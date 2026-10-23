@@ -205,6 +205,7 @@ def _enroll(arguments: argparse.Namespace) -> None:
         goal=arguments.goal,
         k=arguments.k,
         precision=arguments.precision,
+        strangers=arguments.strangers,
         margin=arguments.margin,
         coats=tuple(arguments.coat),
         top=arguments.top,
@@ -612,6 +613,13 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
     )
     enroll.add_argument("--k", type=int, default=2)
     enroll.add_argument("--precision", type=float, default=0.99)
+    enroll.add_argument(
+        "--strangers",
+        type=float,
+        default=0.25,
+        help="share of the named cows the install's threshold check withholds "
+        "as strangers in each draw",
+    )
     enroll.add_argument(
         "--margin",
         type=float,

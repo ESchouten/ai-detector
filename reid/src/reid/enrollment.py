@@ -755,6 +755,7 @@ def _record(options: Options, matcher: Matcher | None) -> dict[str, Any]:
         "goal": options.goal,
         "k": options.k,
         "precision": options.precision,
+        "strangers": options.strangers,
         "margin": options.margin,
         "coats": list(options.coats),
         "top": options.top,

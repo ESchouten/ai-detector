@@ -14,8 +14,8 @@
 <section class="page-narrow">
 	<PageHeader
 		back={{ href: resolve('/settings'), label: 'Settings' }}
-		title="Animals"
-		description="Each group holds sightings that look alike. Give it the animal’s name or number once; alerts then name the animals they recognise."
+		title="Identities"
+		description="Each group holds sightings that look alike. Give it a name or number once; alerts then name the identities they recognise."
 	/>
 
 	{#if form?.message}
@@ -29,22 +29,22 @@
 			<Alert.Title>Name sightings from one more day</Alert.Title>
 			<Alert.Description>
 				Alerts only suggest names until named sightings come from at least two days. From then on
-				they name the animals they are sure of.
+				they name the identities they are sure of.
 			</Alert.Description>
 		</Alert.Root>
 	{/if}
 
-	<datalist id="animal-names">
-		{#each overview.named as animal (animal.name)}
-			<option value={animal.name}></option>
+	<datalist id="identity-names">
+		{#each overview.named as identity (identity.name)}
+			<option value={identity.name}></option>
 		{/each}
 	</datalist>
 
-	<section class="flex flex-col gap-3" aria-labelledby="animals-unnamed">
-		<h2 id="animals-unnamed" class="text-base font-semibold">To name</h2>
+	<section class="flex flex-col gap-3" aria-labelledby="identities-unnamed">
+		<h2 id="identities-unnamed" class="text-base font-semibold">To name</h2>
 		{#if overview.groups.length}
 			{#each overview.groups as group (group.ids[0])}
-				<SightingGroup {group} names="animal-names" />
+				<SightingGroup {group} names="identity-names" />
 			{/each}
 			{#if overview.moreGroups}
 				<p class="text-sm text-muted-foreground">
@@ -56,31 +56,32 @@
 			{/if}
 		{:else}
 			<p class="text-sm text-muted-foreground">
-				Nothing to name. New sightings appear here when a detector with tracking records an animal.
+				Nothing to name. New sightings appear here when a detector with tracking records an
+				individual.
 			</p>
 		{/if}
 	</section>
 
-	<section class="flex flex-col gap-3" aria-labelledby="animals-named">
-		<h2 id="animals-named" class="text-base font-semibold">Named animals</h2>
+	<section class="flex flex-col gap-3" aria-labelledby="identities-named">
+		<h2 id="identities-named" class="text-base font-semibold">Named identities</h2>
 		{#if overview.named.length}
 			<ul class="panel divide-y">
-				{#each overview.named as animal (animal.name)}
+				{#each overview.named as identity (identity.name)}
 					<li>
 						<details class="group">
 							<summary
 								class="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5"
 							>
-								<span class="text-sm font-medium">{animal.name}</span>
+								<span class="text-sm font-medium">{identity.name}</span>
 								<span class="text-sm text-muted-foreground">
-									{plural(animal.ids.length, ['# sighting', '# sightings'])}
+									{plural(identity.ids.length, ['# sighting', '# sightings'])}
 								</span>
 							</summary>
 							<ul class="flex flex-wrap gap-2 px-4 pb-4">
-								{#each animal.shown as sighting (sighting.id)}
+								{#each identity.shown as sighting (sighting.id)}
 									<li class="relative size-24 overflow-hidden rounded-lg bg-media">
 										<img
-											src={resolve(`/animals/${sighting.id}/crop-1.jpg`)}
+											src={resolve(`/identities/${sighting.id}/crop-1.jpg`)}
 											alt=""
 											loading="lazy"
 											decoding="async"
@@ -95,7 +96,7 @@
 											<input type="hidden" name="sighting" value={sighting.id} />
 											<button
 												type="submit"
-												aria-label={`Not ${animal.name}: remove the name from this picture`}
+												aria-label={`Not ${identity.name}: remove the name from this picture`}
 												class="flex size-7 items-center justify-center rounded-full bg-black/65 text-white outline-none hover:bg-black/80 focus-visible:ring-[3px] focus-visible:ring-ring/60"
 											>
 												<X class="size-4" aria-hidden="true" />
@@ -109,7 +110,7 @@
 				{/each}
 			</ul>
 		{:else}
-			<p class="text-sm text-muted-foreground">No animals named yet.</p>
+			<p class="text-sm text-muted-foreground">No identities named yet.</p>
 		{/if}
 	</section>
 </section>

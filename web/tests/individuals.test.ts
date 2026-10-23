@@ -94,7 +94,7 @@ test('naming writes the whole names file the detector reads, and a name can be t
 	});
 	const overview = await folder.overview();
 	assert.deepEqual(
-		overview.named.map((animal) => [animal.name, animal.ids]),
+		overview.named.map((identity) => [identity.name, identity.ids]),
 		[
 			['87', [id('3')]],
 			['412', [id('2'), id('1')]]
@@ -104,7 +104,7 @@ test('naming writes the whole names file the detector reads, and a name can be t
 
 	await folder.unname([id('2')]);
 	assert.deepEqual(
-		(await folder.overview()).named.map((animal) => animal.ids),
+		(await folder.overview()).named.map((identity) => identity.ids),
 		[[id('3')], [id('1')]]
 	);
 	assert.equal((await folder.overview()).unnamed, 1);

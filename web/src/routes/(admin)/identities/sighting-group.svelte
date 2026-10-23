@@ -15,7 +15,7 @@
 		/** The id of the list of names already given, for suggestions while typing. */
 		names: string;
 	} = $props();
-	// Pictures people took out of the group because they show another animal.
+	// Pictures people took out of the group because they show a different individual.
 	const leftOut = new SvelteSet<string>();
 	const kept = $derived(group.ids.filter((id) => !leftOut.has(id)));
 	const field = $derived(`name-${group.ids[0]}`);
@@ -42,12 +42,12 @@
 				<button
 					type="button"
 					aria-pressed={out}
-					aria-label={out ? 'Left out: another animal' : 'Leave this picture out'}
+					aria-label={out ? 'Left out: a different one' : 'Leave this picture out'}
 					onclick={() => toggle(sighting.id)}
 					class="relative block aspect-square w-full overflow-hidden rounded-lg bg-media outline-none focus-visible:ring-[3px] focus-visible:ring-ring/60"
 				>
 					<img
-						src={resolve(`/animals/${sighting.id}/crop-1.jpg`)}
+						src={resolve(`/identities/${sighting.id}/crop-1.jpg`)}
 						alt=""
 						loading="lazy"
 						decoding="async"
@@ -74,7 +74,7 @@
 				])}
 			</span>
 		{/if}
-		<span>Tap a picture of another animal to leave it out.</span>
+		<span>Tap a picture of a different one to leave it out.</span>
 	</p>
 	<form
 		method="POST"

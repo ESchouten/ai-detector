@@ -34,16 +34,16 @@ export function mainNavigation(): NavItem[] {
 	];
 }
 
-/** What people set once and return to occasionally. Animals only when individuals are recognised. */
+/** What people set once and return to occasionally. Identities only when individuals are recognised. */
 export function settingsNavigation({ individuals = false } = {}): NavItem[] {
 	return [
 		...(individuals
 			? [
 					{
-						title: 'Animals',
-						href: resolve('/animals'),
+						title: 'Identities',
+						href: resolve('/identities'),
 						icon: TagIcon,
-						description: 'Name the animals the cameras recognise.'
+						description: 'Name the individuals the cameras recognise.'
 					}
 				]
 			: []),

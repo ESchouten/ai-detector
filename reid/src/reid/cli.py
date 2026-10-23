@@ -135,16 +135,16 @@ def _benchmark(arguments: argparse.Namespace) -> None:
 
 
 def enrolment_table(result: dict[str, Any]) -> str:
-    """One Markdown row per grouping similarity and coat weight, after the
-    labelled ceiling.
+    """One Markdown row per grouping similarity, adaptation and coat weight,
+    after the labelled ceiling.
 
     Day columns are means over the test days: sightings named (right when named),
     cows recognised at least once that day, and the right cow in the top 3.
     """
     lines = [
-        "| Gallery | Coat | Groups | Pure | Taps | Taps 90% | Taps 100% | Named | "
-        "Cows a day | In top 3 | Wrong |",
-        "|---|---|---|---|---|---|---|---|---|---|---|",
+        "| Gallery | Adapt | Coat | Groups | Pure | Taps | Taps 90% | Taps 100% "
+        "| Named | Cows a day | In top 3 | Wrong |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     rows = [("labelled", {}, entry) for entry in result["labelled"]] + [
         (f"grouped at {entry['merge']}", entry, entry) for entry in result["grouped"]
@@ -153,7 +153,8 @@ def enrolment_table(result: dict[str, Any]) -> str:
         days = scored["mean"]
         milestones = enrolment.get("milestones", {})
         lines.append(
-            f"| {label} | {scored['coat']} | {enrolment.get('groups', '–')} "
+            f"| {label} | {scored['adapt']} | {scored['coat']} "
+            f"| {enrolment.get('groups', '–')} "
             f"| {_percent(enrolment.get('purity'))} | {enrolment.get('taps', '–')} "
             f"| {milestones.get('0.9') or '–'} | {milestones.get('1.0') or '–'} "
             f"| {_percent(days['named'])} ({_percent(days['right'])}) "
@@ -164,6 +165,7 @@ def enrolment_table(result: dict[str, Any]) -> str:
 
 
 def _enroll(arguments: argparse.Namespace) -> None:
+    from reid.adapt import Adaptation
     from reid.backbones import build
     from reid.enrollment import Options as EnrolOptions
     from reid.enrollment import simulate
@@ -179,6 +181,7 @@ def _enroll(arguments: argparse.Namespace) -> None:
         top=arguments.top,
         query_crops=arguments.query_crops,
         gallery_crops=arguments.gallery_crops,
+        adapts=tuple(Adaptation.parse(text) for text in arguments.adapt),
     )
     crops = read_manifest(arguments.manifest)
     embedder = build(
@@ -485,6 +488,13 @@ def _add_scoring(commands: argparse._SubParsersAction) -> None:
         default=[0.0],
         help="weights of the coat score (0 to 1 at 100 matches) added for each "
         "sighting's best cows; each is tried, 0 being the embedding alone",
+    )
+    enroll.add_argument(
+        "--adapt",
+        nargs="+",
+        default=["none"],
+        help="ways to adapt the embedding to the farm, each tried: none, center, "
+        "whiten, tracks or names, with :shrink to set the damping (names:0.3)",
     )
     enroll.add_argument("--top", type=int, default=3, help="candidate cows re-checked")
     enroll.add_argument(

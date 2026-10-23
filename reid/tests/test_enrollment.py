@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from conftest import FakeEmbedder, FakeMatcher
+from reid.adapt import Adaptation
 from reid.benchmark import Options as BenchmarkOptions
 from reid.benchmark import embeddings, self_set_thresholds
 from reid.enrollment import (
@@ -147,7 +148,7 @@ def test_the_install_sets_its_threshold_as_the_benchmark_does(herd):
         crops, vectors[enrolled], [whole], BenchmarkOptions()
     )[0]
 
-    assert _thresholds(crops, vectors[enrolled], None, Options()) == {
+    assert _thresholds(crops, vectors[enrolled], None, Adaptation(), Options()) == {
         0.0: pytest.approx(benchmark["track"])
     }
 

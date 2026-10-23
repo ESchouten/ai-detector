@@ -17,6 +17,7 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
+from reid.adapt import Adaptation, Transform, fit
 from reid.local import Matcher, coat_matches
 from reid.manifest import Crop
 from reid.matching import identity_scores, runner_up_margin, similarities
@@ -46,6 +47,10 @@ class Options:
     query_crops: int = 3
     gallery_crops: int = 3
     saturation: float = 100.0
+    # Ways to adapt the embedding to the farm from its enrolment sightings; each
+    # is simulated in turn. Grouping always uses the embedding as it is, so the
+    # farmer's taps stay the same.
+    adapts: tuple[Adaptation, ...] = (Adaptation(),)
     strangers: float = 0.25
     folds: int = 3
     seed: int = 0
@@ -257,6 +262,7 @@ def _thresholds(
     crops: Sequence[Crop],
     vectors: NDArray[np.float32],
     matcher: Matcher | None,
+    adaptation: Adaptation,
     options: Options,
 ) -> dict[float, float | None]:
     """Per coat weight, the threshold an install sets from its own named gallery.
@@ -264,6 +270,8 @@ def _thresholds(
     The gallery is split again by time with some of its cows withheld, as the
     benchmark does with a whole manifest, and each fold's sightings are scored
     the way later days will be. The threshold is the median over the folds.
+    Each fold learns the adaptation again from the names of its own gallery
+    only, so the check never learns from the sightings it checks.
     """
     try:
         inner = open_set_splits(
@@ -271,11 +279,14 @@ def _thresholds(
         )
     except ValueError:
         return dict.fromkeys(options.coats)
+    seen = sightings(crops, range(len(crops)))
     found: dict[float, list[float]] = {weight: [] for weight in options.coats}
     for split in inner:
+        known = set(split.gallery)
+        named = [crops[s[0]].identity if s[0] in known else "" for s in seen]
         scored = _score(
             crops,
-            vectors,
+            fit(adaptation, vectors, seen, named)(vectors),
             split.gallery,
             [crops[i].identity for i in split.gallery],
             split.queries,
@@ -302,10 +313,14 @@ def _days(
     names: Sequence[str],
     queries: Sequence[int],
     matcher: Matcher | None,
+    adaptation: Adaptation,
+    transform: Transform,
     options: Options,
 ) -> list[dict[str, Any]]:
     """Per coat weight, each later day's sightings named against the gallery at
     the install's own threshold.
+
+    `transform` is the adaptation as learnt from every enrolment sighting.
     """
     level = "track" if any(crops[i].track for i in queries) else "crop"
     thresholds = _thresholds(
@@ -315,9 +330,12 @@ def _days(
         ],
         vectors[list(gallery)],
         matcher,
+        adaptation,
         options,
     )
-    scored = _score(crops, vectors, gallery, names, queries, matcher, options)
+    scored = _score(
+        crops, transform(vectors), gallery, names, queries, matcher, options
+    )
     sessions = np.array([crops[s[0]].session for s in scored.seen])
     cows = np.array([crops[s[0]].identity for s in scored.seen])
     in_gallery = np.isin(cows, scored.names)
@@ -383,7 +401,8 @@ def simulate(
     """Enrol on the first sessions at each grouping similarity; test on the rest.
 
     A gallery named from the true labels is scored too, as the ceiling that
-    perfect naming would give. Every gallery is scored at each coat weight.
+    perfect naming would give. Every gallery is scored with each adaptation and
+    at each coat weight.
     """
     sessions = sorted({crop.session for crop in crops})
     if "" in sessions or len(sessions) <= options.enrol_sessions:
@@ -401,29 +420,38 @@ def simulate(
     sizes = [len(s) for s in seen]
     means = sighting_vectors(vectors, seen)
     merges = merge_tree(similarities(means, means))
-    labelled = _days(
-        crops,
-        vectors,
-        enrol,
-        [crops[i].identity for i in enrol],
-        later,
-        matcher,
-        options,
-    )
+
+    def scored(named: Sequence[str]) -> list[dict[str, Any]]:
+        """Every adaptation and coat weight, with `named` the name of each
+        enrolment sighting, empty where it was left unnamed.
+        """
+        gallery = [i for s, name in zip(seen, named, strict=True) if name for i in s]
+        names = [name for s, name in zip(seen, named, strict=True) if name for _ in s]
+        results = []
+        for adaptation in options.adapts:
+            transform = fit(adaptation, vectors, seen, named)
+            results.extend(
+                {"adapt": str(adaptation), **entry}
+                for entry in _days(
+                    crops,
+                    vectors,
+                    gallery,
+                    names,
+                    later,
+                    matcher,
+                    adaptation,
+                    transform,
+                    options,
+                )
+            )
+        return results
+
+    labelled = scored(cows)
     grouped = []
     for merge in options.merges:
         enrolment = play_farmer(
             cut(merges, len(seen), merge).tolist(), cows, sizes, options.goal
         )
-        gallery = [
-            i for s, name in zip(seen, enrolment.names, strict=True) if name for i in s
-        ]
-        names = [
-            name
-            for s, name in zip(seen, enrolment.names, strict=True)
-            if name
-            for _ in s
-        ]
         farmer = {
             "merge": merge,
             "groups": enrolment.groups,
@@ -432,19 +460,19 @@ def simulate(
             "milestones": {
                 str(share): taps for share, taps in enrolment.milestones.items()
             },
+            # Share of the named gallery's pictures named after their own cow.
             "gallery_right": float(
                 np.mean(
                     [
-                        crops[i].identity == n
-                        for i, n in zip(gallery, names, strict=True)
+                        crops[i].identity == name
+                        for s, name in zip(seen, enrolment.names, strict=True)
+                        if name
+                        for i in s
                     ]
                 )
             ),
         }
-        grouped.extend(
-            {**farmer, **scored}
-            for scored in _days(crops, vectors, gallery, names, later, matcher, options)
-        )
+        grouped.extend({**farmer, **entry} for entry in scored(enrolment.names))
     return {
         "crops": len(crops),
         "identities": len({crop.identity for crop in crops}),
@@ -463,6 +491,7 @@ def simulate(
             "gallery_crops": options.gallery_crops,
             "saturation": options.saturation,
             "matcher": matcher.name if matcher is not None else None,
+            "adapts": [str(adaptation) for adaptation in options.adapts],
         },
         "labelled": labelled,
         "grouped": grouped,

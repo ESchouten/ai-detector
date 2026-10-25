@@ -34,7 +34,10 @@ export const init: ServerInit = async () => {
 			);
 		}
 		await followPresets();
-		await initializeDetector(() => configuration.read());
+		await initializeDetector(() => configuration.read(), {
+			remember: (id, source, device) => configuration.rememberCameraDevice(id, source, device),
+			relocate: (moves) => configuration.relocateCameras(moves)
+		});
 		startTelegramReviews();
 		process.once('sveltekit:shutdown', () => previews.close());
 		process.once('sveltekit:shutdown', () => webLog.flush());

@@ -141,8 +141,55 @@ def test_cooldown_prevents_repeated_validation_calls(caplog):
     assert delivery.deliver(event(9)).result is None
     assert delivery.deliver(event(10)).result is not None
     assert validator.calls == 2
-    assert caplog.messages.count("Event skipped: cooldown is still active") == 1
+    assert (
+        caplog.messages.count("Event skipped: not enough frames outside cooldown") == 1
+    )
     assert caplog.messages.count("Event validation: approved") == 2
+
+
+@pytest.mark.parametrize("verified", [False, True])
+def test_a_single_new_class_does_not_notify_during_another_class_cooldown(
+    verified, caplog
+):
+    caplog.set_level("INFO")
+    disk, telegram = RecordingExporter(), RecordingExporter()
+    validator = Validator(ValidationStatus.APPROVED) if verified else None
+    delivery = EventDelivery(
+        (
+            Destination("disk", disk, ExportPolicy()),
+            Destination("telegram", telegram, ExportPolicy()),
+        ),
+        Cooldown({"calf": 43200, "legs": 1800}, min_frames=10),
+        validator,
+    )
+
+    def calving(second, legs_frames):
+        return DetectionEvent(
+            "camera",
+            tuple(
+                Observation(
+                    datetime(2026, 1, 1) + timedelta(seconds=second + i),
+                    np.zeros((8, 8, 3), dtype=np.uint8),
+                    {"calf": 0.91, **({"legs": 0.7} if i < legs_frames else {})},
+                )
+                for i in range(36)
+            ),
+        )
+
+    assert delivery.deliver(calving(0, 0)).result is not None
+    assert delivery.deliver(calving(1900, 1)).result is None
+    assert len(disk.results) == len(telegram.results) == 1
+    if validator is not None:
+        assert validator.calls == 1
+    assert "Event skipped: not enough frames outside cooldown" in caplog.messages
+
+    sufficient = calving(2000, 10)
+    report = delivery.deliver(sufficient)
+    assert report.result is not None
+    assert report.result.event is sufficient
+    assert len(disk.results) == len(telegram.results) == 2
+    if validator is not None:
+        assert validator.calls == 2
 
 
 @pytest.mark.parametrize(

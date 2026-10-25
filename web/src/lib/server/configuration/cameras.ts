@@ -1,7 +1,16 @@
 import { createHash } from 'node:crypto';
 import type * as v from 'valibot';
 import { ConfigurationError, type cameraInput } from '../../configuration.ts';
-import type { Camera, Configuration, LoadedConfiguration, StreamMeta } from '../../schema.ts';
+import type {
+	Camera,
+	CameraDevice,
+	Configuration,
+	LoadedConfiguration,
+	StreamMeta
+} from '../../schema.ts';
+import { movedSource } from '../cameras/connection.ts';
+import type { CameraMove } from '../cameras/identity.ts';
+import { keepCameraSetup } from './camera-setup.ts';
 
 /** A camera's id comes from its first address and stays when the address changes. */
 function cameraId(source: string): string {
@@ -37,6 +46,8 @@ function updateCameraMetadata(
 	if (camera.source !== input.source) {
 		delete camera.setup;
 		delete camera.connection;
+		// Another address can be another camera.
+		delete camera.device;
 	}
 	if (input.connection === null) delete camera.connection;
 	else if (input.connection) camera.connection = input.connection;
@@ -73,4 +84,39 @@ export function removeCamera(document: Configuration, id: string): void {
 	if (!camera) throw new ConfigurationError('This camera no longer exists.');
 	detachCamera(document, camera.source);
 	document.app.streams = document.app.streams.filter((stream) => stream !== camera);
+}
+
+/** Notes what tells a camera apart, unless its address was changed meanwhile. */
+export function rememberCameraDevice(
+	document: Configuration,
+	id: string,
+	source: string,
+	device: CameraDevice
+): void {
+	const camera = document.app.streams.find((stream) => stream.id === id);
+	if (camera?.source === source) camera.device = device;
+}
+
+/**
+ * Follows cameras to the addresses they were found at, keeping their setup. Gives back the moves
+ * made: not those of a camera that was changed or removed meanwhile, or that would take the
+ * address of another saved camera.
+ */
+export function relocateCameras(document: Configuration, moves: CameraMove[]): CameraMove[] {
+	return moves.filter((move) => {
+		const camera = document.app.streams.find((stream) => stream.id === move.id);
+		if (!camera || camera.source !== move.source) return false;
+		const source = movedSource(move.source, move.host);
+		if (document.app.streams.some((stream) => stream.source === source)) return false;
+		keepCameraSetup(document, move.id, () => {
+			camera.source = source;
+			if (camera.connection)
+				camera.connection.address = movedSource(camera.connection.address, move.host);
+			for (const detector of document.config.detectors)
+				detector.detection.source = detector.detection.source.map((item) =>
+					item === move.source ? source : item
+				);
+		});
+		return true;
+	});
 }

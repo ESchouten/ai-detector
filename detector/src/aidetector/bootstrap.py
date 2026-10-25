@@ -321,7 +321,8 @@ def run_application(
                 else None
             )
             cooldown = Cooldown(
-                settings.yolo.cooldown if settings.yolo is not None else 0
+                settings.yolo.cooldown if settings.yolo is not None else 0,
+                min_frames=event_policy.min_frames,
             )
             publish = _publisher(
                 preview, f"detector-{index}", source.sources, identifier

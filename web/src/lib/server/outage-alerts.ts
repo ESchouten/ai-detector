@@ -47,7 +47,7 @@ interface Outage {
 	sent: boolean;
 }
 
-function chat(recipient: Recipient): string {
+export function chat(recipient: Recipient): string {
 	return `${recipient.token}\n${recipient.chat}`;
 }
 
@@ -231,7 +231,7 @@ export class OutageAlerts {
 }
 
 /** Whether a recipient's alerts arrive without sound at this moment, as the detector decides it. */
-function quiet(hours: Recipient['quiet'], at: Date): boolean {
+export function quiet(hours: Recipient['quiet'], at: Date): boolean {
 	if (!hours) return false;
 	const time = at.toTimeString().slice(0, 5);
 	return hours.start <= hours.end

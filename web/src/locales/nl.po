@@ -194,6 +194,7 @@ msgstr "Open het dashboard via localhost op de computer waarop AI Detector draai
 #: src/lib/components/camera-settings.svelte
 #: src/lib/remote/camera.remote.ts
 #: src/lib/remote/camera.remote.ts
+#: src/lib/server/cameras/relocation.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
 #: src/routes/(admin)/identities/+page.server.ts
@@ -3895,3 +3896,16 @@ msgstr "Tik er een aan in het beeld om te zeggen wie het is. Een paar seconden n
 #: src/routes/(admin)/identities/+page.svelte
 msgid "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."
 msgstr "Niets te benoemen. Nieuwe waarnemingen verschijnen hier zodra een detector met tracking en een segmentatiemodel een individu opneemt."
+
+#. 0: label; 1: move.host
+#: src/lib/server/cameras/relocation.ts
+msgid "{0} got a new network address ({1}) and is watched there again."
+msgstr "{0} heeft een nieuw netwerkadres ({1}) en wordt daar weer bewaakt."
+
+#: src/lib/server/cameras/relocation.ts
+msgid "Tip: give your cameras a fixed address in your router (a DHCP reservation), so they keep their address."
+msgstr "Tip: geef je camera’s een vast adres in je router (een DHCP-reservering), zodat ze hun adres houden."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Tip: give this camera a fixed address in your router (a DHCP reservation). When its address changes anyway, AI Detector looks for it on the network by itself."
+msgstr "Tip: geef deze camera een vast adres in je router (een DHCP-reservering). Verandert het adres toch, dan zoekt AI Detector de camera zelf op het netwerk."

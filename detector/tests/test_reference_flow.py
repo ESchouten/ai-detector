@@ -1,4 +1,5 @@
 import json
+from contextlib import nullcontext
 from datetime import datetime
 
 import cv2
@@ -6,11 +7,13 @@ import pytest
 
 from aidetector.adapters.exporters.archive_metadata import EventMetadata
 from aidetector.adapters.exporters.disk import DiskExporter
+from aidetector.adapters.inference.onnx import InferenceOptions
 from aidetector.adapters.media.event_media import EventMedia
 from aidetector.adapters.sources.files import FileSource
 from aidetector.application.delivery import Destination, EventDelivery
 from aidetector.application.pipeline import DetectionPipeline
-from aidetector.configuration import DiskConfig
+from aidetector.bootstrap import run_application
+from aidetector.configuration import Config, DiskConfig
 from aidetector.domain.models import (
     BoundingBox,
     Observation,
@@ -44,6 +47,63 @@ class ScheduledDetector:
 class ApprovingValidator:
     def validate(self, event):
         return ValidationResult(ValidationStatus.APPROVED)
+
+
+def test_configured_minimum_blocks_a_single_new_class_during_cooldown(
+    tmp_path, monkeypatch, caplog
+):
+    class CalvingDetector:
+        def __init__(self):
+            self.index = 0
+
+        def detect(self, sources):
+            outputs = {}
+            for source, frames in sources.items():
+                frame = frames[-1]
+                scores = {"calf": 0.91}
+                if self.index == 5:
+                    scores["legs"] = 0.7
+                outputs[source] = (Observation(frame.date, frame.image, scores),)
+                self.index += 1
+            return outputs
+
+    monkeypatch.setattr(
+        "aidetector.bootstrap.inference_runtime",
+        lambda *args: nullcontext(InferenceOptions()),
+    )
+    monkeypatch.setattr(
+        "aidetector.adapters.inference.yolo.open_detector",
+        lambda *args, **kwargs: nullcontext(CalvingDetector()),
+    )
+    write_video(tmp_path / "input.avi")
+    (tmp_path / "test.pt").write_bytes(b"stand-in for the inference adapter")
+    config = Config.model_validate(
+        {
+            "detectors": [
+                {
+                    "detection": {"source": "input.avi", "frames_width": 64},
+                    "yolo": {
+                        "model": "test.pt",
+                        "frames_min": 3,
+                        "time_max": 0.5,
+                        "timeout": 0,
+                        "include_trailing_time": 0,
+                        "cooldown": {"calf": 43200, "legs": 1800},
+                    },
+                    "exporters": {"disk": {"directory": "calving"}},
+                }
+            ]
+        }
+    )
+    caplog.set_level("INFO")
+    run_application(config, tmp_path, tmp_path)
+
+    recordings = list(
+        (tmp_path / "detections/calving/unvalidated").glob("*/metadata.json")
+    )
+    assert len(recordings) == 1
+    assert json.loads(recordings[0].read_text())["confidences"] == {"calf": 0.91}
+    assert "Event skipped: not enough frames outside cooldown" in caplog.messages
 
 
 @pytest.mark.parametrize("category", [None, "Camera 1"])

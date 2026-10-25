@@ -63,7 +63,7 @@ class EventDelivery:
             dict(event.best.confidence),
         )
         if not self.cooldown.allows(event):
-            logger.info("Event skipped: cooldown is still active")
+            logger.info("Event skipped: not enough frames outside cooldown")
             return DeliveryReport(None)
 
         validation = self._validate(event)

@@ -108,7 +108,7 @@ The detector has one model: turn footage from a source into a completed event, o
 | `EventResult` | An event, its verification outcome, its ID and, when individuals are recognised, its `Identification`. Delivery outcomes belong to the application's `DeliveryReport`. |
 | Sighting | One track's best pictures from one event, kept so a person can name them. |
 | `Individual` | A tracked object of an event with the named individuals it resembles most; recognised when the best clears the installation's own threshold. |
-| Cooldown | The interval since an accepted event's best observation, per source and class within one detector. |
+| Cooldown | The interval since a class's best eligible observation in an accepted event, per source and class within one detector. |
 
 How the main records relate, with a selection of their fields:
 
@@ -199,7 +199,8 @@ flowchart TB
 - Buffered observations are consumed in timestamp order. Eligible trailing frames before a boundary stay with the closing event; the observation at the boundary starts the next window.
 - State never crosses sources. Finite files use media time, so grouping does not depend on machine speed, and each file's EOF closes its own event. Live sources use capture time. `SourceBatch.advance_to` lets an idle live source expire its window; finite sources omit it.
 - Without a YOLO model the pipeline emits one unscored event per source batch, holding its latest frame.
-- Cooldown is checked before verification, on the delivery worker, so two events cannot both pass. At least one class of the best observation must be outside its cooldown. Approved and deliberately unvalidated results consume it for every class of that observation; rejection and failed verification do not.
+- Cooldown is checked before verification, on the delivery worker, so two events cannot both pass. Delivery needs `frames_min` observations with at least one class outside its cooldown at that observation's timestamp. Each image counts once; unscored context and images containing only classes still in cooldown do not count. Unscored snapshot events bypass this minimum. Bootstrap gives the assembler and cooldown the same minimum.
+- Approved and deliberately unvalidated results consume cooldown for classes outside cooldown, using each class's highest-confidence eligible observation (ties keep the first). Eligibility is determined against the previous timers before any timer is updated. Classes still in cooldown keep their timers; rejection and failed verification do not consume cooldown. The complete event and its context remain available to verification, media and exporters.
 - Consuming cooldown, a destination's eligibility and a successful delivery are three separate decisions. A failed exporter does not undo acceptance, which keeps the alert cadence when a destination is down.
 
 ## Verification and delivery

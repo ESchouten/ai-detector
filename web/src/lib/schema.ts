@@ -80,11 +80,19 @@ const cameraSetup = v.object({
 	completedAt: v.optional(timestamp),
 	completionSignature: v.optional(text)
 });
+/** What tells a camera apart when its network address changes. */
+const cameraDevice = v.object({
+	/** The MAC address this computer sees the camera at, as aa:bb:cc:dd:ee:ff. */
+	mac: v.optional(v.pipe(v.string(), v.regex(/^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$/))),
+	/** The serial number the camera gives over ONVIF. */
+	serial: v.optional(text)
+});
 export const streamMeta = v.object({
 	id: v.optional(text),
 	label: v.optional(text),
 	source: text,
 	connection: v.optional(cameraConnectionMeta),
+	device: v.optional(cameraDevice),
 	setup: v.optional(cameraSetup)
 });
 const identity = v.pipe(v.string(), v.minLength(1));
@@ -182,6 +190,7 @@ export type DetectorMeta = v.InferOutput<typeof detectorMeta>;
 export type TelegramMeta = v.InferOutput<typeof telegramMeta>;
 export type LlmConnection = v.InferOutput<typeof llmConnection>;
 export type StreamMeta = v.InferOutput<typeof streamMeta>;
+export type CameraDevice = v.InferOutput<typeof cameraDevice>;
 
 /** A preset to choose in the detector editor. */
 export interface PresetInfo {

@@ -230,6 +230,10 @@
 						oninput={manualAddress ? connectionChangedInput : invalidateCheck}
 					/>
 				{/if}
+				<p class="text-sm text-muted-foreground">
+					Tip: give this camera a fixed address in your router (a DHCP reservation). When its
+					address changes anyway, AI Detector looks for it on the network by itself.
+				</p>
 				{#if !manualAddress && profiles.length > 1}
 					<Field.Field>
 						<Field.Label for="camera-profile">Camera channel or stream</Field.Label>

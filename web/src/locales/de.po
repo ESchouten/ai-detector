@@ -194,6 +194,7 @@ msgstr "Öffnen Sie das Dashboard über localhost auf dem Computer, auf dem AI D
 #: src/lib/components/camera-settings.svelte
 #: src/lib/remote/camera.remote.ts
 #: src/lib/remote/camera.remote.ts
+#: src/lib/server/cameras/relocation.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
 msgid "Camera"
@@ -3729,3 +3730,16 @@ msgstr "KI-Verbindung"
 #: src/lib/server/installation-import/metadata.ts
 msgid "Filled in missing names and ignored empty optional settings in app.json."
 msgstr "Fehlende Namen wurden ergänzt und leere optionale Einstellungen in app.json wurden übersprungen."
+
+#. 0: label; 1: move.host
+#: src/lib/server/cameras/relocation.ts
+msgid "{0} got a new network address ({1}) and is watched there again."
+msgstr "{0} hat eine neue Netzwerkadresse ({1}) und wird dort wieder überwacht."
+
+#: src/lib/server/cameras/relocation.ts
+msgid "Tip: give your cameras a fixed address in your router (a DHCP reservation), so they keep their address."
+msgstr "Tipp: Geben Sie Ihren Kameras im Router eine feste Adresse (eine DHCP-Reservierung), damit sie ihre Adresse behalten."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Tip: give this camera a fixed address in your router (a DHCP reservation). When its address changes anyway, AI Detector looks for it on the network by itself."
+msgstr "Tipp: Geben Sie dieser Kamera im Router eine feste Adresse (eine DHCP-Reservierung). Ändert sich die Adresse trotzdem, sucht AI Detector die Kamera selbst im Netzwerk."

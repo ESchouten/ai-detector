@@ -7,6 +7,7 @@ from datetime import datetime
 from aidetector.domain.models import (
     DetectionEvent,
     EventResult,
+    Observation,
     ValidationResult,
     ValidationStatus,
 )
@@ -52,24 +53,33 @@ class ExportPolicy:
 
 
 class Cooldown:
-    def __init__(self, seconds: float | dict[str, float] = 0):
+    def __init__(self, seconds: float | dict[str, float] = 0, *, min_frames: int = 1):
         self.seconds = seconds
+        self.min_frames = min_frames
         self._last_accepted: dict[tuple[str, str], datetime] = {}
 
+    def _outside(self, source: str, name: str, date: datetime) -> bool:
+        previous = self._last_accepted.get((source, name))
+        duration = (
+            self.seconds.get(name, 0)
+            if isinstance(self.seconds, dict)
+            else self.seconds
+        )
+        return previous is None or (date - previous).total_seconds() >= duration
+
     def allows(self, event: DetectionEvent) -> bool:
-        best = event.best
-        if not best.confidence:
+        if not any(observation.confidence for observation in event.observations):
             return True
-        for name in best.confidence:
-            previous = self._last_accepted.get((event.source, name))
-            duration = (
-                self.seconds.get(name, 0)
-                if isinstance(self.seconds, dict)
-                else self.seconds
+        return (
+            sum(
+                any(
+                    self._outside(event.source, name, observation.date)
+                    for name in observation.confidence
+                )
+                for observation in event.observations
             )
-            if previous is None or (best.date - previous).total_seconds() >= duration:
-                return True
-        return False
+            >= self.min_frames
+        )
 
     def record(self, result: EventResult) -> None:
         """Only approved or deliberately unvalidated outcomes consume cooldown."""
@@ -79,6 +89,14 @@ class Cooldown:
         ):
             return
         event = result.event
-        best = event.best
-        for name in best.confidence:
-            self._last_accepted[event.source, name] = best.date
+        best: dict[str, Observation] = {}
+        for observation in event.observations:
+            for name, score in observation.confidence.items():
+                candidate = best.get(name)
+                if self._outside(event.source, name, observation.date) and (
+                    candidate is None or score > candidate.confidence[name]
+                ):
+                    best[name] = observation
+        # Decide against the old cooldowns before updating any class in this event.
+        for name, observation in best.items():
+            self._last_accepted[event.source, name] = observation.date

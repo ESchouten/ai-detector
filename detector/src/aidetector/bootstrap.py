@@ -224,7 +224,8 @@ def run_application(
 
                 validator = VlmValidator(settings.active_vlm, media)
             cooldown = Cooldown(
-                settings.yolo.cooldown if settings.yolo is not None else 0
+                settings.yolo.cooldown if settings.yolo is not None else 0,
+                min_frames=event_policy.min_frames,
             )
             publish = (
                 preview.observer(f"detector-{index}", source.sources)

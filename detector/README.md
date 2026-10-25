@@ -88,7 +88,7 @@ All options are in [`config.schema.json`](../config/config.schema.json). Sources
 | `tracking` | `false` | Persistent Ultralytics tracking |
 
 - Standard names such as `yolo11n.pt` are downloaded by Ultralytics; model URLs are downloaded once into the cache. Prepared ONNX models and TensorRT engines are cached under `models/prepared/`, which can be deleted while detection is stopped. See [inference backends](ARCHITECTURE.md#inference-backends).
-- An event may proceed when at least one detected class is outside its cooldown. Approved and deliberately unvalidated events consume cooldown; rejected and failed ones do not.
+- An event needs `frames_min` observations containing a class outside its cooldown. Each observation counts once; context and observations containing only classes still in cooldown do not count. Approved and deliberately unvalidated events start cooldown for the classes outside cooldown, using each class's best qualifying observation. A class still in cooldown keeps its previous timer; rejected and failed events do not start cooldown.
 - Without `yolo`, each sampled frame goes straight to the verifier and the exporters, and disk files it under `unclassified` unless `directory` is set.
 
 ### Verification

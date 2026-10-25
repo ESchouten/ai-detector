@@ -74,7 +74,7 @@ export function discoverCameras(): Promise<CameraDiscovery> {
 }
 
 /** This computer's addresses on its networks, by connection. */
-function localAddresses(): { connection: string; address: string }[] {
+export function localAddresses(): { connection: string; address: string }[] {
 	return Object.entries(os.networkInterfaces()).flatMap(([connection, addresses]) =>
 		(addresses ?? [])
 			.filter(({ family, internal }) => family === /* @wc-ignore */ 'IPv4' && !internal)
@@ -97,7 +97,7 @@ const ONVIF_PORTS = [80, 8000, 8080, 2020, 8899];
 const DATE_REQUEST =
 	'<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"><s:Body><GetSystemDateAndTime xmlns="http://www.onvif.org/ver10/device/wsdl"/></s:Body></s:Envelope>';
 
-function open(host: string, port: number): Promise<boolean> {
+export function open(host: string, port: number): Promise<boolean> {
 	return new Promise((resolve) => {
 		const socket = connect({ host, port, timeout: 500 });
 		const done = (result: boolean) => {
@@ -191,20 +191,16 @@ function logFailure(host: string, status: number, cause: unknown): void {
 	);
 }
 
-export async function resolveCameraStream(
-	input: CameraConnectionInput
-): Promise<{ source: string; profiles: CameraProfile[]; connection?: StreamMeta['connection'] }> {
-	if (input.streamUri)
-		return { source: cameraStream(input.streamUri, input.username, input.password), profiles: [] };
-	const address = cameraAddress(input.address);
+/** An ONVIF device at an address, and the HTTP status of its last reply. */
+export function onvifCamera(address: URL, username: string, password: string) {
 	const secure = address.protocol === 'https:';
 	const agent = secure ? new HttpsAgent() : new HttpAgent();
 	const camera = new Cam({
 		hostname: address.hostname,
 		port: Number(address.port || (secure ? 443 : 80)),
 		path: address.pathname === '/' ? '/onvif/device_service' : address.pathname,
-		username: input.username,
-		password: input.password,
+		username,
+		password,
 		useSecure: secure,
 		// A recorder with many channels can take well over ten seconds to list them.
 		timeout: 20000,
@@ -215,6 +211,16 @@ export async function resolveCameraStream(
 	camera.on('rawResponse', (_xml, status) => {
 		responseStatus = status;
 	});
+	return { camera, agent, status: () => responseStatus };
+}
+
+export async function resolveCameraStream(
+	input: CameraConnectionInput
+): Promise<{ source: string; profiles: CameraProfile[]; connection?: StreamMeta['connection'] }> {
+	if (input.streamUri)
+		return { source: cameraStream(input.streamUri, input.username, input.password), profiles: [] };
+	const address = cameraAddress(input.address);
+	const { camera, agent, status } = onvifCamera(address, input.username, input.password);
 	try {
 		// Read stream profiles without configuring the SDK's active/PTZ source state.
 		await promisify(camera.getSystemDateAndTime.bind(camera))();
@@ -259,11 +265,10 @@ export async function resolveCameraStream(
 			connection: { address: `${address.origin}${address.pathname}`, profileToken: selected }
 		};
 	} catch (cause) {
-		logFailure(address.host, responseStatus, cause);
+		logFailure(address.host, status(), cause);
 		if (cause instanceof CameraConnectionError) throw cause;
 		// The SDK's clock-authentication retry can replace a 401 with an XML parsing error.
-		if (responseStatus === 401 || responseStatus === 403)
-			throw connectionFailure(`HTTP ${responseStatus}`);
+		if (status() === 401 || status() === 403) throw connectionFailure(`HTTP ${status()}`);
 		throw connectionFailure(cause);
 	} finally {
 		agent.destroy();

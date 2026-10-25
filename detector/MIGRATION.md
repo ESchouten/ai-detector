@@ -15,7 +15,7 @@ Run `--check-config` against the saved file and correct what it reports. These a
 
 - Configuration is validated before anything starts and is never repaired or rewritten. Unknown options are errors; remove `yolo.strategy`, which never had an effect.
 - Nothing creates a configuration implicitly. A missing file is an error; `--init-config` writes a template and refuses to overwrite.
-- `frames_min` defaults to `3` on every platform. Set `6` explicitly to keep the old CUDA default. It counts matching observations in an event; they need not be consecutive.
+- `frames_min` defaults to `3` on every platform. Set `6` explicitly to keep the old CUDA default. It counts matching observations in an event; they need not be consecutive. Delivery also requires that many observations with a class outside cooldown. Observations containing only classes still in cooldown cannot qualify a new alert, and another class's alert does not restart their cooldown.
 - Verification is switched by `key` alone. A null or omitted key turns an entry off and no longer falls back to credentials from the environment; `""` selects an unauthenticated local service. Add the key to every verifier that should keep running.
 - A verifier must answer exactly `{"detected": true}` or `{"detected": false}`. Custom providers and fixtures that return `confidence` or `reasoning` are rejected.
 - Failed verification is its own outcome. It does not send ordinary Telegram or webhook notifications; disk may keep the event under `unvalidated` with `validation_error`.

@@ -194,6 +194,7 @@ msgstr "Ouvrez le tableau de bord via localhost sur l’ordinateur qui exécute 
 #: src/lib/components/camera-settings.svelte
 #: src/lib/remote/camera.remote.ts
 #: src/lib/remote/camera.remote.ts
+#: src/lib/server/cameras/relocation.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
 msgid "Camera"
@@ -3866,3 +3867,16 @@ msgstr "Aucune identité nommée pour l’instant."
 #: src/routes/(admin)/identities/+page.svelte
 msgid "Named identities"
 msgstr "Identités nommées"
+
+#. 0: label; 1: move.host
+#: src/lib/server/cameras/relocation.ts
+msgid "{0} got a new network address ({1}) and is watched there again."
+msgstr "{0} a une nouvelle adresse réseau ({1}) et y est de nouveau surveillée."
+
+#: src/lib/server/cameras/relocation.ts
+msgid "Tip: give your cameras a fixed address in your router (a DHCP reservation), so they keep their address."
+msgstr "Astuce : donnez à vos caméras une adresse fixe dans votre routeur (une réservation DHCP), pour qu’elles gardent leur adresse."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Tip: give this camera a fixed address in your router (a DHCP reservation). When its address changes anyway, AI Detector looks for it on the network by itself."
+msgstr "Astuce : donnez à cette caméra une adresse fixe dans votre routeur (une réservation DHCP). Si son adresse change quand même, AI Detector la recherche lui-même sur le réseau."

@@ -7,6 +7,13 @@ import { temporaryDirectory } from './support/files.ts';
 
 const id = (digit: string) => digit.repeat(32);
 
+/** The outline of its one picture, as a segmentation model gave it. */
+const outline: [number, number][] = [
+	[1, 2],
+	[30, 2],
+	[30, 40]
+];
+
 /** A sighting as the detector publishes it. */
 async function sighting(directory: string, sightingId: string, seen: string) {
 	const folder = path.join(directory, 'sightings', sightingId);
@@ -22,7 +29,8 @@ async function sighting(directory: string, sightingId: string, seen: string) {
 			track: 1,
 			seen,
 			event_id: 'e'.repeat(32),
-			crops: 1
+			crops: 1,
+			outlines: [outline]
 		})
 	);
 }
@@ -74,7 +82,7 @@ test('unnamed sightings are listed in the look-alike groups the detector made, t
 		{
 			name: '233',
 			ids: [id('3')],
-			shown: [{ id: id('3'), seen: '2026-10-02T08:00:00', crops: 1 }]
+			shown: [{ id: id('3'), seen: '2026-10-02T08:00:00', crops: 1, outlines: [outline] }]
 		}
 	]);
 });
@@ -102,6 +110,15 @@ test('naming writes the whole names file the detector reads, and a name can be t
 	);
 	assert.equal(overview.namedDays, 2);
 
+	// A box on the live picture looks up the sighting it shows.
+	assert.deepEqual(await folder.sighting(id('3')), {
+		id: id('3'),
+		seen: '2026-10-02T13:00:00',
+		crops: 1,
+		outlines: [outline],
+		name: '87'
+	});
+
 	await folder.unname([id('2')]);
 	assert.deepEqual(
 		(await folder.overview()).named.map((identity) => identity.ids),
@@ -116,6 +133,8 @@ test('only existing sightings can be named and only their pictures are served', 
 	await sighting(directory, id('1'), '2026-10-01T12:00:00');
 	await assert.rejects(folder.name([id('1'), id('9')], '412'), SightingMissingError);
 	await assert.rejects(readFile(path.join(directory, 'names.json')), { code: 'ENOENT' });
+	assert.equal(await folder.sighting(id('9')), null);
+	assert.equal(await folder.sighting('../sightings'), null);
 
 	assert.equal(
 		folder.picture(id('1'), 'crop-1.jpg'),

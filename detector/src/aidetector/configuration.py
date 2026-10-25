@@ -119,6 +119,11 @@ class YoloConfig(_ConfigModel):
     frames_min: PositiveInt = 3
     imgsz: PositiveInt = 640
 
+    @property
+    def outlines_tracks(self) -> bool:
+        """Follows objects and outlines them, as recognising individuals needs."""
+        return self.tracking and self.task == "segment"
+
 
 class SourceConfig(_ConfigModel):
     source: Annotated[tuple[NonEmptyString, ...], Field(min_length=1, repr=False)]
@@ -375,11 +380,12 @@ class Config(_ConfigModel):
     @model_validator(mode="after")
     def tracked_individuals(self) -> Config:
         if self.individuals is not None and not any(
-            detector.yolo is not None and detector.yolo.tracking
+            detector.yolo is not None and detector.yolo.outlines_tracks
             for detector in self.detectors
         ):
             raise ValueError(
-                "Recognising individuals needs object tracking in at least one detector"
+                "Recognising individuals needs a detector with object tracking and a "
+                'segmentation model: set "tracking": true and "task": "segment"'
             )
         return self
 

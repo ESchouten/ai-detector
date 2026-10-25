@@ -8,18 +8,25 @@
 	import { onMount, type Snippet } from 'svelte';
 	import { Button } from '$lib/components/ui/button';
 	import CameraDetections from './camera-detections.svelte';
+	import type { DetectionBox } from '$lib/live-preview';
 	import { cameraPreviewSlots } from '$lib/preview-slots';
 	let {
 		id,
 		label,
 		monitored = false,
-		caption
+		caption,
+		onselect,
+		selected
 	}: {
 		id: string;
 		label: string;
 		monitored?: boolean;
 		/** Replaces the camera name along the bottom of the picture. */
 		caption?: Snippet;
+		/** Makes detection boxes with an identity buttons, for naming who they are. */
+		onselect?: (box: DetectionBox) => void;
+		/** The sighting being named; its outline stands out. */
+		selected?: string;
 	} = $props();
 	let failed = $state(false);
 	let picture = $state<string>();
@@ -72,7 +79,7 @@
 	{#if active && picture && !failed}
 		<img src={picture} alt={`${label} live picture`} class="size-full object-contain" />
 	{/if}
-	{#if active && !failed && monitored}<CameraDetections {id} {label} />{/if}
+	{#if active && !failed && monitored}<CameraDetections {id} {label} {onselect} {selected} />{/if}
 	{#if active && !failed && !picture}
 		<p
 			role="status"

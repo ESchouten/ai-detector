@@ -53,7 +53,9 @@ export class IndividualsFolder {
 
 	async #record(id: string): Promise<Sighting | null> {
 		const record = await readJson<Sighting>(path.join(this.#sighting(id), 'sighting.json'));
-		return record && { id, seen: record.seen, crops: record.crops };
+		return (
+			record && { id, seen: record.seen, crops: record.crops, outlines: record.outlines ?? [] }
+		);
 	}
 
 	async #records(ids: string[]): Promise<Sighting[]> {
@@ -116,6 +118,13 @@ export class IndividualsFolder {
 			named: individuals,
 			namedDays: new Set(named.map((sighting) => sighting.seen.slice(0, 10))).size
 		};
+	}
+
+	/** One sighting and the name a person gave it, or null once it is gone. */
+	async sighting(id: string): Promise<(Sighting & { name: string | null }) | null> {
+		if (!SIGHTING_ID.test(id)) return null;
+		const [record, names] = await Promise.all([this.#record(id), this.#readNames()]);
+		return record && { ...record, name: names[id] ?? null };
 	}
 
 	#change(update: (names: Record<string, string>) => Promise<void>): Promise<void> {

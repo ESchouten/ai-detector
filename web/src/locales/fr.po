@@ -197,6 +197,8 @@ msgstr "Ouvrez le tableau de bord via localhost sur l’ordinateur qui exécute 
 #: src/lib/server/cameras/relocation.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/identities/+page.server.ts
+#: src/routes/(admin)/identities/+page.svelte
 msgid "Camera"
 msgstr "Caméra"
 
@@ -1306,6 +1308,7 @@ msgstr "Conserver la connexion actuelle"
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Enregistrement…"
@@ -2252,6 +2255,7 @@ msgid "Please wait…"
 msgstr "Veuillez patienter…"
 
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Enregistrer"
@@ -3823,10 +3827,12 @@ msgstr[0] "# autre observation leur ressemble."
 msgstr[1] "# autres observations leur ressemblent."
 msgstr[2] "# autres observations leur ressemblent."
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Looks most like"
 msgstr "Ressemble le plus à"
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Name or number"
 msgstr "Nom ou numéro"
@@ -3857,16 +3863,55 @@ msgid "Alerts only suggest names until named sightings come from at least two da
 msgstr "Tant que les observations nommées ne couvrent pas au moins deux jours, les alertes se contentent de suggérer des noms. Ensuite, elles nomment les identités dont elles sont sûres."
 
 #: src/routes/(admin)/identities/+page.svelte
-msgid "Nothing to name. New sightings appear here when a detector with tracking records an individual."
-msgstr "Rien à nommer. Les nouvelles observations apparaissent ici dès qu’un détecteur avec suivi enregistre un individu."
-
-#: src/routes/(admin)/identities/+page.svelte
 msgid "No identities named yet."
 msgstr "Aucune identité nommée pour l’instant."
 
 #: src/routes/(admin)/identities/+page.svelte
 msgid "Named identities"
 msgstr "Identités nommées"
+
+#. 0: detectionBoxLabel(box)
+#: src/lib/components/detection-boxes.svelte
+msgid "Name {0}"
+msgstr "Nommer {0}"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "On camera now"
+msgstr "À l’image maintenant"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Could not save the name. Try again."
+msgstr "Impossible d’enregistrer le nom. Réessayez."
+
+#. 0: identity.name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Shown as {0}. Enter another name or number if that is wrong."
+msgstr "Affiché comme {0}. Saisissez un autre nom ou numéro si ce n’est pas le bon."
+
+#. 0: identity.candidates[0].name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Looks most like {0}, but not enough to be sure."
+msgstr "Ressemble le plus à {0}, mais pas assez pour en être sûr."
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Give it a name or number; the camera then recognises it."
+msgstr "Donnez-lui un nom ou un numéro ; la caméra le reconnaîtra ensuite."
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Who is this?"
+msgstr "Qui est-ce ?"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Its pictures were removed. Wait for the box to show it again."
+msgstr "Ses photos ont été supprimées. Attendez que le cadre l’affiche de nouveau."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
+msgstr "Touchez-en un sur l’image pour dire de qui il s’agit. Il peut être nommé quelques secondes après son apparition."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."
+msgstr "Rien à nommer. Les nouvelles observations apparaissent ici dès qu’un détecteur avec suivi et un modèle de segmentation enregistre un individu."
 
 #. 0: label; 1: move.host
 #: src/lib/server/cameras/relocation.ts

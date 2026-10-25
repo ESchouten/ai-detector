@@ -4,6 +4,7 @@ import pytest
 from aidetector.adapters.individuals.scoring import (
     Gallery,
     NamedSighting,
+    decide_together,
     self_set_threshold,
     threshold_for,
 )
@@ -39,6 +40,38 @@ def test_a_close_runner_up_lowers_the_best_score():
     )
     query = np.stack([unit(1, 0.05, 0)])
     assert look_alike.scores(query).max() < alone.scores(query).max()
+
+
+def test_an_individual_is_recognised_once_among_sightings_seen_together():
+    # Similarities to 233, 412 and 87; the first two are seen together.
+    rows = [
+        np.asarray([0.2, 0.9, 0.1], np.float32),
+        np.asarray([0.6, 0.7, 0.1], np.float32),
+        np.asarray([0.6, 0.7, 0.1], np.float32),
+    ]
+    beside = [{1}, {0}, set()]
+
+    surest, beside_it, alone = decide_together(rows, beside, [None] * 3, 0.3)
+
+    assert surest.recognised and surest.scores.argmax() == 1
+    # 412 stands beside it, so 233 is left without a close runner-up.
+    assert beside_it.recognised and beside_it.scores.argmax() == 0
+    assert beside_it.scores[1] == -np.inf
+    # Alone, 412 and 233 are too close to call.
+    assert not alone.recognised and alone.scores.argmax() == 1
+
+
+def test_a_name_a_person_gave_stands_and_is_decided_first():
+    rows = [
+        np.asarray([0.2, 0.9], np.float32),
+        np.asarray([0.1, 0.5], np.float32),
+    ]
+
+    sure, named = decide_together(rows, [{1}, {0}], [None, 1], 0.3)
+
+    assert named.recognised and named.scores.argmax() == 1
+    # The one a person named 412 stands beside it: it can't be 412 too.
+    assert not sure.recognised and sure.scores[1] == -np.inf
 
 
 def test_threshold_is_the_lowest_score_whose_names_are_right_often_enough():

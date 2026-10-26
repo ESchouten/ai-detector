@@ -38,9 +38,24 @@ There is one image now, `ghcr.io/eschouten/ai-detector`: the web application sta
 To move an installation that used the two images:
 
 1. Stop it with `docker compose down`, and back up the data folder.
-2. Replace the Compose file with [`example/compose.yml`](../example/compose.yml) or, on a Jetson with JetPack 7.2, [`example/compose.jetson.yml`](../example/compose.jetson.yml). They have one service and use the host's network on port 80.
-3. Give the data folder to the image's user: `sudo chown -R 999:999 .` in that folder. The web image wrote its files as another user, which the single image cannot change.
-4. Start it with `docker compose up -d`.
+2. Replace the Compose file with [`example/compose.yml`](../example/compose.yml) or, on a Jetson with JetPack 7.2, [`example/compose.jetson.yml`](../example/compose.jetson.yml). They have one service and use the host's network on port 80. Remove the `ai-detector-web` service and any `command` or `entrypoint` the old file set.
+3. Put `config.json`, `app.json` and the `detections` folder together in the folder beside the Compose file, which is mounted at `/data`. The old images mounted them one by one under `/app`.
+4. Give the data folder to the image's user: `sudo chown -R 999:999 .` in that folder. The web application writes the settings, and the web image wrote its files as another user, which the single image cannot change.
+5. Start it with `docker compose up -d --force-recreate`, so no container from the old images is reused.
+
+On a host that cannot share its network with the container, such as some NAS systems, leave out `network_mode: host` and `PORT`, and publish the web port instead, for example `ports: ["8080:3000"]` for `http://<host-IP>:8080/`. Finding cameras on the network by itself may then not work; add them by address.
+
+### A container that keeps restarting after the update
+
+A container created from the old detector image keeps that image's command, `python3 src/aidetector/__init__.py`, when only its image is replaced. Portainer, Synology Container Manager and similar tools can do that when they update or recreate a container from its own settings. The new image answers that command with a message in the container's log that it still runs the old command, and stops; images before that message fail with `can't open file '/app/src/aidetector/__init__.py'`. Either way Docker restarts it again and again.
+
+Recreate the container from the Compose file, which takes the new image's command `node /app/node-server.mjs`:
+
+```sh
+docker compose up -d --force-recreate
+```
+
+In a tool that manages the container itself, delete the container and create it again from the Compose file. `docker inspect --format '{{.Config.Cmd}}' <container>` shows the command a container runs.
 
 Running the detector alone still works by naming the command: `python3 -m aidetector`.
 

@@ -3,6 +3,8 @@
 !web/**
 !config/
 !config/**
+!distribution/docker/
+!distribution/docker/**
 web/node_modules
 web/.svelte-kit
 web/dist

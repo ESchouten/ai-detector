@@ -100,6 +100,11 @@ RUN printf 'TYPE = "cuda"\nREF_NAME = "%s"\n' "$REF_NAME" > src/aidetector/versi
         ln -s "$(command -v aidetector)" /app/aidetector; \
     fi
 
+# A container created from the old detector image keeps its command, python3
+# src/aidetector/__init__.py in /app, when a tool updates only its image. This answers it with how
+# to recreate the container instead of a missing file.
+COPY --chown=nonroot:nonroot distribution/docker/legacy_command.py /app/src/aidetector/__init__.py
+
 # The web application, which starts the detector and keeps it running. Node may listen on
 # port 80 without being root, also when the container shares the host's network.
 COPY --from=node /usr/local/bin/node /usr/local/bin/node

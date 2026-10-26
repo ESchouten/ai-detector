@@ -45,7 +45,7 @@ cd example
 docker compose up -d
 ```
 
-Open `http://<computer-IP>/`. Settings, models and recordings live in the folder beside the Compose file. The container uses the host's network so the cameras on it can be found; update with `docker compose pull && docker compose up -d`. Coming from the two separate images, read [Docker](detector/MIGRATION.md#docker) first; a container that keeps restarting after the update needs [recreating](detector/MIGRATION.md#a-container-that-keeps-restarting-after-the-update).
+Open `http://<computer-IP>/`. Settings, models and recordings live in the folder beside the Compose file. The container uses the host's network so the cameras on it can be found; update with `docker compose pull && docker compose up -d`. Coming from the two separate images, read [Docker](detector/MIGRATION.md#docker) first.
 
 | Host | Compose file |
 | --- | --- |

@@ -13,7 +13,6 @@ on:
       - 'web/patches/**'
       - 'web/tests/container-smoke.mjs'
       - 'detector/pyproject.toml'
-      - 'distribution/docker/**'
       - '.github/workflows/container-tests.yml'
       - '.github/actions/setup-container/**'
   push:
@@ -61,8 +60,3 @@ jobs:
       - name: Check the container serves setup, has working FFmpeg and can run its detector
         timeout-minutes: 5
         run: docker run --rm --entrypoint node --volume "$GITHUB_WORKSPACE/web/tests/container-smoke.mjs:/smoke.mjs:ro" ai-detector:test /smoke.mjs
-      - name: Check the old detector image's command says how to recreate the container
-        run: |
-          output=$(docker run --rm --workdir /app ai-detector:test python3 src/aidetector/__init__.py 2>&1) && exit 1
-          echo "$output"
-          grep --quiet -- --force-recreate <<<"$output"

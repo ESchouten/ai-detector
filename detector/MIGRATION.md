@@ -38,7 +38,7 @@ There is one image now, `ghcr.io/eschouten/ai-detector`: the web application sta
 To move an installation that used the two images:
 
 1. Stop it with `docker compose down`, and back up the data folder.
-2. Replace the Compose file with [`example/compose.yml`](../example/compose.yml) or, on a Jetson with JetPack 7.2, [`example/compose.jetson.yml`](../example/compose.jetson.yml). They have one service and use the host's network on port 80.
+2. Replace the Compose file with [`example/compose.yml`](../example/compose.yml) or, on a Jetson with JetPack 7.2, [`example/compose.jetson.yml`](../example/compose.jetson.yml). They have one service and use the host's network on port 80. Keep `config.json`, `app.json` and `detections` in the folder beside the Compose file, which is mounted at `/data`; the old example already had them there.
 3. Give the data folder to the image's user: `sudo chown -R 999:999 .` in that folder. The web image wrote its files as another user, which the single image cannot change.
 4. Start it with `docker compose up -d --force-recreate`. A container from the old image that keeps restarting with a message about the old command needs that too: delete and recreate it, also in Portainer or Synology Container Manager.
 

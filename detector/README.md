@@ -128,6 +128,24 @@ Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected
 | `video_width`, `video_crf` | `1280`, `28` | `1280`, `28` |
 | `timeout` | `30` | `30` |
 
+### Individuals
+
+`individuals` recognises individual animals, such as cows, in every detector that has `yolo.tracking` on. It is off without it.
+
+```json
+"individuals": {"model": "https://example.com/cow-embeddings.onnx", "labels": "cow"}
+```
+
+| Field | Default | Meaning |
+| --- | --- | --- |
+| `model` | required | ONNX embedding model, a local file or HTTP(S) URL; you bring your own |
+| `labels` | required | Detection classes whose tracked objects are individuals |
+| `precision` | `0.99` | Share of names that must be right when the installation sets its naming threshold |
+
+- Each track of those classes is saved once as a sighting, its best pictures (cut out along the object's outline when the detector's model segments, `"task": "segment"`), under `individuals/sightings/` in the data folder. People name sightings in `individuals/names.json`; a name covers every sighting given it, from every camera. Unnamed sightings that look alike are listed together in `individuals/groups.json`, so a whole group can be named at once.
+- Alerts show `412` for a recognised individual and `412, 233 or 87?` when the herd only suggests names. `metadata.json` lists them under `individuals`, or the reason they could not be recognised under `individuals_error`.
+- Recognition starts once the named sightings come from at least two days, the least from which an installation can check its own threshold; until then alerts only suggest names. See [individuals](ARCHITECTURE.md#individuals) for the model contract, the files and the scoring.
+
 ### Runtime and health
 
 - `onnx.provider` requests an installed execution provider; `onnx.winml` (`true`) registers Windows ML providers in Windows ML builds; `onnx.opset` (`20`) is used for model export.
@@ -145,7 +163,7 @@ That test follows one event from a temporary video to a real archive, with deter
 1. [CLI](src/aidetector/cli.py) and [bootstrap](src/aidetector/bootstrap.py): arguments, configuration, and construction of sources, models and destinations.
 2. [Runtime](src/aidetector/runtime.py): supervises processing and delivery, including failure and shutdown.
 3. [Pipeline](src/aidetector/application/pipeline.py) and [event assembler](src/aidetector/domain/events.py): batches become observations and events.
-4. [Delivery](src/aidetector/application/delivery.py): cooldown, verification and destinations.
+4. [Delivery](src/aidetector/application/delivery.py): cooldown, verification, [individuals](src/aidetector/adapters/individuals/herd.py) and destinations.
 5. [Disk archive](src/aidetector/adapters/exporters/disk.py): the files the web application reads.
 
 [ARCHITECTURE.md](ARCHITECTURE.md) has the structure, the ownership rules and a table of [where each kind of change belongs](ARCHITECTURE.md#where-a-change-belongs). Read [AGENTS.md](AGENTS.md) before editing. A change to configuration or archive metadata needs regenerated schemas, and a note in [MIGRATION.md](MIGRATION.md) when someone upgrading must act.

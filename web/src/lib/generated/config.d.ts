@@ -127,12 +127,25 @@ export type Headers2 = {
 } | null;
 export type Body1 = string | null;
 export type Interval1 = number;
+/**
+ * ONNX embedding model, as a path or an http(s) URL ending in .onnx.
+ */
+export type Model2 = string;
+/**
+ * Detection classes whose tracked objects are individuals.
+ */
+export type Labels = string | string[];
+/**
+ * Share of names that must be right when the installation sets its naming threshold from its own named sightings.
+ */
+export type Precision = number;
 
 export interface Config {
 	$schema?: $Schema;
 	detectors: Detectors;
 	onnx?: OnnxConfig;
 	health?: HealthcheckConfig | null;
+	individuals?: IndividualsConfig | null;
 }
 export interface DetectorConfig {
 	detection: SourceConfig;
@@ -241,4 +254,12 @@ export interface HealthcheckConfig {
 	headers?: Headers2;
 	body?: Body1;
 	interval?: Interval1;
+}
+/**
+ * Recognise individual animals of tracked classes, shared by every detector.
+ */
+export interface IndividualsConfig {
+	model: Model2;
+	labels: Labels;
+	precision?: Precision;
 }

@@ -5,9 +5,16 @@ import numpy as np
 import pytest
 
 from aidetector.application.delivery import Destination, EventDelivery
-from aidetector.application.ports import DeliveryError, ValidationUnavailable
+from aidetector.application.ports import (
+    DeliveryError,
+    IdentificationUnavailable,
+    ValidationUnavailable,
+)
 from aidetector.domain.models import (
+    Candidate,
     DetectionEvent,
+    Identification,
+    Individual,
     Observation,
     ValidationResult,
     ValidationStatus,
@@ -282,3 +289,64 @@ def test_all_unexpected_destination_failures_remain_observable(caplog):
     assert "Unexpected delivery failure at first" in caplog.text
     assert "Unexpected delivery failure at second" in caplog.text
     assert "second bug" in caplog.text
+
+
+class Identifier:
+    def __init__(self, individuals=(), error=None):
+        self.individuals = individuals
+        self.error = error
+        self.calls = []
+
+    def identify(self, event, event_id):
+        self.calls.append((event, event_id))
+        if self.error:
+            raise self.error
+        return self.individuals
+
+
+def test_results_carry_the_individuals_recognised_in_the_event(caplog):
+    caplog.set_level("INFO")
+    exporter = RecordingExporter()
+    individuals = (
+        Individual(3, "cow", "a" * 32, (Candidate("412", 0.8),), recognised=True),
+        Individual(5, "cow", "b" * 32, (Candidate("233", 0.4), Candidate("87", 0.3))),
+    )
+    identifier = Identifier(individuals)
+    delivery = EventDelivery(
+        (Destination("disk", exporter, ExportPolicy()),),
+        Cooldown(),
+        identifier=identifier,
+    )
+    delivered = event()
+    delivery.deliver(delivered)
+    result = exporter.results[0]
+    assert identifier.calls == [(delivered, result.id)]
+    assert result.identification == Identification(individuals)
+    assert [individual.name for individual in individuals] == ["412", None]
+    assert "Individuals: 412, 233/87" in caplog.text
+
+
+def test_rejected_events_are_not_identified():
+    exporter = RecordingExporter()
+    identifier = Identifier()
+    delivery = EventDelivery(
+        (Destination("disk", exporter, ExportPolicy(export_rejected=True)),),
+        Cooldown(),
+        Validator(ValidationStatus.REJECTED),
+        identifier=identifier,
+    )
+    delivery.deliver(event())
+    assert identifier.calls == []
+    assert exporter.results[0].identification is None
+
+
+def test_unavailable_identification_is_recorded_and_the_event_still_delivered(caplog):
+    exporter = RecordingExporter()
+    delivery = EventDelivery(
+        (Destination("telegram", exporter, ExportPolicy()),),
+        Cooldown(),
+        identifier=Identifier(error=IdentificationUnavailable("disk full")),
+    )
+    assert delivery.deliver(event()).failures == 0
+    assert exporter.results[0].identification == Identification(error="disk full")
+    assert "Recognising individuals failed: disk full" in caplog.text

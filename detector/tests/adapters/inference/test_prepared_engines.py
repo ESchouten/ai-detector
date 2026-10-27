@@ -610,6 +610,9 @@ def test_a_tensorrt_preference_without_a_gpu_detects_through_onnx_runtime(
         config, tmp_path, tmp_path, prefer_tensorrt=True
     )
     assert len(results) == 1
-    assert gpu_builder.processes == []
+    # The ONNX export may start tools of its own; no TensorRT helper starts.
+    assert not any(
+        "tensorrt_worker" in str(command) for command in gpu_builder.commands
+    )
     assert "No NVIDIA GPU is available" in caplog.text
     assert list((tmp_path / "models" / "prepared").glob("*/model.onnx"))

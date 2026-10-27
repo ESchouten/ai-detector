@@ -600,7 +600,7 @@ def test_real_sdk_builds_and_runs_dynamic_engine_in_helper(tmp_path):
         )
 
 
-def test_a_tensorrt_preference_without_a_gpu_detects_without_it(
+def test_a_tensorrt_preference_without_a_gpu_detects_through_onnx_runtime(
     tmp_path, gpu_builder, monkeypatch, caplog
 ):
     config = cuda_monitoring(
@@ -611,4 +611,5 @@ def test_a_tensorrt_preference_without_a_gpu_detects_without_it(
     )
     assert len(results) == 1
     assert gpu_builder.processes == []
-    assert "no NVIDIA GPU is available" in caplog.text
+    assert "No NVIDIA GPU is available" in caplog.text
+    assert list((tmp_path / "models" / "prepared").glob("*/model.onnx"))

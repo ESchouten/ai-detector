@@ -33,7 +33,7 @@ Run `--check-config` against the saved file and correct what it reports. These a
 
 ## Windows ML
 
-Automatic provider selection excludes experimental WebGPU, including its Windows ML download and DLL registration. An explicit `onnx.provider: "WebGpuExecutionProvider"` remains available for experiments; remove that override to use automatic selection in production. A working DirectML installation uses DirectML with the standard CPU fallback. It is never combined with another GPU or NPU provider in the same session.
+Automatic provider selection no longer uses experimental WebGPU. Set `onnx.provider: "WebGpuExecutionProvider"` to keep using it.
 
 ## Docker
 

@@ -131,6 +131,7 @@ Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected
 ### Runtime and health
 
 - `onnx.provider` requests an installed execution provider; `onnx.winml` (`true`) registers Windows ML providers in Windows ML builds; `onnx.opset` (`20`) is used for model export.
+- Automatic selection excludes experimental WebGPU. Use `onnx.provider: "WebGpuExecutionProvider"` only for an explicit experiment; leave the provider unset for production. DirectML runs with the standard CPU fallback, without other GPU or NPU providers in its session.
 - `health` takes a `url`, `method` (`GET`), `interval` (`60`), `timeout` (`5`), and optional `headers` and `body`. Failed pings are warnings.
 
 ## Working on it

@@ -16,7 +16,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from aidetector.adapters.inference.provider_probe import probe_provider
-from aidetector.adapters.inference.windows_ml import prepare_windows_ml
+from aidetector.adapters.inference.windows_ml import WEBGPU_PROVIDER, prepare_windows_ml
 from aidetector.application.ports import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig
 
@@ -131,6 +131,9 @@ def _register_windows_ml(
     registered: set[str] = set()
     failed = False
     for name, library_path in libraries.items():
+        if requested is None and name == WEBGPU_PROVIDER:
+            logger.info("Skipping experimental WebGPU in automatic mode")
+            continue
         report_status(
             StatusEvent(
                 "preparing",
@@ -173,7 +176,7 @@ def _register_windows_ml(
 
 
 def select_devices(devices: list[Any]) -> list[Any]:
-    """Prefer GPUs to CPUs, with experimental WebGPU after vendor GPU providers."""
+    """Prefer GPUs to CPUs, with DirectML after vendor GPU providers."""
     selected: dict[str, Any] = {}
     for device in devices:
         if device.ep_name not in selected or str(device.device.type).endswith("GPU"):
@@ -200,8 +203,34 @@ def select_providers(
         if requested not in available and not devices:
             raise ValueError(f"Configured ONNX provider is unavailable: {requested}")
         available = [requested]
+    else:
+        available = [name for name in available if name != WEBGPU_PROVIDER]
+        devices = [device for device in devices if device.ep_name != WEBGPU_PROVIDER]
     selected = tuple(select_devices(devices))
+    if selected and any(
+        device.ep_name == "DmlExecutionProvider" for device in selected
+    ):
+        # DirectML cannot share a session with another GPU or NPU provider.
+        if selected[0].ep_name == "DmlExecutionProvider":
+            # ONNX Runtime supplies its ordinary CPU fallback automatically.
+            selected = (selected[0],)
+        else:
+            selected = tuple(
+                device
+                for device in selected
+                if device.ep_name != "DmlExecutionProvider"
+            )
     names = tuple(device.ep_name for device in selected) or tuple(available)
+    if not selected and "DmlExecutionProvider" in names:
+        names = (
+            tuple(
+                name
+                for name in names
+                if name in {"DmlExecutionProvider", "CPUExecutionProvider"}
+            )
+            if names[0] == "DmlExecutionProvider"
+            else tuple(name for name in names if name != "DmlExecutionProvider")
+        )
     return ProviderSelection(names, selected)
 
 

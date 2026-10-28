@@ -192,7 +192,9 @@ def test_registered_devices_define_provider_order_and_inference_options():
 
 @pytest.mark.parametrize("order", [(0, 1, 2, 3), (3, 2, 1, 0)])
 @pytest.mark.parametrize("openvino_device", ["GPU", "CPU"])
-def test_webgpu_follows_vendor_gpus_and_precedes_cpu_devices(order, openvino_device):
+def test_automatic_selection_excludes_webgpu_and_keeps_vendor_acceleration(
+    order, openvino_device
+):
     devices = [
         SimpleNamespace(ep_name=name, device=SimpleNamespace(type=kind))
         for name, kind in [
@@ -205,11 +207,112 @@ def test_webgpu_follows_vendor_gpus_and_precedes_cpu_devices(order, openvino_dev
     selection = select_providers(
         ["CPUExecutionProvider"], [devices[i] for i in order], None
     )
-    expected = [devices[0], devices[1], devices[3], devices[2]]
-    if openvino_device == "CPU":
-        expected = [devices[0], devices[3], devices[2], devices[1]]
+    expected = [devices[0], devices[1]]
     assert selection.devices == tuple(expected)
     assert selection.names == tuple(device.ep_name for device in expected)
+
+
+@pytest.mark.parametrize("explicit", [False, True])
+def test_webgpu_requires_an_explicit_request_even_when_it_is_the_only_accelerator(
+    explicit,
+):
+    device = SimpleNamespace(
+        ep_name="WebGpuExecutionProvider", device=SimpleNamespace(type="GPU")
+    )
+    selection = select_providers(
+        [device.ep_name, "CPUExecutionProvider"],
+        [device],
+        device.ep_name if explicit else None,
+    )
+    assert selection.names == (
+        (device.ep_name,) if explicit else ("CPUExecutionProvider",)
+    )
+    assert selection.devices == ((device,) if explicit else ())
+    assert selection.inference_options.half is explicit
+
+
+@pytest.mark.parametrize(
+    "other",
+    ["WebGpuExecutionProvider", "OpenVINOExecutionProvider", "QNNExecutionProvider"],
+)
+@pytest.mark.parametrize("has_devices", [False, True])
+def test_directml_sessions_exclude_other_accelerators(other, has_devices):
+    devices = [
+        SimpleNamespace(ep_name=name, device=SimpleNamespace(type="GPU"))
+        for name in ["DmlExecutionProvider", other]
+    ]
+    selection = select_providers(
+        ["DmlExecutionProvider", other, "CPUExecutionProvider"],
+        devices if has_devices else [],
+        None,
+    )
+    if other != "WebGpuExecutionProvider" and has_devices:
+        assert selection.names == (other,)
+        assert selection.devices == (devices[1],)
+    else:
+        assert selection.names == (
+            ("DmlExecutionProvider",)
+            if has_devices
+            else ("DmlExecutionProvider", "CPUExecutionProvider")
+        )
+        assert selection.devices == ((devices[0],) if has_devices else ())
+
+
+def test_directml_uses_standard_cpu_fallback_instead_of_another_provider_cpu_device():
+    dml = SimpleNamespace(
+        ep_name="DmlExecutionProvider", device=SimpleNamespace(type="GPU")
+    )
+    openvino = SimpleNamespace(
+        ep_name="OpenVINOExecutionProvider", device=SimpleNamespace(type="CPU")
+    )
+    selection = select_providers(
+        ["DmlExecutionProvider", "CPUExecutionProvider"], [openvino, dml], None
+    )
+    assert selection.names == ("DmlExecutionProvider",)
+    assert selection.devices == (dml,)
+
+
+@pytest.mark.parametrize("explicit_webgpu", [False, True])
+def test_windows_ml_never_loads_webgpu_automatically_or_combines_it_with_directml(
+    monkeypatch, windows_ml, explicit_webgpu
+):
+    webgpu = "WebGpuExecutionProvider"
+    dml = "DmlExecutionProvider"
+    windows_ml.libraries = {webgpu: "onnxruntime_providers_webgpu.dll"}
+    devices = [
+        SimpleNamespace(ep_name=name, device=SimpleNamespace(type="GPU"))
+        for name in [dml, webgpu]
+    ]
+    selected, registered = [], []
+
+    class SessionOptions(ort.SessionOptions):
+        def add_provider_for_devices(self, devices, settings):
+            selected.extend(device.ep_name for device in devices)
+
+    def session(path, **kwargs):
+        if dml in selected and any(name != dml for name in selected):
+            raise ValueError("DML EP can only be used with CPU EPs.")
+        return "model session"
+
+    sdk = SimpleNamespace(
+        SessionOptions=SessionOptions,
+        ExecutionMode=ort.ExecutionMode,
+        InferenceSession=session,
+        get_available_providers=lambda: [dml, "CPUExecutionProvider"],
+        get_ep_devices=lambda: devices,
+        register_execution_provider_library=lambda name, path: registered.append(name),
+        unregister_execution_provider_library=lambda name: registered.remove(name),
+    )
+    monkeypatch.setitem(sys.modules, "onnxruntime", sdk)
+    with inference_runtime(
+        OnnxConfig(provider=webgpu if explicit_webgpu else None),
+        ONNX_MODELS,
+        "windowsml",
+    ):
+        assert sdk.InferenceSession("model.onnx") == "model session"
+        assert selected == [webgpu if explicit_webgpu else dml]
+        assert registered == ([webgpu] if explicit_webgpu else [])
+    assert registered == []
 
 
 @pytest.mark.parametrize("failure", [None, "preparation", "registration"])
@@ -243,7 +346,7 @@ def test_builtin_directml_survives_optional_windows_ml_failure(
         if failure == "preparation":
             raise OSError("Optional Windows ML provider unavailable")
         if failure == "registration":
-            return {"WebGpuExecutionProvider": "onnxruntime_providers_webgpu.dll"}
+            return {"OpenVINOExecutionProvider": "onnxruntime_providers_openvino.dll"}
         return {}
 
     def register(name, path):
@@ -300,6 +403,9 @@ def test_builtin_directml_survives_optional_windows_ml_failure(
 def test_unusable_builtin_directml_is_probed_before_entering_the_inference_process(
     tmp_path, monkeypatch, windows_ml, explicit
 ):
+    windows_ml.libraries = {
+        "WebGpuExecutionProvider": "onnxruntime_providers_webgpu.dll"
+    }
     monkeypatch.setattr(
         ort,
         "get_available_providers",
@@ -342,7 +448,7 @@ def test_windows_provider_dll_directories_survive_registration_until_runtime_cle
 
     from onnxruntime.capi.onnxruntime_pybind11_state import Fail
 
-    first, second = "WebGpuExecutionProvider", "OpenVINOExecutionProvider"
+    first, second = "QNNExecutionProvider", "OpenVINOExecutionProvider"
     directories = {name: str(tmp_path / name) for name in (first, second)}
     windows_ml.libraries = {
         name: str(Path(directory) / "provider.dll")
@@ -430,19 +536,19 @@ def test_windows_ml_session_uses_registered_device_and_releases_libraries(
     provider = SimpleNamespace(
         name="OpenVINOExecutionProvider", library_path="openvino.dll"
     )
-    webgpu = SimpleNamespace(
-        name="WebGpuExecutionProvider", library_path="onnxruntime_providers_webgpu.dll"
+    unavailable = SimpleNamespace(
+        name="QNNExecutionProvider", library_path="onnxruntime_providers_qnn.dll"
     )
     providers = [provider]
     if missing_provider == "first":
-        providers.insert(0, webgpu)
+        providers.insert(0, unavailable)
     elif missing_provider == "last":
-        providers.append(webgpu)
+        providers.append(unavailable)
     windows_ml.libraries = {item.name: item.library_path for item in providers}
 
     def register(name, path):
         assert f"Registering Windows ML provider {name}: {path}" in caplog.text
-        if name == webgpu.name:
+        if name == unavailable.name:
             raise Fail(f'Error loading "{path}" which is missing. (Error 126)')
         lifecycle.append("register")
 
@@ -500,7 +606,7 @@ def test_windows_ml_session_uses_registered_device_and_releases_libraries(
         "unregister:OpenVINOExecutionProvider",
     ]
     if missing_provider and not explicit:
-        assert "onnxruntime_providers_webgpu.dll" in caplog.text
+        assert "onnxruntime_providers_qnn.dll" in caplog.text
         assert "Error 126" in caplog.text
     else:
         assert "unavailable" not in caplog.text
@@ -521,7 +627,7 @@ def test_windows_ml_registration_failure_is_observable(
 
     monkeypatch.setattr(ort, "register_execution_provider_library", register)
     windows_ml.libraries = {
-        "WebGpuExecutionProvider": "onnxruntime_providers_webgpu.dll"
+        "OpenVINOExecutionProvider": "onnxruntime_providers_openvino.dll"
     }
     caplog.set_level(logging.INFO)
     path = tmp_path / "model.onnx"
@@ -531,7 +637,7 @@ def test_windows_ml_registration_failure_is_observable(
     with (
         outcome,
         inference_runtime(
-            OnnxConfig(provider="WebGpuExecutionProvider" if explicit else None),
+            OnnxConfig(provider="OpenVINOExecutionProvider" if explicit else None),
             ONNX_MODELS,
             "windowsml",
             reports.append,

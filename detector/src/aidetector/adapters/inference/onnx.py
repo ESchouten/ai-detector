@@ -16,7 +16,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from aidetector.adapters.inference.provider_probe import probe_provider
-from aidetector.adapters.inference.windows_ml import prepare_windows_ml
+from aidetector.adapters.inference.windows_ml import WEBGPU_PROVIDER, prepare_windows_ml
 from aidetector.application.ports import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig
 
@@ -173,7 +173,7 @@ def _register_windows_ml(
 
 
 def select_devices(devices: list[Any]) -> list[Any]:
-    """Prefer GPUs to CPUs, with experimental WebGPU after vendor GPU providers."""
+    """Prefer GPUs to CPUs, with DirectML after vendor GPU providers."""
     selected: dict[str, Any] = {}
     for device in devices:
         if device.ep_name not in selected or str(device.device.type).endswith("GPU"):
@@ -182,7 +182,6 @@ def select_devices(devices: list[Any]) -> list[Any]:
         selected,
         key=lambda name: (
             str(selected[name].device.type).endswith("CPU"),
-            name == "WebGpuExecutionProvider",
             name == "DmlExecutionProvider",
             name == "OpenVINOExecutionProvider",
             name,
@@ -200,9 +199,20 @@ def select_providers(
         if requested not in available and not devices:
             raise ValueError(f"Configured ONNX provider is unavailable: {requested}")
         available = [requested]
-    selected = tuple(select_devices(devices))
-    names = tuple(device.ep_name for device in selected) or tuple(available)
-    return ProviderSelection(names, selected)
+    else:
+        available = [name for name in available if name != WEBGPU_PROVIDER]
+        devices = [device for device in devices if device.ep_name != WEBGPU_PROVIDER]
+    selected = select_devices(devices)
+    names = [device.ep_name for device in selected] or available
+    if "DmlExecutionProvider" in names:
+        # DirectML shares a session only with CPU: it leads alone or is left out.
+        if names[0] == "DmlExecutionProvider":
+            cpu = {"DmlExecutionProvider", "CPUExecutionProvider"}
+            names = [name for name in names if name in cpu]
+        else:
+            names = [name for name in names if name != "DmlExecutionProvider"]
+        selected = [device for device in selected if device.ep_name in names]
+    return ProviderSelection(tuple(names), tuple(selected))
 
 
 def tensorrt_profiles(models: tuple[ModelRequirements, ...]) -> dict[str, str]:

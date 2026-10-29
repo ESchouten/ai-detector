@@ -192,7 +192,9 @@ def test_registered_devices_define_provider_order_and_inference_options():
 
 @pytest.mark.parametrize("order", [(0, 1, 2, 3), (3, 2, 1, 0)])
 @pytest.mark.parametrize("openvino_device", ["GPU", "CPU"])
-def test_webgpu_follows_vendor_gpus_and_precedes_cpu_devices(order, openvino_device):
+def test_automatic_selection_excludes_webgpu_and_keeps_vendor_acceleration(
+    order, openvino_device
+):
     devices = [
         SimpleNamespace(ep_name=name, device=SimpleNamespace(type=kind))
         for name, kind in [
@@ -205,11 +207,69 @@ def test_webgpu_follows_vendor_gpus_and_precedes_cpu_devices(order, openvino_dev
     selection = select_providers(
         ["CPUExecutionProvider"], [devices[i] for i in order], None
     )
-    expected = [devices[0], devices[1], devices[3], devices[2]]
-    if openvino_device == "CPU":
-        expected = [devices[0], devices[3], devices[2], devices[1]]
+    expected = [devices[0], devices[1]]
     assert selection.devices == tuple(expected)
     assert selection.names == tuple(device.ep_name for device in expected)
+
+
+@pytest.mark.parametrize("explicit", [False, True])
+def test_webgpu_requires_an_explicit_request_even_when_it_is_the_only_accelerator(
+    explicit,
+):
+    device = SimpleNamespace(
+        ep_name="WebGpuExecutionProvider", device=SimpleNamespace(type="GPU")
+    )
+    selection = select_providers(
+        [device.ep_name, "CPUExecutionProvider"],
+        [device],
+        device.ep_name if explicit else None,
+    )
+    assert selection.names == (
+        (device.ep_name,) if explicit else ("CPUExecutionProvider",)
+    )
+    assert selection.devices == ((device,) if explicit else ())
+    assert selection.inference_options.half is explicit
+
+
+@pytest.mark.parametrize(
+    "other",
+    ["WebGpuExecutionProvider", "OpenVINOExecutionProvider", "QNNExecutionProvider"],
+)
+@pytest.mark.parametrize("has_devices", [False, True])
+def test_directml_sessions_exclude_other_accelerators(other, has_devices):
+    devices = [
+        SimpleNamespace(ep_name=name, device=SimpleNamespace(type="GPU"))
+        for name in ["DmlExecutionProvider", other]
+    ]
+    selection = select_providers(
+        ["DmlExecutionProvider", other, "CPUExecutionProvider"],
+        devices if has_devices else [],
+        None,
+    )
+    if other != "WebGpuExecutionProvider" and has_devices:
+        assert selection.names == (other,)
+        assert selection.devices == (devices[1],)
+    else:
+        assert selection.names == (
+            ("DmlExecutionProvider",)
+            if has_devices
+            else ("DmlExecutionProvider", "CPUExecutionProvider")
+        )
+        assert selection.devices == ((devices[0],) if has_devices else ())
+
+
+def test_directml_uses_standard_cpu_fallback_instead_of_another_provider_cpu_device():
+    dml = SimpleNamespace(
+        ep_name="DmlExecutionProvider", device=SimpleNamespace(type="GPU")
+    )
+    openvino = SimpleNamespace(
+        ep_name="OpenVINOExecutionProvider", device=SimpleNamespace(type="CPU")
+    )
+    selection = select_providers(
+        ["DmlExecutionProvider", "CPUExecutionProvider"], [openvino, dml], None
+    )
+    assert selection.names == ("DmlExecutionProvider",)
+    assert selection.devices == (dml,)
 
 
 @pytest.mark.parametrize("failure", [None, "preparation", "registration"])

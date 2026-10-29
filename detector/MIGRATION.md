@@ -31,6 +31,10 @@ Run `--check-config` against the saved file and correct what it reports. These a
 - A person's review is the optional `review` object in `metadata.json` (`validated`, `source`, `reviewed_at`), written by the web application. `validated` stays the validator's own result.
 - Status records for the launcher (`--status-json`) and live pictures (`--live-preview`) are versioned protocols between the detector and the web application of the same release. Deploy both from one release.
 
+## Windows ML
+
+Automatic provider selection no longer uses experimental WebGPU. Set `onnx.provider: "WebGpuExecutionProvider"` to keep using it.
+
 ## Docker
 
 There is one image now, `ghcr.io/eschouten/ai-detector`: the web application starts and supervises the detector inside it, so detector settings apply without restarting a container. The separate `ai-detector-web` image is no longer published, and the `ai-detector` image no longer runs the detector as its default command.

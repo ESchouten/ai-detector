@@ -58,7 +58,7 @@ def requests_sent(monkeypatch):
     "options",
     [
         {"data_type": "none"},
-        {"data_type": "base64", "include_image": True, "body": "fixed-body"},
+        {"data_type": "base64", "include_image": True, "body": "Kälber"},
     ],
 )
 def test_webhook_without_data_or_with_a_fixed_body_sends_no_event_payload(
@@ -67,7 +67,8 @@ def test_webhook_without_data_or_with_a_fixed_body_sends_no_event_payload(
     config = WebhookConfig(url="https://example.test", **options)
     WebhookExporter(config, EventMedia()).export(result)
     [(_, _, request)] = requests_sent
-    assert request["data"] == config.body
+    # A text body is sent as UTF-8, so names like "Kälber" arrive intact.
+    assert request["data"] == (config.body and config.body.encode())
     assert request["json"] is None
     assert request["files"] is None
     assert request["timeout"] == 30

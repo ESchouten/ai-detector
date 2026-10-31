@@ -706,6 +706,7 @@ msgstr "The camera did not return a stream address."
 msgid "Confirm that you received the test alert before enabling new or changed connection details."
 msgstr "Confirm that you received the test alert before enabling new or changed connection details."
 
+#: src/lib/server/configuration/phone-alarm.ts
 #: src/lib/server/configuration/telegrams.ts
 msgid "A selected detector no longer exists."
 msgstr "A selected detector no longer exists."
@@ -1008,6 +1009,7 @@ msgstr "The recording check could not finish. Try again."
 #: src/lib/components/app-sidebar.svelte
 #: src/lib/components/guided-header.svelte
 #: src/lib/components/mobile-header.svelte
+#: src/lib/phone-alarm.ts
 msgid "AI Detector"
 msgstr "AI Detector"
 
@@ -1193,6 +1195,7 @@ msgstr "Done"
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/recording-viewer.svelte
 #: src/lib/components/setup-finish.svelte
+#: src/routes/(admin)/notifications/alarm/+page.svelte
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -1306,6 +1309,7 @@ msgstr "Keep current connection"
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
+#: src/routes/(admin)/notifications/alarm/+page.svelte
 msgid "Saving…"
 msgstr "Saving…"
 
@@ -2250,6 +2254,7 @@ msgid "Please wait…"
 msgstr "Please wait…"
 
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/notifications/alarm/+page.svelte
 msgid "Save"
 msgstr "Save"
 
@@ -2575,6 +2580,7 @@ msgstr "<0/>Add another detector"
 #: src/lib/navigation.ts
 #: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/notifications/add/+page.svelte
+#: src/routes/(admin)/notifications/alarm/+page.svelte
 msgid "Alerts"
 msgstr "Alerts"
 
@@ -2587,6 +2593,7 @@ msgstr "<0/>Add recipient"
 msgid "Alerts from {0}"
 msgstr "Alerts from {0}"
 
+#: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/validator/+page.svelte
 msgid "Not used by a detector yet"
@@ -3743,3 +3750,134 @@ msgstr "Tip: give your cameras a fixed address in your router (a DHCP reservatio
 #: src/lib/components/camera-settings.svelte
 msgid "Tip: give this camera a fixed address in your router (a DHCP reservation). When its address changes anyway, AI Detector looks for it on the network by itself."
 msgstr "Tip: give this camera a fixed address in your router (a DHCP reservation). When its address changes anyway, AI Detector looks for it on the network by itself."
+
+#: src/lib/server/ntfy.ts
+msgid "Could not reach ntfy. Check the internet connection of this computer."
+msgstr "Could not reach ntfy. Check the internet connection of this computer."
+
+#: src/lib/server/ntfy.ts
+msgid "Test alarm. This is how a detection sounds."
+msgstr "Test alarm. This is how a detection sounds."
+
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Phone alarm"
+msgstr "Phone alarm"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Wake up for a detection with a loud alarm, through the free ntfy app."
+msgstr "Wake up for a detection with a loud alarm, through the free ntfy app."
+
+#. 0: alarm.detectorLabels.join(', ')
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Rings for {0}"
+msgstr "Rings for {0}"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Could not send the test alarm."
+msgstr "Could not send the test alarm."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Phone alarm saved."
+msgstr "Phone alarm saved."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Could not save the phone alarm. Your choices are still here."
+msgstr "Could not save the phone alarm. Your choices are still here."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Could not remove the phone alarm."
+msgstr "Could not remove the phone alarm."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "A loud alarm on your phone for each detection, also at night. It comes next to the Telegram alert, through the free ntfy app."
+msgstr "A loud alarm on your phone for each detection, also at night. It comes next to the Telegram alert, through the free ntfy app."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Install the ntfy app on your phone."
+msgstr "Install the ntfy app on your phone."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Google Play"
+msgstr "Google Play"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "App Store"
+msgstr "App Store"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Code that opens ntfy on this alarm"
+msgstr "Code that opens ntfy on this alarm"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Scan this code with your phone’s camera."
+msgstr "Scan this code with your phone’s camera."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Already on your phone? <0>Open in ntfy</0>. On an iPhone, tap + in ntfy and enter <1/> instead."
+msgstr "Already on your phone? <0>Open in ntfy</0>. On an iPhone, tap + in ntfy and enter <1/> instead."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Let the alarm ring through Do Not Disturb."
+msgstr "Let the alarm ring through Do Not Disturb."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "On Android, open Settings › Apps › ntfy › Notifications, choose the max priority category and turn on Override Do Not Disturb. An iPhone shows the alarm, but stays silent while it is on silent mode."
+msgstr "On Android, open Settings › Apps › ntfy › Notifications, choose the max priority category and turn on Override Do Not Disturb. An iPhone shows the alarm, but stays silent while it is on silent mode."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Sending…"
+msgstr "Sending…"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Send again"
+msgstr "Send again"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Send a test alarm"
+msgstr "Send a test alarm"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "My phone rang"
+msgstr "My phone rang"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Send a test alarm."
+msgstr "Send a test alarm."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "You can save the alarm now and choose it when you add a detector."
+msgstr "You can save the alarm now and choose it when you add a detector."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Which detectors ring the alarm?"
+msgstr "Which detectors ring the alarm?"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Phone alarm needs attention"
+msgstr "Phone alarm needs attention"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Remove the phone alarm…"
+msgstr "Remove the phone alarm…"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Remove the phone alarm?"
+msgstr "Remove the phone alarm?"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Detectors will stop ringing your phone. Telegram alerts stay as they are."
+msgstr "Detectors will stop ringing your phone. Telegram alerts stay as they are."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Keep alarm"
+msgstr "Keep alarm"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Remove alarm"
+msgstr "Remove alarm"
+
+#. 0: response.status
+#: src/lib/server/ntfy.ts
+msgid "The ntfy server did not accept the test alarm (status {0})."
+msgstr "The ntfy server did not accept the test alarm (status {0})."

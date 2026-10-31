@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { Bell, Plus } from '@lucide/svelte';
+	import { Bell, BellRing, Plus } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Empty from '$lib/components/ui/empty';
 	import * as Field from '$lib/components/ui/field';
@@ -9,6 +9,7 @@
 	import PageHeader from '$lib/components/page-header.svelte';
 	import {
 		getTelegrams,
+		getPhoneAlarm,
 		getOutageNotifications,
 		saveOutageNotifications
 	} from '$lib/remote/alerts.remote';
@@ -16,7 +17,9 @@
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { recipientDetectorLabels } from '$lib/alert-recipients';
 	const [detectors, telegrams] = $derived(await Promise.all([getDetectors(), getTelegrams()]));
-	const savedNotifications = $derived(await getOutageNotifications());
+	const [savedNotifications, alarm] = $derived(
+		await Promise.all([getOutageNotifications(), getPhoneAlarm()])
+	);
 	let savingNotifications = $state<boolean | null>(null);
 	let notificationError = $state('');
 
@@ -72,6 +75,20 @@
 			<p role="alert" class="text-sm text-danger-foreground">{notificationError}</p>
 		{/if}
 	</Field.Group>
+	<LinkRows
+		items={[
+			{
+				title: 'Phone alarm',
+				href: resolve('/notifications/alarm'),
+				icon: BellRing,
+				description: !alarm.saved
+					? 'Wake up for a detection with a loud alarm, through the free ntfy app.'
+					: alarm.detectorLabels.length
+						? `Rings for ${alarm.detectorLabels.join(', ')}`
+						: 'Not used by a detector yet'
+			}
+		]}
+	/>
 	{#if telegrams.length}
 		<LinkRows
 			items={telegrams.map((telegram) => {

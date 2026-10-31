@@ -16,6 +16,8 @@ import { DEFAULT_SCHEMA_URL, type StreamMeta } from '../src/lib/schema.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
 import { newerPresets, presetVersion } from '../src/lib/server/configuration/followed-presets.ts';
 import { configurationAction } from '../src/lib/server/configuration/request.ts';
+import { phoneAlarmDetectors } from '../src/lib/server/configuration/phone-alarm.ts';
+import { phoneAlarmExporter } from '../src/lib/phone-alarm.ts';
 import { isHttpError } from '@sveltejs/kit';
 
 const source = 'rtsp://camera.local/first';
@@ -869,4 +871,42 @@ test('concurrent detector additions each save their rules and preserve notificat
 	assert.equal(document.app.streams.length, 2);
 	assert.equal(document.app.telegrams.length, 1);
 	assert.deepEqual(document.config.onnx, { provider: 'CPUExecutionProvider' });
+});
+
+test('the phone alarm rings for the chosen detectors, follows a renamed detector and leaves other webhooks alone', async (t) => {
+	const hook = { url: 'https://farm.example/hook' };
+	const { store } = await fixture(t, {
+		detectors: [{ ...detector, exporters: { webhook: [hook] } }, { detection: { source: [other] } }]
+	});
+	const topic = 'aidetector-fixture';
+	const alarm = (label: string) => phoneAlarmExporter(topic, label);
+	await store.savePhoneAlarm({ topic, detectorLabels: ['Detector 1'] });
+	let saved = await store.read();
+	assert.deepEqual(saved.app.phoneAlarm, { topic });
+	assert.deepEqual(saved.config.detectors[0].exporters?.webhook, [hook, alarm('Detector 1')]);
+	assert.deepEqual(saved.config.detectors[1].exporters?.webhook, undefined);
+	assert.deepEqual(phoneAlarmDetectors(saved), ['Detector 1']);
+
+	await store.saveDetector({
+		original: 'Detector 1',
+		detector: saved.config.detectors[0],
+		meta: { label: 'Calving pen' }
+	});
+	saved = await store.read();
+	assert.deepEqual(saved.config.detectors[0].exporters?.webhook, [hook, alarm('Calving pen')]);
+
+	await store.savePhoneAlarm({ topic, detectorLabels: ['Detector 2'] });
+	saved = await store.read();
+	assert.deepEqual(saved.config.detectors[0].exporters?.webhook, [hook]);
+	assert.deepEqual(saved.config.detectors[1].exporters?.webhook, [alarm('Detector 2')]);
+	await assert.rejects(
+		store.savePhoneAlarm({ topic, detectorLabels: ['Gone'] }),
+		/no longer exists/
+	);
+
+	await store.deletePhoneAlarm();
+	saved = await store.read();
+	assert.equal(saved.app.phoneAlarm, undefined);
+	assert.deepEqual(saved.config.detectors[0].exporters?.webhook, [hook]);
+	assert.deepEqual(saved.config.detectors[1].exporters?.webhook, []);
 });

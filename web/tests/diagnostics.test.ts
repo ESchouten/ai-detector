@@ -19,19 +19,21 @@ test('support bundles include rotated and TensorRT logs while redacting saved cr
 					key: 'vision-secret',
 					url: 'https://vision.example/v1',
 					headers: { Authorization: 'Bearer header-secret' }
-				}
+				},
+				exporters: { webhook: [{ url: 'https://ntfy.sh/alarm-secret' }] }
 			}
 		],
 		health: { url: 'https://ping.example/health-secret' }
 	});
 	await writeJson(path.join(directory, 'app.json'), {
 		telegrams: [{ label: '1234567890', token: 'telegram-secret', chat: '1234567890' }],
-		devices: [{ name: 'Private phone', hash: 'device-access-hash' }]
+		devices: [{ name: 'Private phone', hash: 'device-access-hash' }],
+		phoneAlarm: { topic: 'alarm-secret' }
 	});
 	await mkdir(path.join(directory, 'logs'));
 	await writeFile(
 		path.join(directory, 'logs', 'detector.log.1'),
-		'vision-secret telegram-secret Bearer header-secret rtsp://farmer:camera-secret@192.168.1.2/feed chat 1234567890 https://ping.example/health-secret'
+		'vision-secret telegram-secret Bearer header-secret rtsp://farmer:camera-secret@192.168.1.2/feed chat 1234567890 https://ping.example/health-secret https://ntfy.sh/alarm-secret'
 	);
 	const build = path.join(directory, 'models', 'prepared', 'tensorrt', 'a'.repeat(64));
 	await mkdir(build, { recursive: true });
@@ -60,6 +62,7 @@ test('support bundles include rotated and TensorRT logs while redacting saved cr
 		'camera-secret',
 		'1234567890',
 		'health-secret',
+		'alarm-secret',
 		'device-access-hash',
 		'Private phone',
 		'secret.json'

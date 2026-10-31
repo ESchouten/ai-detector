@@ -180,6 +180,8 @@ export const appSchema = v.object({
 	streams: v.optional(v.array(streamMeta), []),
 	telegrams: v.optional(v.array(telegramMeta), []),
 	llms: v.optional(v.array(llmConnection), []),
+	// The ntfy topic that phone alarms go to; detectors that ring it have its webhook.
+	phoneAlarm: v.optional(v.object({ topic: v.pipe(v.string(), v.regex(/^[-_A-Za-z0-9]{1,64}$/)) })),
 	detectors: v.optional(v.array(detectorMeta), []),
 	devices: v.optional(v.array(pairedDevice))
 });

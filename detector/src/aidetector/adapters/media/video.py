@@ -54,12 +54,13 @@ def _frame_boxes(
     observations: Sequence[Observation],
 ) -> Iterator[Sequence[BoundingBox]]:
     """Boxes per frame. Only scored frames were evaluated; frames between two of
-    them show the boxes moving from one to the next."""
+    them show the boxes moving from one to the next. A frame whose evaluation
+    found nothing shows no box, so a missed detection is not drawn over."""
     scored = [item for item in observations if item.confidence]
     dates = [item.date for item in scored]
     for item in observations:
         index = bisect_left(dates, item.date)
-        if index == len(scored):
+        if not item.boxes or index == len(scored):
             yield ()
         elif index == 0 or dates[index] == item.date:
             yield scored[index].boxes

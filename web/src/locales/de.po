@@ -1193,9 +1193,9 @@ msgstr "Fertig"
 #: src/lib/components/llm-connection-editor.svelte
 #: src/lib/components/monitoring-control.svelte
 #: src/lib/components/notification-editor.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 #: src/lib/components/recording-viewer.svelte
 #: src/lib/components/setup-finish.svelte
-#: src/routes/(admin)/notifications/alarm/+page.svelte
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -1309,7 +1309,7 @@ msgstr "Aktuelle Verbindung behalten"
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Saving…"
 msgstr "Wird gespeichert…"
 
@@ -2253,8 +2253,8 @@ msgstr "Einstellungen brauchen Ihre Aufmerksamkeit"
 msgid "Please wait…"
 msgstr "Bitte warten…"
 
+#: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/advanced/+page.svelte
-#: src/routes/(admin)/notifications/alarm/+page.svelte
 msgid "Save"
 msgstr "Speichern"
 
@@ -3767,19 +3767,19 @@ msgstr "Werden Sie bei einer Erkennung durch einen lauten Alarm geweckt, über d
 msgid "Rings for {0}"
 msgstr "Klingelt bei {0}"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Could not send the test alarm."
 msgstr "Der Testalarm konnte nicht gesendet werden."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Phone alarm saved."
 msgstr "Telefonalarm gespeichert."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Could not save the phone alarm. Your choices are still here."
 msgstr "Der Telefonalarm konnte nicht gespeichert werden. Ihre Auswahl ist noch da."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Could not remove the phone alarm."
 msgstr "Der Telefonalarm konnte nicht entfernt werden."
 
@@ -3787,87 +3787,87 @@ msgstr "Der Telefonalarm konnte nicht entfernt werden."
 msgid "A loud alarm on your phone for each detection, also at night. It comes next to the Telegram alert, through the free ntfy app."
 msgstr "Ein lauter Alarm auf Ihrem Telefon bei jeder Erkennung, auch nachts. Er kommt zusätzlich zur Telegram-Benachrichtigung, über die kostenlose ntfy-App."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Install the ntfy app on your phone."
 msgstr "Installieren Sie die ntfy-App auf Ihrem Telefon."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Google Play"
 msgstr "Google Play"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "App Store"
 msgstr "App Store"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Code that opens ntfy on this alarm"
 msgstr "Code, der ntfy mit diesem Alarm öffnet"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Scan this code with your phone’s camera."
 msgstr "Scannen Sie diesen Code mit der Kamera Ihres Telefons."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Already on your phone? <0>Open in ntfy</0>. On an iPhone, tap + in ntfy and enter <1/> instead."
 msgstr "Schon auf Ihrem Telefon? <0>In ntfy öffnen</0>. Auf einem iPhone tippen Sie in ntfy auf + und geben <1/> ein."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Let the alarm ring through Do Not Disturb."
 msgstr "Lassen Sie den Alarm trotz „Bitte nicht stören“ klingeln."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "On Android, open Settings › Apps › ntfy › Notifications, choose the max priority category and turn on Override Do Not Disturb. An iPhone shows the alarm, but stays silent while it is on silent mode."
 msgstr "Öffnen Sie auf Android Einstellungen › Apps › ntfy › Benachrichtigungen, wählen Sie die Kategorie mit der höchsten Priorität und schalten Sie „Bitte nicht stören“ ignorieren ein. Ein iPhone zeigt den Alarm, bleibt aber im Lautlos-Modus stumm."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Sending…"
 msgstr "Wird gesendet…"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Send again"
 msgstr "Erneut senden"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Send a test alarm"
 msgstr "Testalarm senden"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "My phone rang"
 msgstr "Mein Telefon hat geklingelt"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Send a test alarm."
 msgstr "Senden Sie einen Testalarm."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "You can save the alarm now and choose it when you add a detector."
 msgstr "Sie können den Alarm jetzt speichern und ihn wählen, wenn Sie einen Detektor hinzufügen."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Which detectors ring the alarm?"
 msgstr "Bei welchen Detektoren klingelt der Alarm?"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Phone alarm needs attention"
 msgstr "Telefonalarm braucht Aufmerksamkeit"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Remove the phone alarm…"
 msgstr "Telefonalarm entfernen…"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Remove the phone alarm?"
 msgstr "Telefonalarm entfernen?"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Detectors will stop ringing your phone. Telegram alerts stay as they are."
 msgstr "Detektoren lassen Ihr Telefon dann nicht mehr klingeln. Telegram-Benachrichtigungen bleiben, wie sie sind."
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Keep alarm"
 msgstr "Alarm behalten"
 
-#: src/routes/(admin)/notifications/alarm/+page.svelte
+#: src/lib/components/phone-alarm-editor.svelte
 msgid "Remove alarm"
 msgstr "Alarm entfernen"
 
@@ -3907,3 +3907,15 @@ msgstr "Telefonalarm einrichten"
 #: src/routes/(admin)/detectors/+page.svelte
 msgid "<0/> Rings the phone alarm"
 msgstr "<0/> Löst den Telefonalarm aus"
+
+#: src/lib/components/detector-editor.svelte
+msgid "<0/>Connect ntfy"
+msgstr "<0/>ntfy verbinden"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Connect ntfy"
+msgstr "ntfy verbinden"
+
+#: src/lib/components/detector-editor.svelte
+msgid "A loud alarm on your phone for each detection, also at night. Your detector changes stay here until you save the detector."
+msgstr "Ein lauter Alarm auf Ihrem Telefon bei jeder Erkennung, auch nachts. Ihre Änderungen am Detektor bleiben erhalten, bis Sie den Detektor speichern."

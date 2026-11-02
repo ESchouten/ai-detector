@@ -3698,12 +3698,6 @@ msgstr "Mogelijk is deze verwijderd."
 msgid "Camera notifications could not be saved. Try again."
 msgstr "De camerameldingen konden niet worden opgeslagen. Probeer het opnieuw."
 
-#~ msgid "Camera offline notifications"
-#~ msgstr "Meldingen bij camera-uitval"
-
-#~ msgid "Send a Telegram message to the camera’s alert recipients after five minutes without monitoring, and when monitoring resumes."
-#~ msgstr "Stuur de ontvangers van de camerameldingen een Telegram-bericht na vijf minuten zonder bewaking en wanneer de bewaking weer actief is."
-
 #. 0: app.telegrams.length + 1
 #: src/lib/configuration.ts
 msgid "Telegram {0}"
@@ -3871,9 +3865,6 @@ msgstr "Alarm behouden"
 msgid "Remove alarm"
 msgstr "Alarm verwijderen"
 
-#~ msgid "The ntfy server did not accept the test alarm (status {0})."
-#~ msgstr "De ntfy-server heeft het testalarm niet aangenomen (status {0})."
-
 #: src/lib/components/detector-editor.svelte
 msgid "Ring the phone alarm"
 msgstr "Telefoonalarm laten afgaan"
@@ -3893,9 +3884,6 @@ msgstr "De beelden gaan naar deze mensen. Zij kunnen de detectie daar meteen bev
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "No Telegram recipients yet"
 msgstr "Nog geen Telegram-ontvangers"
-
-#~ msgid "Rings your phone loudly, also at night. Photos stay in Telegram."
-#~ msgstr "Laat je telefoon hard afgaan, ook ’s nachts. Foto’s blijven in Telegram."
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Set up the phone alarm"

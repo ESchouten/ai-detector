@@ -223,6 +223,9 @@ def _run(
             sum(item.delivery_failures for item in stats),
             sum(item.validation_failures for item in stats),
         )
+        # The app already shows each failed delivery; a requested stop is not a failure.
+        if args.control_stdin:
+            return 0
         return 1 if any(item.failed for item in stats) else 0
     except KeyboardInterrupt:
         logger.info("Shutdown completed")

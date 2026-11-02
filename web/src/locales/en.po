@@ -2600,10 +2600,6 @@ msgid "Not used by a detector yet"
 msgstr "Not used by a detector yet"
 
 #: src/routes/(admin)/notifications/+page.svelte
-msgid "No phone alerts yet"
-msgstr "No phone alerts yet"
-
-#: src/routes/(admin)/notifications/+page.svelte
 msgid "Connect Telegram to get each event on your phone. Monitoring and recording also work without alerts."
 msgstr "Connect Telegram to get each event on your phone. Monitoring and recording also work without alerts."
 
@@ -3616,10 +3612,6 @@ msgstr "Telegram settings in a preset leave out token, chat and quiet: each reci
 msgid "Send a Telegram message with the footage when this detector sees something."
 msgstr "Send a Telegram message with the footage when this detector sees something."
 
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "When a detector sees something, the footage is sent to these people in Telegram. They can confirm it or mark it as a false alarm right there."
-msgstr "When a detector sees something, the footage is sent to these people in Telegram. They can confirm it or mark it as a false alarm right there."
-
 #: src/lib/navigation.ts
 #: src/lib/server/runtime-status.ts
 #: src/routes/(admin)/validator/+page.svelte
@@ -3727,6 +3719,7 @@ msgid "Detector"
 msgstr "Detector"
 
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/notifications/+page.svelte
 msgid "Telegram"
 msgstr "Telegram"
 
@@ -3759,6 +3752,7 @@ msgstr "Could not reach ntfy. Check the internet connection of this computer."
 msgid "Test alarm. This is how a detection sounds."
 msgstr "Test alarm. This is how a detection sounds."
 
+#: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/notifications/alarm/+page.svelte
 msgid "Phone alarm"
@@ -3881,3 +3875,35 @@ msgstr "Remove alarm"
 #: src/lib/server/ntfy.ts
 msgid "The ntfy server did not accept the test alarm (status {0})."
 msgstr "The ntfy server did not accept the test alarm (status {0})."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Ring the phone alarm"
+msgstr "Ring the phone alarm"
+
+#: src/lib/components/detector-editor.svelte
+msgid "A loud alarm through the ntfy app."
+msgstr "A loud alarm through the ntfy app."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Choose how you hear about what a detector sees: a Telegram message with the footage, a loud alarm on your phone, or both."
+msgstr "Choose how you hear about what a detector sees: a Telegram message with the footage, a loud alarm on your phone, or both."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "The footage goes to these people. They can confirm it or mark it as a false alarm right there."
+msgstr "The footage goes to these people. They can confirm it or mark it as a false alarm right there."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "No Telegram recipients yet"
+msgstr "No Telegram recipients yet"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Rings your phone loudly, also at night. Photos stay in Telegram."
+msgstr "Rings your phone loudly, also at night. Photos stay in Telegram."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Set up the phone alarm"
+msgstr "Set up the phone alarm"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "<0/> Rings the phone alarm"
+msgstr "<0/> Rings the phone alarm"

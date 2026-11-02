@@ -47,7 +47,8 @@
 		saveDetector
 	} from '$lib/remote/detector.remote';
 	import { getCameras } from '$lib/remote/camera.remote';
-	import { getTelegrams } from '$lib/remote/alerts.remote';
+	import { getPhoneAlarm, getTelegrams } from '$lib/remote/alerts.remote';
+	import { isPhoneAlarm, phoneAlarmExporter } from '$lib/phone-alarm';
 
 	let {
 		initial,
@@ -77,7 +78,8 @@
 			getDetectorPresets(),
 			getLlmConnections(),
 			canTestLlm(),
-			getDetectors()
+			getDetectors(),
+			getPhoneAlarm()
 		])
 	);
 	const cameras = $derived(choices[0]);
@@ -87,6 +89,7 @@
 	const llms = $derived(choices[3]);
 	const canTest = $derived(choices[4]);
 	const existingDetectors = $derived(choices[5]);
+	const alarm = $derived(choices[6]);
 	let suggestValidator = $state(!saved);
 	untrack(() => {
 		if (!saved && cameras.length === 1) detector.detection.source = [cameras[0].source];
@@ -106,6 +109,19 @@
 		...(selectedPreset?.modes ?? []).map(({ id, name }) => ({ value: id, label: name }))
 	]);
 	const selectedChannels = $derived(detector.exporters.telegram ?? []);
+	const ringsAlarm = $derived(
+		(detector.exporters.webhook ?? []).some((item) => isPhoneAlarm(item, alarm.topic))
+	);
+	function setPhoneAlarm(ring: boolean) {
+		const others = (detector.exporters.webhook ?? []).filter(
+			(item) => !isPhoneAlarm(item, alarm.topic)
+		);
+		// Saving names the alarm after the detector, whatever the name is now.
+		detector.exporters.webhook = ring
+			? [...others, phoneAlarmExporter(alarm.topic, label)]
+			: others;
+		keepDelivery = true;
+	}
 	const options = $derived<DetectorOptions>({
 		cameras,
 		telegrams,
@@ -426,6 +442,23 @@
 					? 'Connect another phone or group'
 					: 'Connect Telegram'}
 			</Button>
+			{#if alarm.saved}
+				<label
+					for="phone-alarm"
+					class="panel flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors hover:bg-accent/60"
+				>
+					<Checkbox
+						id="phone-alarm"
+						disabled={pending}
+						checked={ringsAlarm}
+						onCheckedChange={setPhoneAlarm}
+					/>
+					<span class="flex flex-col">
+						<span class="text-sm font-medium">Ring the phone alarm</span>
+						<span class="text-sm text-muted-foreground">A loud alarm through the ntfy app.</span>
+					</span>
+				</label>
+			{/if}
 		</Field.Set>
 
 		<DetectorVerification

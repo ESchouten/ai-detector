@@ -44,16 +44,22 @@
 	<PageHeader
 		back={{ href: resolve('/settings'), label: 'Settings' }}
 		title="Alerts"
-		description="When a detector sees something, the footage is sent to these people in Telegram. They can confirm it or mark it as a false alarm right there."
-	>
-		{#snippet actions()}
-			{#if telegrams.length}
-				<Button href={resolve('/notifications/add')}>
-					<Plus data-icon="inline-start" aria-hidden="true" />Add recipient
-				</Button>
-			{/if}
-		{/snippet}
-	</PageHeader>
+		description="Choose how you hear about what a detector sees: a Telegram message with the footage, a loud alarm on your phone, or both."
+	/>
+	<div class="flex flex-wrap items-center justify-between gap-3">
+		<div class="flex flex-col gap-1">
+			<h2 id="alerts-telegram" class="text-base font-semibold">Telegram</h2>
+			<p class="text-sm text-muted-foreground">
+				The footage goes to these people. They can confirm it or mark it as a false alarm right
+				there.
+			</p>
+		</div>
+		{#if telegrams.length}
+			<Button href={resolve('/notifications/add')}>
+				<Plus data-icon="inline-start" aria-hidden="true" />Add recipient
+			</Button>
+		{/if}
+	</div>
 	<Field.Group class="panel p-4">
 		<Field.Field orientation="horizontal" data-disabled={savingNotifications !== null}>
 			<Field.Content>
@@ -75,20 +81,6 @@
 			<p role="alert" class="text-sm text-danger-foreground">{notificationError}</p>
 		{/if}
 	</Field.Group>
-	<LinkRows
-		items={[
-			{
-				title: 'Phone alarm',
-				href: resolve('/notifications/alarm'),
-				icon: BellRing,
-				description: !alarm.saved
-					? 'Wake up for a detection with a loud alarm, through the free ntfy app.'
-					: alarm.detectorLabels.length
-						? `Rings for ${alarm.detectorLabels.join(', ')}`
-						: 'Not used by a detector yet'
-			}
-		]}
-	/>
 	{#if telegrams.length}
 		<LinkRows
 			items={telegrams.map((telegram) => {
@@ -107,7 +99,7 @@
 		<Empty.Root class="border border-dashed">
 			<Empty.Header>
 				<Empty.Media variant="icon"><Bell aria-hidden="true" /></Empty.Media>
-				<Empty.Title>No phone alerts yet</Empty.Title>
+				<Empty.Title>No Telegram recipients yet</Empty.Title>
 				<Empty.Description>
 					Connect Telegram to get each event on your phone. Monitoring and recording also work
 					without alerts.
@@ -118,4 +110,24 @@
 			</Empty.Content>
 		</Empty.Root>
 	{/if}
+	<div class="flex flex-col gap-1">
+		<h2 id="alerts-phone-alarm" class="text-base font-semibold">Phone alarm</h2>
+		<p class="text-sm text-muted-foreground">
+			Rings your phone loudly, also at night. Photos stay in Telegram.
+		</p>
+	</div>
+	<LinkRows
+		items={[
+			{
+				title: alarm.saved ? 'Phone alarm' : 'Set up the phone alarm',
+				href: resolve('/notifications/alarm'),
+				icon: BellRing,
+				description: !alarm.saved
+					? 'Wake up for a detection with a loud alarm, through the free ntfy app.'
+					: alarm.detectorLabels.length
+						? `Rings for ${alarm.detectorLabels.join(', ')}`
+						: 'Not used by a detector yet'
+			}
+		]}
+	/>
 </section>

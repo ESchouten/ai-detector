@@ -182,10 +182,12 @@ def test_video_boxes_move_between_evaluated_frames(monkeypatch):
         )
 
     # Frames between evaluations carry the boxes of the next evaluated frame.
+    # A frame whose evaluation found nothing carries none.
     encode_video(
         (
             frame(0, first, scored=False),
             frame(0.25, first),
+            frame(0.4, scored=False),
             frame(0.5, second, other, scored=False),
             frame(1, second, other),
             frame(1.5, scored=False),
@@ -197,6 +199,7 @@ def test_video_boxes_move_between_evaluated_frames(monkeypatch):
     assert drawn == [
         [(0, 10, "cow")],
         [(0, 10, "cow")],
+        [],
         [(13, 23, "cow"), (100, 110, "calf")],
         [(40, 50, "cow"), (100, 110, "calf")],
         [],

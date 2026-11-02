@@ -1,10 +1,12 @@
 """Prepare event frames and encode bounded MP4 attachments through FFmpeg."""
 
+import math
 import subprocess
 import sys
 import tempfile
+from bisect import bisect_left
 from collections.abc import Iterator, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from itertools import chain
 from pathlib import Path
 
@@ -21,6 +23,52 @@ from aidetector.adapters.media.images import (
 from aidetector.domain.models import BoundingBox, Observation
 
 
+def _center(box: BoundingBox) -> tuple[float, float]:
+    return (box.x1 + box.x2) / 2, (box.y1 + box.y2) / 2
+
+
+def _moved(
+    earlier: Sequence[BoundingBox], later: Sequence[BoundingBox], share: float
+) -> tuple[BoundingBox, ...]:
+    """Move each later box this share of the way from the nearest earlier one."""
+    moved = []
+    for box in later:
+        same = [origin for origin in earlier if origin.label == box.label]
+        if not same:
+            moved.append(box)
+            continue
+        origin = min(same, key=lambda item: math.dist(_center(item), _center(box)))
+        moved.append(
+            replace(
+                box,
+                x1=round(origin.x1 + (box.x1 - origin.x1) * share),
+                y1=round(origin.y1 + (box.y1 - origin.y1) * share),
+                x2=round(origin.x2 + (box.x2 - origin.x2) * share),
+                y2=round(origin.y2 + (box.y2 - origin.y2) * share),
+            )
+        )
+    return tuple(moved)
+
+
+def _frame_boxes(
+    observations: Sequence[Observation],
+) -> Iterator[Sequence[BoundingBox]]:
+    """Boxes per frame. Only scored frames were evaluated; frames between two of
+    them show the boxes moving from one to the next."""
+    scored = [item for item in observations if item.confidence]
+    dates = [item.date for item in scored]
+    for item in observations:
+        index = bisect_left(dates, item.date)
+        if index == len(scored):
+            yield ()
+        elif index == 0 or dates[index] == item.date:
+            yield scored[index].boxes
+        else:
+            earlier, later = scored[index - 1], scored[index]
+            share = (item.date - earlier.date) / (later.date - earlier.date)
+            yield _moved(earlier.boxes, later.boxes, share)
+
+
 def _video_frames(
     observations: Sequence[Observation], plot: bool, padding: float
 ) -> Iterator[Image]:
@@ -30,16 +78,15 @@ def _video_frames(
         for item in observations:
             yield draw_boxes(item) if plot else item.image
         return
-    last_box_index = max(index for index, item in enumerate(observations) if item.boxes)
-    previous_boxes: Sequence[BoundingBox] = ()
-    for index, observation in enumerate(observations):
-        previous_boxes = observation.boxes or previous_boxes
+    for observation, plot_boxes in zip(
+        observations, _frame_boxes(observations), strict=True
+    ):
         frame = crop_observation(
             observation,
             region=region,
             padding=padding,
             plot=plot,
-            plot_boxes=previous_boxes if index <= last_box_index else (),
+            plot_boxes=plot_boxes,
         )
         yield frame if frame is not None else observation.image
 

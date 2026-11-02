@@ -1,7 +1,7 @@
 import gc
 import subprocess
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
@@ -158,6 +158,49 @@ def test_video_with_identical_timestamps_is_encodable(tmp_path):
         assert capture.get(cv2.CAP_PROP_FRAME_COUNT) == 2
     finally:
         capture.release()
+
+
+def test_video_boxes_move_between_evaluated_frames(monkeypatch):
+    drawn = []
+
+    def record(observation, *, plot_boxes, **_options):
+        drawn.append([(box.x1, box.x2, box.label) for box in plot_boxes])
+        return observation.image
+
+    monkeypatch.setattr("aidetector.adapters.media.video.crop_observation", record)
+    started = datetime(2026, 1, 1)
+    first = BoundingBox(0, 0, 10, 10, "cow", 0.9)
+    second = BoundingBox(40, 0, 50, 10, "cow", 0.8)
+    other = BoundingBox(100, 0, 110, 10, "calf", 0.7)
+
+    def frame(seconds, *boxes, scored=True):
+        return Observation(
+            started + timedelta(seconds=seconds),
+            np.zeros((20, 160, 3), dtype=np.uint8),
+            {"cow": 0.9} if scored else {},
+            boxes=boxes,
+        )
+
+    # Frames between evaluations carry the boxes of the next evaluated frame.
+    encode_video(
+        (
+            frame(0, first, scored=False),
+            frame(0.25, first),
+            frame(0.5, second, other, scored=False),
+            frame(1, second, other),
+            frame(1.5, scored=False),
+        ),
+        width=None,
+        crf=28,
+        padding=0,
+    )
+    assert drawn == [
+        [(0, 10, "cow")],
+        [(0, 10, "cow")],
+        [(13, 23, "cow"), (100, 110, "calf")],
+        [(40, 50, "cow"), (100, 110, "calf")],
+        [],
+    ]
 
 
 def test_impossible_image_size_is_an_explicit_error():

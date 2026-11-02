@@ -11,6 +11,7 @@
 		getTelegrams,
 		getPhoneAlarm,
 		getOutageNotifications,
+		saveAlarmOutages,
 		saveOutageNotifications
 	} from '$lib/remote/alerts.remote';
 	import { errorMessage, refresh } from '$lib/remote-calls';
@@ -21,6 +22,7 @@
 		await Promise.all([getOutageNotifications(), getPhoneAlarm()])
 	);
 	let savingNotifications = $state<boolean | null>(null);
+	let savingAlarmOutages = $state<boolean | null>(null);
 	let notificationError = $state('');
 
 	async function setOutageNotifications(enabled: boolean) {
@@ -38,6 +40,21 @@
 			savingNotifications = null;
 		}
 	}
+	async function setAlarmOutages(enabled: boolean) {
+		savingAlarmOutages = enabled;
+		notificationError = '';
+		try {
+			await saveAlarmOutages(enabled);
+			await refresh(getPhoneAlarm());
+		} catch (cause) {
+			notificationError = errorMessage(
+				cause,
+				'Camera notifications could not be saved. Try again.'
+			);
+		} finally {
+			savingAlarmOutages = null;
+		}
+	}
 </script>
 
 <section class="page-narrow">
@@ -46,6 +63,47 @@
 		title="Alerts"
 		description="Choose how you hear about what a detector sees: a Telegram message with the footage, a loud alarm on your phone, or both."
 	/>
+	<div class="flex flex-col gap-1">
+		<h2 id="alerts-camera-offline" class="text-base font-semibold">Camera offline</h2>
+		<p class="text-sm text-muted-foreground">
+			Tell the people who get a camera’s alerts after five minutes without monitoring, and when
+			monitoring resumes.
+		</p>
+	</div>
+	<Field.Group class="panel gap-4 p-4">
+		<Field.Field orientation="horizontal" data-disabled={savingNotifications !== null}>
+			<Field.Label for="camera-offline-notifications">Through Telegram</Field.Label>
+			<Switch
+				id="camera-offline-notifications"
+				checked={savingNotifications ?? savedNotifications}
+				onCheckedChange={setOutageNotifications}
+				disabled={savingNotifications !== null}
+			/>
+		</Field.Field>
+		<Field.Field
+			orientation="horizontal"
+			data-disabled={!alarm.saved || savingAlarmOutages !== null}
+		>
+			<Field.Content>
+				<Field.Label for="camera-offline-alarm">Through the phone alarm</Field.Label>
+				<Field.Description id="camera-offline-alarm-help">
+					{alarm.saved
+						? 'A normal notification in ntfy, without the alarm sound.'
+						: 'Set up the phone alarm first.'}
+				</Field.Description>
+			</Field.Content>
+			<Switch
+				id="camera-offline-alarm"
+				checked={savingAlarmOutages ?? alarm.outages}
+				onCheckedChange={setAlarmOutages}
+				disabled={!alarm.saved || savingAlarmOutages !== null}
+				aria-describedby="camera-offline-alarm-help"
+			/>
+		</Field.Field>
+		{#if notificationError}
+			<p role="alert" class="text-sm text-danger-foreground">{notificationError}</p>
+		{/if}
+	</Field.Group>
 	<div class="flex flex-wrap items-center justify-between gap-3">
 		<div class="flex flex-col gap-1">
 			<h2 id="alerts-telegram" class="text-base font-semibold">Telegram</h2>
@@ -60,27 +118,6 @@
 			</Button>
 		{/if}
 	</div>
-	<Field.Group class="panel p-4">
-		<Field.Field orientation="horizontal" data-disabled={savingNotifications !== null}>
-			<Field.Content>
-				<Field.Label for="camera-offline-notifications">Camera offline notifications</Field.Label>
-				<Field.Description id="camera-offline-notifications-help">
-					Send a Telegram message to the camera’s alert recipients after five minutes without
-					monitoring, and when monitoring resumes.
-				</Field.Description>
-			</Field.Content>
-			<Switch
-				id="camera-offline-notifications"
-				checked={savingNotifications ?? savedNotifications}
-				onCheckedChange={setOutageNotifications}
-				disabled={savingNotifications !== null}
-				aria-describedby="camera-offline-notifications-help"
-			/>
-		</Field.Field>
-		{#if notificationError}
-			<p role="alert" class="text-sm text-danger-foreground">{notificationError}</p>
-		{/if}
-	</Field.Group>
 	{#if telegrams.length}
 		<LinkRows
 			items={telegrams.map((telegram) => {
@@ -113,7 +150,7 @@
 	<div class="flex flex-col gap-1">
 		<h2 id="alerts-phone-alarm" class="text-base font-semibold">Phone alarm</h2>
 		<p class="text-sm text-muted-foreground">
-			Rings your phone loudly, also at night. Photos stay in Telegram.
+			Rings your phone loudly, also at night, with a picture of what the detector saw.
 		</p>
 	</div>
 	<LinkRows

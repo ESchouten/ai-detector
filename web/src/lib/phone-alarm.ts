@@ -19,17 +19,28 @@ export function phoneAlarmLink(topic: string): string {
 	return `ntfy://${new URL(NTFY_SERVER).host}/${topic}?display=AI%20Detector`;
 }
 
-/** A detector's alarm: the highest priority, which the phone may let ring through Do Not Disturb. */
+/**
+ * A detector's alarm: the highest priority, which the phone may let ring through Do Not Disturb,
+ * with the picture of the detection attached. The detector's name goes in the address, where
+ * ntfy reads any language.
+ */
 export function phoneAlarmExporter(topic: string, detector: string): WebhookConfig {
 	return {
-		url: phoneAlarmUrl(topic),
+		url: `${phoneAlarmUrl(topic)}?${new URLSearchParams({ message: detector })}`,
 		method: 'POST',
-		headers: { Title: 'AI Detector', Priority: 'urgent', Tags: 'rotating_light' },
-		body: detector,
-		data_type: 'none'
+		headers: {
+			Title: 'AI Detector',
+			Priority: 'urgent',
+			Tags: 'rotating_light',
+			Filename: 'detection.jpg'
+		},
+		data_type: 'file',
+		include_plot: true,
+		include_crop: false
 	};
 }
 
 export function isPhoneAlarm(exporter: WebhookConfig, topic: string): boolean {
-	return exporter.url === phoneAlarmUrl(topic);
+	const url = phoneAlarmUrl(topic);
+	return exporter.url === url || exporter.url.startsWith(`${url}?`);
 }

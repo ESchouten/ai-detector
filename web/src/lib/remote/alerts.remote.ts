@@ -46,6 +46,10 @@ export const saveOutageNotifications = command(v.boolean(), (enabled) =>
 	configurationAction(() => configuration.saveOutageNotifications(enabled))
 );
 
+export const saveAlarmOutages = command(v.boolean(), (enabled) =>
+	configurationAction(() => configuration.saveAlarmOutages(enabled))
+);
+
 export const connectTelegram = command(telegramInput, (input) =>
 	configurationAction(() => configuration.saveTelegram(input))
 );
@@ -71,6 +75,7 @@ export const getPhoneAlarm = query(async () => {
 	return {
 		topic,
 		saved: Boolean(saved),
+		outages: document.app.phoneAlarm?.outages === true,
 		detectorLabels: phoneAlarmDetectors(document),
 		link: phoneAlarmLink(topic),
 		qr: await QRCode.toDataURL(phoneAlarmLink(topic), { margin: 1, width: 256 })

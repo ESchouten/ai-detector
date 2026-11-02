@@ -60,6 +60,7 @@ msgid "Preparing"
 msgstr "Preparing"
 
 #: src/lib/monitoring.ts
+#: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/streams/camera-history.svelte
 msgid "Camera offline"
 msgstr "Camera offline"
@@ -3693,16 +3694,15 @@ msgid "It may have been removed."
 msgstr "It may have been removed."
 
 #: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/notifications/+page.svelte
 msgid "Camera notifications could not be saved. Try again."
 msgstr "Camera notifications could not be saved. Try again."
 
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "Camera offline notifications"
-msgstr "Camera offline notifications"
+#~ msgid "Camera offline notifications"
+#~ msgstr "Camera offline notifications"
 
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "Send a Telegram message to the camera’s alert recipients after five minutes without monitoring, and when monitoring resumes."
-msgstr "Send a Telegram message to the camera’s alert recipients after five minutes without monitoring, and when monitoring resumes."
+#~ msgid "Send a Telegram message to the camera’s alert recipients after five minutes without monitoring, and when monitoring resumes."
+#~ msgstr "Send a Telegram message to the camera’s alert recipients after five minutes without monitoring, and when monitoring resumes."
 
 #. 0: app.telegrams.length + 1
 #: src/lib/configuration.ts
@@ -3871,10 +3871,8 @@ msgstr "Keep alarm"
 msgid "Remove alarm"
 msgstr "Remove alarm"
 
-#. 0: response.status
-#: src/lib/server/ntfy.ts
-msgid "The ntfy server did not accept the test alarm (status {0})."
-msgstr "The ntfy server did not accept the test alarm (status {0})."
+#~ msgid "The ntfy server did not accept the test alarm (status {0})."
+#~ msgstr "The ntfy server did not accept the test alarm (status {0})."
 
 #: src/lib/components/detector-editor.svelte
 msgid "Ring the phone alarm"
@@ -3896,9 +3894,8 @@ msgstr "The footage goes to these people. They can confirm it or mark it as a fa
 msgid "No Telegram recipients yet"
 msgstr "No Telegram recipients yet"
 
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "Rings your phone loudly, also at night. Photos stay in Telegram."
-msgstr "Rings your phone loudly, also at night. Photos stay in Telegram."
+#~ msgid "Rings your phone loudly, also at night. Photos stay in Telegram."
+#~ msgstr "Rings your phone loudly, also at night. Photos stay in Telegram."
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Set up the phone alarm"
@@ -3919,3 +3916,33 @@ msgstr "Connect ntfy"
 #: src/lib/components/detector-editor.svelte
 msgid "A loud alarm on your phone for each detection, also at night. Your detector changes stay here until you save the detector."
 msgstr "A loud alarm on your phone for each detection, also at night. Your detector changes stay here until you save the detector."
+
+#. 0: response.status
+#: src/lib/server/ntfy.ts
+msgid "The ntfy server did not accept the message (status {0})."
+msgstr "The ntfy server did not accept the message (status {0})."
+
+#: src/lib/server/configuration/store.ts
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Set up the phone alarm first."
+msgstr "Set up the phone alarm first."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Tell the people who get a camera’s alerts after five minutes without monitoring, and when monitoring resumes."
+msgstr "Tell the people who get a camera’s alerts after five minutes without monitoring, and when monitoring resumes."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Through Telegram"
+msgstr "Through Telegram"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "A normal notification in ntfy, without the alarm sound."
+msgstr "A normal notification in ntfy, without the alarm sound."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Through the phone alarm"
+msgstr "Through the phone alarm"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Rings your phone loudly, also at night, with a picture of what the detector saw."
+msgstr "Rings your phone loudly, also at night, with a picture of what the detector saw."

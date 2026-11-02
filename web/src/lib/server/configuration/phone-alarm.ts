@@ -27,7 +27,7 @@ function assign({ config, app }: Configuration, topic: string | undefined, selec
 			detector.exporters.webhook = webhook;
 		}
 	}
-	if (topic) app.phoneAlarm = { topic };
+	if (topic) app.phoneAlarm = { ...app.phoneAlarm, topic };
 	else delete app.phoneAlarm;
 }
 

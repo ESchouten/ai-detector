@@ -10,6 +10,7 @@ import requests
 from aidetector.adapters.exporters.telegram import TelegramExporter
 from aidetector.adapters.exporters.webhook import WebhookExporter
 from aidetector.adapters.http import send_request
+from aidetector.adapters.media import MediaError
 from aidetector.adapters.media.event_media import EventMedia
 from aidetector.adapters.media.images import encode_jpeg
 from aidetector.application.delivery import Destination, EventDelivery
@@ -406,3 +407,36 @@ def test_request_exception_reports_its_kind_without_credential_details(
 
     assert str(failure.value) == f"HTTP request failed ({error_type.__name__})"
     assert request.call_count == 1
+
+
+def test_webhook_file_sends_the_first_chosen_picture_as_the_body(result, requests_sent):
+    config = WebhookConfig(
+        url="https://example.test",
+        data_type="file",
+        include_plot=True,
+        include_crop=False,
+        body="Calving pen",
+        headers={"Priority": "urgent"},
+    )
+    WebhookExporter(config, EventMedia()).export(result)
+    [(_, _, request)] = requests_sent
+    assert request["data"].startswith(b"\xff\xd8")
+    assert request["headers"] == {"Priority": "urgent", "Content-Type": "image/jpeg"}
+
+
+def test_webhook_file_without_a_picture_still_sends_its_text(
+    result, requests_sent, monkeypatch
+):
+    media = EventMedia()
+
+    def broken(*_args, **_kwargs):
+        raise MediaError("no frame")
+
+    monkeypatch.setattr(media, "attachments", broken)
+    config = WebhookConfig(
+        url="https://example.test", data_type="file", include_image=True, body="Pen"
+    )
+    WebhookExporter(config, media).export(result)
+    [(_, _, request)] = requests_sent
+    assert request["data"] == b"Pen"
+    assert "Content-Type" not in request["headers"]

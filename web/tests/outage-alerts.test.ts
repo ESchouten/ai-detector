@@ -8,17 +8,23 @@ import {
 	outageDelivery,
 	outageWatch,
 	watchedCameras,
+	type OutageRecipient,
 	type Recipient,
 	type OutageWatch,
 	type SavedOutages,
 	type WatchedCamera
 } from '../src/lib/server/outage-alerts.ts';
 import { sourceKey } from '../src/lib/server/source-key.ts';
+import { phoneAlarmExporter } from '../src/lib/phone-alarm.ts';
 
 /** Two o'clock at night on this computer, whatever its time zone. */
 const start = new Date(2026, 9, 12, 2, 0).getTime();
 const farmer: Recipient = { token: 'fixture-token', chat: '1' };
 const vet: Recipient = { token: 'fixture-token', chat: '2' };
+
+function name(recipient: OutageRecipient): string {
+	return 'topic' in recipient ? recipient.topic : recipient.chat;
+}
 
 function camera(label: string, watched: boolean, recipients = [farmer]): WatchedCamera {
 	return { id: label, label, watched, recipients };
@@ -39,7 +45,7 @@ function follow(
 	for (let at = from; at <= to; at += 10)
 		for (const notice of alerts.sample(cameras(at), start + at * 1000)) {
 			if (arrives) alerts.delivered(notice);
-			notices.push({ at, chat: notice.recipient.chat, text: notice.text });
+			notices.push({ at, chat: name(notice.recipient), text: notice.text });
 		}
 	return notices;
 }
@@ -263,8 +269,8 @@ test('a notice that cannot be sent is tried again each minute, and later notices
 	let pauses = 0;
 	const deliver = outageDelivery(
 		async (recipient, text) => {
-			if (recipient.chat === '1' && refusals-- > 0) throw new Error('No internet');
-			sent.push(`${recipient.chat}: ${text}`);
+			if (name(recipient) === '1' && refusals-- > 0) throw new Error('No internet');
+			sent.push(`${name(recipient)}: ${text}`);
 		},
 		(error) => failures.push(error),
 		async () => void pauses++
@@ -322,14 +328,19 @@ test('a notice arrives without sound in the quiet hours of its recipient', async
 test('the cameras to watch come from the settings, also while the status has lost them', () => {
 	const directory = '/data';
 	const sources = ['rtsp://calving.local/live', 'rtsp://barn.local/live'];
+	const alarm = { topic: 'aidetector-fixture' };
 	const configuration = {
 		config: {
 			detectors: [
 				{ detection: { source: sources }, exporters: { telegram: [farmer] } },
-				{ detection: { source: [sources[1]] }, exporters: { telegram: [vet] } }
+				{
+					detection: { source: [sources[1]] },
+					exporters: { telegram: [vet], webhook: [phoneAlarmExporter(alarm.topic, 'Barn')] }
+				}
 			]
 		},
 		app: {
+			phoneAlarm: alarm,
 			streams: [
 				{ id: 'camera-a', label: 'Calving pen', source: sources[0] },
 				{ id: 'camera-b', label: 'Barn', source: sources[1] }
@@ -365,7 +376,8 @@ test('the cameras to watch come from the settings, also while the status has los
 	};
 	const expected = [
 		{ id: 'camera-a', label: 'Calving pen', watched: true, recipients: [farmer] },
-		{ id: 'camera-b', label: 'Barn', watched: false, recipients: [farmer, vet] }
+		// A detector that rings the phone alarm tells its outages there too.
+		{ id: 'camera-b', label: 'Barn', watched: false, recipients: [farmer, vet, alarm] }
 	];
 	assert.deepEqual(watchedCameras(configuration, status, directory), expected);
 	// Waiting to restart, the detector lists no cameras at all.

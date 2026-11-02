@@ -748,10 +748,12 @@
         },
         "data_type": {
           "default": "binary",
+          "description": "binary: form fields and files; base64: JSON; none: no content; file: the first chosen picture or video as the whole body, or `body` without one.",
           "enum": [
             "binary",
             "base64",
-            "none"
+            "none",
+            "file"
           ],
           "title": "Data Type",
           "type": "string"

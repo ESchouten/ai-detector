@@ -2,7 +2,8 @@ import { setTimeout as wait } from 'node:timers/promises';
 import * as v from 'valibot';
 import { recentMoment } from '../format.ts';
 import type { RuntimeStatus } from '../runtime.ts';
-import type { Configuration, TelegramConfig } from '../schema.ts';
+import { isPhoneAlarm } from '../phone-alarm.ts';
+import type { AppConfig, Configuration, TelegramConfig } from '../schema.ts';
 import { RuntimeProgress } from './runtime-status.ts';
 import { serialQueue } from './serial.ts';
 import { sourceKey } from './source-key.ts';
@@ -17,16 +18,21 @@ const INTERRUPTED = 30000;
 const WAKING = 2 * 60000;
 
 export type Recipient = Pick<TelegramConfig, 'token' | 'chat' | 'quiet'>;
+/** The phone alarm, which tells of outages too when that is switched on. */
+export interface AlarmRecipient {
+	topic: string;
+}
+export type OutageRecipient = Recipient | AlarmRecipient;
 
 export interface WatchedCamera {
 	id: string;
 	label: string;
 	watched: boolean;
-	recipients: Recipient[];
+	recipients: OutageRecipient[];
 }
 
 export interface OutageNotice {
-	recipient: Recipient;
+	recipient: OutageRecipient;
 	text: string;
 	/** The cameras this notice warns about, by id. */
 	stopped: string[];
@@ -47,8 +53,19 @@ interface Outage {
 	sent: boolean;
 }
 
-export function chat(recipient: Recipient): string {
-	return `${recipient.token}\n${recipient.chat}`;
+export function chat(recipient: OutageRecipient): string {
+	return 'topic' in recipient
+		? `ntfy\n${recipient.topic}`
+		: `${recipient.token}\n${recipient.chat}`;
+}
+
+/** Whether outages are told through Telegram, the phone alarm or both. */
+export function outagesNotified(app: AppConfig): boolean {
+	return app.notifyCameraOutages === true || app.phoneAlarm?.outages === true;
+}
+
+function notified(app: AppConfig, recipient: OutageRecipient): boolean {
+	return 'topic' in recipient ? app.phoneAlarm?.outages === true : app.notifyCameraOutages === true;
 }
 
 /** The cameras the detectors watch, whether each is watched now, and who gets its alerts. */
@@ -57,15 +74,22 @@ export function watchedCameras(
 	status: RuntimeStatus,
 	directory: string
 ): WatchedCamera[] {
-	const recipients = new Map<string, Recipient[]>();
-	for (const detector of config.detectors)
+	const recipients = new Map<string, OutageRecipient[]>();
+	const topic = app.phoneAlarm?.topic;
+	for (const detector of config.detectors) {
+		const alarm =
+			topic && detector.exporters?.webhook?.some((item) => isPhoneAlarm(item, topic))
+				? [{ topic }]
+				: [];
 		for (const source of detector.detection.source) {
 			const key = sourceKey(source, directory);
 			recipients.set(key, [
 				...(recipients.get(key) ?? []),
-				...(detector.exporters?.telegram ?? [])
+				...(detector.exporters?.telegram ?? []),
+				...alarm
 			]);
 		}
+	}
 	// The status loses its cameras while the detector restarts; the settings name them as it does.
 	const configured = new RuntimeProgress();
 	configured.configure(config, app, directory);
@@ -109,7 +133,7 @@ function notices(
 	still: Outage[],
 	now: number
 ): OutageNotice[] {
-	const recipients = new Map<string, Recipient>();
+	const recipients = new Map<string, OutageRecipient>();
 	for (const outage of [...stopped, ...returned])
 		for (const recipient of outage.camera.recipients)
 			if (!recipients.has(chat(recipient))) recipients.set(chat(recipient), recipient);
@@ -245,7 +269,7 @@ export function quiet(hours: Recipient['quiet'], at: Date): boolean {
  * the first attempt that fails.
  */
 export function outageDelivery(
-	send: (recipient: Recipient, text: string, silent: boolean) => Promise<void>,
+	send: (recipient: OutageRecipient, text: string, silent: boolean) => Promise<void>,
 	failed: (error: unknown) => void,
 	pause: () => Promise<unknown> = () => wait(60000, undefined, { ref: false })
 ): (notice: OutageNotice) => Promise<void> {
@@ -256,7 +280,11 @@ export function outageDelivery(
 		return queue(async () => {
 			for (let attempt = 1; ; attempt++)
 				try {
-					return await send(recipient, text, quiet(recipient.quiet, new Date()));
+					return await send(
+						recipient,
+						text,
+						'token' in recipient && quiet(recipient.quiet, new Date())
+					);
 				} catch (error) {
 					if (attempt === 1) failed(error);
 					if (attempt === 24 * 60) throw error;
@@ -275,7 +303,7 @@ export interface OutageWatch {
 	noted: unknown;
 	note(outages: SavedOutages): Promise<void>;
 	settings(): Promise<Configuration>;
-	send(recipient: Recipient, text: string, silent: boolean): Promise<void>;
+	send(recipient: OutageRecipient, text: string, silent: boolean): Promise<void>;
 	warn(message: string, error: unknown): void;
 }
 
@@ -311,33 +339,34 @@ export function outageWatch(
 		return outageDelivery(
 			async (...args) => {
 				// Switching off also cancels queued retries, including after a later switch on.
-				if (current === generation && known?.app.notifyCameraOutages === true)
+				if (current === generation && known && notified(known.app, args[0]))
 					await watch.send(...args);
 			},
 			(error) =>
-				watch.warn(
-					/* @wc-ignore */ 'Could not send an outage notice through Telegram; trying each minute',
-					error
-				)
+				watch.warn(/* @wc-ignore */ 'Could not send an outage notice; trying each minute', error)
 		);
 	};
 	let deliver = delivery();
 	return () => {
 		if (known) {
-			const next = known.app.notifyCameraOutages === true;
+			const settings = known;
+			const next = outagesNotified(settings.app);
 			if (!next && enabled !== false) {
 				generation++;
 				outages = new OutageAlerts();
 			} else if (next && enabled === false) deliver = delivery();
 			enabled = next;
 			const cameras = watch.monitored.monitoring
-				? watchedCameras(known, watch.monitored.status(), watch.directory)
+				? watchedCameras(settings, watch.monitored.status(), watch.directory).map((camera) => ({
+						...camera,
+						recipients: camera.recipients.filter((recipient) => notified(settings.app, recipient))
+					}))
 				: [];
 			const current = generation;
 			for (const notice of next ? outages.sample(cameras, Date.now()) : [])
 				deliver(notice).then(
 					() => {
-						if (current !== generation || known?.app.notifyCameraOutages !== true) return;
+						if (current !== generation || !known || !outagesNotified(known.app)) return;
 						outages.delivered(notice);
 						keep();
 					},

@@ -60,6 +60,7 @@ msgid "Preparing"
 msgstr "Wird vorbereitet"
 
 #: src/lib/monitoring.ts
+#: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/streams/camera-history.svelte
 msgid "Camera offline"
 msgstr "Kamera offline"
@@ -3693,16 +3694,15 @@ msgid "It may have been removed."
 msgstr "Möglicherweise wurde sie entfernt."
 
 #: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/notifications/+page.svelte
 msgid "Camera notifications could not be saved. Try again."
 msgstr "Die Kamerabenachrichtigungen konnten nicht gespeichert werden. Versuchen Sie es erneut."
 
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "Camera offline notifications"
-msgstr "Benachrichtigungen bei Kameraausfall"
+#~ msgid "Camera offline notifications"
+#~ msgstr "Benachrichtigungen bei Kameraausfall"
 
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "Send a Telegram message to the camera’s alert recipients after five minutes without monitoring, and when monitoring resumes."
-msgstr "Die Empfänger der Kamerabenachrichtigungen erhalten eine Telegram-Nachricht nach fünf Minuten ohne Überwachung und sobald die Überwachung wieder läuft."
+#~ msgid "Send a Telegram message to the camera’s alert recipients after five minutes without monitoring, and when monitoring resumes."
+#~ msgstr "Die Empfänger der Kamerabenachrichtigungen erhalten eine Telegram-Nachricht nach fünf Minuten ohne Überwachung und sobald die Überwachung wieder läuft."
 
 #. 0: app.telegrams.length + 1
 #: src/lib/configuration.ts
@@ -3871,10 +3871,8 @@ msgstr "Alarm behalten"
 msgid "Remove alarm"
 msgstr "Alarm entfernen"
 
-#. 0: response.status
-#: src/lib/server/ntfy.ts
-msgid "The ntfy server did not accept the test alarm (status {0})."
-msgstr "Der ntfy-Server hat den Testalarm nicht angenommen (Status {0})."
+#~ msgid "The ntfy server did not accept the test alarm (status {0})."
+#~ msgstr "Der ntfy-Server hat den Testalarm nicht angenommen (Status {0})."
 
 #: src/lib/components/detector-editor.svelte
 msgid "Ring the phone alarm"
@@ -3896,9 +3894,8 @@ msgstr "Die Aufnahmen gehen an diese Personen. Sie können die Erkennung dort di
 msgid "No Telegram recipients yet"
 msgstr "Noch keine Telegram-Empfänger"
 
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "Rings your phone loudly, also at night. Photos stay in Telegram."
-msgstr "Lässt Ihr Telefon laut klingeln, auch nachts. Fotos bleiben in Telegram."
+#~ msgid "Rings your phone loudly, also at night. Photos stay in Telegram."
+#~ msgstr "Lässt Ihr Telefon laut klingeln, auch nachts. Fotos bleiben in Telegram."
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Set up the phone alarm"
@@ -3919,3 +3916,33 @@ msgstr "ntfy verbinden"
 #: src/lib/components/detector-editor.svelte
 msgid "A loud alarm on your phone for each detection, also at night. Your detector changes stay here until you save the detector."
 msgstr "Ein lauter Alarm auf Ihrem Telefon bei jeder Erkennung, auch nachts. Ihre Änderungen am Detektor bleiben erhalten, bis Sie den Detektor speichern."
+
+#. 0: response.status
+#: src/lib/server/ntfy.ts
+msgid "The ntfy server did not accept the message (status {0})."
+msgstr "Der ntfy-Server hat die Nachricht nicht angenommen (Status {0})."
+
+#: src/lib/server/configuration/store.ts
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Set up the phone alarm first."
+msgstr "Richten Sie zuerst den Telefonalarm ein."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Tell the people who get a camera’s alerts after five minutes without monitoring, and when monitoring resumes."
+msgstr "Benachrichtigt die Empfänger der Kamerabenachrichtigungen nach fünf Minuten ohne Überwachung und wenn die Überwachung wieder läuft."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Through Telegram"
+msgstr "Über Telegram"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "A normal notification in ntfy, without the alarm sound."
+msgstr "Eine normale Benachrichtigung in ntfy, ohne Alarmton."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Through the phone alarm"
+msgstr "Über den Telefonalarm"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Rings your phone loudly, also at night, with a picture of what the detector saw."
+msgstr "Lässt Ihr Telefon laut klingeln, auch nachts, mit einem Foto dessen, was der Detektor gesehen hat."

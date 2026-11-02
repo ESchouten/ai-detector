@@ -271,6 +271,13 @@ export class ConfigurationStore {
 		});
 	}
 
+	saveAlarmOutages(enabled: boolean): Promise<void> {
+		return this.update((document) => {
+			if (!document.app.phoneAlarm) throw new ConfigurationError('Set up the phone alarm first.');
+			document.app.phoneAlarm.outages = enabled;
+		});
+	}
+
 	/** Turn the detector's heartbeat on, change it, or turn it off with `null`. */
 	saveHeartbeat(input: v.InferOutput<typeof heartbeatInput>): Promise<void> {
 		return this.update((document) => {

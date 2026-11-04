@@ -71,15 +71,17 @@ test('camera outage notifications are opt-in and saved only in app.json without 
 	await writeJson(files.config, { detectors: [detector] });
 	const outages = { barn: '2026-10-16T12:00:00.000Z' };
 	await writeJson(files.app, { monitoring: true, outages });
-	assert.equal((await store.read()).app.notifyCameraOutages, undefined);
+	await assert.rejects(store.saveAlarmOutages(true), /Set up the phone alarm first/);
+	await writeJson(files.app, { monitoring: true, outages, phoneAlarm: { topic: 'aidetector-x' } });
+	assert.equal((await store.read()).app.phoneAlarm?.outages, undefined);
 	const config = await readFile(files.config, 'utf8');
 	for (const enabled of [true, false]) {
-		await store.saveOutageNotifications(enabled);
+		await store.saveAlarmOutages(enabled);
 		const app = JSON.parse(await readFile(files.app, 'utf8'));
-		assert.equal(app.notifyCameraOutages, enabled);
+		assert.equal(app.phoneAlarm.outages, enabled);
 		assert.equal(app.monitoring, true);
 		assert.deepEqual(app.outages, outages);
-		assert.equal((await new ConfigurationStore(files).read()).app.notifyCameraOutages, enabled);
+		assert.equal((await new ConfigurationStore(files).read()).app.phoneAlarm?.outages, enabled);
 		assert.equal(await readFile(files.config, 'utf8'), config);
 	}
 	assert.deepEqual(calls, []);

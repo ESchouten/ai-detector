@@ -408,7 +408,7 @@
 
 		<Field.Set>
 			<Field.Legend>
-				Phone alerts <span class="font-normal text-muted-foreground">(optional)</span>
+				Messages <span class="font-normal text-muted-foreground">(optional)</span>
 			</Field.Legend>
 			<Field.Description>
 				Send a Telegram message with the footage when this detector sees something.
@@ -444,6 +444,15 @@
 					? 'Connect another phone or group'
 					: 'Connect Telegram'}
 			</Button>
+		</Field.Set>
+
+		<Field.Set>
+			<Field.Legend>
+				Alarm <span class="font-normal text-muted-foreground">(optional)</span>
+			</Field.Legend>
+			<Field.Description>
+				Ring your phone loudly through the free ntfy app, also at night, with a picture.
+			</Field.Description>
 			{#if alarm.saved}
 				<label
 					for="phone-alarm"

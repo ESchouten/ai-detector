@@ -265,12 +265,6 @@ export class ConfigurationStore {
 		});
 	}
 
-	saveOutageNotifications(enabled: boolean): Promise<void> {
-		return this.update((document) => {
-			document.app.notifyCameraOutages = enabled;
-		});
-	}
-
 	saveAlarmOutages(enabled: boolean): Promise<void> {
 		return this.update((document) => {
 			if (!document.app.phoneAlarm) throw new ConfigurationError('Set up the phone alarm first.');

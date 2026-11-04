@@ -1460,10 +1460,6 @@ msgid "Connect Telegram"
 msgstr "Telegram koppelen"
 
 #: src/lib/components/detector-editor.svelte
-msgid "Phone alerts <0>(optional)</0>"
-msgstr "Meldingen op je telefoon <0>(optioneel)</0>"
-
-#: src/lib/components/detector-editor.svelte
 msgid "Could not update detector"
 msgstr "Detector kon niet worden bijgewerkt"
 
@@ -3694,7 +3690,6 @@ msgid "It may have been removed."
 msgstr "Mogelijk is deze verwijderd."
 
 #: src/routes/(admin)/notifications/+page.svelte
-#: src/routes/(admin)/notifications/+page.svelte
 msgid "Camera notifications could not be saved. Try again."
 msgstr "De camerameldingen konden niet worden opgeslagen. Probeer het opnieuw."
 
@@ -3713,7 +3708,6 @@ msgid "Detector"
 msgstr "Detector"
 
 #: src/lib/server/installation-import/metadata.ts
-#: src/routes/(admin)/notifications/+page.svelte
 msgid "Telegram"
 msgstr "Telegram"
 
@@ -3746,7 +3740,6 @@ msgstr "ntfy is niet bereikbaar. Controleer de internetverbinding van deze compu
 msgid "Test alarm. This is how a detection sounds."
 msgstr "Testalarm. Zo klinkt een detectie."
 
-#: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/notifications/alarm/+page.svelte
 msgid "Phone alarm"
@@ -3874,14 +3867,6 @@ msgid "A loud alarm through the ntfy app."
 msgstr "Een hard alarm via de ntfy-app."
 
 #: src/routes/(admin)/notifications/+page.svelte
-msgid "Choose how you hear about what a detector sees: a Telegram message with the footage, a loud alarm on your phone, or both."
-msgstr "Kies hoe je hoort wat een detector ziet: een Telegram-bericht met de beelden, een hard alarm op je telefoon, of allebei."
-
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "The footage goes to these people. They can confirm it or mark it as a false alarm right there."
-msgstr "De beelden gaan naar deze mensen. Zij kunnen de detectie daar meteen bevestigen of als vals alarm markeren."
-
-#: src/routes/(admin)/notifications/+page.svelte
 msgid "No Telegram recipients yet"
 msgstr "Nog geen Telegram-ontvangers"
 
@@ -3911,26 +3896,41 @@ msgid "The ntfy server did not accept the message (status {0})."
 msgstr "De ntfy-server heeft het bericht niet aangenomen (status {0})."
 
 #: src/lib/server/configuration/store.ts
-#: src/routes/(admin)/notifications/+page.svelte
 msgid "Set up the phone alarm first."
 msgstr "Stel eerst het telefoonalarm in."
 
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "Tell the people who get a camera’s alerts after five minutes without monitoring, and when monitoring resumes."
-msgstr "Laat de ontvangers van de camerameldingen het weten na vijf minuten zonder bewaking, en wanneer de bewaking weer actief is."
+#: src/lib/components/detector-editor.svelte
+msgid "Messages <0>(optional)</0>"
+msgstr "Berichten <0>(optioneel)</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Alarm <0>(optional)</0>"
+msgstr "Alarm <0>(optioneel)</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Ring your phone loudly through the free ntfy app, also at night, with a picture."
+msgstr "Laat je telefoon hard afgaan via de gratis ntfy-app, ook 's nachts, met een foto."
 
 #: src/routes/(admin)/notifications/+page.svelte
-msgid "Through Telegram"
-msgstr "Via Telegram"
+msgid "Choose how you hear about what a detector sees: a message with the footage, a loud alarm on your phone, or both."
+msgstr "Kies hoe je hoort wat een detector ziet: een bericht met de beelden, een hard alarm op je telefoon, of allebei."
 
 #: src/routes/(admin)/notifications/+page.svelte
-msgid "A normal notification in ntfy, without the alarm sound."
-msgstr "Een gewone melding in ntfy, zonder alarmgeluid."
+msgid "Messages"
+msgstr "Berichten"
 
 #: src/routes/(admin)/notifications/+page.svelte
-msgid "Through the phone alarm"
-msgstr "Via het telefoonalarm"
+msgid "Through Telegram, the footage goes to these people. They can confirm it or mark it as a false alarm right there."
+msgstr "Via Telegram gaan de beelden naar deze mensen. Ze kunnen het daar meteen bevestigen of als vals alarm markeren."
 
 #: src/routes/(admin)/notifications/+page.svelte
-msgid "Rings your phone loudly, also at night, with a picture of what the detector saw."
-msgstr "Laat je telefoon hard afgaan, ook ’s nachts, met een foto van wat de detector zag."
+msgid "Alarm"
+msgstr "Alarm"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Through the free ntfy app, your phone rings loudly, also at night, with a picture of what the detector saw."
+msgstr "Via de gratis ntfy-app gaat je telefoon hard af, ook 's nachts, met een foto van wat de detector zag."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "After five minutes without monitoring, and when monitoring resumes. A normal notification in ntfy, without the alarm sound."
+msgstr "Na vijf minuten zonder bewaking, en wanneer de bewaking weer start. Een gewone melding in ntfy, zonder alarmgeluid."

@@ -7,39 +7,16 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import LinkRows from '$lib/components/link-rows.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
-	import {
-		getTelegrams,
-		getPhoneAlarm,
-		getOutageNotifications,
-		saveAlarmOutages,
-		saveOutageNotifications
-	} from '$lib/remote/alerts.remote';
+	import { getTelegrams, getPhoneAlarm, saveAlarmOutages } from '$lib/remote/alerts.remote';
 	import { errorMessage, refresh } from '$lib/remote-calls';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { recipientDetectorLabels } from '$lib/alert-recipients';
-	const [detectors, telegrams] = $derived(await Promise.all([getDetectors(), getTelegrams()]));
-	const [savedNotifications, alarm] = $derived(
-		await Promise.all([getOutageNotifications(), getPhoneAlarm()])
+	const [detectors, telegrams, alarm] = $derived(
+		await Promise.all([getDetectors(), getTelegrams(), getPhoneAlarm()])
 	);
-	let savingNotifications = $state<boolean | null>(null);
 	let savingAlarmOutages = $state<boolean | null>(null);
 	let notificationError = $state('');
 
-	async function setOutageNotifications(enabled: boolean) {
-		savingNotifications = enabled;
-		notificationError = '';
-		try {
-			await saveOutageNotifications(enabled);
-			await refresh(getOutageNotifications());
-		} catch (cause) {
-			notificationError = errorMessage(
-				cause,
-				'Camera notifications could not be saved. Try again.'
-			);
-		} finally {
-			savingNotifications = null;
-		}
-	}
 	async function setAlarmOutages(enabled: boolean) {
 		savingAlarmOutages = enabled;
 		notificationError = '';
@@ -61,55 +38,14 @@
 	<PageHeader
 		back={{ href: resolve('/settings'), label: 'Settings' }}
 		title="Alerts"
-		description="Choose how you hear about what a detector sees: a Telegram message with the footage, a loud alarm on your phone, or both."
+		description="Choose how you hear about what a detector sees: a message with the footage, a loud alarm on your phone, or both."
 	/>
-	<div class="flex flex-col gap-1">
-		<h2 id="alerts-camera-offline" class="text-base font-semibold">Camera offline</h2>
-		<p class="text-sm text-muted-foreground">
-			Tell the people who get a camera’s alerts after five minutes without monitoring, and when
-			monitoring resumes.
-		</p>
-	</div>
-	<Field.Group class="panel gap-4 p-4">
-		<Field.Field orientation="horizontal" data-disabled={savingNotifications !== null}>
-			<Field.Label for="camera-offline-notifications">Through Telegram</Field.Label>
-			<Switch
-				id="camera-offline-notifications"
-				checked={savingNotifications ?? savedNotifications}
-				onCheckedChange={setOutageNotifications}
-				disabled={savingNotifications !== null}
-			/>
-		</Field.Field>
-		<Field.Field
-			orientation="horizontal"
-			data-disabled={!alarm.saved || savingAlarmOutages !== null}
-		>
-			<Field.Content>
-				<Field.Label for="camera-offline-alarm">Through the phone alarm</Field.Label>
-				<Field.Description id="camera-offline-alarm-help">
-					{alarm.saved
-						? 'A normal notification in ntfy, without the alarm sound.'
-						: 'Set up the phone alarm first.'}
-				</Field.Description>
-			</Field.Content>
-			<Switch
-				id="camera-offline-alarm"
-				checked={savingAlarmOutages ?? alarm.outages}
-				onCheckedChange={setAlarmOutages}
-				disabled={!alarm.saved || savingAlarmOutages !== null}
-				aria-describedby="camera-offline-alarm-help"
-			/>
-		</Field.Field>
-		{#if notificationError}
-			<p role="alert" class="text-sm text-danger-foreground">{notificationError}</p>
-		{/if}
-	</Field.Group>
 	<div class="flex flex-wrap items-center justify-between gap-3">
 		<div class="flex flex-col gap-1">
-			<h2 id="alerts-telegram" class="text-base font-semibold">Telegram</h2>
+			<h2 id="alerts-messages" class="text-base font-semibold">Messages</h2>
 			<p class="text-sm text-muted-foreground">
-				The footage goes to these people. They can confirm it or mark it as a false alarm right
-				there.
+				Through Telegram, the footage goes to these people. They can confirm it or mark it as a
+				false alarm right there.
 			</p>
 		</div>
 		{#if telegrams.length}
@@ -148,9 +84,10 @@
 		</Empty.Root>
 	{/if}
 	<div class="flex flex-col gap-1">
-		<h2 id="alerts-phone-alarm" class="text-base font-semibold">Phone alarm</h2>
+		<h2 id="alerts-alarm" class="text-base font-semibold">Alarm</h2>
 		<p class="text-sm text-muted-foreground">
-			Rings your phone loudly, also at night, with a picture of what the detector saw.
+			Through the free ntfy app, your phone rings loudly, also at night, with a picture of what the
+			detector saw.
 		</p>
 	</div>
 	<LinkRows
@@ -167,4 +104,27 @@
 			}
 		]}
 	/>
+	{#if alarm.saved}
+		<Field.Group class="panel gap-4 p-4">
+			<Field.Field orientation="horizontal" data-disabled={savingAlarmOutages !== null}>
+				<Field.Content>
+					<Field.Label for="camera-offline-alarm">Camera offline</Field.Label>
+					<Field.Description id="camera-offline-alarm-help">
+						After five minutes without monitoring, and when monitoring resumes. A normal
+						notification in ntfy, without the alarm sound.
+					</Field.Description>
+				</Field.Content>
+				<Switch
+					id="camera-offline-alarm"
+					checked={savingAlarmOutages ?? alarm.outages}
+					onCheckedChange={setAlarmOutages}
+					disabled={savingAlarmOutages !== null}
+					aria-describedby="camera-offline-alarm-help"
+				/>
+			</Field.Field>
+			{#if notificationError}
+				<p role="alert" class="text-sm text-danger-foreground">{notificationError}</p>
+			{/if}
+		</Field.Group>
+	{/if}
 </section>

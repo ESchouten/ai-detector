@@ -40,7 +40,8 @@ flowchart TB
     Detector <-->|optional AI check| VLM["AI provider"]
     Detector -->|alerts| Telegram["Telegram"]
     Detector -->|alerts| Webhooks["Webhooks"]
-    Web <-->|pairing, review buttons, outage notices| Telegram
+    Web <-->|pairing, review buttons| Telegram
+    Web -->|test alarm, outage notices| Ntfy["ntfy"]
     Web -->|newer presets, daily| GitHub["Presets on GitHub"]
 ```
 

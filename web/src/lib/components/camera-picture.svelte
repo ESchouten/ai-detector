@@ -13,14 +13,18 @@
 		id,
 		label,
 		monitored = false,
-		caption
+		caption,
+		overlay
 	}: {
 		id: string;
 		label: string;
 		monitored?: boolean;
 		/** Replaces the camera name along the bottom of the picture. */
 		caption?: Snippet;
+		/** Drawn over the picture, given its size in pixels. */
+		overlay?: Snippet<[{ width: number; height: number }]>;
 	} = $props();
+	let size = $state<{ width: number; height: number }>();
 	let failed = $state(false);
 	let picture = $state<string>();
 	let version = $state(0);
@@ -70,7 +74,16 @@
 	class="relative aspect-video overflow-hidden rounded-xl bg-media text-media-foreground"
 >
 	{#if active && picture && !failed}
-		<img src={picture} alt={`${label} live picture`} class="size-full object-contain" />
+		<img
+			src={picture}
+			alt={`${label} live picture`}
+			class="size-full object-contain"
+			onload={(event) => {
+				const image = event.currentTarget as HTMLImageElement;
+				size = { width: image.naturalWidth, height: image.naturalHeight };
+			}}
+		/>
+		{#if overlay && size}{@render overlay(size)}{/if}
 	{/if}
 	{#if active && !failed && monitored}<CameraDetections {id} {label} />{/if}
 	{#if active && !failed && !picture}

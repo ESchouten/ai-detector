@@ -145,6 +145,21 @@ export interface SourceConfig {
 	interval?: Interval;
 	frame_retention?: FrameRetention;
 	frames_width?: FramesWidth;
+	areas?: Areas;
+}
+/**
+ * Per source, the area a detection's box centre must lie in to count.
+ */
+export interface Areas {
+	/**
+	 * Polygon corners as x, y fractions of the picture's width and height.
+	 *
+	 * @minItems 3
+	 *
+	 * This interface was referenced by `Areas`'s JSON-Schema definition
+	 * via the `patternProperty` "\S".
+	 */
+	[k: string]: [[number, number], [number, number], [number, number], ...[number, number][]];
 }
 export interface YoloConfig {
 	model: Model;

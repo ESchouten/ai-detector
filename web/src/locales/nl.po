@@ -3743,3 +3743,40 @@ msgstr "Tip: geef je camera’s een vast adres in je router (een DHCP-reserverin
 #: src/lib/components/camera-settings.svelte
 msgid "Tip: give this camera a fixed address in your router (a DHCP reservation). When its address changes anyway, AI Detector looks for it on the network by itself."
 msgstr "Tip: geef deze camera een vast adres in je router (een DHCP-reservering). Verandert het adres toch, dan zoekt AI Detector de camera zelf op het netwerk."
+
+#: src/lib/components/camera-selection.svelte
+msgid "Whole picture"
+msgstr "Heel beeld"
+
+#. 0: camera.label
+#: src/lib/components/detection-area.svelte
+msgid "Detection area · {0}"
+msgstr "Detectiegebied · {0}"
+
+#: src/lib/components/detection-area.svelte
+msgid "Tap the corners of the area to watch. A detection counts when the middle of its box is inside it."
+msgstr "Tik de hoeken aan van het gebied dat bewaakt moet worden. Een detectie telt als het midden van het vak erbinnen valt."
+
+#: src/lib/components/detection-area.svelte
+msgid "Add a corner here"
+msgstr "Hier een hoek toevoegen"
+
+#: src/lib/components/detection-area.svelte
+msgid "Undo corner"
+msgstr "Hoek ongedaan maken"
+
+#: src/lib/components/detection-area.svelte
+msgid "Clear"
+msgstr "Wissen"
+
+#: src/lib/components/detection-area.svelte
+msgid "Save area"
+msgstr "Gebied opslaan"
+
+#: src/lib/components/detection-area.svelte
+msgid "Watch the whole picture"
+msgstr "Heel beeld bewaken"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Part of the picture"
+msgstr "Deel van het beeld"

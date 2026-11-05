@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import pathlib
-from collections.abc import Generator
+from collections.abc import Generator, Mapping
 from contextlib import contextmanager
 from time import perf_counter
 from typing import TYPE_CHECKING, Any, cast
@@ -22,7 +22,7 @@ from aidetector.application.ports import (
     ignore_status,
 )
 from aidetector.configuration import OnnxConfig, YoloConfig
-from aidetector.domain.models import BoundingBox, Frame, Observation
+from aidetector.domain.models import Area, BoundingBox, Frame, Observation, inside
 
 logger = logging.getLogger(__name__)
 
@@ -60,8 +60,13 @@ class InMemoryStreamBatch(LoadStreams):
 
 
 def map_observations(
-    result: Results, frames: tuple[Frame, ...], classes: dict[int, tuple[str, float]]
+    result: Results,
+    frames: tuple[Frame, ...],
+    classes: dict[int, tuple[str, float]],
+    area: Area | None = None,
 ) -> tuple[Observation, ...]:
+    """Map the boxes that count: of a watched class, and centred in the area if any."""
+    height, width = frames[-1].image.shape[:2]
     boxes: list[BoundingBox] = []
     confidences: dict[str, float] = {}
     # Detect and segment results always have boxes; the SDK annotation spans all tasks.
@@ -76,6 +81,10 @@ def map_observations(
         if score < threshold:
             continue
         x1, y1, x2, y2 = map(int, box.xyxy[0])
+        if area is not None and not inside(
+            area, (x1 + x2) / 2 / width, (y1 + y2) / 2 / height
+        ):
+            continue
         track_id = int(box.id.item()) if box.id is not None else None
         boxes.append(BoundingBox(x1, y1, x2, y2, name, score, track_id))
         confidences[name] = max(confidences.get(name, 0), score)
@@ -101,10 +110,12 @@ class YoloDetector:
         config: YoloConfig,
         sources: tuple[str, ...],
         options: InferenceOptions,
+        areas: Mapping[str, Area] | None = None,
     ):
         self.model = model
         self.tracking = config.tracking
         self.sources = sources
+        self.areas = areas or {}
         self.classes = resolve_classes(model.names, config.confidence)
         self._arguments: dict[str, Any] = {
             "conf": min(threshold for _, threshold in self.classes.values()),
@@ -158,7 +169,9 @@ class YoloDetector:
             )
         predicted = perf_counter()
         mapped = {
-            source: map_observations(result, frames[source], self.classes)
+            source: map_observations(
+                result, frames[source], self.classes, self.areas.get(source)
+            )
             for source, result in zip(sources, results, strict=True)
             if source in frames
         }
@@ -239,6 +252,7 @@ def open_detector(
     cache_directory: pathlib.Path,
     report_status: ReportStatus = ignore_status,
     engines: EnginePreparation | None = None,
+    areas: Mapping[str, Area] | None = None,
 ) -> Generator[YoloDetector]:
     """Prepare inference and own its model and tracking frames until shutdown."""
     loaded: YOLO | None = None
@@ -275,7 +289,7 @@ def open_detector(
                 loaded = _load_model(model_path, config.task, report_status)
             if loaded.predictor is None:
                 initialize_predictor(loaded, options, report_status)
-        detector = YoloDetector(loaded, config, sources, options)
+        detector = YoloDetector(loaded, config, sources, options, areas)
         yield detector
     finally:
         if detector is not None:

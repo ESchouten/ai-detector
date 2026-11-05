@@ -228,6 +228,13 @@ def run_application(
                         cache_directory=data_directory / "models" / "prepared",
                         report_status=rule_status,
                         engines=engines,
+                        areas={
+                            resolved: settings.detection.areas[configured]
+                            for configured, resolved in zip(
+                                settings.detection.source, source.sources, strict=True
+                            )
+                            if configured in settings.detection.areas
+                        },
                     )
                 )
                 event_policy = EventPolicy(

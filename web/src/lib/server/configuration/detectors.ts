@@ -14,6 +14,7 @@ import {
 	presetVersion,
 	withPresetTelegram
 } from './followed-presets.ts';
+import { renamePhoneAlarms } from './phone-alarm.ts';
 
 export function saveDetector(
 	{ config, app }: Configuration,
@@ -56,6 +57,7 @@ export function saveDetector(
 	const position = index < 0 ? config.detectors.length : index;
 	config.detectors[position] = normalized;
 	app.detectors[position] = meta;
+	renamePhoneAlarms({ config, app });
 }
 
 export function deleteDetector({ config, app }: Configuration, label: string): void {

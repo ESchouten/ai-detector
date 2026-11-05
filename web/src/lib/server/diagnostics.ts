@@ -7,7 +7,7 @@ import { isMissingFile, readJson } from './json-file.ts';
 import { sanitizeTextForLogs } from './logs.ts';
 import type { ZipEntry } from './zip-download.ts';
 
-const SECRET_FIELD = /^(?:key|token|password|secret|headers|authorization|chat)$/i;
+const SECRET_FIELD = /^(?:key|token|password|secret|headers|authorization|chat|topic)$/i;
 
 /** Redact structured settings and the same credentials wherever a library printed them. */
 function diagnosticRedactor(...documents: unknown[]) {
@@ -22,18 +22,18 @@ function diagnosticRedactor(...documents: unknown[]) {
 			}
 			return sanitizeTextForLogs(value);
 		}
-		if (Array.isArray(value)) return value.map((item) => settings(item, sensitive));
+		if (Array.isArray(value)) return value.map((item) => settings(item, sensitive, parent));
 		if (value && typeof value === 'object')
 			return Object.fromEntries(
 				Object.entries(value).map(([key, item]) => [
 					key,
 					settings(
 						item,
-						// Whoever has the health check's address can ping it.
+						// Whoever has the health check's or a webhook's address can ping it.
 						// A Telegram recipient someone named by its chat number would show that number.
 						sensitive ||
 							SECRET_FIELD.test(key) ||
-							(parent === 'health' && key === 'url') ||
+							((parent === 'health' || parent === 'webhook') && key === 'url') ||
 							(key === 'label' && item === (value as { chat?: unknown }).chat),
 						key
 					)

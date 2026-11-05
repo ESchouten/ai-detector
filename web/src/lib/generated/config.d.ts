@@ -114,7 +114,10 @@ export type IncludeVideo1 = boolean;
 export type VideoWidth1 = number | null;
 export type VideoCrf1 = number;
 export type Token1 = string | null;
-export type DataType = 'binary' | 'base64' | 'none';
+/**
+ * binary: form fields and files; base64: JSON; none: no content; file: the first chosen picture or video as the whole body, or `body` without one.
+ */
+export type DataType = 'binary' | 'base64' | 'none' | 'file';
 export type DataMax = number | null;
 export type Provider = string | null;
 export type Winml = boolean;

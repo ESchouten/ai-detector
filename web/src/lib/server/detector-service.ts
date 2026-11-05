@@ -14,7 +14,7 @@ import { CameraRelocation, type RelocationWatch } from './cameras/relocation';
 import { outageWatch } from './outage-alerts';
 import { diskSpace } from './storage';
 import { recordings } from './recordings';
-import { sendTelegramNotice } from './telegram';
+import { sendNtfyNotice } from './ntfy';
 import { webLog } from './web-log';
 import { WatchHistory } from './watch-history';
 import { watchState } from '../camera-history';
@@ -77,7 +77,7 @@ async function followMonitoring(
 			noted: notes.outages,
 			note: (outages) => noteOutages(APP_CONFIG_PATH, outages),
 			settings,
-			send: ({ token, chat }, text, silent) => sendTelegramNotice(token, chat, text, silent),
+			send: ({ topic }, text) => sendNtfyNotice(topic, text),
 			warn: (message, error) => webLog.warn(message, error)
 		},
 		known,
@@ -90,7 +90,7 @@ async function followMonitoring(
 		settings,
 		remember: cameras.remember,
 		relocate: cameras.relocate,
-		send: ({ token, chat }, text, silent) => sendTelegramNotice(token, chat, text, silent),
+		send: ({ topic }, text) => sendNtfyNotice(topic, text),
 		log: (message) => webLog.info(message),
 		warn: (message, error) => webLog.warn(message, error)
 	});

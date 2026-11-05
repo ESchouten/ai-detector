@@ -8,17 +8,22 @@ import {
 	outageDelivery,
 	outageWatch,
 	watchedCameras,
-	type Recipient,
+	type OutageRecipient,
 	type OutageWatch,
 	type SavedOutages,
 	type WatchedCamera
 } from '../src/lib/server/outage-alerts.ts';
 import { sourceKey } from '../src/lib/server/source-key.ts';
+import { phoneAlarmExporter } from '../src/lib/phone-alarm.ts';
 
 /** Two o'clock at night on this computer, whatever its time zone. */
 const start = new Date(2026, 9, 12, 2, 0).getTime();
-const farmer: Recipient = { token: 'fixture-token', chat: '1' };
-const vet: Recipient = { token: 'fixture-token', chat: '2' };
+const farmer: OutageRecipient = { topic: '1' };
+const vet: OutageRecipient = { topic: '2' };
+
+function name(recipient: OutageRecipient): string {
+	return recipient.topic;
+}
 
 function camera(label: string, watched: boolean, recipients = [farmer]): WatchedCamera {
 	return { id: label, label, watched, recipients };
@@ -39,7 +44,7 @@ function follow(
 	for (let at = from; at <= to; at += 10)
 		for (const notice of alerts.sample(cameras(at), start + at * 1000)) {
 			if (arrives) alerts.delivered(notice);
-			notices.push({ at, chat: notice.recipient.chat, text: notice.text });
+			notices.push({ at, chat: name(notice.recipient), text: notice.text });
 		}
 	return notices;
 }
@@ -263,8 +268,8 @@ test('a notice that cannot be sent is tried again each minute, and later notices
 	let pauses = 0;
 	const deliver = outageDelivery(
 		async (recipient, text) => {
-			if (recipient.chat === '1' && refusals-- > 0) throw new Error('No internet');
-			sent.push(`${recipient.chat}: ${text}`);
+			if (name(recipient) === '1' && refusals-- > 0) throw new Error('No internet');
+			sent.push(`${name(recipient)}: ${text}`);
 		},
 		(error) => failures.push(error),
 		async () => void pauses++
@@ -302,34 +307,23 @@ test('a notice is given up after a day, and the next one is still sent', async (
 	assert.deepEqual(sent, ['returned']);
 });
 
-test('a notice arrives without sound in the quiet hours of its recipient', async (t) => {
-	const silent: boolean[] = [];
-	const deliver = outageDelivery(
-		async (_recipient, _text, quiet) => void silent.push(quiet),
-		() => undefined
-	);
-	const night: Recipient = { ...farmer, quiet: { start: '22:00', end: '06:00' } };
-	const midday: Recipient = { ...farmer, quiet: { start: '12:00', end: '13:00' } };
-	t.mock.timers.enable({ apis: ['Date'], now: start });
-	for (const recipient of [night, midday, farmer])
-		await deliver({ recipient, text: 'stopped', stopped: [] });
-	t.mock.timers.setTime(new Date(2026, 9, 12, 12, 30).getTime());
-	for (const recipient of [night, midday])
-		await deliver({ recipient, text: 'stopped', stopped: [] });
-	assert.deepEqual(silent, [true, false, false, false, true]);
-});
-
 test('the cameras to watch come from the settings, also while the status has lost them', () => {
 	const directory = '/data';
 	const sources = ['rtsp://calving.local/live', 'rtsp://barn.local/live'];
+	const alarm = { topic: 'aidetector-fixture' };
+	const telegram = { token: 'fixture-token', chat: '1' };
 	const configuration = {
 		config: {
 			detectors: [
-				{ detection: { source: sources }, exporters: { telegram: [farmer] } },
-				{ detection: { source: [sources[1]] }, exporters: { telegram: [vet] } }
+				{ detection: { source: sources }, exporters: { telegram: [telegram] } },
+				{
+					detection: { source: [sources[1]] },
+					exporters: { webhook: [phoneAlarmExporter(alarm.topic, 'Barn')] }
+				}
 			]
 		},
 		app: {
+			phoneAlarm: alarm,
 			streams: [
 				{ id: 'camera-a', label: 'Calving pen', source: sources[0] },
 				{ id: 'camera-b', label: 'Barn', source: sources[1] }
@@ -364,8 +358,9 @@ test('the cameras to watch come from the settings, also while the status has los
 		]
 	};
 	const expected = [
-		{ id: 'camera-a', label: 'Calving pen', watched: true, recipients: [farmer] },
-		{ id: 'camera-b', label: 'Barn', watched: false, recipients: [farmer, vet] }
+		// Outages are told only through the phone alarm, for the cameras of detectors that ring it.
+		{ id: 'camera-a', label: 'Calving pen', watched: true, recipients: [] },
+		{ id: 'camera-b', label: 'Barn', watched: false, recipients: [alarm] }
 	];
 	assert.deepEqual(watchedCameras(configuration, status, directory), expected);
 	// Waiting to restart, the detector lists no cameras at all.
@@ -375,16 +370,21 @@ test('the cameras to watch come from the settings, also while the status has los
 	);
 });
 
-/** One camera watched by one detector whose alerts go to the farmer, and a detector to answer for it. */
+/** One camera watched by one detector that rings the farmer's alarm, and a detector to answer for it. */
 function watching(t: TestContext, lastRunning?: number, known = true) {
 	const directory = '/data';
 	const source = 'rtsp://barn.local/live';
 	const settings = {
 		config: {
-			detectors: [{ detection: { source: [source] }, exporters: { telegram: [farmer] } }]
+			detectors: [
+				{
+					detection: { source: [source] },
+					exporters: { webhook: [phoneAlarmExporter(farmer.topic, 'Barn')] }
+				}
+			]
 		},
 		app: {
-			notifyCameraOutages: true,
+			phoneAlarm: { topic: farmer.topic, outages: true },
 			streams: [{ id: 'barn', label: 'Barn', source }],
 			telegrams: [],
 			llms: [],
@@ -449,7 +449,7 @@ function watching(t: TestContext, lastRunning?: number, known = true) {
 for (const preference of [undefined, false])
 	test(`camera outage notifications stay off when the preference is ${preference}`, async (t) => {
 		const { settings, state, sent, notes, watch, run } = watching(t, start - 3600000);
-		settings.app.notifyCameraOutages = preference;
+		settings.app.phoneAlarm!.outages = preference;
 		const sample = watch({ barn: new Date(start - 3600000).toISOString() });
 		await run(sample, 600);
 		state.watched = true;
@@ -460,17 +460,17 @@ for (const preference of [undefined, false])
 
 test('switching outage notices on starts a new watch, and off suppresses recovery messages', async (t) => {
 	const { settings, state, sent, watch, run } = watching(t);
-	settings.app.notifyCameraOutages = false;
+	settings.app.phoneAlarm!.outages = false;
 	const sample = watch();
 	await run(sample, 600);
 	assert.deepEqual(sent, []);
-	settings.app.notifyCameraOutages = true;
+	settings.app.phoneAlarm!.outages = true;
 	await run(sample, 310);
 	assert.deepEqual(sent, [stopped('Barn', 600)]);
-	settings.app.notifyCameraOutages = false;
+	settings.app.phoneAlarm!.outages = false;
 	state.watched = true;
 	await run(sample, 120);
-	settings.app.notifyCameraOutages = true;
+	settings.app.phoneAlarm!.outages = true;
 	await run(sample, 120);
 	assert.deepEqual(sent, [stopped('Barn', 600)]);
 });
@@ -488,9 +488,9 @@ test('switching outage notices off cancels queued retries even if notices are en
 	const sample = watch();
 	await run(sample, 310);
 	assert.equal(attempts, 1);
-	settings.app.notifyCameraOutages = false;
+	settings.app.phoneAlarm!.outages = false;
 	await run(sample, 20);
-	settings.app.notifyCameraOutages = true;
+	settings.app.phoneAlarm!.outages = true;
 	await run(sample, 300);
 	assert.equal(attempts, 1);
 	assert.deepEqual(sent, []);

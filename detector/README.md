@@ -117,7 +117,7 @@ Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected
 
 **Telegram.** Needs `token` and `chat`. `alert_every` (`1`) plays the sound on every Nth alert. `quiet` takes a `start` and `end` such as `"22:00"` and `"06:00"`, in the computer's local time: alerts in that period arrive without sound. Photos are limited to 10 MB and videos to 12 MB. Alerts carry 👍 and 👎 buttons tied to the event's `event_id`; the web application receives the reviews.
 
-**Webhook.** Needs `url`; defaults to `method: "POST"` and `data_type: "binary"` (form fields and files), with `base64` (JSON) and `none` as alternatives. `headers` adds headers, `token` becomes the `Authorization` value, `body` replaces the generated content, and `data_max` limits each attachment. Payloads carry `confidence`, `timestamp`, `duration` and `validated`.
+**Webhook.** Needs `url`; defaults to `method: "POST"` and `data_type: "binary"` (form fields and files), with `base64` (JSON), `none` and `file` (the first chosen picture or video as the whole body, or `body` without one) as alternatives. `headers` adds headers, `token` becomes the `Authorization` value, `body` replaces the generated content, and `data_max` limits each attachment. Payloads carry `confidence`, `timestamp`, `duration` and `validated`.
 
 | Field | Telegram | Webhook |
 | --- | --- | --- |

@@ -266,7 +266,13 @@ class TelegramConfig(MediaConfig):
 class WebhookConfig(MediaConfig, HttpConfig):
     method: HttpMethod = "POST"
     token: str | None = Field(default=None, repr=False)
-    data_type: Literal["binary", "base64", "none"] = "binary"
+    data_type: Literal["binary", "base64", "none", "file"] = Field(
+        default="binary",
+        description=(
+            "binary: form fields and files; base64: JSON; none: no content; file: the "
+            "first chosen picture or video as the whole body, or `body` without one."
+        ),
+    )
     data_max: PositiveInt | None = None
     include_crop: bool = True
 

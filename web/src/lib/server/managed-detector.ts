@@ -236,7 +236,7 @@ export class ManagedDetector {
 				void this.enqueue(async () => {
 					// Ignore duplicate/stale requests from a process already being replaced.
 					if (this.child !== child || this.stoppingChild) return;
-					await this.restartChild(signal, /* @wc-ignore */ 'TensorRT models are ready');
+					await this.restartChild(signal, /* @wc-ignore */ 'Optimized models are ready');
 				}).catch((error) => this.fail(error));
 		});
 		createInterface({ input: child.stderr, crlfDelay: Infinity }).on('line', (line) =>

@@ -131,9 +131,15 @@ export async function readLegacyConfiguration(source: string): Promise<{
 	}
 	for (const detector of document.config.detectors) {
 		if (detector.yolo) detector.yolo.model = await relocate(detector.yolo.model, true);
-		detector.detection.source = await Promise.all(
-			detector.detection.source.map((value) => relocate(value))
-		);
+		const sources = detector.detection.source;
+		detector.detection.source = await Promise.all(sources.map((value) => relocate(value)));
+		const areas = detector.detection.areas;
+		if (areas)
+			detector.detection.areas = Object.fromEntries(
+				sources.flatMap((value, index) =>
+					areas[value] ? [[detector.detection.source[index], areas[value]]] : []
+				)
+			);
 	}
 	for (const camera of document.app.streams) {
 		camera.source = await relocate(camera.source);

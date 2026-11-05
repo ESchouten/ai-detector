@@ -393,7 +393,12 @@
 		{/if}
 
 		{#if cameras.length}
-			<CameraSelection {cameras} bind:selected={detector.detection.source} disabled={pending} />
+			<CameraSelection
+				{cameras}
+				bind:selected={detector.detection.source}
+				bind:areas={detector.detection.areas}
+				disabled={pending}
+			/>
 		{:else}
 			<Alert.Root>
 				<Alert.Title>Add a camera first</Alert.Title>

@@ -123,6 +123,17 @@ def test_source_groups_are_validated_before_startup():
     )
 
 
+def test_areas_belong_to_the_detectors_sources_and_need_three_corners():
+    triangle = ((0, 0), (1, 0), (0.5, 1))
+    assert SourceConfig(source="0", areas={"0": triangle}).areas == {"0": triangle}
+    with pytest.raises(ValidationError, match="one of the detector's sources"):
+        SourceConfig(source="0", areas={"1": triangle})
+    with pytest.raises(ValidationError):
+        SourceConfig(source="0", areas={"0": triangle[:2]})
+    with pytest.raises(ValidationError):
+        SourceConfig(source="0", areas={"0": ((0, 0), (1.5, 0), (0.5, 1))})
+
+
 @pytest.mark.parametrize(
     "source",
     [

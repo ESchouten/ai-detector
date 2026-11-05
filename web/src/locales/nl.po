@@ -3948,3 +3948,40 @@ msgstr "Laat het afgaan tot je kijkt."
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. The alarm then rings at alarm volume, also when your phone is on silent, until you swipe it away. An iPhone plays the sound once."
 msgstr "Open op Android in ntfy Instellingen en zet Behoud meldingen voor hoogste prioriteit aan. Het alarm klinkt dan via het wekkervolume, ook als je telefoon op stil staat, tot je het wegveegt. Een iPhone speelt het geluid één keer af."
+
+#: src/lib/components/camera-selection.svelte
+msgid "Part of the picture"
+msgstr "Deel van het beeld"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Whole picture"
+msgstr "Heel beeld"
+
+#. 0: camera.label
+#: src/lib/components/detection-area.svelte
+msgid "Detection area · {0}"
+msgstr "Detectiegebied · {0}"
+
+#: src/lib/components/detection-area.svelte
+msgid "Tap the corners of the area to watch. A detection counts when the middle of its box is inside it."
+msgstr "Tik de hoeken aan van het gebied dat bewaakt moet worden. Een detectie telt als het midden van het vak erbinnen valt."
+
+#: src/lib/components/detection-area.svelte
+msgid "Add a corner here"
+msgstr "Hier een hoek toevoegen"
+
+#: src/lib/components/detection-area.svelte
+msgid "Undo corner"
+msgstr "Hoek ongedaan maken"
+
+#: src/lib/components/detection-area.svelte
+msgid "Clear"
+msgstr "Wissen"
+
+#: src/lib/components/detection-area.svelte
+msgid "Save area"
+msgstr "Gebied opslaan"
+
+#: src/lib/components/detection-area.svelte
+msgid "Watch the whole picture"
+msgstr "Heel beeld bewaken"

@@ -576,6 +576,13 @@ test('a detector that follows a preset takes its new model and keeps what the pe
 	await addPresetDetector(store, { label: 'Calving pen', source: other }, 'calving-catcher');
 	const chosen = (await store.read()).config.detectors[0];
 	chosen.detection.source = [source, other];
+	chosen.detection.areas = {
+		[other]: [
+			[0, 0],
+			[0.5, 0],
+			[0.5, 1]
+		]
+	};
 	chosen.exporters = { telegram: [{ token: 'fixture-token', chat: '123' }] };
 	chosen.vlm = [
 		{
@@ -808,8 +815,13 @@ test('duplicate and stale notification edits fail without creating extra channel
 });
 
 test('a changed camera address reaches every detector that uses it, and duplicates are refused', async (t) => {
+	const area: [number, number][] = [
+		[0, 0],
+		[1, 0],
+		[1, 0.5]
+	];
 	const { store } = await fixture(t, {
-		detectors: [detector, { detection: { source: [source, other] } }]
+		detectors: [detector, { detection: { source: [source, other], areas: { [source]: area } } }]
 	});
 	const [camera, second] = (await store.read()).app.streams;
 	const replacement = 'rtsp://camera.local/new';
@@ -822,6 +834,10 @@ test('a changed camera address reaches every detector that uses it, and duplicat
 		(await store.read()).config.detectors.map((item) => item.detection.source),
 		[[replacement], [replacement, other]]
 	);
+	// The camera is watched within the same area at its new address.
+	assert.deepEqual((await store.read()).config.detectors[1].detection.areas, {
+		[replacement]: area
+	});
 	await assert.rejects(
 		store.saveCamera({ id: camera.id, source: other, label: 'Duplicate' }),
 		/already saved/

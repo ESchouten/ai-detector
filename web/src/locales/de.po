@@ -3948,3 +3948,40 @@ msgstr "Lass es klingeln, bis du nachsiehst."
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. The alarm then rings at alarm volume, also when your phone is on silent, until you swipe it away. An iPhone plays the sound once."
 msgstr "Öffne auf Android in ntfy die Einstellungen und schalte die Option ein, bei höchster Priorität weiter zu alarmieren (Keep alerting for highest priority). Der Alarm klingelt dann in Weckerlautstärke, auch wenn dein Telefon stumm ist, bis du ihn wegwischst. Ein iPhone spielt den Ton einmal ab."
+
+#: src/lib/components/camera-selection.svelte
+msgid "Part of the picture"
+msgstr "Teil des Bildes"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Whole picture"
+msgstr "Ganzes Bild"
+
+#. 0: camera.label
+#: src/lib/components/detection-area.svelte
+msgid "Detection area · {0}"
+msgstr "Erkennungsbereich · {0}"
+
+#: src/lib/components/detection-area.svelte
+msgid "Tap the corners of the area to watch. A detection counts when the middle of its box is inside it."
+msgstr "Tippen Sie auf die Ecken des Bereichs, der überwacht werden soll. Eine Erkennung zählt, wenn die Mitte ihres Rahmens darin liegt."
+
+#: src/lib/components/detection-area.svelte
+msgid "Add a corner here"
+msgstr "Hier eine Ecke hinzufügen"
+
+#: src/lib/components/detection-area.svelte
+msgid "Undo corner"
+msgstr "Ecke rückgängig machen"
+
+#: src/lib/components/detection-area.svelte
+msgid "Clear"
+msgstr "Löschen"
+
+#: src/lib/components/detection-area.svelte
+msgid "Save area"
+msgstr "Bereich speichern"
+
+#: src/lib/components/detection-area.svelte
+msgid "Watch the whole picture"
+msgstr "Ganzes Bild überwachen"

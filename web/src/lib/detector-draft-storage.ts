@@ -6,6 +6,8 @@ const choicesSchema = v.object({
 	preset: v.string(),
 	mode: v.string(),
 	cameras: v.array(v.string()),
+	/** Detection areas by camera id. */
+	areas: v.optional(v.record(v.string(), v.array(v.tuple([v.number(), v.number()])))),
 	telegrams: v.array(v.string()),
 	connection: v.string(),
 	validatorEnabled: v.boolean()

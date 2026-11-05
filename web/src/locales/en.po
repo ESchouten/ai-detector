@@ -3948,3 +3948,40 @@ msgstr "Keep it ringing until you look."
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. The alarm then rings at alarm volume, also when your phone is on silent, until you swipe it away. An iPhone plays the sound once."
 msgstr "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. The alarm then rings at alarm volume, also when your phone is on silent, until you swipe it away. An iPhone plays the sound once."
+
+#: src/lib/components/camera-selection.svelte
+msgid "Part of the picture"
+msgstr "Part of the picture"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Whole picture"
+msgstr "Whole picture"
+
+#. 0: camera.label
+#: src/lib/components/detection-area.svelte
+msgid "Detection area · {0}"
+msgstr "Detection area · {0}"
+
+#: src/lib/components/detection-area.svelte
+msgid "Tap the corners of the area to watch. A detection counts when the middle of its box is inside it."
+msgstr "Tap the corners of the area to watch. A detection counts when the middle of its box is inside it."
+
+#: src/lib/components/detection-area.svelte
+msgid "Add a corner here"
+msgstr "Add a corner here"
+
+#: src/lib/components/detection-area.svelte
+msgid "Undo corner"
+msgstr "Undo corner"
+
+#: src/lib/components/detection-area.svelte
+msgid "Clear"
+msgstr "Clear"
+
+#: src/lib/components/detection-area.svelte
+msgid "Save area"
+msgstr "Save area"
+
+#: src/lib/components/detection-area.svelte
+msgid "Watch the whole picture"
+msgstr "Watch the whole picture"

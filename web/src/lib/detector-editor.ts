@@ -64,7 +64,11 @@ export function applyDetectorPreset(
 ): DetectorDraft {
 	const next = createDetectorDraft({
 		...structuredClone(preset),
-		detection: { ...preset.detection, source: [...current.detection.source] },
+		detection: {
+			...preset.detection,
+			source: [...current.detection.source],
+			...(current.detection.areas && { areas: structuredClone(current.detection.areas) })
+		},
 		exporters: structuredClone(keepDelivery ? current.exporters : preset.exporters)
 	});
 	const previous = current.vlm?.[0];
@@ -74,6 +78,19 @@ export function applyDetectorPreset(
 		next.vlm[0].key = null;
 	}
 	return next;
+}
+
+/** Corners as fractions of the picture's width and height. */
+export type Area = [number, number][];
+/** The area each camera is watched in, by its source; a camera without one is watched whole. */
+export type Areas = NonNullable<DetectorConfig['detection']['areas']>;
+
+/** The areas with this camera's replaced; fewer than three corners watch the whole picture. */
+export function withArea(areas: Areas | undefined, source: string, area: Area): Areas | undefined {
+	const next = { ...areas };
+	delete next[source];
+	if (area.length >= 3) next[source] = area as Areas[string];
+	return Object.keys(next).length ? next : undefined;
 }
 
 export function selectTelegram(
@@ -138,6 +155,12 @@ export function detectorChoices(
 		cameras: options.cameras
 			.filter((camera) => edit.detector.detection.source.includes(camera.source))
 			.map((camera) => camera.id),
+		areas: Object.fromEntries(
+			options.cameras.flatMap((camera) => {
+				const area = edit.detector.detection.areas?.[camera.source];
+				return area ? [[camera.id, area]] : [];
+			})
+		),
 		telegrams: options.telegrams
 			.filter((channel) => channels.some((item) => sameTelegram(item, channel)))
 			.map((channel) => channel.label),
@@ -251,9 +274,12 @@ export async function restoreDetectorChoices(
 		}
 	}
 	const detector = createDetectorDraft(edit.detector);
-	detector.detection.source = options.cameras
-		.filter((camera) => choices.cameras.includes(camera.id))
-		.map((camera) => camera.source);
+	const chosen = options.cameras.filter((camera) => choices.cameras.includes(camera.id));
+	detector.detection.source = chosen.map((camera) => camera.source);
+	detector.detection.areas = chosen.reduce<Areas | undefined>(
+		(areas, camera) => withArea(areas, camera.source, choices.areas?.[camera.id] ?? []),
+		undefined
+	);
 	for (const channel of options.telegrams)
 		detector.exporters.telegram = selectTelegram(
 			detector.exporters.telegram ?? [],

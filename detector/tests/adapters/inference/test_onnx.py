@@ -5,6 +5,7 @@ import os
 import sys
 from contextlib import contextmanager, nullcontext
 from pathlib import Path
+from threading import Event
 from types import SimpleNamespace
 
 import numpy as np
@@ -806,3 +807,141 @@ def test_signed_onnx_url_still_checks_the_configured_provider(
     ):
         pytest.fail("A query string must not bypass provider validation")
     assert ort.InferenceSession is original_session
+
+
+@pytest.fixture
+def amd_windows_ml(monkeypatch, windows_ml, tmp_path):
+    """Windows ML offers an AMD GPU; built-in DirectML works too."""
+    import onnxruntime as real_ort
+
+    state = SimpleNamespace(sessions=[], devices=[], fail_compiled=False, requests=[])
+    amd = SimpleNamespace(
+        ep_name="MIGraphXExecutionProvider", device=SimpleNamespace(type="GPU")
+    )
+    windows_ml.libraries = {amd.ep_name: "amd-gpu-ep.dll"}
+
+    class SessionOptions(real_ort.SessionOptions):
+        def add_provider_for_devices(self, devices, settings):
+            state.devices.append(devices)
+
+    def session(path, sess_options=None, **kwargs):
+        if state.fail_compiled and str(path).startswith(str(state.cache)):
+            raise Fail("compiled model does not match this driver")
+        state.sessions.append((str(path), kwargs.get("providers")))
+        return "session"
+
+    sdk = SimpleNamespace(
+        __version__="1.25.2",
+        SessionOptions=SessionOptions,
+        ExecutionMode=real_ort.ExecutionMode,
+        InferenceSession=session,
+        get_available_providers=lambda: [
+            "CPUExecutionProvider",
+            "DmlExecutionProvider",
+        ],
+        get_ep_devices=lambda: [amd],
+        register_execution_provider_library=lambda name, path: None,
+        unregister_execution_provider_library=lambda name: None,
+    )
+    monkeypatch.setitem(sys.modules, "onnxruntime", sdk)
+
+    def compile_model(request, log_path, stop_requested):
+        state.requests.append(json.loads(request.read_text()))
+        output = Path(state.requests[-1]["output"])
+        output.parent.mkdir()
+        output.write_bytes(b"compiled")
+
+    monkeypatch.setattr(
+        "aidetector.adapters.inference.compiled_models.run_compilation", compile_model
+    )
+    state.amd, state.sdk = amd, sdk
+    state.model = tmp_path / "model.onnx"
+    state.cache = tmp_path / "prepared"
+    write_detection_model(state.model)
+    return state
+
+
+def test_windows_ml_accelerator_waits_on_directml_for_its_compiled_model(
+    amd_windows_ml, tmp_path, caplog
+):
+    caplog.set_level(logging.INFO)
+    cache, ready = amd_windows_ml.cache, Event()
+
+    def report(event):
+        if event.kind == "models_ready":
+            ready.set()
+
+    with inference_runtime(
+        OnnxConfig(), ONNX_MODELS, "windowsml", report, cache
+    ) as options:
+        assert options.half is True
+        amd_windows_ml.sdk.InferenceSession(str(amd_windows_ml.model), None)
+        assert ready.wait(10)
+    assert amd_windows_ml.sessions == [
+        (
+            str(amd_windows_ml.model),
+            [("DmlExecutionProvider", {}), ("CPUExecutionProvider", {})],
+        )
+    ]
+    assert "starting with DirectML" in caplog.text
+    [request] = amd_windows_ml.requests
+    assert request["model"] == str(amd_windows_ml.model)
+    assert request["libraries"] == {
+        "MIGraphXExecutionProvider": str(tmp_path / "amd-gpu-ep.dll")
+    }
+    assert request["accelerators"] == [
+        {"provider": "MIGraphXExecutionProvider", "kind": "GPU", "options": {}}
+    ]
+    assert (request["image_sizes"], request["batch"]) == ([640], 1)
+
+    amd_windows_ml.sessions.clear()
+    with inference_runtime(OnnxConfig(), ONNX_MODELS, "windowsml", cache=cache):
+        amd_windows_ml.sdk.InferenceSession(str(amd_windows_ml.model), None)
+    [(path, providers)] = amd_windows_ml.sessions
+    assert path.endswith(str(Path("model", "model.onnx")))
+    assert path.startswith(str(cache / "compiled"))
+    assert providers is None
+    assert amd_windows_ml.devices[-1] == [amd_windows_ml.amd]
+    assert len(amd_windows_ml.requests) == 1
+
+
+def test_compiled_model_that_does_not_open_is_deferred_to_directml(
+    amd_windows_ml, caplog
+):
+    cache, ready = amd_windows_ml.cache, Event()
+
+    def report(event):
+        if event.kind == "models_ready":
+            ready.set()
+
+    with inference_runtime(OnnxConfig(), ONNX_MODELS, "windowsml", report, cache):
+        amd_windows_ml.sdk.InferenceSession(str(amd_windows_ml.model), None)
+        assert ready.wait(10)
+    amd_windows_ml.fail_compiled = True
+    for _ in range(2):
+        amd_windows_ml.sessions.clear()
+        with inference_runtime(OnnxConfig(), ONNX_MODELS, "windowsml", cache=cache):
+            amd_windows_ml.sdk.InferenceSession(str(amd_windows_ml.model), None)
+        assert amd_windows_ml.sessions == [
+            (
+                str(amd_windows_ml.model),
+                [("DmlExecutionProvider", {}), ("CPUExecutionProvider", {})],
+            )
+        ]
+    assert "does not match this driver" in caplog.text
+    assert "compilation deferred" in caplog.text
+    assert len(amd_windows_ml.requests) == 1
+
+
+@pytest.mark.parametrize(
+    "config", [OnnxConfig(), OnnxConfig(provider="MIGraphXExecutionProvider")]
+)
+def test_accelerator_runs_directly_without_a_cache_or_when_requested(
+    amd_windows_ml, tmp_path, config
+):
+    cache = None if config.provider is None else tmp_path / "prepared"
+    with inference_runtime(config, ONNX_MODELS, "windowsml", cache=cache):
+        amd_windows_ml.sdk.InferenceSession(str(amd_windows_ml.model), None)
+    assert amd_windows_ml.sessions == [(str(amd_windows_ml.model), None)]
+    assert amd_windows_ml.devices == [[amd_windows_ml.amd]]
+    assert amd_windows_ml.requests == []

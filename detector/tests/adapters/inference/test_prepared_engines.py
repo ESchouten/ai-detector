@@ -409,7 +409,7 @@ def test_builder_parent_pipe_closes_without_leaving_an_orphan():
     command = [
         sys.executable,
         "-c",
-        "from aidetector.adapters.inference.tensorrt_worker import exit_with_parent; print('ready', flush=True); exit_with_parent()",
+        "from aidetector.adapters.inference.parent_control import exit_with_parent; print('ready', flush=True); exit_with_parent()",
     ]
     with subprocess.Popen(
         command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True

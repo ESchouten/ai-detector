@@ -168,7 +168,13 @@ def run_application(
             StatusEvent("preparing", message="Preparing detection on this computer…")
         )
         options = resources.enter_context(
-            inference_runtime(onnx, models, build_type, report_status)
+            inference_runtime(
+                onnx,
+                models,
+                build_type,
+                report_status,
+                data_directory / "models" / "prepared",
+            )
         )
         engines = None
         if prefer_tensorrt and build_type == "cuda":

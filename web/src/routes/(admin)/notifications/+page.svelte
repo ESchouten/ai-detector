@@ -90,20 +90,33 @@
 			detector saw.
 		</p>
 	</div>
-	<LinkRows
-		items={[
-			{
-				title: alarm.saved ? 'Phone alarm' : 'Set up the phone alarm',
-				href: resolve('/notifications/alarm'),
-				icon: BellRing,
-				description: !alarm.saved
-					? 'Wake up for a detection with a loud alarm, through the free ntfy app.'
-					: alarm.detectorLabels.length
+	{#if alarm.saved}
+		<LinkRows
+			items={[
+				{
+					title: 'Phone alarm',
+					href: resolve('/notifications/alarm'),
+					icon: BellRing,
+					description: alarm.detectorLabels.length
 						? `Rings for ${alarm.detectorLabels.join(', ')}`
 						: 'Not used by a detector yet'
-			}
-		]}
-	/>
+				}
+			]}
+		/>
+	{:else}
+		<Empty.Root class="border border-dashed">
+			<Empty.Header>
+				<Empty.Media variant="icon"><BellRing aria-hidden="true" /></Empty.Media>
+				<Empty.Title>No phone alarm yet</Empty.Title>
+				<Empty.Description>
+					Connect ntfy to wake up for a detection with a loud alarm.
+				</Empty.Description>
+			</Empty.Header>
+			<Empty.Content>
+				<Button href={resolve('/notifications/alarm')}>Connect ntfy</Button>
+			</Empty.Content>
+		</Empty.Root>
+	{/if}
 	{#if alarm.saved}
 		<Field.Group class="panel gap-4 p-4">
 			<Field.Field orientation="horizontal" data-disabled={savingAlarmOutages !== null}>

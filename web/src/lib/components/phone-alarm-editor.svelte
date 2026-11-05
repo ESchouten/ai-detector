@@ -102,18 +102,22 @@
 			</span>
 		</li>
 		<li class="flex flex-col gap-2">
-			<span class="font-medium">Scan this code with your phone’s camera.</span>
+			<span class="font-medium">Subscribe to this alarm in ntfy.</span>
+			<span class="text-muted-foreground">
+				Scan this code with your phone’s camera and copy the name, or type it:
+				<code class="select-all">{alarm.topic}</code>. Then tap + in ntfy, paste the name and tap
+				Subscribe.
+			</span>
 			<img
 				src={alarm.qr}
-				alt="Code that opens ntfy on this alarm"
+				alt={`Code with the name ${alarm.topic}`}
 				class="size-40 rounded-lg border bg-white p-1"
 			/>
 			<span class="text-muted-foreground">
 				Already on your phone?
 				<!-- An ntfy:// link opens the app, not a page of this site. -->
 				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-				<a class="underline" href={alarm.link}>Open in ntfy</a>. On an iPhone, tap + in ntfy and
-				enter <code class="select-all">{alarm.topic}</code> instead.
+				<a class="underline" href={alarm.link}>Open in ntfy</a>.
 			</span>
 		</li>
 		<li class="flex flex-col gap-1">

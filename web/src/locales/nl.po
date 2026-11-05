@@ -3745,10 +3745,6 @@ msgstr "Testalarm. Zo klinkt een detectie."
 msgid "Phone alarm"
 msgstr "Telefoonalarm"
 
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "Wake up for a detection with a loud alarm, through the free ntfy app."
-msgstr "Word wakker bij een detectie met een hard alarm, via de gratis ntfy-app."
-
 #. 0: alarm.detectorLabels.join(', ')
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Rings for {0}"
@@ -3785,18 +3781,6 @@ msgstr "Google Play"
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "App Store"
 msgstr "App Store"
-
-#: src/lib/components/phone-alarm-editor.svelte
-msgid "Code that opens ntfy on this alarm"
-msgstr "Code die ntfy op dit alarm opent"
-
-#: src/lib/components/phone-alarm-editor.svelte
-msgid "Scan this code with your phone’s camera."
-msgstr "Scan deze code met de camera van je telefoon."
-
-#: src/lib/components/phone-alarm-editor.svelte
-msgid "Already on your phone? <0>Open in ntfy</0>. On an iPhone, tap + in ntfy and enter <1/> instead."
-msgstr "Al op je telefoon? <0>Openen in ntfy</0>. Op een iPhone tik je in ntfy op + en vul je <1/> in."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Let the alarm ring through Do Not Disturb."
@@ -3870,10 +3854,6 @@ msgstr "Een hard alarm via de ntfy-app."
 msgid "No Telegram recipients yet"
 msgstr "Nog geen Telegram-ontvangers"
 
-#: src/routes/(admin)/notifications/+page.svelte
-msgid "Set up the phone alarm"
-msgstr "Telefoonalarm instellen"
-
 #: src/routes/(admin)/detectors/+page.svelte
 msgid "<0/> Rings the phone alarm"
 msgstr "<0/> Laat het telefoonalarm afgaan"
@@ -3883,6 +3863,7 @@ msgid "<0/>Connect ntfy"
 msgstr "<0/>ntfy koppelen"
 
 #: src/lib/components/detector-editor.svelte
+#: src/routes/(admin)/notifications/+page.svelte
 msgid "Connect ntfy"
 msgstr "ntfy koppelen"
 
@@ -3934,3 +3915,28 @@ msgstr "Via de gratis ntfy-app gaat je telefoon hard af, ook 's nachts, met een 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "After five minutes without monitoring, and when monitoring resumes. A normal notification in ntfy, without the alarm sound."
 msgstr "Na vijf minuten zonder bewaking, en wanneer de bewaking weer start. Een gewone melding in ntfy, zonder alarmgeluid."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "No phone alarm yet"
+msgstr "Nog geen telefoonalarm"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Connect ntfy to wake up for a detection with a loud alarm."
+msgstr "Koppel ntfy om bij een detectie wakker te worden van een hard alarm."
+
+#. 0: alarm.topic
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Code with the name {0}"
+msgstr "Code met de naam {0}"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Subscribe to this alarm in ntfy."
+msgstr "Abonneer je in ntfy op dit alarm."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Scan this code with your phone’s camera and copy the name, or type it: <0/>. Then tap + in ntfy, paste the name and tap Subscribe."
+msgstr "Scan deze code met de camera van je telefoon en kopieer de naam, of typ hem over: <0/>. Tik dan in ntfy op +, plak de naam en tik op Abonneren."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Already on your phone? <0>Open in ntfy</0>."
+msgstr "Al op je telefoon? <0>Openen in ntfy</0>."

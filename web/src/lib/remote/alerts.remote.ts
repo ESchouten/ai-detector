@@ -70,7 +70,8 @@ export const getPhoneAlarm = query(async () => {
 		outages: document.app.phoneAlarm?.outages === true,
 		detectorLabels: phoneAlarmDetectors(document),
 		link: phoneAlarmLink(topic),
-		qr: await QRCode.toDataURL(phoneAlarmLink(topic), { margin: 1, width: 256 })
+		// Phone cameras open only web addresses, so the code holds the name to copy into ntfy.
+		qr: await QRCode.toDataURL(topic, { margin: 1, width: 256 })
 	};
 });
 

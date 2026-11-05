@@ -3953,3 +3953,11 @@ msgstr "Scannez ce code avec l’appareil photo de votre téléphone et copiez l
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Already on your phone? <0>Open in ntfy</0>."
 msgstr "Déjà sur votre téléphone ? <0>Ouvrir dans ntfy</0>."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Let it ring like an alarm clock."
+msgstr "Faites-la sonner comme un réveil."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. Under Channel settings › Max priority › Sound, pick an alarm tone. The alarm then rings until you swipe it away. An iPhone plays the sound once."
+msgstr "Sur Android, ouvrez les paramètres de ntfy et activez l’option pour continuer d’alerter en priorité maximale (Keep alerting for highest priority). Sous Paramètres des canaux › Max priority › Son, choisissez une sonnerie de réveil. L’alarme sonne alors jusqu’à ce que vous la balayiez. Un iPhone joue le son une seule fois."

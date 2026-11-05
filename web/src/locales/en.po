@@ -3940,3 +3940,11 @@ msgstr "Scan this code with your phone’s camera and copy the name, or type it:
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Already on your phone? <0>Open in ntfy</0>."
 msgstr "Already on your phone? <0>Open in ntfy</0>."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Let it ring like an alarm clock."
+msgstr "Let it ring like an alarm clock."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. Under Channel settings › Max priority › Sound, pick an alarm tone. The alarm then rings until you swipe it away. An iPhone plays the sound once."
+msgstr "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. Under Channel settings › Max priority › Sound, pick an alarm tone. The alarm then rings until you swipe it away. An iPhone plays the sound once."

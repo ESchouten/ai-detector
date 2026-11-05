@@ -128,6 +128,14 @@
 				on silent mode.
 			</span>
 		</li>
+		<li class="flex flex-col gap-1">
+			<span class="font-medium">Let it ring like an alarm clock.</span>
+			<span class="text-muted-foreground">
+				On Android, open Settings in ntfy and turn on Keep alerting for highest priority. Under
+				Channel settings › Max priority › Sound, pick an alarm tone. The alarm then rings until you
+				swipe it away. An iPhone plays the sound once.
+			</span>
+		</li>
 		<li class="flex flex-col items-start gap-2">
 			<span class="font-medium">Send a test alarm.</span>
 			<Button type="button" variant="outline" onclick={test} disabled={testing || pending}>

@@ -3940,3 +3940,11 @@ msgstr "Scan deze code met de camera van je telefoon en kopieer de naam, of typ 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Already on your phone? <0>Open in ntfy</0>."
 msgstr "Al op je telefoon? <0>Openen in ntfy</0>."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Let it ring like an alarm clock."
+msgstr "Laat het afgaan als een wekker."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. Under Channel settings › Max priority › Sound, pick an alarm tone. The alarm then rings until you swipe it away. An iPhone plays the sound once."
+msgstr "Open op Android in ntfy Instellingen en zet Behoud meldingen voor hoogste prioriteit aan. Kies bij Kanaalinstellingen › Max priority › Geluid een wekkertoon. Het alarm blijft dan afgaan tot je het wegveegt. Een iPhone speelt het geluid één keer af."

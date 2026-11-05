@@ -129,11 +129,11 @@
 			</span>
 		</li>
 		<li class="flex flex-col gap-1">
-			<span class="font-medium">Let it ring like an alarm clock.</span>
+			<span class="font-medium">Keep it ringing until you look.</span>
 			<span class="text-muted-foreground">
-				On Android, open Settings in ntfy and turn on Keep alerting for highest priority. Under
-				Channel settings › Max priority › Sound, pick an alarm tone. The alarm then rings until you
-				swipe it away. An iPhone plays the sound once.
+				On Android, open Settings in ntfy and turn on Keep alerting for highest priority. The alarm
+				then rings at alarm volume, also when your phone is on silent, until you swipe it away. An
+				iPhone plays the sound once.
 			</span>
 		</li>
 		<li class="flex flex-col items-start gap-2">

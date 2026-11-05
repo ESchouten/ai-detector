@@ -15,7 +15,7 @@
 		/** Called with the chosen area, empty for the whole picture. */
 		onDone: (area: Area) => void;
 	} = $props();
-	let area = $state<Area>(untrack(() => structuredClone(saved)));
+	let area = $state<Area>(untrack(() => $state.snapshot(saved)));
 
 	/** The tapped point as fractions of the picture, which `object-contain` centres in the box. */
 	function addCorner(event: MouseEvent, size: { width: number; height: number }) {

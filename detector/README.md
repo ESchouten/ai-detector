@@ -68,6 +68,7 @@ All options are in [`config.schema.json`](../config/config.schema.json). Sources
 | `detection.interval` | `0` | Minimum seconds between sampled frames; files use media time and are not paced |
 | `detection.frame_retention` | `15` | Frames kept per live source for each evaluation: the latest is evaluated, earlier ones give context. With an interval, frames between samples are kept evenly spread, so event videos stay smooth |
 | `detection.frames_width` | `1280` | Maximum input width; aspect ratio is kept and smaller frames are not upscaled |
+| `detection.areas` | none | Per source, the corners of the area to watch as fractions of the picture's width and height; a detection counts only when the middle of its box is inside |
 
 - Detectors that name the **same live source string** share one camera connection and its decoded frames. Each keeps its own sampling, frame size, tracking and event rules.
 - Use separate detectors for files and live streams. Files in one detector are processed in order, and each file's end closes its own event. Live captures reconnect after expected failures.

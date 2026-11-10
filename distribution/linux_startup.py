@@ -82,7 +82,7 @@ def install(compose: Path, url: str) -> None:
     print(
         "Startup enabled. Detection starts at boot; the browser opens at desktop login."
     )
-    print("New installations open Setup; configured installations open Detections.")
+    print("New installations open Setup; configured installations open Recordings.")
     print(
         "For unattended power-on, enable automatic login in the Linux desktop settings."
     )

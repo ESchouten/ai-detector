@@ -2,7 +2,7 @@ name: Web and setup tests
 
 on:
   pull_request:
-    paths: &paths ['web/**', 'config/**', 'distribution/toolchain.json', 'example/compose*.yml', '.github/workflows/web-tests.yml', '.github/actions/setup-web/**', '.gitattributes']
+    paths: &paths ['web/**', 'config/**', 'distribution/toolchain.json', 'example/compose.yml', '.github/workflows/web-tests.yml', '.github/actions/setup-web/**', '.gitattributes']
   push:
     branches: ['main']
     paths: *paths
@@ -45,11 +45,9 @@ jobs:
       - name: Test production server
         if: runner.os == 'Linux'
         run: pnpm --dir web test:production
-      - name: Validate Docker Compose deployments
+      - name: Validate the Docker Compose deployment
         if: runner.os == 'Linux'
-        run: |
-          docker compose -f example/compose.yml config --quiet
-          docker compose -f example/compose.jetson.yml config --quiet
+        run: docker compose -f example/compose.yml config --quiet
       - name: Upload test diagnostics
         if: failure()
         uses: actions/upload-artifact@v7

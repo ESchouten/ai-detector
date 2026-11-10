@@ -163,7 +163,7 @@ Before the first real pair of versions, try a signed update on a Mac and on Wind
 | --- | --- | --- |
 | [Application download](../.github/workflows/application.yml) | `v*`, `test-*`, manual | Checks all three systems, builds and tests the native applications, then publishes signed official or preview updates and the container image. |
 | [Detector Tests](../.github/workflows/detector-tests.yml) | Relevant pull requests and pushes to `main`, manual, and every application build | Lint, formatting and types; tests on three systems, with branch coverage on Linux; schemas and the wheel. |
-| [Web and setup tests](../.github/workflows/web-tests.yml) | The same | Unit tests on three systems; static checks, the production server and Compose checks on Linux. |
+| [Web and setup tests](../.github/workflows/web-tests.yml) | The same | Unit tests on three systems; static checks, the production server and the Compose check on Linux. |
 | [Desktop distribution tests](../.github/workflows/distribution-tests.yml) | Relevant pull requests and pushes to `main`, manual | Native launchers, the compiled web process, installers and update packages. |
 | [Container image](../.github/workflows/container-tests.yml) | Pull requests and pushes to `main` that change the `Dockerfile`, its ignore file or the dependency files it installs from, manual | Builds the image for amd64 and arm64 without publishing it and runs the container smoke check. |
 | [End-to-end test](../.github/workflows/e2e-tests.yml) | Every pull request and push to `main`, manual | Sets up Cow Catcher in the browser, with a camera that plays the example clip, and receives its alerts. |

@@ -38,26 +38,21 @@ Monitoring keeps running when you close the browser. While it is on, the Windows
 
 ## Docker
 
-One image, `ghcr.io/eschouten/ai-detector`, holds the web application and the detector it starts and supervises, as the desktop application does. The [example Compose file](example/compose.yml) runs it on a Linux PC with an NVIDIA GPU and the NVIDIA Container Toolkit:
+One image, `ghcr.io/eschouten/ai-detector`, holds the web application and the detector it starts and supervises, as the desktop application does. The [example Compose file](example/compose.yml) runs it on a Linux PC with an NVIDIA GPU and the NVIDIA Container Toolkit, or on a Jetson Orin or Thor with JetPack 7.2:
 
 ```sh
 cd example
 docker compose up -d
 ```
 
-Open `http://<computer-IP>/`. Settings, models and recordings live in the folder beside the Compose file. The container uses the host's network so the cameras on it can be found; update with `docker compose pull && docker compose up -d`. Coming from the two separate images, read [Docker](detector/MIGRATION.md#docker) first.
-
-| Host | Compose file |
-| --- | --- |
-| Linux PC with an NVIDIA GPU | [`example/compose.yml`](example/compose.yml) |
-| Jetson Orin or Thor with JetPack 7.2 | [`example/compose.jetson.yml`](example/compose.jetson.yml); checked on an Orin Nano, not on a Thor, see [Jetson](detector/MIGRATION.md#jetson) |
+Open `http://<computer-IP>/`. Settings, models and recordings live in the folder beside the Compose file. The container uses the host's network so the cameras on it can be found; update with `docker compose pull && docker compose up -d`. Coming from the two separate images, read [Docker](detector/MIGRATION.md#docker) first. On a Jetson it is checked on an Orin Nano, not on a Thor; see [Jetson](detector/MIGRATION.md#jetson).
 
 ### Start automatically on a Jetson or Linux desktop
 
 For an existing Compose installation, run this once from the repository folder as the desktop's user:
 
 ```sh
-python3 distribution/linux_startup.py install --compose example/compose.jetson.yml
+python3 distribution/linux_startup.py install --compose example/compose.yml
 ```
 
 It enables Docker at boot, starts the services and opens the application in the browser at login, so detection runs from boot. Use the Compose file your installation already uses, and add `--url http://localhost:YOUR_PORT/` if you changed the web port. `python3 distribution/linux_startup.py uninstall` removes the browser autostart and nothing else. The helper does not install Docker or GPU drivers.

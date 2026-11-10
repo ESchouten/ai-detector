@@ -1,6 +1,6 @@
 import { fail } from '@sveltejs/kit';
 import { calendarDateInput } from '$lib/detections';
-import { plural } from '$lib/format';
+import { calendarDay, plural } from '$lib/format';
 import * as v from 'valibot';
 import { DATA_DIRECTORY } from '$lib/server/application-paths';
 import { recordings } from '$lib/server/recordings';
@@ -16,7 +16,8 @@ import type { Actions, PageServerLoad } from './$types';
 
 const beforeDate = v.pipe(
 	calendarDateInput,
-	v.check((value) => value <= new Date().toISOString().slice(0, 10))
+	// Recordings are named by this computer's calendar day, not the day in UTC.
+	v.check((value) => value <= calendarDay(new Date()))
 );
 export const load: PageServerLoad = async () => ({
 	space: await diskSpace(recordings.directory),

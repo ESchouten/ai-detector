@@ -258,18 +258,6 @@ msgstr "Impossible d’ouvrir le détecteur. Extrayez le téléchargement comple
 msgid "The detector check did not finish. Please try again."
 msgstr "La vérification du détecteur ne s’est pas terminée. Veuillez réessayer."
 
-#: src/lib/server/diagnostics.ts
-msgid ""
-"AI Detector diagnostics\n"
-"\n"
-"Includes available rotated logs, the eight latest TensorRT build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n"
-""
-msgstr ""
-"Diagnostic d’AI Detector\n"
-"\n"
-"Contient les journaux disponibles, les huit derniers journaux de compilation TensorRT, des détails d’exécution et les paramètres sans mots de passe. Aucun enregistrement n’est inclus. Vérifiez les fichiers avant de les partager : les journaux peuvent contenir des chemins locaux et des adresses de caméras.\n"
-""
-
 #. 0: (space.available / 1024 ** 3).toFixed(1)
 #: src/lib/server/detector-service.ts
 msgid "Storage is almost full ({0} GB free). Free space in Settings → Storage so recordings can continue."
@@ -3139,10 +3127,6 @@ msgid "Use an interval of at most one day."
 msgstr "Utilisez un intervalle d’un jour au maximum."
 
 #: src/lib/navigation.ts
-msgid "Who gets a Telegram message when something is detected."
-msgstr "Qui reçoit un message Telegram lorsque quelque chose est détecté."
-
-#: src/lib/navigation.ts
 msgid "Let AI double-check detections before an alert is sent."
 msgstr "Laissez l’IA revérifier les détections avant l’envoi d’une alerte."
 
@@ -3998,3 +3982,19 @@ msgstr "Enregistrer la zone"
 #: src/lib/components/detection-area.svelte
 msgid "Watch the whole picture"
 msgstr "Surveiller toute l’image"
+
+#: src/lib/navigation.ts
+msgid "A message with the footage, a loud alarm on your phone, or both."
+msgstr "Un message avec les images, une alarme forte sur votre téléphone, ou les deux."
+
+#: src/lib/server/diagnostics.ts
+msgid ""
+"AI Detector diagnostics\n"
+"\n"
+"Includes available rotated logs, the latest TensorRT and Windows ML build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n"
+""
+msgstr ""
+"Diagnostic d’AI Detector\n"
+"\n"
+"Contient les journaux disponibles, les derniers journaux de compilation de TensorRT et de Windows ML, des détails d’exécution et les paramètres sans mots de passe. Aucun enregistrement n’est inclus. Vérifiez les fichiers avant de les partager : les journaux peuvent contenir des chemins locaux et des adresses de caméras.\n"
+""

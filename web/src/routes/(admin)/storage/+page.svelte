@@ -7,7 +7,7 @@
 	import * as Field from '$lib/components/ui/field';
 	import * as Alert from '$lib/components/ui/alert';
 	import PageHeader from '$lib/components/page-header.svelte';
-	import { calendarDate, dataSize, plural } from '$lib/format';
+	import { calendarDate, calendarDay, dataSize, plural } from '$lib/format';
 	let { data, form } = $props();
 	const used = $derived(data.space.total - data.space.available);
 </script>
@@ -55,13 +55,7 @@
 		<form method="POST" action="?/preview" use:enhance class="flex flex-wrap items-end gap-3">
 			<Field.Field class="w-auto">
 				<Field.Label for="before-date">Recordings before</Field.Label>
-				<Input
-					id="before-date"
-					name="before"
-					type="date"
-					max={new Date().toISOString().slice(0, 10)}
-					required
-				/>
+				<Input id="before-date" name="before" type="date" max={calendarDay(new Date())} required />
 			</Field.Field>
 			<Button type="submit" variant="outline">Review</Button>
 		</form>

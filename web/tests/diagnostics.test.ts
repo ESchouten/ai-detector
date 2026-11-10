@@ -9,7 +9,7 @@ import { DetectionArchive } from '../src/lib/server/archive.ts';
 import { webLog } from '../src/lib/server/web-log.ts';
 import { temporaryDirectory } from './support/files.ts';
 
-test('support bundles include rotated and TensorRT logs while redacting saved credentials and excluding recordings', async (t) => {
+test('support bundles include rotated, TensorRT and Windows ML logs while redacting saved credentials and excluding recordings', async (t) => {
 	const directory = await temporaryDirectory(t, 'detector-diagnostics-');
 	await writeJson(path.join(directory, 'config.json'), {
 		detectors: [
@@ -38,6 +38,9 @@ test('support bundles include rotated and TensorRT logs while redacting saved cr
 	const build = path.join(directory, 'models', 'prepared', 'tensorrt', 'a'.repeat(64));
 	await mkdir(build, { recursive: true });
 	await writeFile(path.join(build, 'build.log'), 'Exporting model\nCompilation timeout\n');
+	const compiled = path.join(directory, 'models', 'prepared', 'compiled', 'b'.repeat(64));
+	await mkdir(compiled, { recursive: true });
+	await writeFile(path.join(compiled, 'build.log'), 'Compiling for the NPU\n');
 	await writeFile(path.join(directory, 'logs', 'secret.json'), '{"private": true}');
 	const files = [];
 	for await (const file of diagnosticFiles(directory, {
@@ -52,6 +55,14 @@ test('support bundles include rotated and TensorRT logs while redacting saved cr
 				file.name.endsWith('/build.log') &&
 				'content' in file &&
 				file.content.includes('Compilation timeout')
+		)
+	);
+	assert.ok(
+		files.some(
+			(file) =>
+				file.name === `windows-ml/${'b'.repeat(64)}/build.log` &&
+				'content' in file &&
+				file.content.includes('Compiling for the NPU')
 		)
 	);
 	const text = JSON.stringify(files);

@@ -258,18 +258,6 @@ msgstr "De detector kon niet worden geopend. Pak de volledige download uit en ho
 msgid "The detector check did not finish. Please try again."
 msgstr "De controle van de detector is niet afgerond. Probeer het opnieuw."
 
-#: src/lib/server/diagnostics.ts
-msgid ""
-"AI Detector diagnostics\n"
-"\n"
-"Includes available rotated logs, the eight latest TensorRT build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n"
-""
-msgstr ""
-"Diagnosegegevens van AI Detector\n"
-"\n"
-"Bevat de beschikbare logbestanden, de acht nieuwste TensorRT-buildlogs, gegevens over de uitvoering en instellingen zonder wachtwoorden. Er zitten geen opnamen in. Bekijk de bestanden voordat je ze deelt: logs kunnen lokale paden en camera-adressen bevatten.\n"
-""
-
 #. 0: (space.available / 1024 ** 3).toFixed(1)
 #: src/lib/server/detector-service.ts
 msgid "Storage is almost full ({0} GB free). Free space in Settings → Storage so recordings can continue."
@@ -3129,10 +3117,6 @@ msgid "Use an interval of at most one day."
 msgstr "Gebruik een interval van hoogstens één dag."
 
 #: src/lib/navigation.ts
-msgid "Who gets a Telegram message when something is detected."
-msgstr "Wie een Telegram-bericht krijgt wanneer er iets wordt gedetecteerd."
-
-#: src/lib/navigation.ts
 msgid "Let AI double-check detections before an alert is sent."
 msgstr "Laat AI detecties nog eens controleren voordat er een melding wordt verstuurd."
 
@@ -3985,3 +3969,19 @@ msgstr "Gebied opslaan"
 #: src/lib/components/detection-area.svelte
 msgid "Watch the whole picture"
 msgstr "Heel beeld bewaken"
+
+#: src/lib/navigation.ts
+msgid "A message with the footage, a loud alarm on your phone, or both."
+msgstr "Een bericht met de beelden, een hard alarm op je telefoon, of allebei."
+
+#: src/lib/server/diagnostics.ts
+msgid ""
+"AI Detector diagnostics\n"
+"\n"
+"Includes available rotated logs, the latest TensorRT and Windows ML build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n"
+""
+msgstr ""
+"Diagnosegegevens van AI Detector\n"
+"\n"
+"Bevat de beschikbare logbestanden, de nieuwste buildlogs van TensorRT en Windows ML, gegevens over de uitvoering en instellingen zonder wachtwoorden. Er zitten geen opnamen in. Bekijk de bestanden voordat je ze deelt: logs kunnen lokale paden en camera-adressen bevatten.\n"
+""

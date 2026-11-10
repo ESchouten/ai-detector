@@ -1271,7 +1271,7 @@ msgstr "Diese Kamera konnte nicht entfernt werden."
 
 #: src/lib/components/camera-settings.svelte
 msgid "Connect to see the new picture."
-msgstr "Verbinden Sie, um das neue Bild zu sehen."
+msgstr "Verbinden Sie die Kamera, um das neue Bild zu sehen."
 
 #: src/lib/components/camera-settings.svelte
 msgid "Camera settings"
@@ -1813,7 +1813,7 @@ msgstr "Name des Empfängers"
 
 #: src/lib/components/notification-editor.svelte
 msgid "You can connect now and choose this recipient when you add a detector."
-msgstr "Sie können jetzt verbinden und diesen Empfänger wählen, wenn Sie einen Detektor hinzufügen."
+msgstr "Sie können die Verbindung jetzt herstellen und diesen Empfänger wählen, wenn Sie einen Detektor hinzufügen."
 
 #: src/lib/components/notification-editor.svelte
 msgid "Which detectors alert this recipient?"
@@ -3667,7 +3667,7 @@ msgstr "Keine KI-Prüfung verbunden"
 #: src/routes/(admin)/notifications/add/+page.svelte
 #: src/routes/(admin)/validator/add/+page.svelte
 msgid "It may have been removed or renamed."
-msgstr "Möglicherweise wurde er entfernt oder umbenannt."
+msgstr "Möglicherweise wurde der Eintrag entfernt oder umbenannt."
 
 #: src/routes/(admin)/streams/[id]/+page.svelte
 msgid "It may have been removed."
@@ -3744,7 +3744,7 @@ msgstr "Telefonalarm gespeichert."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Could not save the phone alarm. Your choices are still here."
-msgstr "Der Telefonalarm konnte nicht gespeichert werden. Ihre Auswahl ist noch da."
+msgstr "Der Telefonalarm konnte nicht gespeichert werden. Ihre Angaben sind noch vorhanden."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Could not remove the phone alarm."
@@ -3752,11 +3752,11 @@ msgstr "Der Telefonalarm konnte nicht entfernt werden."
 
 #: src/routes/(admin)/notifications/alarm/+page.svelte
 msgid "A loud alarm on your phone for each detection, also at night. It comes next to the Telegram alert, through the free ntfy app."
-msgstr "Ein lauter Alarm auf Ihrem Telefon bei jeder Erkennung, auch nachts. Er kommt zusätzlich zur Telegram-Benachrichtigung, über die kostenlose ntfy-App."
+msgstr "Ein lauter Alarm auf Ihrem Handy bei jeder Erkennung, auch nachts. Er kommt zusätzlich zur Telegram-Benachrichtigung, über die kostenlose ntfy-App."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Install the ntfy app on your phone."
-msgstr "Installieren Sie die ntfy-App auf Ihrem Telefon."
+msgstr "Installieren Sie die ntfy-App auf Ihrem Handy."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Google Play"
@@ -3788,7 +3788,7 @@ msgstr "Testalarm senden"
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "My phone rang"
-msgstr "Mein Telefon hat geklingelt"
+msgstr "Mein Handy hat geklingelt"
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Send a test alarm."
@@ -3804,7 +3804,7 @@ msgstr "Bei welchen Detektoren klingelt der Alarm?"
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Phone alarm needs attention"
-msgstr "Telefonalarm braucht Aufmerksamkeit"
+msgstr "Telefonalarm braucht Ihre Aufmerksamkeit"
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Remove the phone alarm…"
@@ -3816,7 +3816,7 @@ msgstr "Telefonalarm entfernen?"
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Detectors will stop ringing your phone. Telegram alerts stay as they are."
-msgstr "Detektoren lassen Ihr Telefon dann nicht mehr klingeln. Telegram-Benachrichtigungen bleiben, wie sie sind."
+msgstr "Detektoren lassen Ihr Handy dann nicht mehr klingeln. Telegram-Benachrichtigungen bleiben, wie sie sind."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Keep alarm"
@@ -3853,7 +3853,7 @@ msgstr "ntfy verbinden"
 
 #: src/lib/components/detector-editor.svelte
 msgid "A loud alarm on your phone for each detection, also at night. Your detector changes stay here until you save the detector."
-msgstr "Ein lauter Alarm auf Ihrem Telefon bei jeder Erkennung, auch nachts. Ihre Änderungen am Detektor bleiben erhalten, bis Sie den Detektor speichern."
+msgstr "Ein lauter Alarm auf Ihrem Handy bei jeder Erkennung, auch nachts. Ihre Änderungen am Detektor bleiben erhalten, bis Sie den Detektor speichern."
 
 #. 0: response.status
 #: src/lib/server/ntfy.ts
@@ -3874,11 +3874,11 @@ msgstr "Alarm <0>(optional)</0>"
 
 #: src/lib/components/detector-editor.svelte
 msgid "Ring your phone loudly through the free ntfy app, also at night, with a picture."
-msgstr "Lässt Ihr Telefon über die kostenlose ntfy-App laut klingeln, auch nachts, mit einem Foto."
+msgstr "Lässt Ihr Handy über die kostenlose ntfy-App laut klingeln, auch nachts, mit einem Foto."
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Choose how you hear about what a detector sees: a message with the footage, a loud alarm on your phone, or both."
-msgstr "Wählen Sie, wie Sie erfahren, was ein Detektor sieht: eine Nachricht mit den Aufnahmen, ein lauter Alarm auf Ihrem Telefon oder beides."
+msgstr "Wählen Sie, wie Sie erfahren, was ein Detektor sieht: eine Nachricht mit den Aufnahmen, ein lauter Alarm auf Ihrem Handy oder beides."
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Messages"
@@ -3894,7 +3894,7 @@ msgstr "Alarm"
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Through the free ntfy app, your phone rings loudly, also at night, with a picture of what the detector saw."
-msgstr "Über die kostenlose ntfy-App klingelt Ihr Telefon laut, auch nachts, mit einem Foto von dem, was der Detektor gesehen hat."
+msgstr "Über die kostenlose ntfy-App klingelt Ihr Handy laut, auch nachts, mit einem Foto von dem, was der Detektor gesehen hat."
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "After five minutes without monitoring, and when monitoring resumes. A normal notification in ntfy, without the alarm sound."
@@ -3919,11 +3919,11 @@ msgstr "Abonnieren Sie diesen Alarm in ntfy."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Scan this code with your phone’s camera and copy the name, or type it: <0/>. Then tap + in ntfy, paste the name and tap Subscribe."
-msgstr "Scannen Sie diesen Code mit der Kamera Ihres Telefons und kopieren Sie den Namen, oder tippen Sie ihn ab: <0/>. Tippen Sie dann in ntfy auf +, fügen Sie den Namen ein und tippen Sie auf Abonnieren."
+msgstr "Scannen Sie diesen Code mit der Kamera Ihres Handys und kopieren Sie den Namen, oder tippen Sie ihn ab: <0/>. Tippen Sie dann in ntfy auf +, fügen Sie den Namen ein und tippen Sie auf Abonnieren."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Already on your phone? <0>Open in ntfy</0>."
-msgstr "Schon auf Ihrem Telefon? <0>In ntfy öffnen</0>."
+msgstr "Schon auf Ihrem Handy? <0>In ntfy öffnen</0>."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Keep it ringing until you look."
@@ -3931,7 +3931,7 @@ msgstr "Lassen Sie es klingeln, bis Sie nachsehen."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. The alarm then rings at alarm volume, also when your phone is on silent, until you swipe it away. An iPhone plays the sound once."
-msgstr "Öffnen Sie auf Android in ntfy die Einstellungen und schalten Sie die Option ein, bei höchster Priorität weiter zu alarmieren (Keep alerting for highest priority). Der Alarm klingelt dann in Weckerlautstärke, auch wenn Ihr Telefon stumm ist, bis Sie ihn wegwischen. Ein iPhone spielt den Ton einmal ab."
+msgstr "Öffnen Sie auf Android in ntfy die Einstellungen und schalten Sie die Option ein, bei höchster Priorität weiter zu alarmieren (Keep alerting for highest priority). Der Alarm klingelt dann in Weckerlautstärke, auch wenn Ihr Handy stumm ist, bis Sie ihn wegwischen. Ein iPhone spielt den Ton einmal ab."
 
 #: src/lib/components/camera-selection.svelte
 msgid "Part of the picture"
@@ -3972,7 +3972,7 @@ msgstr "Ganzes Bild überwachen"
 
 #: src/lib/navigation.ts
 msgid "A message with the footage, a loud alarm on your phone, or both."
-msgstr "Eine Nachricht mit den Aufnahmen, ein lauter Alarm auf Ihrem Telefon oder beides."
+msgstr "Eine Nachricht mit den Aufnahmen, ein lauter Alarm auf Ihrem Handy oder beides."
 
 #: src/lib/server/diagnostics.ts
 msgid ""

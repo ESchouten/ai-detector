@@ -16,7 +16,7 @@ The downloads are not signed with an Apple or Windows publisher certificate, so 
 
 ## Set up
 
-Open **AI Detector**. Setup opens in your browser, in English, Dutch, German, French or Turkish. If no browser opens, go to [localhost](http://localhost/).
+Open **AI Detector**. Setup opens in your browser, in English, Dutch, German, French, Spanish, Portuguese, Polish, Turkish or Chinese. If no browser opens, go to [localhost](http://localhost/).
 
 1. **Cameras.** The cameras found on your network are already ticked; a camera that needs its own login asks for it. Or paste an RTSP address. Check each picture and give the cameras a name.
 2. **Detection.** Choose a preset, such as Cow Catcher, and the cameras it watches. Phone alerts and the AI check can be added here or later.

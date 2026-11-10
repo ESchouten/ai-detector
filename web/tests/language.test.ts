@@ -61,10 +61,10 @@ test('a browser gets the first of its languages that the interface has', () => {
 	assert.equal(negotiateLocale('nl-NL,nl;q=0.9,en-US;q=0.8,en;q=0.7'), 'nl');
 	assert.equal(negotiateLocale('fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5'), 'fr');
 	// Quality decides, not position; a language switched off with q=0 is never chosen.
-	assert.equal(negotiateLocale('pl,de-AT;q=0.8,en;q=0.9'), 'en');
+	assert.equal(negotiateLocale('it,de-AT;q=0.8,en;q=0.9'), 'en');
 	assert.equal(negotiateLocale('en;q=0, de'), 'de');
 	// Nothing we can serve leaves the choice to the caller, which falls back to English.
-	for (const header of ['es-ES,es;q=0.9', '*', '', null, undefined])
+	for (const header of ['ja-JP,ja;q=0.9', '*', '', null, undefined])
 		assert.equal(negotiateLocale(header), undefined);
 });
 

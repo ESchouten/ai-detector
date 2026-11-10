@@ -258,18 +258,6 @@ msgstr "Der Detektor konnte nicht geöffnet werden. Entpacken Sie den vollständ
 msgid "The detector check did not finish. Please try again."
 msgstr "Die Prüfung des Detektors wurde nicht abgeschlossen. Bitte versuchen Sie es erneut."
 
-#: src/lib/server/diagnostics.ts
-msgid ""
-"AI Detector diagnostics\n"
-"\n"
-"Includes available rotated logs, the eight latest TensorRT build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n"
-""
-msgstr ""
-"Diagnosedaten von AI Detector\n"
-"\n"
-"Enthält die verfügbaren Protokolldateien, die acht neuesten TensorRT-Build-Protokolle, Laufzeitdetails und Einstellungen ohne Passwörter. Aufnahmen sind nicht enthalten. Prüfen Sie die Dateien, bevor Sie sie weitergeben: Protokolle können lokale Pfade und Kameraadressen enthalten.\n"
-""
-
 #. 0: (space.available / 1024 ** 3).toFixed(1)
 #: src/lib/server/detector-service.ts
 msgid "Storage is almost full ({0} GB free). Free space in Settings → Storage so recordings can continue."
@@ -3129,10 +3117,6 @@ msgid "Use an interval of at most one day."
 msgstr "Verwenden Sie ein Intervall von höchstens einem Tag."
 
 #: src/lib/navigation.ts
-msgid "Who gets a Telegram message when something is detected."
-msgstr "Wer eine Telegram-Nachricht bekommt, wenn etwas erkannt wird."
-
-#: src/lib/navigation.ts
 msgid "Let AI double-check detections before an alert is sent."
 msgstr "Lassen Sie Erkennungen von einer KI gegenprüfen, bevor eine Benachrichtigung gesendet wird."
 
@@ -3890,11 +3874,11 @@ msgstr "Alarm <0>(optional)</0>"
 
 #: src/lib/components/detector-editor.svelte
 msgid "Ring your phone loudly through the free ntfy app, also at night, with a picture."
-msgstr "Lässt dein Telefon über die kostenlose ntfy-App laut klingeln, auch nachts, mit einem Foto."
+msgstr "Lässt Ihr Telefon über die kostenlose ntfy-App laut klingeln, auch nachts, mit einem Foto."
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Choose how you hear about what a detector sees: a message with the footage, a loud alarm on your phone, or both."
-msgstr "Wähle, wie du erfährst, was ein Detektor sieht: eine Nachricht mit den Aufnahmen, ein lauter Alarm auf deinem Telefon oder beides."
+msgstr "Wählen Sie, wie Sie erfahren, was ein Detektor sieht: eine Nachricht mit den Aufnahmen, ein lauter Alarm auf Ihrem Telefon oder beides."
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Messages"
@@ -3910,7 +3894,7 @@ msgstr "Alarm"
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Through the free ntfy app, your phone rings loudly, also at night, with a picture of what the detector saw."
-msgstr "Über die kostenlose ntfy-App klingelt dein Telefon laut, auch nachts, mit einem Foto von dem, was der Detektor gesehen hat."
+msgstr "Über die kostenlose ntfy-App klingelt Ihr Telefon laut, auch nachts, mit einem Foto von dem, was der Detektor gesehen hat."
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "After five minutes without monitoring, and when monitoring resumes. A normal notification in ntfy, without the alarm sound."
@@ -3922,7 +3906,7 @@ msgstr "Noch kein Telefonalarm"
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Connect ntfy to wake up for a detection with a loud alarm."
-msgstr "Verbinde ntfy, um bei einer Erkennung von einem lauten Alarm geweckt zu werden."
+msgstr "Verbinden Sie ntfy, um bei einer Erkennung von einem lauten Alarm geweckt zu werden."
 
 #. 0: alarm.topic
 #: src/lib/components/phone-alarm-editor.svelte
@@ -3931,23 +3915,23 @@ msgstr "Code mit dem Namen {0}"
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Subscribe to this alarm in ntfy."
-msgstr "Abonniere diesen Alarm in ntfy."
+msgstr "Abonnieren Sie diesen Alarm in ntfy."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Scan this code with your phone’s camera and copy the name, or type it: <0/>. Then tap + in ntfy, paste the name and tap Subscribe."
-msgstr "Scanne diesen Code mit der Kamera deines Telefons und kopiere den Namen, oder tippe ihn ab: <0/>. Tippe dann in ntfy auf +, füge den Namen ein und tippe auf Abonnieren."
+msgstr "Scannen Sie diesen Code mit der Kamera Ihres Telefons und kopieren Sie den Namen, oder tippen Sie ihn ab: <0/>. Tippen Sie dann in ntfy auf +, fügen Sie den Namen ein und tippen Sie auf Abonnieren."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Already on your phone? <0>Open in ntfy</0>."
-msgstr "Schon auf deinem Telefon? <0>In ntfy öffnen</0>."
+msgstr "Schon auf Ihrem Telefon? <0>In ntfy öffnen</0>."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Keep it ringing until you look."
-msgstr "Lass es klingeln, bis du nachsiehst."
+msgstr "Lassen Sie es klingeln, bis Sie nachsehen."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. The alarm then rings at alarm volume, also when your phone is on silent, until you swipe it away. An iPhone plays the sound once."
-msgstr "Öffne auf Android in ntfy die Einstellungen und schalte die Option ein, bei höchster Priorität weiter zu alarmieren (Keep alerting for highest priority). Der Alarm klingelt dann in Weckerlautstärke, auch wenn dein Telefon stumm ist, bis du ihn wegwischst. Ein iPhone spielt den Ton einmal ab."
+msgstr "Öffnen Sie auf Android in ntfy die Einstellungen und schalten Sie die Option ein, bei höchster Priorität weiter zu alarmieren (Keep alerting for highest priority). Der Alarm klingelt dann in Weckerlautstärke, auch wenn Ihr Telefon stumm ist, bis Sie ihn wegwischen. Ein iPhone spielt den Ton einmal ab."
 
 #: src/lib/components/camera-selection.svelte
 msgid "Part of the picture"
@@ -3985,3 +3969,19 @@ msgstr "Bereich speichern"
 #: src/lib/components/detection-area.svelte
 msgid "Watch the whole picture"
 msgstr "Ganzes Bild überwachen"
+
+#: src/lib/navigation.ts
+msgid "A message with the footage, a loud alarm on your phone, or both."
+msgstr "Eine Nachricht mit den Aufnahmen, ein lauter Alarm auf Ihrem Telefon oder beides."
+
+#: src/lib/server/diagnostics.ts
+msgid ""
+"AI Detector diagnostics\n"
+"\n"
+"Includes available rotated logs, the latest TensorRT and Windows ML build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n"
+""
+msgstr ""
+"Diagnosedaten von AI Detector\n"
+"\n"
+"Enthält die verfügbaren Protokolldateien, die neuesten Build-Protokolle von TensorRT und Windows ML, Laufzeitdetails und Einstellungen ohne Passwörter. Aufnahmen sind nicht enthalten. Prüfen Sie die Dateien, bevor Sie sie weitergeben: Protokolle können lokale Pfade und Kameraadressen enthalten.\n"
+""

@@ -21,6 +21,8 @@ Camera pictures show the latest detection boxes over live video; the boxes can l
 
 **History** on the same page shows, per camera, when it was really watched over the last hour, day or week, with every recording as a mark on the same line; a mark opens the recording. A gap is time in which nothing would have been noticed, and it says why: the camera was offline, monitoring was paused, or AI Detector was not running. History is kept for thirty days, and a gap is known to within about ten seconds. With a separately managed detector only the recordings are shown.
 
+A camera whose network address changes, as happens when the router hands out addresses by itself, is found again. After two minutes without pictures the application searches the network, and once it finds the camera at exactly one other address it watches it there. With **Camera offline** switched on, the phone alarm reports the new address. A fixed address in the router (a DHCP reservation) avoids the interruption.
+
 ### Detectors and presets
 
 A detector made from a preset follows it. When a newer model is published for that preset, the detector takes it within a day or at the next start: monitoring restarts by itself and is interrupted while the model is downloaded and prepared. Cameras, alerts and the AI check stay as you set them. For this the application asks GitHub once a day; without internet nothing changes.
@@ -30,6 +32,8 @@ A detector made from a preset follows it. When a newer model is published for th
 A preset can come in more than one mode, chosen under the preset in a detector's settings. **Default** is the preset's own settings. Calving Catcher also has **Low Power**, which looks less often: it asks less of the computer and can notice an event later. A detector follows the mode it is in.
 
 A detector whose detection settings you changed keeps them and is not updated. Choose the preset again to follow it.
+
+A detector watches the whole picture of each of its cameras. **Whole picture** on a chosen camera in the detector's settings limits it to a part: tap the corners of the area to watch, and a detection counts only when the middle of its box is inside it.
 
 ### Recordings
 
@@ -46,6 +50,15 @@ A detector whose detection settings you changed keeps them and is not updated. C
 - Alerts carry 👍 and 👎 buttons that save a review; the thumb you press stays coloured on that alert. The application must be running for this, and the bot must be used by this installation only.
 - **Quiet hours** on a recipient make alerts between two times of day arrive without sound, for example at night. They still arrive.
 - **Enter chat ID manually** is for a bot that another application also reads. Setup never removes another application's webhook.
+
+### Phone alarm
+
+**Connect ntfy** under **Settings → Alerts**, or in the detector editor, makes a detection ring your phone loudly, also at night, with a picture of what the detector saw. It uses the free ntfy app and needs no account: install ntfy, subscribe to the name the application shows, confirm the test alarm and choose the detectors that ring it. It works beside Telegram alerts or without them.
+
+- There is one alarm per installation. Every phone subscribed to its name rings, so keep the name to yourself.
+- On Android the alarm can ring through Do Not Disturb and keep ringing until you look; the steps are shown while connecting. An iPhone shows the alarm but stays silent in silent mode.
+- The alarm travels through the ntfy.sh service, so it needs internet.
+- **Camera offline** on the same page reports a camera that is no longer watched, as [Monitoring](#monitoring) describes.
 
 ### AI check
 

@@ -1,6 +1,6 @@
 # AI Detector
 
-AI Detector watches your cameras on your own computer, records what a detector recognises, and shows it in your browser. Phone alerts through Telegram and a second check by an AI model are optional. Nothing runs on a server of ours.
+AI Detector watches your cameras on your own computer, records what a detector recognises, and shows it in your browser. Alerts on your phone, as a Telegram message or a loud alarm, and a second check by an AI model are optional. Nothing runs on a server of ours.
 
 ## Install
 

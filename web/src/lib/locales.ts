@@ -1,5 +1,5 @@
 /** Interface languages, the source language first. Each has a catalog in src/locales. */
-export const LOCALES = ['en', 'nl', 'de', 'fr'] as const;
+export const LOCALES = ['en', 'nl', 'de', 'fr', 'tr'] as const;
 export type Locale = (typeof LOCALES)[number];
 export const SOURCE_LOCALE: Locale = 'en';
 
@@ -8,7 +8,8 @@ export const LANGUAGE_NAMES: Record<Locale, string> = {
 	en: 'English',
 	nl: 'Nederlands',
 	de: 'Deutsch',
-	fr: 'Français'
+	fr: 'Français',
+	tr: 'Türkçe'
 };
 
 export function isLocale(value: unknown): value is Locale {

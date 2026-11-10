@@ -93,4 +93,4 @@ The import copies settings, `detections/`, local `presets/` and referenced local
 
 ### Language
 
-English, Nederlands, Deutsch and Français. An installation takes the language of the browser that sets it up, for every device and for its Telegram replies; change it under **Settings → Language**. Logs, the Advanced JSON editor's hints and the detector's own messages stay in English; the logs repeat a status or error message in the language it was shown in.
+English, Nederlands, Deutsch, Français and Türkçe. An installation takes the language of the browser that sets it up, for every device and for its Telegram replies; change it under **Settings → Language**. Logs, the Advanced JSON editor's hints and the detector's own messages stay in English; the logs repeat a status or error message in the language it was shown in.

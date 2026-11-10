@@ -1271,7 +1271,7 @@ msgstr "Deze camera kon niet worden verwijderd."
 
 #: src/lib/components/camera-settings.svelte
 msgid "Connect to see the new picture."
-msgstr "Verbind om het nieuwe beeld te zien."
+msgstr "Verbind de camera om het nieuwe beeld te zien."
 
 #: src/lib/components/camera-settings.svelte
 msgid "Camera settings"
@@ -2415,7 +2415,7 @@ msgstr "Weergave"
 
 #: src/routes/(admin)/settings/+page.svelte
 msgid "Automatic follows this device."
-msgstr "Automatisch volgt dit apparaat."
+msgstr "Automatisch volgt de instelling van dit apparaat."
 
 #: src/routes/(admin)/settings/+page.svelte
 msgid "Download cameras, detectors and alert settings to keep them safe."
@@ -3800,11 +3800,11 @@ msgstr "Je kunt het alarm nu opslaan en het kiezen wanneer je een detector toevo
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Which detectors ring the alarm?"
-msgstr "Bij welke detectors gaat het alarm af?"
+msgstr "Bij welke detectoren gaat het alarm af?"
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Phone alarm needs attention"
-msgstr "Telefoonalarm vraagt aandacht"
+msgstr "Telefoonalarm heeft aandacht nodig"
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Remove the phone alarm…"
@@ -3816,7 +3816,7 @@ msgstr "Telefoonalarm verwijderen?"
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Detectors will stop ringing your phone. Telegram alerts stay as they are."
-msgstr "Detectors laten je telefoon dan niet meer afgaan. Telegram-meldingen blijven zoals ze zijn."
+msgstr "Detectoren laten je telefoon dan niet meer afgaan. Telegram-meldingen blijven zoals ze zijn."
 
 #: src/lib/components/phone-alarm-editor.svelte
 msgid "Keep alarm"
@@ -3874,7 +3874,7 @@ msgstr "Alarm <0>(optioneel)</0>"
 
 #: src/lib/components/detector-editor.svelte
 msgid "Ring your phone loudly through the free ntfy app, also at night, with a picture."
-msgstr "Laat je telefoon hard afgaan via de gratis ntfy-app, ook 's nachts, met een foto."
+msgstr "Laat je telefoon hard afgaan via de gratis ntfy-app, ook ’s nachts, met een foto."
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Choose how you hear about what a detector sees: a message with the footage, a loud alarm on your phone, or both."
@@ -3894,7 +3894,7 @@ msgstr "Alarm"
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "Through the free ntfy app, your phone rings loudly, also at night, with a picture of what the detector saw."
-msgstr "Via de gratis ntfy-app gaat je telefoon hard af, ook 's nachts, met een foto van wat de detector zag."
+msgstr "Via de gratis ntfy-app gaat je telefoon hard af, ook ’s nachts, met een foto van wat de detector zag."
 
 #: src/routes/(admin)/notifications/+page.svelte
 msgid "After five minutes without monitoring, and when monitoring resumes. A normal notification in ntfy, without the alarm sound."

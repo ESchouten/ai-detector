@@ -1,18 +1,18 @@
 # Translations
 
-`en.po` is extracted from the source by Wuchale; `nl.po`, `de.po`, `fr.po`, `es.po`, `pt.po`, `pl.po`, `tr.po` and `zh.po` hold the translations. `pnpm i18n` updates all nine after text changes, and leaves new entries with an empty `msgstr` to fill in. `pnpm quality` fails while an entry is empty or a placeholder differs. The other files here load the catalogs; [ARCHITECTURE.md](../../ARCHITECTURE.md#languages) explains them and how to write translatable text.
+`en.po` is extracted from the source by Wuchale; `nl.po`, `de.po`, `fr.po`, `es.po`, `it.po`, `pt.po`, `pl.po`, `ru.po`, `uk.po`, `tr.po` and `zh.po` hold the translations. `pnpm i18n` updates all twelve after text changes, and leaves new entries with an empty `msgstr` to fill in. `pnpm quality` fails while an entry is empty or a placeholder differs. The other files here load the catalogs; [ARCHITECTURE.md](../../ARCHITECTURE.md#languages) explains them and how to write translatable text.
 
 ## How to translate
 
 The reader is a dairy farmer, not a technician. Write what a local farm-software company would: short, plain, calm. Do not translate word for word.
 
 - Keep `{0}`, `#`, `<0>…</0>` and `<0/>` exactly; they may move within the sentence. Keep leading and trailing spaces, `…` and `·`.
-- A plural entry needs every form of the language: one for Chinese, two for Dutch, German and Turkish (Turkish gives both the same text: “3 kamera”), three for French, Spanish and Portuguese (`one`, `many`, `other`; give `many` the text of `other`), four for Polish (`one`, `few`, `many`, `other`: “1 kamera”, “3 kamery”, “5 kamer”, “1,5 kamery”).
+- A plural entry needs every form of the language: one for Chinese, two for Dutch, German and Turkish (Turkish gives both the same text: “3 kamera”), three for French, Spanish, Italian and Portuguese (`one`, `many`, `other`; give `many` the text of `other`), four for Polish, Russian and Ukrainian (`one`, `few`, `many`, `other`: “1 kamera”, “3 kamery”, “5 kamer”, “1,5 kamery”). Russian and Ukrainian `one` also covers 21, 31 and so on, so it always shows `#`.
 - Use the name a button or page has here whenever a sentence refers to it: "Settings → Storage" is "Instellingen → Opslag".
 - Buttons inside Telegram keep Telegram's own names (**Start**).
 - Leave product and technical names alone: AI Detector, Telegram, BotFather, Google Gemini, NVIDIA, TensorRT, RTSP, JSON, ZIP, Heartbeat, Webhook and file names.
 - Dutch addresses the reader as **je**, German as **Sie**, French as **vous**, Turkish as **siz** ("Tekrar deneyin"). Buttons use the infinitive ("Camera toevoegen", "Kamera hinzufügen", "Ajouter une caméra"); Turkish buttons use the short imperative ("Kamera ekle"). French puts a non-breaking space before `: ; ? !` and inside « ». Turkish adds a suffix to a name after an apostrophe (AI Detector’a, Telegram’ı); never put a suffix on a placeholder, rephrase instead.
-- Spanish is European Spanish with **usted** (ordenador, «»); Portuguese is Brazilian Portuguese with **você** (celular, “”). Both use the infinitive on buttons ("Añadir cámara", "Adicionar câmera"). Polish addresses the reader informally, buttons and sentences alike ("Dodaj kamerę", "Spróbuj ponownie"), and avoids gendered past forms; quote a button name and never put a case ending on a placeholder or on AI Detector. Chinese is Simplified Chinese with 你, full-width punctuation and a space between Chinese and Latin text or a placeholder (“连接 Telegram”, “检测器 {0}”).
+- Spanish is European Spanish with **usted** (ordenador, «»); Portuguese is Brazilian Portuguese with **você** (celular, “”). Both use the infinitive on buttons ("Añadir cámara", "Adicionar câmera"). Polish addresses the reader informally, buttons and sentences alike ("Dodaj kamerę", "Spróbuj ponownie"), and avoids gendered past forms; quote a button name and never put a case ending on a placeholder or on AI Detector. Italian addresses the reader as **tu** with imperative buttons ("Aggiungi telecamera"). Russian and Ukrainian use **вы**/**ви** in sentences and the infinitive on buttons ("Добавить камеру", "Додати камеру"), with «» quotes; Telegram's **Start** is «Запустить», «Почати» and «Avvia» there. Chinese is Simplified Chinese with 你, full-width punctuation and a space between Chinese and Latin text or a placeholder (“连接 Telegram”, “检测器 {0}”).
 
 ## Terms
 
@@ -74,3 +74,33 @@ The reader is a dairy farmer, not a technician. Write what a local farm-software
 | Connect (camera, Telegram)  | Conectar                  | Conectar                  | Połącz                        | 连接          |
 | Back up                     | Copia de seguridad        | Fazer backup              | Kopia zapasowa                | 备份          |
 | Confidence                  | Confianza                 | Confiança                 | Pewność                       | 置信度        |
+
+| English                      | Italiano                   | Русский                        | Українська                   |
+| ---------------------------- | -------------------------- | ------------------------------ | ---------------------------- |
+| Recording                    | Registrazione              | Запись                         | Запис                        |
+| Camera                       | Telecamera                 | Камера                         | Камера                       |
+| Detector                     | Rilevatore                 | Детектор                       | Детектор                     |
+| Detection                    | Rilevamento                | Обнаружение                    | Виявлення                    |
+| Preset                       | Preimpostazione            | Шаблон                         | Шаблон                       |
+| Monitoring (page, activity)  | Monitoraggio               | Наблюдение                     | Спостереження                |
+| Monitoring (state)           | Monitoraggio attivo        | Наблюдение активно             | Спостереження активне        |
+| Alert                        | Avviso                     | Уведомление                    | Сповіщення                   |
+| Recipient                    | Destinatario               | Получатель                     | Отримувач                    |
+| AI check                     | Verifica IA                | Проверка ИИ                    | Перевірка ШІ                 |
+| AI connection                | Connessione IA             | Подключение к ИИ               | Підключення до ШІ            |
+| Confirmed / False alarm      | Confermato / Falso allarme | Подтверждено / Ложная тревога  | Підтверджено / Хибна тривога |
+| Review                       | Valutazione                | Оценка                         | Оцінка                       |
+| Settings                     | Impostazioni               | Настройки                      | Налаштування                 |
+| Devices                      | Dispositivi                | Устройства                     | Пристрої                     |
+| Storage                      | Archiviazione              | Хранилище                      | Сховище                      |
+| Advanced                     | Avanzate                   | Дополнительно                  | Додатково                    |
+| Logs                         | Log                        | Журналы                        | Журнали                      |
+| Diagnostics                  | Dati di diagnostica        | Диагностические данные         | Діагностичні дані            |
+| Set up                       | Configura, configurazione  | Настроить, настройка           | Налаштувати, налаштування    |
+| Live picture                 | Immagine dal vivo          | Изображение в реальном времени | Зображення в реальному часі  |
+| Stream URL                   | URL dello stream           | URL потока                     | URL потоку                   |
+| Login (of a camera)          | Credenziali                | Данные для входа               | Дані для входу               |
+| Connect (camera)             | Connetti                   | Подключить                     | Підключити                   |
+| Connect (Telegram, a device) | Collega                    | Подключить                     | Підключити                   |
+| Back up                      | Backup                     | Резервная копия                | Резервна копія               |
+| Confidence                   | Affidabilità               | Уверенность                    | Впевненість                  |

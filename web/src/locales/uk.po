@@ -1,0 +1,4013 @@
+msgid ""
+msgstr ""
+"Source-Language: en\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4\n"
+"X-Plurals-Order: one, few, many, other\n"
+
+#: src/lib/camera-batch.ts
+msgid "Could not connect. Check this camera’s login and network."
+msgstr "Не вдалося підключитися. Перевірте дані для входу та мережу цієї камери."
+
+#: src/lib/cameras.ts
+msgid "The camera check could not finish. Please try again."
+msgstr "Не вдалося завершити перевірку камери. Спробуйте ще раз."
+
+#: src/lib/components/recording-viewer.svelte
+#: src/routes/(admin)/detections/recording-card.svelte
+msgid "AI check failed"
+msgstr "Перевірка ШІ не вдалася"
+
+#: src/lib/detections.ts
+msgid "Not checked"
+msgstr "Не перевірено"
+
+#: src/lib/detections.ts
+msgid "Checked by AI"
+msgstr "Перевірено ШІ"
+
+#: src/lib/detections.ts
+msgid "Reviewed in Telegram"
+msgstr "Оцінено в Telegram"
+
+#: src/lib/detections.ts
+msgid "Reviewed by you"
+msgstr "Оцінено вами"
+
+#: src/lib/components/setup-finish.svelte
+#: src/lib/monitoring.ts
+msgid "Status unavailable"
+msgstr "Стан недоступний"
+
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Paused"
+msgstr "Призупинено"
+
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+msgid "Detection stopped"
+msgstr "Виявлення зупинено"
+
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+msgid "Preparing"
+msgstr "Підготовка"
+
+#: src/lib/monitoring.ts
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Camera offline"
+msgstr "Камера не в мережі"
+
+#: src/lib/monitoring.ts
+msgid "Recording failed"
+msgstr "Помилка запису"
+
+#: src/lib/monitoring.ts
+msgid "Detection delayed"
+msgstr "Виявлення затримується"
+
+#: src/lib/components/setup-finish.svelte
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+msgid "Monitoring"
+msgstr "Спостереження активне"
+
+#: src/lib/monitoring.ts
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Connecting"
+msgstr "Підключення"
+
+#: src/lib/format.ts
+msgid "Today"
+msgstr "Сьогодні"
+
+#: src/lib/format.ts
+msgid "Yesterday"
+msgstr "Учора"
+
+#. 0: ajv.errorsText(errors)
+#: src/lib/configuration.ts
+msgid "Invalid detector configuration: {0}"
+msgstr "Неправильне налаштування детектора: {0}"
+
+#: src/lib/configuration.ts
+msgid "A detector cannot use the same source more than once."
+msgstr "Детектор не може використовувати те саме джерело більше одного разу."
+
+#. 0: index + 1
+#. 0: index + 1
+#. 0: index + 1
+#: src/lib/configuration.ts
+#: src/lib/server/configuration/advanced.ts
+#: src/lib/server/runtime-status.ts
+msgid "Detector {0}"
+msgstr "Детектор {0}"
+
+#. 0: index + 1
+#. 0: streams.size + 1
+#. 0: parsed.output.$.token
+#. 0: this.cameras.size + 1
+#: src/lib/configuration.ts
+#: src/lib/configuration.ts
+#: src/lib/server/cameras/discovery.ts
+#: src/lib/server/runtime-status.ts
+msgid "Camera {0}"
+msgstr "Камера {0}"
+
+#: src/lib/telegram-pairing.ts
+msgid "This connection link expired. Choose Connect Telegram to try again."
+msgstr "Термін дії посилання для підключення минув. Натисніть «Підключити Telegram», щоб спробувати знову."
+
+#: src/lib/telegram-pairing.ts
+msgid "Telegram could not connect. Try again."
+msgstr "Не вдалося підключити Telegram. Спробуйте ще раз."
+
+#: src/lib/monitoring.ts
+msgid "Connection lost"
+msgstr "З’єднання втрачено"
+
+#: src/lib/monitoring.ts
+msgid "This page has not heard from AI Detector. Reopen the app if it does not reconnect."
+msgstr "Ця сторінка не отримує даних від AI Detector. Відкрийте застосунок знову, якщо з’єднання не відновиться."
+
+#: src/lib/monitoring.ts
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Live view only"
+msgstr "Лише перегляд"
+
+#: src/lib/monitoring.ts
+msgid "Add a detector to start monitoring your cameras."
+msgstr "Додайте детектор, щоб почати спостереження за камерами."
+
+#: src/lib/monitoring.ts
+msgid "Runs separately"
+msgstr "Працює окремо"
+
+#: src/lib/monitoring.ts
+msgid "Detection is started and stopped outside this app, so its status is not shown here."
+msgstr "Виявлення запускається й зупиняється поза цим застосунком, тому його стан тут не показано."
+
+#: src/lib/monitoring.ts
+msgid "Stopping…"
+msgstr "Зупинення…"
+
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+msgid "Monitoring stopped"
+msgstr "Спостереження зупинено"
+
+#: src/lib/monitoring.ts
+msgid "Starting…"
+msgstr "Запуск…"
+
+#: src/lib/monitoring.ts
+msgid "Nothing is detected or recorded while monitoring is paused."
+msgstr "Поки спостереження призупинене, нічого не виявляється і не записується."
+
+#: src/lib/monitoring.ts
+msgid "Needs attention"
+msgstr "Потребує уваги"
+
+#: src/lib/monitoring.ts
+msgid "Connecting cameras…"
+msgstr "Підключення камер…"
+
+#: src/lib/monitoring.ts
+msgid "Preparing…"
+msgstr "Підготовка…"
+
+#: src/lib/remote/llm.remote.ts
+msgid "Connection testing requires the desktop application. You can still save this connection."
+msgstr "Для перевірки підключення потрібен настільний застосунок. Це підключення все одно можна зберегти."
+
+#: src/lib/remote/installation-import.remote.ts
+msgid "Open the localhost dashboard on the computer running AI Detector to import its files."
+msgstr "Щоб імпортувати файли, відкрийте панель localhost на комп’ютері, де працює AI Detector."
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/remote/camera.remote.ts
+#: src/lib/remote/camera.remote.ts
+#: src/lib/server/cameras/relocation.ts
+#: src/lib/server/configuration/camera-setup.ts
+#: src/lib/server/installation-import/metadata.ts
+msgid "Camera"
+msgstr "Камера"
+
+#: src/lib/remote/detector.remote.ts
+msgid "This preset is no longer available. Choose another preset."
+msgstr "Цей шаблон більше недоступний. Виберіть інший шаблон."
+
+#: src/lib/remote/runtime.remote.ts
+msgid "Use the complete application download to start detection here."
+msgstr "Щоб запускати виявлення тут, використовуйте повну версію застосунку."
+
+#: src/lib/remote/settings.remote.ts
+msgid "Invalid JSON."
+msgstr "Неправильний JSON."
+
+#: src/lib/server/access.ts
+msgid "Open the dashboard directly to make changes."
+msgstr "Щоб внести зміни, відкрийте панель напряму."
+
+#: src/lib/server/access.ts
+msgid "Connect this device to AI Detector first."
+msgstr "Спершу підключіть цей пристрій до AI Detector."
+
+#: src/lib/detections.ts
+#: src/lib/server/archive.ts
+msgid "Invalid category."
+msgstr "Неправильна категорія."
+
+#: src/lib/server/folder-picker.ts
+msgid "The folder chooser could not open. Use “Enter folder path” instead."
+msgstr "Не вдалося відкрити вибір папки. Натомість використайте «Ввести шлях до папки»."
+
+#: src/lib/server/device-access.ts
+msgid "This code has expired. Create a new code on a connected device."
+msgstr "Термін дії коду минув. Створіть новий код на підключеному пристрої."
+
+#: src/lib/server/device-access.ts
+msgid "The code did not match. Check the six digits and try again."
+msgstr "Код не збігається. Перевірте шість цифр і спробуйте ще раз."
+
+#: src/lib/server/device-access.ts
+msgid "Remove an old connected device before adding another."
+msgstr "Видаліть один зі старих підключених пристроїв, перш ніж додати новий."
+
+#: src/lib/server/device-access.ts
+msgid "Browser"
+msgstr "Браузер"
+
+#: src/lib/server/detector-preparation.ts
+msgid "NVIDIA acceleration could not be prepared. Check your internet connection and graphics driver, then try again. Details are available below."
+msgstr "Не вдалося підготувати прискорення NVIDIA. Перевірте підключення до інтернету та драйвер відеокарти, потім спробуйте ще раз. Подробиці нижче."
+
+#: src/lib/server/detector-preparation.ts
+msgid "Could not open the detector. Extract the complete download and keep its files together."
+msgstr "Не вдалося відкрити детектор. Розпакуйте завантажений архів повністю й тримайте всі файли разом."
+
+#: src/lib/server/detector-preparation.ts
+msgid "The detector check did not finish. Please try again."
+msgstr "Не вдалося завершити перевірку детектора. Спробуйте ще раз."
+
+#. 0: (space.available / 1024 ** 3).toFixed(1)
+#: src/lib/server/detector-service.ts
+msgid "Storage is almost full ({0} GB free). Free space in Settings → Storage so recordings can continue."
+msgstr "Сховище майже заповнене (вільно {0} ГБ). Звільніть місце в розділі Налаштування → Сховище, щоб запис тривав далі."
+
+#: src/lib/server/detector-service.ts
+msgid "This web server uses a separately managed detector. Download the complete application to start and stop it here."
+msgstr "Цей вебсервер використовує окремо керований детектор. Завантажте повний застосунок, щоб запускати й зупиняти його тут."
+
+#: src/lib/server/managed-detector.ts
+msgid "Ready to set up your camera."
+msgstr "Можна налаштовувати камеру."
+
+#: src/lib/server/managed-detector.ts
+msgid "Monitoring needs attention."
+msgstr "Спостереження потребує уваги."
+
+#: src/lib/server/managed-detector.ts
+msgid "Pause monitoring before clearing the model cache."
+msgstr "Призупиніть спостереження перед очищенням кешу моделей."
+
+#: src/lib/server/managed-detector.ts
+msgid "Checking this computer…"
+msgstr "Перевірка комп’ютера…"
+
+#: src/lib/server/managed-detector.ts
+msgid "Add a camera and choose what to detect first."
+msgstr "Спершу додайте камеру й виберіть, що виявляти."
+
+#: src/lib/server/managed-detector.ts
+msgid "Start cancelled."
+msgstr "Запуск скасовано."
+
+#: src/lib/server/managed-detector.ts
+msgid "Starting the detector…"
+msgstr "Запуск детектора…"
+
+#: src/lib/server/managed-detector.ts
+msgid "Preparing detection and connecting cameras. Monitoring will be confirmed after frames are processed."
+msgstr "Підготовка виявлення та підключення камер. Спостереження буде підтверджено після обробки кадрів."
+
+#. 0: exitSignal ?? code
+#: src/lib/server/managed-detector.ts
+msgid "The detector stopped unexpectedly ({0})."
+msgstr "Детектор несподівано зупинився ({0})."
+
+#: src/lib/server/managed-detector.ts
+msgid "Detector stopped."
+msgstr "Детектор зупинено."
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector stopped unexpectedly. Check the details below, then try again."
+msgstr "Детектор несподівано зупинився. Перегляньте подробиці нижче й спробуйте ще раз."
+
+#: src/lib/server/managed-detector.ts
+msgid "Restart cancelled."
+msgstr "Перезапуск скасовано."
+
+#: src/lib/server/managed-detector.ts
+msgid "Finishing detections and stopping…"
+msgstr "Завершення виявлення та зупинення…"
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector did not finish shutting down within 30 seconds. It was forced to stop; the last detection may be incomplete."
+msgstr "Детектор не завершив роботу за 30 секунд. Його зупинено примусово; останнє виявлення може бути неповним."
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector could not start."
+msgstr "Не вдалося запустити детектор."
+
+#: src/lib/components/export-recordings.svelte
+#: src/lib/server/recording-export.ts
+msgid "No recordings match these filters."
+msgstr "Немає записів, що відповідають цим фільтрам."
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Update the NVIDIA graphics driver, then try again to enable GPU acceleration."
+msgstr "Оновіть драйвер відеокарти NVIDIA та спробуйте ще раз, щоб увімкнути прискорення GPU."
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "The NVIDIA runtime files are missing. Reinstall AI Detector."
+msgstr "Бракує файлів середовища NVIDIA. Перевстановіть AI Detector."
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Preparing NVIDIA acceleration. The first download may take several minutes…"
+msgstr "Підготовка прискорення NVIDIA. Перше завантаження може тривати кілька хвилин…"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Downloading and installing NVIDIA acceleration…"
+msgstr "Завантаження та встановлення прискорення NVIDIA…"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Checking NVIDIA acceleration…"
+msgstr "Перевірка прискорення NVIDIA…"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "TensorRT preparation is deferred after an earlier failure. Using PyTorch/CUDA."
+msgstr "Підготовку TensorRT відкладено після попередньої помилки. Використовується PyTorch/CUDA."
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Preparing faster NVIDIA detection. Downloading TensorRT once for this computer…"
+msgstr "Підготовка швидшого виявлення NVIDIA. TensorRT завантажується для цього комп’ютера один раз…"
+
+#. 0: String(error)
+#: src/lib/server/nvidia-runtime.ts
+msgid "TensorRT could not be prepared. Using PyTorch/CUDA. {0}"
+msgstr "Не вдалося підготувати TensorRT. Використовується PyTorch/CUDA. {0}"
+
+#. 0: String(error)
+#: src/lib/server/nvidia-runtime.ts
+msgid "Could not save the TensorRT retry time: {0}"
+msgstr "Не вдалося зберегти час повторної спроби TensorRT: {0}"
+
+#: src/lib/server/storage.ts
+msgid "The recordings changed. Check the number of recordings and confirm again."
+msgstr "Записи змінилися. Перевірте кількість записів і підтвердьте ще раз."
+
+#: src/lib/server/runtime-status.ts
+msgid "Telegram alert"
+msgstr "Сповіщення Telegram"
+
+#: src/lib/server/runtime-status.ts
+msgid "Webhook"
+msgstr "Webhook"
+
+#: src/lib/server/runtime-status.ts
+msgid "Model preparation failed. Check the details and try again."
+msgstr "Не вдалося підготувати модель. Перегляньте подробиці й спробуйте ще раз."
+
+#: src/lib/server/runtime-status.ts
+msgid "Connection failed."
+msgstr "Помилка підключення."
+
+#: src/lib/server/runtime-status.ts
+msgid "No recent camera frames. Waiting for the connection to recover."
+msgstr "Немає нових кадрів з камери. Очікування відновлення з’єднання."
+
+#. 0: stale.label
+#: src/lib/server/runtime-status.ts
+msgid "{0}: waiting for AI validation or delivery to finish."
+msgstr "{0}: очікування завершення перевірки ШІ або надсилання."
+
+#. 0: stale.label
+#: src/lib/server/runtime-status.ts
+msgid "{0}: processing has not completed recently."
+msgstr "{0}: обробка давно не завершувалася."
+
+#: src/lib/server/telegram-pairing.ts
+msgid "My Telegram"
+msgstr "Мій Telegram"
+
+#: src/lib/server/telegram-pairing.ts
+msgid "This bot already has a connection in progress. Finish or cancel it before starting another."
+msgstr "У цього бота вже триває підключення. Завершіть або скасуйте його, перш ніж починати нове."
+
+#: src/lib/server/stream-preview.ts
+msgid "Invalid live picture received."
+msgstr "Отримано неправильне зображення з камери."
+
+#: src/lib/server/stream-preview.ts
+msgid "Live stream ended."
+msgstr "Трансляцію завершено."
+
+#: src/lib/server/stream-preview.ts
+#: src/lib/server/stream-preview.ts
+#: src/lib/server/stream-preview.ts
+msgid "Live stream unavailable."
+msgstr "Трансляція недоступна."
+
+#: src/lib/server/stream-preview.ts
+msgid "Live stream stopped receiving frames."
+msgstr "Трансляція перестала отримувати кадри."
+
+#: src/lib/server/telegram.ts
+#: src/lib/server/telegram.ts
+msgid "Telegram returned an unexpected reply. Please try again later."
+msgstr "Telegram повернув неочікувану відповідь. Спробуйте пізніше."
+
+#: src/lib/server/telegram.ts
+msgid "Telegram could not be reached. Check this computer’s internet connection, then try again. Local monitoring can continue without alerts."
+msgstr "Telegram недоступний. Перевірте підключення цього комп’ютера до інтернету й спробуйте ще раз. Локальне спостереження може тривати без сповіщень."
+
+#: src/lib/server/telegram.ts
+msgid "This bot token is not valid. Copy the current token from BotFather."
+msgstr "Цей токен бота недійсний. Скопіюйте поточний токен із BotFather."
+
+#: src/lib/server/telegram.ts
+msgid "This bot is receiving messages in another application or has a webhook. Use a dedicated bot for AI Detector, or enter its chat ID manually."
+msgstr "Цей бот отримує повідомлення в іншому застосунку або використовує webhook. Використовуйте окремого бота для AI Detector або введіть ID чату вручну."
+
+#: src/lib/server/telegram.ts
+msgid "Telegram could not complete this request. Check your bot token and try again."
+msgstr "Telegram не зміг виконати цей запит. Перевірте токен бота й спробуйте ще раз."
+
+#: src/lib/server/telegram.ts
+msgid "This bot is connected to another application through a webhook. Its connection has not been changed. Use a dedicated bot for AI Detector, or enter its chat ID manually."
+msgstr "Цей бот підключений до іншого застосунку через webhook. Його підключення не змінено. Використовуйте окремого бота для AI Detector або введіть ID чату вручну."
+
+#: src/lib/server/telegram.ts
+msgid "AI Detector setup test. If you received this message on the intended device, confirm receipt in AI Detector to enable alerts."
+msgstr "Перевірка налаштування AI Detector. Якщо це повідомлення надійшло на потрібний пристрій, підтвердьте отримання в AI Detector, щоб увімкнути сповіщення."
+
+#: src/lib/server/telegram.ts
+msgid "Choose a group for AI Detector alerts. Add this bot to your group first if it is not listed."
+msgstr "Виберіть групу для сповіщень AI Detector. Якщо групи немає в списку, спершу додайте до неї цього бота."
+
+#: src/lib/server/telegram.ts
+msgid "Choose a channel for AI Detector alerts. Telegram will ask for permission to post there."
+msgstr "Виберіть канал для сповіщень AI Detector. Telegram попросить дозвіл на публікацію в ньому."
+
+#: src/lib/server/telegram.ts
+msgid "Choose group"
+msgstr "Вибрати групу"
+
+#: src/lib/server/telegram.ts
+msgid "Choose channel"
+msgstr "Вибрати канал"
+
+#: src/lib/server/telegram.ts
+msgid "AI Detector test alert. Choose Confirm connection to receive detector alerts in this chat."
+msgstr "Тестове сповіщення AI Detector. Натисніть «Підтвердити підключення», щоб отримувати сповіщення детектора в цьому чаті."
+
+#: src/lib/server/telegram.ts
+msgid "Confirm connection"
+msgstr "Підтвердити підключення"
+
+#: src/lib/server/telegram.ts
+msgid "Connected. Return to AI Detector to save your settings."
+msgstr "Підключено. Поверніться до AI Detector, щоб зберегти налаштування."
+
+#: src/lib/server/telegram-reviews.ts
+msgid "This chat is not connected to AI Detector."
+msgstr "Цей чат не підключений до AI Detector."
+
+#: src/lib/components/review-buttons.svelte
+#: src/lib/server/telegram-reviews.ts
+msgid "Could not save this review. Please try again."
+msgstr "Не вдалося зберегти оцінку. Спробуйте ще раз."
+
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+#: src/lib/detections.ts
+msgid "Confirmed"
+msgstr "Підтверджено"
+
+#: src/lib/components/review-buttons.svelte
+msgid "Marked as a false alarm"
+msgstr "Позначено як хибну тривогу"
+
+#: src/lib/server/telegram-reviews.ts
+msgid "This recording is no longer available in AI Detector."
+msgstr "Цей запис більше недоступний в AI Detector."
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The recording location contains a file or linked folder. Choose a regular recording folder before testing it."
+msgstr "Місце зберігання записів містить файл або пов’язану папку. Перед перевіркою виберіть звичайну папку для записів."
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The recording location is invalid. Check the camera settings."
+msgstr "Неправильне місце зберігання записів. Перевірте налаштування камери."
+
+#: src/lib/server/cameras/connection.ts
+msgid "The camera software is missing. Repair or reinstall AI Detector and try again."
+msgstr "Бракує програми для камер. Відновіть або перевстановіть AI Detector і спробуйте ще раз."
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The test recording was saved but could not be played. Check the camera picture and try again."
+msgstr "Тестовий запис збережено, але він не відтворюється. Перевірте зображення з камери й спробуйте ще раз."
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The camera test recording is no longer available. Check its picture again."
+msgstr "Тестовий запис камери більше недоступний. Перевірте її зображення ще раз."
+
+#: src/routes/recovery/+page.server.ts
+msgid "The saved settings could not be restored. Download diagnostics for help."
+msgstr "Не вдалося відновити збережені налаштування. Завантажте діагностичні дані, щоб отримати допомогу."
+
+#: src/lib/server/cameras/connection.ts
+msgid "Enter the camera username and password in their separate fields."
+msgstr "Введіть ім’я користувача та пароль камери в окремі поля."
+
+#: src/lib/server/cameras/connection.ts
+msgid "Enter the camera’s address, for example 192.168.1.50."
+msgstr "Введіть адресу камери, наприклад 192.168.1.50."
+
+#: src/lib/server/cameras/connection.ts
+msgid "Enter a complete camera stream address starting with rtsp:// or http://."
+msgstr "Введіть повну адресу потоку камери, що починається з rtsp:// або http://."
+
+#: src/lib/server/cameras/connection.ts
+msgid "There is not enough space to save the test recording. Free some space on this computer and try again."
+msgstr "Недостатньо місця для збереження тестового запису. Звільніть місце на цьому комп’ютері й спробуйте ще раз."
+
+#: src/lib/server/cameras/connection.ts
+msgid "The camera rejected the login. Check its username and password, then try again."
+msgstr "Камера відхилила вхід. Перевірте ім’я користувача й пароль, потім спробуйте ще раз."
+
+#: src/lib/server/cameras/connection.ts
+msgid "The camera did not respond. Check its power, network connection and address, then try again."
+msgstr "Камера не відповідає. Перевірте живлення, підключення до мережі та адресу, потім спробуйте ще раз."
+
+#: src/lib/server/cameras/connection.ts
+msgid "The camera did not provide a supported video stream. Try another channel or ask your camera installer for its stream address."
+msgstr "Камера не передає підтримуваний відеопотік. Спробуйте інший канал або дізнайтеся адресу потоку в установника камери."
+
+#: src/lib/server/cameras/connection.ts
+msgid "Could not connect to this camera. Check that local camera access is enabled, or enter its stream URL manually."
+msgstr "Не вдалося підключитися до цієї камери. Перевірте, чи ввімкнено локальний доступ до камери, або введіть URL потоку вручну."
+
+#: src/lib/server/cameras/connection.ts
+msgid "The test recording could not be saved. Check that AI Detector’s data folder is writable, or repair the installation."
+msgstr "Не вдалося зберегти тестовий запис. Перевірте, чи папка даних AI Detector доступна для запису, або відновіть установлення."
+
+#: src/lib/server/configuration/advanced.ts
+msgid "Each AI connection needs a unique name."
+msgstr "Кожне підключення до ШІ повинно мати унікальну назву."
+
+#: src/lib/server/configuration/camera-setup.ts
+#: src/lib/server/configuration/cameras.ts
+#: src/lib/server/configuration/cameras.ts
+msgid "This camera no longer exists."
+msgstr "Цієї камери більше немає."
+
+#: src/lib/server/configuration/camera-setup.ts
+msgid "Camera settings changed during the recording check. Check the recording location again."
+msgstr "Налаштування камери змінилися під час перевірки запису. Перевірте місце зберігання записів ще раз."
+
+#: src/lib/server/configuration/camera-setup.ts
+msgid "Confirm the picture and check the recording location before finishing."
+msgstr "Перед завершенням підтвердьте зображення й перевірте місце зберігання записів."
+
+#: src/lib/server/configuration/camera-setup.ts
+msgid "Monitoring has not been verified yet. Start monitoring and wait for the camera to process pictures before finishing."
+msgstr "Спостереження ще не підтверджено. Запустіть спостереження й дочекайтеся, поки камера обробить зображення, перш ніж завершувати."
+
+#: src/lib/server/configuration/cameras.ts
+msgid "Camera identities are duplicated. Restore your camera settings from a backup."
+msgstr "Ідентифікатори камер повторюються. Відновіть налаштування камер із резервної копії."
+
+#: src/lib/server/configuration/cameras.ts
+msgid "This camera is already saved. Edit it from Cameras."
+msgstr "Цю камеру вже збережено. Змініть її в розділі «Камери»."
+
+#: src/lib/server/configuration/cameras.ts
+msgid "A camera with this name already exists. Choose another name."
+msgstr "Камера з такою назвою вже існує. Виберіть іншу назву."
+
+#: src/lib/server/cameras/checks.ts
+msgid "The camera check took too long. Try again or choose another camera channel."
+msgstr "Перевірка камери тривала надто довго. Спробуйте ще раз або виберіть інший канал камери."
+
+#: src/lib/server/cameras/checks.ts
+msgid "Camera check failed"
+msgstr "Перевірка камери не вдалася"
+
+#: src/lib/server/cameras/checks.ts
+msgid "Check the camera picture again before saving. The previous check has expired or the camera address changed."
+msgstr "Перед збереженням перевірте зображення з камери ще раз. Попередня перевірка застаріла або адреса камери змінилася."
+
+#: src/lib/server/configuration/llms.ts
+#: src/lib/server/configuration/llms.ts
+msgid "This AI connection no longer exists."
+msgstr "Цього підключення до ШІ більше немає."
+
+#: src/lib/server/configuration/llms.ts
+msgid "An AI connection with this name already exists."
+msgstr "Підключення до ШІ з такою назвою вже існує."
+
+#: src/lib/server/configuration/llms.ts
+msgid "This connection is in use. Change its detectors before removing it."
+msgstr "Це підключення використовується. Змініть його детектори, перш ніж видаляти."
+
+#: src/lib/server/configuration/detectors.ts
+#: src/lib/server/configuration/detectors.ts
+msgid "This detector no longer exists."
+msgstr "Цього детектора більше немає."
+
+#: src/lib/server/configuration/detectors.ts
+msgid "A detector with this name already exists."
+msgstr "Детектор із такою назвою вже існує."
+
+#: src/lib/server/configuration/detectors.ts
+msgid "Choose an existing AI connection."
+msgstr "Виберіть наявне підключення до ШІ."
+
+#: src/lib/server/configuration/detectors.ts
+msgid "Enter a question for AI verification."
+msgstr "Введіть запитання для перевірки ШІ."
+
+#: src/lib/server/configuration/preset-files.ts
+msgid "A preset must contain a detector configuration."
+msgstr "Шаблон повинен містити налаштування детектора."
+
+#. 0: file; 1: cause.message
+#: src/lib/server/configuration/preset-files.ts
+msgid "Invalid preset \"{0}\": {1}"
+msgstr "Неправильний шаблон \"{0}\": {1}"
+
+#. 0: file
+#: src/lib/server/configuration/preset-files.ts
+msgid "Could not read preset file \"{0}\"."
+msgstr "Не вдалося прочитати файл шаблону \"{0}\"."
+
+#. 0: file
+#: src/lib/server/configuration/preset-files.ts
+msgid "Preset file \"{0}\" is not valid JSON."
+msgstr "Файл шаблону \"{0}\" не є коректним JSON."
+
+#. 0: directory
+#: src/lib/server/configuration/preset-files.ts
+msgid "Could not read preset folder \"{0}\"."
+msgstr "Не вдалося прочитати папку шаблонів \"{0}\"."
+
+#: src/lib/server/cameras/discovery.ts
+msgid "Camera search was incomplete. Check local network access, or enter a stream URL manually."
+msgstr "Пошук камер не завершено. Перевірте доступ до локальної мережі або введіть URL потоку вручну."
+
+#: src/lib/server/cameras/discovery.ts
+msgid "No cameras found. Check that this computer and camera use the same network and allow local network access, or enter its stream URL manually."
+msgstr "Камер не знайдено. Перевірте, що комп’ютер і камера в одній мережі й доступ до локальної мережі дозволено, або введіть URL потоку вручну."
+
+#: src/lib/server/cameras/discovery.ts
+msgid "This device did not provide a video stream. Check that camera streaming is enabled or enter its stream URL manually."
+msgstr "Цей пристрій не передає відеопотік. Перевірте, чи ввімкнено трансляцію на камері, або введіть URL потоку вручну."
+
+#: src/lib/server/cameras/discovery.ts
+msgid "That camera channel is no longer available. Connect again and choose a channel."
+msgstr "Цей канал камери більше недоступний. Підключіться знову й виберіть канал."
+
+#: src/lib/server/cameras/discovery.ts
+msgid "The camera did not return a stream address."
+msgstr "Камера не повідомила адресу потоку."
+
+#: src/lib/server/configuration/telegrams.ts
+msgid "Confirm that you received the test alert before enabling new or changed connection details."
+msgstr "Підтвердьте, що тестове сповіщення надійшло, перш ніж вмикати нові або змінені дані підключення."
+
+#: src/lib/server/configuration/phone-alarm.ts
+#: src/lib/server/configuration/telegrams.ts
+msgid "A selected detector no longer exists."
+msgstr "Вибраного детектора більше немає."
+
+#: src/lib/server/configuration/settings-files.ts
+msgid "A settings file is missing. Restore the last valid settings to continue."
+msgstr "Бракує файлу налаштувань. Відновіть останні коректні налаштування, щоб продовжити."
+
+#: src/lib/server/configuration/store.ts
+msgid "No previous valid settings are available."
+msgstr "Попередніх коректних налаштувань немає."
+
+#: src/lib/server/configuration/store.ts
+msgid "This application already has a setup. Import into a new installation to avoid replacing your settings."
+msgstr "Цей застосунок уже налаштовано. Імпортуйте в нове встановлення, щоб не замінити свої налаштування."
+
+#: src/lib/server/configuration/store.ts
+msgid "Add a camera before finishing setup."
+msgstr "Додайте камеру, перш ніж завершити налаштування."
+
+#: src/lib/server/configuration/store.ts
+msgid "Settings changed since you opened the editor. Reload the saved settings before applying your changes."
+msgstr "Налаштування змінилися після відкриття редактора. Завантажте збережені налаштування знову, перш ніж застосовувати зміни."
+
+#. 0: file.source
+#: src/lib/server/installation-import/files.ts
+msgid "Expected a file: {0}"
+msgstr "Очікувався файл: {0}"
+
+#. 0: relative
+#. 0: next
+#: src/lib/server/installation-import/files.ts
+#: src/lib/server/installation-import/files.ts
+msgid "The old folder contains a symbolic link at {0}. Select a folder with the original files."
+msgstr "Стара папка містить символьне посилання: {0}. Виберіть папку з оригінальними файлами."
+
+#: src/lib/server/installation-import/files.ts
+msgid "There is not enough free space. Free some space or keep recordings in their current folder."
+msgstr "Недостатньо вільного місця. Звільніть місце або залиште записи в поточній папці."
+
+#: src/lib/server/installation-import/files.ts
+msgid "The old installation changed during import. Stop the old detector and choose its folder again."
+msgstr "Старе встановлення змінилося під час імпорту. Зупиніть старий детектор і виберіть його папку ще раз."
+
+#: src/lib/server/installation-import/files.ts
+msgid "An incomplete import file has changed. Choose the old folder again to restart the import."
+msgstr "Незавершений файл імпорту змінився. Виберіть стару папку ще раз, щоб почати імпорт заново."
+
+#: src/lib/server/installation-import/files.ts
+msgid "Choose the folder containing config.json, rather than the file itself."
+msgstr "Виберіть папку, що містить config.json, а не сам файл."
+
+#: src/lib/server/installation-import/files.ts
+msgid "Choose the old installation, outside the new application data folder."
+msgstr "Виберіть старе встановлення поза папкою даних нового застосунку."
+
+#: src/lib/server/installation-import/configuration.ts
+msgid "Choose the old application folder containing config.json."
+msgstr "Виберіть стару папку застосунку, що містить config.json."
+
+#. 0: path.basename(file)
+#: src/lib/server/installation-import/configuration.ts
+msgid "{0} is not valid JSON. The original file has not been changed."
+msgstr "{0} не є коректним JSON. Оригінальний файл не змінено."
+
+#: src/lib/server/installation-import/configuration.ts
+msgid "Removed the old strategy option, which the previous detector did not use."
+msgstr "Видалено старий параметр strategy, який попередній детектор не використовував."
+
+#. 0: value
+#: src/lib/server/installation-import/configuration.ts
+msgid "The model {0} is not in the old folder. Ultralytics will try to download it when monitoring starts."
+msgstr "Моделі {0} немає в старій папці. Ultralytics спробує завантажити її під час запуску спостереження."
+
+#. 0: model ? 'model' \\: 'video'; 1: value
+#: src/lib/server/installation-import/configuration.ts
+msgid "A local {0} file is missing: {1}. Restore it before importing."
+msgstr "Бракує локального файлу ({0}): {1}. Відновіть його перед імпортом."
+
+#: src/routes/(admin)/camera-checks/+server.ts
+msgid "Choose a camera stream before checking its picture."
+msgstr "Виберіть потік камери, перш ніж перевіряти зображення."
+
+#: src/lib/components/page-error.svelte
+#: src/routes/(admin)/[...catchall]/+page.ts
+msgid "Page not found"
+msgstr "Сторінку не знайдено"
+
+#: src/routes/(admin)/devices/+page.server.ts
+msgid "Connect this computer to your local network and try again."
+msgstr "Підключіть цей комп’ютер до локальної мережі й спробуйте ще раз."
+
+#: src/routes/(admin)/devices/+page.server.ts
+msgid "Use another connected device to remove this browser."
+msgstr "Щоб видалити цей браузер, використайте інший підключений пристрій."
+
+#: src/lib/server/installation-import/service.ts
+msgid "An unfinished import is ready to resume."
+msgstr "Незавершений імпорт можна продовжити."
+
+#: src/lib/server/installation-import/service.ts
+msgid "Finish the current import before leaving setup."
+msgstr "Завершіть поточний імпорт, перш ніж вийти з налаштування."
+
+#: src/lib/server/installation-import/service.ts
+msgid "Finish the current import before choosing another folder."
+msgstr "Завершіть поточний імпорт, перш ніж вибирати іншу папку."
+
+#: src/lib/server/installation-import/service.ts
+msgid "Choose the previous installation again."
+msgstr "Виберіть попереднє встановлення ще раз."
+
+#: src/lib/server/installation-import/service.ts
+msgid "Resume with the same recording option, or choose the folder again."
+msgstr "Продовжте з тим самим варіантом для записів або виберіть папку ще раз."
+
+#: src/lib/server/installation-import/service.ts
+msgid "This application already has a setup. Import is available before adding cameras or detectors."
+msgstr "Цей застосунок уже налаштовано. Імпорт доступний до додавання камер або детекторів."
+
+#. 0: folder
+#: src/lib/server/installation-import/service.ts
+msgid "The new application already has a {0} folder. Import will not overwrite existing data."
+msgstr "Новий застосунок уже має папку {0}. Імпорт не перезапише наявні дані."
+
+#: src/lib/server/installation-import/service.ts
+msgid "Saving your setup…"
+msgstr "Збереження налаштування…"
+
+#: src/lib/server/installation-import/service.ts
+msgid "An imported folder is missing. Restore the drive before resuming the import."
+msgstr "Імпортована папка відсутня. Підключіть диск, перш ніж продовжувати імпорт."
+
+#: src/lib/server/installation-import/service.ts
+msgid "The old folder or a file could not be found. Connect the drive and choose the folder again."
+msgstr "Стару папку або файл не знайдено. Підключіть диск і виберіть папку ще раз."
+
+#: src/lib/server/installation-import/service.ts
+msgid "There is not enough free space. Free some space and resume the import."
+msgstr "Недостатньо вільного місця. Звільніть місце й продовжте імпорт."
+
+#: src/lib/server/installation-import/service.ts
+msgid "AI Detector cannot access this folder. Check its permissions and try again."
+msgstr "AI Detector не має доступу до цієї папки. Перевірте права доступу й спробуйте ще раз."
+
+#: src/lib/server/installation-import/service.ts
+msgid "The import could not finish. Your original files are unchanged. Check the drive and try again."
+msgstr "Не вдалося завершити імпорт. Оригінальні файли не змінено. Перевірте диск і спробуйте ще раз."
+
+#: src/routes/(admin)/storage/+page.server.ts
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Choose a valid date, today or earlier."
+msgstr "Виберіть правильну дату: сьогодні або раніше."
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Recordings could not be removed."
+msgstr "Не вдалося видалити записи."
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Cache cleanup requires the desktop application so monitoring can be checked."
+msgstr "Для очищення кешу потрібен настільний застосунок, щоб можна було перевірити спостереження."
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Prepared models and unused model downloads removed. Current source models were kept."
+msgstr "Підготовлені моделі та невикористані завантаження моделей видалено. Поточні вихідні моделі збережено."
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "The cache could not be cleared."
+msgstr "Не вдалося очистити кеш."
+
+#: src/routes/(admin)/cameras/live/+server.ts
+#: src/routes/(admin)/cameras/pictures/+server.ts
+msgid "Camera not found."
+msgstr "Камеру не знайдено."
+
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+msgid "The recording check request was not valid."
+msgstr "Неправильний запит перевірки запису."
+
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+msgid "This camera has no local recording destination to check."
+msgstr "Ця камера не має локального місця зберігання записів для перевірки."
+
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+msgid "Check the camera picture again. The test recording has expired."
+msgstr "Перевірте зображення з камери ще раз. Тестовий запис застарів."
+
+#: src/routes/(admin)/camera-checks/[id]/picture.jpg/+server.ts
+msgid "This camera check has expired. Check the camera again."
+msgstr "Ця перевірка камери застаріла. Перевірте камеру ще раз."
+
+#: src/routes/recovery/+page.svelte
+msgid "Recover settings · AI Detector"
+msgstr "Відновлення налаштувань · AI Detector"
+
+#: src/routes/recovery/+page.svelte
+msgid "Recover settings"
+msgstr "Відновити налаштування"
+
+#: src/routes/recovery/+page.svelte
+msgid "Restore the last settings AI Detector could read. The current files are kept as copies for troubleshooting. Recordings are kept."
+msgstr "Відновіть останні налаштування, які AI Detector зміг прочитати. Поточні файли зберігаються як копії для діагностики. Записи зберігаються."
+
+#: src/routes/recovery/+page.svelte
+msgid "Recovery did not finish"
+msgstr "Відновлення не завершено"
+
+#: src/routes/recovery/+page.svelte
+msgid "Restore saved settings"
+msgstr "Відновити збережені налаштування"
+
+#: src/routes/recovery/+page.svelte
+msgid "No valid recovery snapshot is available. Restore config.json and app.json from your settings backup, or ask for help using the diagnostics download."
+msgstr "Немає коректного знімка для відновлення. Відновіть config.json і app.json із резервної копії налаштувань або зверніться по допомогу, додавши діагностичні дані."
+
+#: src/lib/components/page-error.svelte
+#: src/routes/(admin)/logs/+page.svelte
+#: src/routes/(admin)/status/+page.svelte
+#: src/routes/recovery/+page.svelte
+msgid "<0/>Download diagnostics"
+msgstr "<0/>Завантажити діагностичні дані"
+
+#: src/routes/recovery/+page.svelte
+msgid "Back to the app"
+msgstr "Повернутися до застосунку"
+
+#: src/routes/pair/+page.svelte
+msgid "Connect device · AI Detector"
+msgstr "Підключення пристрою · AI Detector"
+
+#: src/routes/pair/+page.svelte
+msgid "Your code is filled in. Tap Connect device to open the dashboard here."
+msgstr "Код уже введено. Натисніть «Підключити пристрій», щоб відкрити панель тут."
+
+#: src/routes/pair/+page.svelte
+msgid "On the computer running AI Detector, open Settings → Devices and choose Connect a device. Enter the code it shows."
+msgstr "На комп’ютері, де працює AI Detector, відкрийте Налаштування → Пристрої та виберіть «Підключити пристрій». Введіть показаний код."
+
+#: src/routes/pair/+page.svelte
+msgid "Connect to AI Detector"
+msgstr "Підключення до AI Detector"
+
+#: src/routes/pair/+page.svelte
+msgid "Six-digit code"
+msgstr "Шестизначний код"
+
+#: src/routes/pair/+page.svelte
+msgid "Name for this device <0>(optional)</0>"
+msgstr "Назва цього пристрою <0>(необов’язково)</0>"
+
+#: src/lib/components/camera-add.svelte
+#: src/routes/pair/+page.svelte
+msgid "Could not connect"
+msgstr "Не вдалося підключитися"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-picture.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/llm-connection-editor.svelte
+#: src/routes/pair/+page.svelte
+msgid "Connecting…"
+msgstr "Підключення…"
+
+#: src/routes/pair/+page.svelte
+msgid "Connect device"
+msgstr "Підключити пристрій"
+
+#. 0: title
+#: src/lib/components/page-header.svelte
+msgid "{0} · AI Detector"
+msgstr "{0} · AI Detector"
+
+#: src/lib/components/page-error.svelte
+msgid "This page needs attention"
+msgstr "Ця сторінка потребує уваги"
+
+#: src/lib/components/page-error.svelte
+msgid "Go to the start"
+msgstr "На початкову сторінку"
+
+#: src/lib/components/page-error.svelte
+msgid "<0/>Recover settings"
+msgstr "<0/>Відновити налаштування"
+
+#: src/lib/hooks/runtime-status.svelte.ts
+msgid "Status is unavailable."
+msgstr "Стан недоступний."
+
+#: src/lib/hooks/setup-verifier.svelte.ts
+msgid "This camera could not be checked. Try again."
+msgstr "Не вдалося перевірити цю камеру. Спробуйте ще раз."
+
+#: src/lib/hooks/setup-verifier.svelte.ts
+msgid "The recording check could not finish. Try again."
+msgstr "Не вдалося завершити перевірку запису. Спробуйте ще раз."
+
+#: src/lib/components/app-sidebar.svelte
+#: src/lib/components/guided-header.svelte
+#: src/lib/components/mobile-header.svelte
+#: src/lib/phone-alarm.ts
+msgid "AI Detector"
+msgstr "AI Detector"
+
+#: src/lib/components/app-sidebar.svelte
+msgid "View monitoring status"
+msgstr "Стан спостереження"
+
+#: src/lib/components/app-sidebar.svelte
+#: src/lib/components/guided-header.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Help on GitHub"
+msgstr "Довідка на GitHub"
+
+#. 0: version
+#: src/lib/components/app-sidebar.svelte
+msgid "Version {0}"
+msgstr "Версія {0}"
+
+#: src/lib/components/camera-add.svelte
+msgid "Waiting"
+msgstr "Очікування"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Connected"
+msgstr "Підключено"
+
+#: src/lib/components/camera-add.svelte
+msgid "Added"
+msgstr "Додано"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera search failed. Check the network and try again."
+msgstr "Не вдалося знайти камери. Перевірте мережу й спробуйте ще раз."
+
+#: src/lib/components/camera-add.svelte
+msgid "Could not connect to the camera. Check the stream URL and try again."
+msgstr "Не вдалося підключитися до камери. Перевірте URL потоку й спробуйте ще раз."
+
+#: src/lib/components/camera-add.svelte
+msgid "Could not check this picture. Try again."
+msgstr "Не вдалося перевірити це зображення. Спробуйте ще раз."
+
+#: src/lib/components/camera-add.svelte
+msgid "Could not add this camera. Try again."
+msgstr "Не вдалося додати цю камеру. Спробуйте ще раз."
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Searching…"
+msgstr "Пошук…"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Search again"
+msgstr "Шукати знову"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Cameras on your network"
+msgstr "Камери у вашій мережі"
+
+#: src/lib/components/camera-add.svelte
+msgid "Looking for cameras…"
+msgstr "Пошук камер…"
+
+#: src/lib/components/camera-add.svelte
+msgid "Already added"
+msgstr "Уже додано"
+
+#: src/lib/components/camera-connection-fields.svelte
+msgid "Camera username"
+msgstr "Ім’я користувача камери"
+
+#: src/lib/components/camera-connection-fields.svelte
+msgid "Camera password"
+msgstr "Пароль камери"
+
+#: src/lib/components/camera-add.svelte
+msgid "Select cameras that share this login."
+msgstr "Виберіть камери з такими самими даними для входу."
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-picture.svelte
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/setup-finish.svelte
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Try again"
+msgstr "Повторити"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Enter a stream URL instead"
+msgstr "Ввести URL потоку"
+
+#: src/lib/components/camera-connection-fields.svelte
+msgid "RTSP URL"
+msgstr "URL RTSP"
+
+#: src/lib/components/camera-connection-fields.svelte
+msgid "Paste the full stream URL, including the username and password if the camera needs them."
+msgstr "Вставте повний URL потоку, разом з ім’ям користувача й паролем, якщо камера їх вимагає."
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera needs attention"
+msgstr "Камера потребує уваги"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Connect camera"
+msgstr "Підключити камеру"
+
+#: src/lib/components/camera-add.svelte
+msgid "Enter a stream URL"
+msgstr "Введіть URL потоку"
+
+#: src/lib/components/camera-add.svelte
+msgid "Check the picture"
+msgstr "Перевірте зображення"
+
+#: src/lib/components/camera-add.svelte
+msgid "Check the pictures"
+msgstr "Перевірте зображення"
+
+#: src/lib/components/camera-add.svelte
+msgid "Give each camera a name you’ll recognize. A short test recording is checked for you."
+msgstr "Дайте кожній камері зрозумілу вам назву. Короткий тестовий запис перевіряється автоматично."
+
+#. 0: camera.name
+#. 0: label || 'Camera'
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "{0} connection preview"
+msgstr "Попередній перегляд підключення: {0}"
+
+#. 0: camera.name
+#: src/lib/components/camera-add.svelte
+msgid "Leave out {0}"
+msgstr "Пропустити: {0}"
+
+#: src/lib/components/camera-add.svelte
+msgid "Leave out"
+msgstr "Пропустити"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera name"
+msgstr "Назва камери"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera channel or stream"
+msgstr "Канал або потік камери"
+
+#: src/lib/components/camera-add.svelte
+msgid "Refresh picture"
+msgstr "Оновити зображення"
+
+#: src/lib/components/camera-add.svelte
+msgid "Adding…"
+msgstr "Додавання…"
+
+#: src/lib/components/camera-add.svelte
+msgid "Change login and retry"
+msgstr "Змінити дані для входу й повторити"
+
+#: src/lib/components/camera-add.svelte
+msgid "Add more cameras"
+msgstr "Додати ще камери"
+
+#: src/lib/components/camera-add.svelte
+msgid "Done"
+msgstr "Готово"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/heartbeat-settings.svelte
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/phone-alarm-editor.svelte
+#: src/lib/components/recording-viewer.svelte
+#: src/lib/components/setup-finish.svelte
+msgid "Cancel"
+msgstr "Скасувати"
+
+#. 0: label
+#: src/lib/components/camera-picture.svelte
+msgid "{0} live picture"
+msgstr "Зображення в реальному часі: {0}"
+
+#: src/lib/components/camera-picture.svelte
+msgid "The live picture is unavailable."
+msgstr "Зображення в реальному часі недоступне."
+
+#: src/lib/components/camera-picture.svelte
+msgid "Preview paused"
+msgstr "Попередній перегляд призупинено"
+
+#: src/lib/components/camera-picture.svelte
+msgid "Show live picture"
+msgstr "Показати зображення"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Custom settings from JSON"
+msgstr "Власні налаштування з JSON"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Off — alert on every detection"
+msgstr "Вимкнено: сповіщати про кожне виявлення"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Check detections with"
+msgstr "Перевіряти виявлення через"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Add another connection"
+msgstr "Додати ще підключення"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Let AI look at each clip before an alert is sent, to filter out false alarms. The preset supplies the question."
+msgstr "ШІ переглядає кожен ролик перед надсиланням сповіщення й відсіює хибні тривоги. Запитання задає шаблон."
+
+#: src/lib/components/camera-discovery.svelte
+msgid "Discovered cameras"
+msgstr "Знайдені камери"
+
+#: src/lib/components/camera-discovery.svelte
+msgid "Choose from the list instead"
+msgstr "Вибрати зі списку"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Which cameras should it watch?"
+msgstr "За якими камерами спостерігати?"
+
+#: src/lib/components/camera-selection.svelte
+msgid "A camera can be watched by several detectors."
+msgstr "За однією камерою можуть спостерігати кілька детекторів."
+
+#: src/lib/components/camera-selection.svelte
+msgid "Clear selection"
+msgstr "Зняти вибір"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Select all cameras"
+msgstr "Вибрати всі камери"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Choose at least one camera to continue."
+msgstr "Виберіть принаймні одну камеру, щоб продовжити."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Could not connect to the camera. Check its connection details."
+msgstr "Не вдалося підключитися до камери. Перевірте дані підключення."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Camera saved."
+msgstr "Камеру збережено."
+
+#: src/lib/components/camera-settings.svelte
+msgid "The camera could not be saved. Your choices are still here."
+msgstr "Не вдалося зберегти камеру. Ваш вибір збережено тут."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Could not remove this camera."
+msgstr "Не вдалося видалити цю камеру."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Connect to see the new picture."
+msgstr "Підключіть камеру, щоб побачити нове зображення."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Camera settings"
+msgstr "Налаштування камери"
+
+#. 0: address
+#: src/lib/components/camera-settings.svelte
+msgid "Camera selected: {0}"
+msgstr "Вибрано камеру: {0}"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Choose camera channel again"
+msgstr "Вибрати канал камери знову"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Reconnect camera"
+msgstr "Перепідключити камеру"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Keep current connection"
+msgstr "Залишити поточне підключення"
+
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/heartbeat-settings.svelte
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Saving…"
+msgstr "Збереження…"
+
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/notification-editor.svelte
+msgid "Save changes"
+msgstr "Зберегти зміни"
+
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Change connection"
+msgstr "Змінити підключення"
+
+#. 0: initial.label
+#. 0: originalLabel
+#. 0: connection.label
+#. 0: initial.label
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/notification-editor.svelte
+msgid "Remove “{0}”?"
+msgstr "Видалити «{0}»?"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Monitoring and alerts for this camera will stop. Its existing recordings stay on this computer."
+msgstr "Спостереження й сповіщення для цієї камери припиняться. Її наявні записи залишаться на цьому комп’ютері."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Keep camera"
+msgstr "Залишити камеру"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Remove camera"
+msgstr "Видалити камеру"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Remove this camera…"
+msgstr "Видалити цю камеру…"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Export recordings"
+msgstr "Експорт записів"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Download images, videos and detection details in one ZIP to share for model improvement."
+msgstr "Завантажте зображення, відео й дані виявлень одним ZIP-архівом, щоб поділитися ними для покращення моделі."
+
+#: src/lib/components/export-recordings.svelte
+msgid "All categories"
+msgstr "Усі категорії"
+
+#: src/lib/components/export-recordings.svelte
+msgid "All results"
+msgstr "Усі результати"
+
+#: src/lib/components/export-recordings.svelte
+msgid "From date"
+msgstr "З дати"
+
+#: src/lib/components/export-recordings.svelte
+msgid "To date"
+msgstr "До дати"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Optional. Leave both empty to include all dates."
+msgstr "Необов’язково. Залиште обидва поля порожніми, щоб охопити всі дати."
+
+#: src/lib/components/export-recordings.svelte
+msgid "<0/>Download ZIP"
+msgstr "<0/>Завантажити ZIP"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Counting recordings…"
+msgstr "Підрахунок записів…"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Could not read the recordings. Close this window and try again."
+msgstr "Не вдалося прочитати записи. Закрийте це вікно й спробуйте ще раз."
+
+#: src/lib/components/export-recordings.svelte
+msgid "<0/>Export"
+msgstr "<0/>Експорт"
+
+#: src/lib/components/detector-editor.svelte
+msgid "The preset could not be loaded."
+msgstr "Не вдалося завантажити шаблон."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Could not load the preset question."
+msgstr "Не вдалося завантажити запитання шаблону."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset for this detector."
+msgstr "Виберіть шаблон для цього детектора."
+
+#. 0: savedLabel
+#: src/lib/components/detector-editor.svelte
+msgid "Detector '{0}' saved."
+msgstr "Детектор «{0}» збережено."
+
+#: src/lib/components/detector-editor.svelte
+msgid "The detector could not be saved."
+msgstr "Не вдалося зберегти детектор."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Your unsaved choices were restored. Review them before saving."
+msgstr "Ваш незбережений вибір відновлено. Перегляньте його перед збереженням."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Monitoring presets are unavailable"
+msgstr "Шаблони спостереження недоступні"
+
+#. 0: presetWarning
+#: src/lib/components/detector-editor.svelte
+msgid "{0} You can still edit and save the current configuration."
+msgstr "{0} Поточне налаштування все одно можна змінити й зберегти."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Preset"
+msgstr "Шаблон"
+
+#: src/lib/components/detector-editor.svelte
+msgid "What do you want to detect?"
+msgstr "Що потрібно виявляти?"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Detector name"
+msgstr "Назва детектора"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Add a camera first"
+msgstr "Спершу додайте камеру"
+
+#: src/lib/components/detector-editor.svelte
+msgid "A detector watches cameras you have connected. <0><0/>Add cameras</0>"
+msgstr "Детектор спостерігає за підключеними вами камерами. <0><0/>Додати камери</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Connect another phone or group"
+msgstr "Підключити інший телефон або групу"
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Connect Telegram"
+msgstr "Підключити Telegram"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Could not update detector"
+msgstr "Не вдалося оновити детектор"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Save detector"
+msgstr "Зберегти детектор"
+
+#: src/lib/components/detector-editor.svelte
+msgid "This stops this detector on all of its cameras. Other detectors, camera connections and saved recordings are kept. This cannot be undone."
+msgstr "Цей детектор буде зупинено на всіх його камерах. Інші детектори, підключення камер і збережені записи залишаться. Цю дію не можна скасувати."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Keep detector"
+msgstr "Залишити детектор"
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-editor.svelte
+msgid "Your detector changes stay here until you save the detector."
+msgstr "Зміни детектора залишаються тут, доки ви його не збережете."
+
+#: src/lib/components/guided-header.svelte
+msgid "<0/>Help"
+msgstr "<0/>Довідка"
+
+#: src/lib/components/guided-header.svelte
+msgid "Open on a phone or other computer"
+msgstr "Відкрити на телефоні або іншому комп’ютері"
+
+#: src/lib/components/guided-header.svelte
+msgid "Logs and diagnostics"
+msgstr "Журнали й діагностика"
+
+#: src/lib/components/import-installation.svelte
+msgid "Could not read the import progress. Reopen setup to try again."
+msgstr "Не вдалося прочитати перебіг імпорту. Відкрийте налаштування знову, щоб спробувати ще раз."
+
+#: src/lib/components/import-installation.svelte
+msgid "Import could not finish. Try again."
+msgstr "Не вдалося завершити імпорт. Спробуйте ще раз."
+
+#: src/lib/components/import-installation.svelte
+msgid "Reconnecting to the import…"
+msgstr "Повторне підключення до імпорту…"
+
+#: src/lib/components/import-installation.svelte
+msgid "Moving from an earlier AI Detector?"
+msgstr "Переходите з попередньої версії AI Detector?"
+
+#: src/lib/components/import-installation.svelte
+msgid "Bring its cameras, detectors, alerts and recordings along."
+msgstr "Перенесіть її камери, детектори, сповіщення й записи."
+
+#: src/lib/components/import-installation.svelte
+msgid "Use existing setup"
+msgstr "Використати наявне налаштування"
+
+#: src/lib/components/import-installation.svelte
+msgid "Import previous installation"
+msgstr "Імпортувати попереднє встановлення"
+
+#: src/lib/components/import-installation.svelte
+msgid "Use your existing setup"
+msgstr "Використайте наявне налаштування"
+
+#: src/lib/components/import-installation.svelte
+msgid "Bring your cameras, detectors, alerts and recordings from your previous AI Detector folder."
+msgstr "Перенесіть камери, детектори, сповіщення й записи з папки попередньої версії AI Detector."
+
+#: src/lib/components/import-installation.svelte
+msgid "Open the localhost dashboard on the computer running AI Detector to choose its old folder."
+msgstr "Щоб вибрати стару папку, відкрийте панель localhost на комп’ютері, де працює AI Detector."
+
+#: src/lib/components/import-installation.svelte
+msgid "<0/>Choose old folder"
+msgstr "<0/>Вибрати стару папку"
+
+#: src/lib/components/import-installation.svelte
+msgid "Enter folder path"
+msgstr "Ввести шлях до папки"
+
+#: src/lib/components/import-installation.svelte
+msgid "Choose the folder containing your old config.json, usually next to the old application."
+msgstr "Виберіть папку зі старим config.json, зазвичай поруч зі старим застосунком."
+
+#. 0: summary.source
+#: src/lib/components/import-installation.svelte
+msgid "From: {0}"
+msgstr "Звідки: {0}"
+
+#. 0: summary.destination
+#: src/lib/components/import-installation.svelte
+msgid "To: {0}"
+msgstr "Куди: {0}"
+
+#: src/lib/components/import-installation.svelte
+msgid "Copying your files…"
+msgstr "Копіювання файлів…"
+
+#: src/lib/components/import-installation.svelte
+msgid "Import progress"
+msgstr "Перебіг імпорту"
+
+#: src/lib/components/import-installation.svelte
+msgid "Keep AI Detector open. You can close this browser tab."
+msgstr "Не закривайте AI Detector. Цю вкладку браузера можна закрити."
+
+#: src/lib/components/import-installation.svelte
+msgid "<0/>Keep recordings in their current folder"
+msgstr "<0/>Залишити записи в поточній папці"
+
+#. 0: dataSize(summary.recordingBytes)
+#: src/lib/components/import-installation.svelte
+msgid "Saves {0} of copying. Keep the old folder and drive connected; new recordings will also be saved there."
+msgstr "Не потрібно копіювати {0}. Стара папка й диск мають залишатися підключеними; нові записи теж зберігатимуться там."
+
+#: src/lib/components/import-installation.svelte
+msgid "Recording storage"
+msgstr "Зберігання записів"
+
+#: src/lib/components/import-installation.svelte
+msgid "Resume import"
+msgstr "Продовжити імпорт"
+
+#: src/lib/components/import-installation.svelte
+msgid "Import and review setup"
+msgstr "Імпортувати й перевірити налаштування"
+
+#: src/lib/components/import-installation.svelte
+msgid "Choose another folder"
+msgstr "Вибрати іншу папку"
+
+#: src/lib/components/import-installation.svelte
+msgid "Your original files will stay in place. Monitoring starts when you’re ready in the final setup step."
+msgstr "Оригінальні файли залишаться на місці. Спостереження почнеться, коли ви будете готові, на останньому кроці налаштування."
+
+#: src/lib/components/import-installation.svelte
+msgid "<0/>I’ve closed the previous AI Detector"
+msgstr "<0/>Попередню версію AI Detector закрито"
+
+#: src/lib/components/import-installation.svelte
+msgid "Old application folder"
+msgstr "Папка старого застосунку"
+
+#: src/lib/components/import-installation.svelte
+msgid "Find existing setup"
+msgstr "Знайти наявне налаштування"
+
+#: src/lib/components/import-installation.svelte
+msgid "Cancel import"
+msgstr "Скасувати імпорт"
+
+#: src/lib/components/import-installation.svelte
+msgid "Back"
+msgstr "Назад"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat saved."
+msgstr "Heartbeat збережено."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat turned off."
+msgstr "Heartbeat вимкнено."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "The heartbeat could not be saved. Your changes are still here."
+msgstr "Не вдалося зберегти heartbeat. Ваші зміни збережено тут."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat"
+msgstr "Heartbeat"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Get warned when this computer or AI Detector stops. While monitoring runs, the detector calls an address you choose; a service such as Healthchecks.io or Uptime Kuma alerts you when the calls stop coming."
+msgstr "Отримуйте попередження, коли цей комп’ютер або AI Detector перестає працювати. Під час спостереження детектор звертається до вибраної вами адреси; сервіс на кшталт Healthchecks.io чи Uptime Kuma попередить вас, коли звернення припиняться."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Address to call"
+msgstr "Адреса для виклику"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "The ping or push address your monitoring service gives you."
+msgstr "Адреса ping або push, яку дав ваш сервіс моніторингу."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Call every (seconds)"
+msgstr "Викликати кожні (секунди)"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat needs attention"
+msgstr "Heartbeat потребує уваги"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Saving restarts monitoring for a moment so the detector picks up the change."
+msgstr "Під час збереження спостереження ненадовго перезапуститься, щоб детектор застосував зміну."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Restart your detector after saving so it picks up the change."
+msgstr "Після збереження перезапустіть детектор, щоб він застосував зміну."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Save heartbeat"
+msgstr "Зберегти heartbeat"
+
+#. 0: host
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Calling {0}"
+msgstr "Виклик {0}"
+
+#. 0: saved.interval
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Every {0} seconds while monitoring runs"
+msgstr "Кожні {0} с під час спостереження"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Off"
+msgstr "Вимкнено"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Nothing is called."
+msgstr "Нічого не викликається."
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Change"
+msgstr "Змінити"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Set up"
+msgstr "Налаштувати"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Turn off"
+msgstr "Вимкнути"
+
+#: src/lib/components/json-editor.svelte
+msgid "The editor could not load. Reload this page to try again."
+msgstr "Не вдалося завантажити редактор. Перезавантажте сторінку, щоб спробувати ще раз."
+
+#: src/lib/components/json-editor.svelte
+msgid "Editor unavailable"
+msgstr "Редактор недоступний"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Google Gemini"
+msgstr "Google Gemini"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Could not save this connection."
+msgstr "Не вдалося зберегти це підключення."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Could not remove this connection."
+msgstr "Не вдалося видалити це підключення."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Connection name"
+msgstr "Назва підключення"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Open Google AI Studio and copy or create an API key. <0>Open Google AI Studio<0/></0>"
+msgstr "Відкрийте Google AI Studio і скопіюйте або створіть ключ API. <0>Відкрити Google AI Studio<0/></0>"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Paste the key below."
+msgstr "Вставте ключ нижче."
+
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/llm-connection-editor.svelte
+msgid "API key"
+msgstr "Ключ API"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Kept on this computer. Clips of detected events are sent to Google to be checked."
+msgstr "Зберігається на цьому комп’ютері. Ролики з виявленими подіями надсилаються в Google на перевірку."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Google offers a limited free tier. Quotas and billing depend on your project. <0>Google’s pricing and data-use terms</0>."
+msgstr "Google пропонує обмежений безкоштовний тариф. Квоти й оплата залежать від вашого проєкту. <0>Ціни та умови використання даних Google</0>."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "This connection uses custom settings. You can edit these in Advanced."
+msgstr "Це підключення використовує власні налаштування. Їх можна змінити в розділі «Додатково»."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Open Advanced"
+msgstr "Відкрити «Додатково»"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "The key is checked with a test image before it is saved."
+msgstr "Перед збереженням ключ перевіряється на тестовому зображенні."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Connection testing is available in the desktop application. Save settings here for your separate detector."
+msgstr "Перевірка підключення доступна в настільному застосунку. Збережіть тут налаштування для окремого детектора."
+
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Connection needs attention"
+msgstr "Підключення потребує уваги"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Connect"
+msgstr "Підключити"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Save connection"
+msgstr "Зберегти підключення"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Remove connection"
+msgstr "Видалити підключення"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Remove this connection…"
+msgstr "Видалити це підключення…"
+
+#: src/lib/components/mobile-nav.svelte
+msgid "Main"
+msgstr "Головне"
+
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/setup-finish.svelte
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Start monitoring"
+msgstr "Почати спостереження"
+
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/setup-finish.svelte
+msgid "Pause monitoring"
+msgstr "Призупинити спостереження"
+
+#: src/lib/components/monitoring-control.svelte
+msgid "The request could not be completed. Check that AI Detector is still open."
+msgstr "Не вдалося виконати запит. Перевірте, чи AI Detector досі відкритий."
+
+#: src/lib/components/monitoring-banner.svelte
+msgid "Details"
+msgstr "Докладніше"
+
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "My phone"
+msgstr "Мій телефон"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Alert settings saved."
+msgstr "Налаштування сповіщень збережено."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Could not save alerts. Your choices are still here."
+msgstr "Не вдалося зберегти сповіщення. Ваш вибір збережено тут."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Could not remove this recipient."
+msgstr "Не вдалося видалити цього отримувача."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Already connected as <0/>. We’ll reuse this recipient."
+msgstr "Уже підключено як <0/>. Цього отримувача буде використано знову."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Recipient name"
+msgstr "Ім’я отримувача"
+
+#: src/lib/components/notification-editor.svelte
+msgid "You can connect now and choose this recipient when you add a detector."
+msgstr "Можна підключити зараз і вибрати цього отримувача під час додавання детектора."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Which detectors alert this recipient?"
+msgstr "Які детектори сповіщають цього отримувача?"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Each detector alerts for all of its cameras."
+msgstr "Кожен детектор сповіщає про всі свої камери."
+
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Alerts need attention"
+msgstr "Сповіщення потребують уваги"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Use this recipient"
+msgstr "Використати цього отримувача"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Save recipient"
+msgstr "Зберегти отримувача"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Every detector will stop sending alerts to this recipient. Monitoring and saved recordings are kept. You can reconnect the recipient later."
+msgstr "Жоден детектор більше не надсилатиме сповіщення цьому отримувачу. Спостереження й збережені записи залишаться. Отримувача можна підключити знову пізніше."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Keep recipient"
+msgstr "Залишити отримувача"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Remove recipient"
+msgstr "Видалити отримувача"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Remove this recipient…"
+msgstr "Видалити цього отримувача…"
+
+#. 0: name
+#. 0: name
+#: src/lib/components/secret-input.svelte
+#: src/lib/components/secret-input.svelte
+msgid "Hide {0}"
+msgstr "Сховати: {0}"
+
+#. 0: name
+#. 0: name
+#: src/lib/components/secret-input.svelte
+#: src/lib/components/secret-input.svelte
+msgid "Show {0}"
+msgstr "Показати: {0}"
+
+#: src/routes/(admin)/settings/+page.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Back up settings"
+msgstr "Резервна копія налаштувань"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Save your cameras, detectors and alert settings in one ZIP."
+msgstr "Збережіть камери, детектори й налаштування сповіщень в одному ZIP-архіві."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "<0/>Download backup"
+msgstr "<0/>Завантажити резервну копію"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Includes saved passwords and tokens. Keep this backup private."
+msgstr "Містить збережені паролі й токени. Нікому не передавайте цю копію."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Recordings and model files are not included. To restore, extract the ZIP and choose Use existing setup in a new installation."
+msgstr "Записи та файли моделей не включено. Щоб відновити, розпакуйте ZIP і виберіть «Використати наявне налаштування» в новому встановленні."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "<0/>Back up"
+msgstr "<0/>Створити копію"
+
+#: src/lib/components/setup-steps.svelte
+#: src/lib/navigation.ts
+#: src/routes/(admin)/status/+page.svelte
+#: src/routes/(admin)/streams/+page.svelte
+#: src/routes/(admin)/streams/[id]/+page.svelte
+#: src/routes/(admin)/streams/add/+page.svelte
+msgid "Cameras"
+msgstr "Камери"
+
+#: src/lib/components/setup-steps.svelte
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Detection"
+msgstr "Виявлення"
+
+#: src/lib/components/setup-steps.svelte
+msgid "Start"
+msgstr "Запуск"
+
+#: src/lib/components/setup-steps.svelte
+msgid "Setup progress"
+msgstr "Перебіг налаштування"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Copied. Paste /newbot into BotFather."
+msgstr "Скопійовано. Вставте /newbot у BotFather."
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Type /newbot into BotFather."
+msgstr "Введіть /newbot у BotFather."
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Open BotFather below, send <0/> and follow its instructions for a name and username."
+msgstr "Відкрийте BotFather нижче, надішліть <0/> і дотримуйтеся його підказок, щоб задати ім’я та ім’я користувача."
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Copy the bot token from BotFather into AI Detector. Keep this token private."
+msgstr "Скопіюйте токен бота з BotFather в AI Detector. Нікому не передавайте цей токен."
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Choose Connect Telegram below. Open the link or scan the code with your phone."
+msgstr "Натисніть «Підключити Telegram» нижче. Відкрийте посилання або відскануйте код телефоном."
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Open BotFather"
+msgstr "Відкрити BotFather"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Copy /newbot"
+msgstr "Копіювати /newbot"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "How to create your Telegram bot"
+msgstr "Як створити бота Telegram"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Your progress could not be saved. Try again."
+msgstr "Не вдалося зберегти перебіг налаштування. Спробуйте ще раз."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Could not start monitoring. Try again."
+msgstr "Не вдалося почати спостереження. Спробуйте ще раз."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Could not pause monitoring. Try again."
+msgstr "Не вдалося призупинити спостереження. Спробуйте ще раз."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Connection to the app was lost. Reconnecting…"
+msgstr "Зв’язок із застосунком втрачено. Повторне підключення…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Checking the recording location…"
+msgstr "Перевірка місця зберігання записів…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Checking the picture…"
+msgstr "Перевірка зображення…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Waiting to be checked…"
+msgstr "Очікування перевірки…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Open camera"
+msgstr "Відкрити камеру"
+
+#: src/lib/components/setup-finish.svelte
+msgid "No phone alerts. Recordings still appear in this app."
+msgstr "Без сповіщень на телефон. Записи й надалі з’являються в цьому застосунку."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Add phone alerts"
+msgstr "Додати сповіщення на телефон"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Detection runs separately from this app. Restart your detector so it uses these settings."
+msgstr "Виявлення працює окремо від цього застосунку. Перезапустіть детектор, щоб він використовував ці налаштування."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Setup needs attention"
+msgstr "Налаштування потребує уваги"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Open recordings"
+msgstr "Відкрити записи"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Open cameras"
+msgstr "Відкрити камери"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Starting monitoring…"
+msgstr "Запуск спостереження…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Finishing…"
+msgstr "Завершення…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Finish setup"
+msgstr "Завершити налаштування"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Open Telegram"
+msgstr "Відкрити Telegram"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose your recipient below."
+msgstr "Виберіть отримувача нижче."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Send a message to your bot, then try again. In a group, mention the bot in your message."
+msgstr "Надішліть повідомлення своєму боту й спробуйте ще раз. У групі згадайте бота в повідомленні."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Could not find Telegram chats."
+msgstr "Не вдалося знайти чати Telegram."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "The test could not be sent. Check your bot and recipient."
+msgstr "Не вдалося надіслати тест. Перевірте бота й отримувача."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "<0/> Connected in Telegram."
+msgstr "<0/> Підключено в Telegram."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Connect again"
+msgstr "Підключити знову"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "<0/> Telegram connected and test alert confirmed."
+msgstr "<0/> Telegram підключено, тестове сповіщення підтверджено."
+
+#. 0: pairingState.session.bot.name
+#: src/lib/components/telegram-connection.svelte
+msgid "Scan to connect to {0} in Telegram"
+msgstr "Відскануйте, щоб підключитися до {0} у Telegram"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose your group or channel in Telegram."
+msgstr "Виберіть групу або канал у Telegram."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose Confirm connection on the test alert in Telegram."
+msgstr "Натисніть «Підтвердити підключення» в тестовому сповіщенні в Telegram."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Waiting for Telegram…"
+msgstr "Очікування Telegram…"
+
+#. 0: pairingState.state === 'choosing' ? 'Choose your group or channel in Telegram.' \\: pairingState.state === 'confirming' ? 'Choose Confirm connection on the test alert in Telegram.' \\: 'Waiting for Telegram…'
+#: src/lib/components/telegram-connection.svelte
+msgid "{0} Keep this page open. The link expires in five minutes."
+msgstr "{0} Не закривайте цю сторінку. Посилання дійсне п’ять хвилин."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Scan with your phone, or open Telegram on this device. Choose <0>Start</0>, then follow the message to confirm your connection."
+msgstr "Відскануйте телефоном або відкрийте Telegram на цьому пристрої. Натисніть <0>Почати</0>, потім дотримуйтеся повідомлення, щоб підтвердити підключення."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Cancel connection"
+msgstr "Скасувати підключення"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Use bot from"
+msgstr "Використати бота з"
+
+#. 0: bots[0].label
+#: src/lib/components/telegram-connection.svelte
+msgid "Using the Telegram bot you set up for {0}."
+msgstr "Використовується бот Telegram, налаштований для: {0}."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Bot token from BotFather"
+msgstr "Токен бота з BotFather"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Paste the token here. If you already have a bot, use its token."
+msgstr "Вставте токен сюди. Якщо бот у вас уже є, використайте його токен."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "A group"
+msgstr "Група"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "A channel"
+msgstr "Канал"
+
+#: src/lib/components/telegram-connection.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Send alerts to"
+msgstr "Надсилати сповіщення в"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Finding chats…"
+msgstr "Пошук чатів…"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Find chats"
+msgstr "Знайти чати"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose a recipient"
+msgstr "Виберіть отримувача"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Telegram chat ID"
+msgstr "ID чату Telegram"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "For a group, add your bot and send a message mentioning it. Find the chat below, or enter its chat ID."
+msgstr "Для групи додайте до неї бота й надішліть повідомлення зі згадкою бота. Знайдіть чат нижче або введіть його ID."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Checking your bot…"
+msgstr "Перевірка бота…"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Use another bot"
+msgstr "Використати іншого бота"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Use saved bot"
+msgstr "Використати збереженого бота"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose in Telegram"
+msgstr "Вибрати в Telegram"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Enter chat ID manually"
+msgstr "Ввести ID чату вручну"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Sending test…"
+msgstr "Надсилання тесту…"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Send test alert"
+msgstr "Надіслати тестове сповіщення"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Test alert sent."
+msgstr "Тестове сповіщення надіслано."
+
+#: src/lib/components/telegram-connection.svelte
+msgid "<0/> I received the test on the intended phone or chat"
+msgstr "<0/> Тест надійшов на потрібний телефон або в потрібний чат"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Send test again"
+msgstr "Надіслати тест знову"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/devices/+page.svelte
+#: src/routes/(admin)/logs/+page.svelte
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/settings/+page.svelte
+#: src/routes/(admin)/storage/+page.svelte
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Settings"
+msgstr "Налаштування"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Advanced"
+msgstr "Додатково"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Everything the presets decide for you, as JSON: thresholds, prompts, delivery and the detection engine. Changes are checked before they are saved."
+msgstr "Усе, що шаблони вирішують за вас, у форматі JSON: пороги, промпти, надсилання й механізм виявлення. Зміни перевіряються перед збереженням."
+
+#: src/lib/components/theme-toggle.svelte
+msgid "Switch light or dark theme"
+msgstr "Перемкнути світлу або темну тему"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Enter valid JSON."
+msgstr "Введіть коректний JSON."
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "AI connections"
+msgstr "Підключення до ШІ"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Shared AI connections in app.json. Use a LiteLLM model name, API key, optional URL and headers. Changes apply to assigned detectors. Unassign a connection before removing or renaming it here."
+msgstr "Спільні підключення до ШІ в app.json. Укажіть назву моделі LiteLLM, ключ API та, за потреби, URL і заголовки. Зміни застосовуються до призначених детекторів. Перш ніж видалити або перейменувати підключення тут, зніміть його з детекторів."
+
+#: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Discard unsaved JSON changes?"
+msgstr "Скасувати незбережені зміни JSON?"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Could not load settings."
+msgstr "Не вдалося завантажити налаштування."
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Settings saved."
+msgstr "Налаштування збережено."
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Could not save settings."
+msgstr "Не вдалося зберегти налаштування."
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Settings file"
+msgstr "Файл налаштувань"
+
+#: src/lib/components/json-editor.svelte
+msgid "Advanced settings JSON"
+msgstr "JSON додаткових налаштувань"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Correct the JSON before saving"
+msgstr "Виправте JSON перед збереженням"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Settings need attention"
+msgstr "Налаштування потребують уваги"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Please wait…"
+msgstr "Зачекайте…"
+
+#: src/lib/components/phone-alarm-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Save"
+msgstr "Зберегти"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Invalid JSON"
+msgstr "Неправильний JSON"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Valid · Unsaved changes"
+msgstr "Коректно · Є незбережені зміни"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Valid JSON"
+msgstr "Коректний JSON"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "<0/>Discard changes"
+msgstr "<0/>Скасувати зміни"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Devices"
+msgstr "Пристрої"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Open this dashboard on a phone or another computer on the same network. Each browser is remembered until you remove it."
+msgstr "Відкрийте цю панель на телефоні або іншому комп’ютері в тій самій мережі. Кожен браузер запам’ятовується, доки ви його не видалите."
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Scan to connect to AI Detector"
+msgstr "Відскануйте, щоб підключитися до AI Detector"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Scan this code with your phone’s camera, then tap <0>Connect device</0>."
+msgstr "Відскануйте цей код камерою телефона, потім натисніть <0>Підключити пристрій</0>."
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Or open the pairing page and enter"
+msgstr "Або відкрийте сторінку з’єднання й введіть"
+
+#. 0: clockTime(form.expires!)
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Valid until {0}. Keep this code private."
+msgstr "Дійсний до {0}. Нікому не повідомляйте цей код."
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Open pairing page"
+msgstr "Відкрити сторінку з’єднання"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Network"
+msgstr "Мережа"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Choose the network your phone is connected to."
+msgstr "Виберіть мережу, до якої підключено ваш телефон."
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Creating code…"
+msgstr "Створення коду…"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Create a new code"
+msgstr "Створити новий код"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Connect a device"
+msgstr "Підключити пристрій"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Could not connect device"
+msgstr "Не вдалося підключити пристрій"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "This browser"
+msgstr "Цей браузер"
+
+#. 0: calendarDate(device.created)
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Connected {0}"
+msgstr "Підключено: {0}"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Remove access"
+msgstr "Закрити доступ"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "No other devices yet. The computer running AI Detector always has access."
+msgstr "Інших пристроїв поки немає. Комп’ютер, де працює AI Detector, завжди має доступ."
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Connected devices"
+msgstr "Підключені пристрої"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "This dashboard uses HTTP, so use it on a network you trust. Pairing limits who can open it; HTTPS or a secure tunnel is needed to encrypt the traffic."
+msgstr "Ця панель працює через HTTP, тож використовуйте її в довіреній мережі. З’єднання обмежує, хто може її відкрити; для шифрування трафіку потрібен HTTPS або захищений тунель."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Failed to load recordings."
+msgstr "Не вдалося завантажити записи."
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Recordings"
+msgstr "Записи"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Category"
+msgstr "Категорія"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Review result"
+msgstr "Результат оцінки"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "<0/>Show new recordings"
+msgstr "<0/>Показати нові записи"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Could not check for new recordings. Retrying automatically."
+msgstr "Не вдалося перевірити нові записи. Повторна спроба буде автоматично."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Loading recordings"
+msgstr "Завантаження записів"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Nothing matches these filters"
+msgstr "Ніщо не відповідає цим фільтрам"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "No recordings yet"
+msgstr "Записів поки немає"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Try another category or result."
+msgstr "Спробуйте іншу категорію або результат."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Show everything"
+msgstr "Показати все"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Loading more…"
+msgstr "Завантаження…"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "That’s everything."
+msgstr "Це все."
+
+#. 0: categoryName(entry.type); 1: time
+#: src/routes/(admin)/detections/recording-card.svelte
+msgid "Play {0} recording from {1}"
+msgstr "Відтворити запис ({0}, {1})"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Light"
+msgstr "Світла"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Dark"
+msgstr "Темна"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Automatic"
+msgstr "Автоматично"
+
+#: src/routes/(admin)/settings/+page.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Appearance"
+msgstr "Вигляд"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Automatic follows this device."
+msgstr "«Автоматично» відповідає налаштуванню цього пристрою."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Download cameras, detectors and alert settings to keep them safe."
+msgstr "Завантажте камери, детектори й налаштування сповіщень, щоб зберегти їх."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "This installation"
+msgstr "Це встановлення"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Monitoring status"
+msgstr "Стан спостереження"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "What each camera is doing right now."
+msgstr "Що зараз робить кожна камера."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Guides, questions and bug reports."
+msgstr "Посібники, запитання й повідомлення про помилки."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Support"
+msgstr "Підтримка"
+
+#. 0: version
+#: src/routes/(admin)/settings/+page.svelte
+msgid "AI Detector version {0}"
+msgstr "AI Detector, версія {0}"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Whether your cameras are being watched right now, and what needs attention if they are not."
+msgstr "Чи ведеться зараз спостереження за камерами, а якщо ні — що потребує уваги."
+
+#: src/routes/(admin)/detectors/+page.svelte
+#: src/routes/(admin)/detectors/add/+page.svelte
+#: src/routes/(admin)/status/+page.svelte
+msgid "Add a detector"
+msgstr "Додати детектор"
+
+#. 0: clockTime(monitor.lastCheckedAt)
+#: src/routes/(admin)/status/+page.svelte
+msgid "Last heard from the app at {0}."
+msgstr "Останній сигнал від застосунку о {0}."
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Picture received; waiting for detection."
+msgstr "Зображення отримано; очікування виявлення."
+
+#. 0: camera.recordingError
+#. 0: status.recordingError
+#: src/routes/(admin)/status/+page.svelte
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Recording: {0}"
+msgstr "Запис: {0}"
+
+#. 0: clockTime(camera.lastFrameAt)
+#: src/routes/(admin)/status/+page.svelte
+msgid "Last picture {0}"
+msgstr "Останній кадр {0}"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Technical details <0>For troubleshooting</0>"
+msgstr "Технічні відомості <0>Для пошуку несправностей</0>"
+
+#. 0: backend.label
+#: src/routes/(admin)/status/+page.svelte
+msgid "{0} runs on"
+msgstr "{0} працює на"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Settings and recordings folder"
+msgstr "Папка налаштувань і записів"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Setup instructions<0/>"
+msgstr "Інструкція з установлення<0/>"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "<0/>View logs"
+msgstr "<0/>Відкрити журнали"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Monitoring keeps running when you close this page. If AI Detector opens when you log in, it resumes by itself — unless you paused it here."
+msgstr "Спостереження триває після закриття цієї сторінки. Якщо AI Detector відкривається під час входу в систему, спостереження відновиться саме, якщо тільки ви не призупинили його тут."
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Connect your cameras"
+msgstr "Підключіть камери"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "AI Detector looks for cameras on your network. Keep this computer on the same network as the cameras."
+msgstr "AI Detector шукає камери у вашій мережі. Цей комп’ютер має бути в тій самій мережі, що й камери."
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Choose what to detect"
+msgstr "Виберіть, що виявляти"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Pick a preset and the cameras it should watch. You can add more detectors later."
+msgstr "Виберіть шаблон і камери, за якими він спостерігатиме. Пізніше можна додати інші детектори."
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Each camera is checked once. Monitoring then keeps running in the background, also when this page is closed."
+msgstr "Кожна камера перевіряється один раз. Потім спостереження триває у фоні, зокрема коли цю сторінку закрито."
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Set up · AI Detector"
+msgstr "Налаштування · AI Detector"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Your existing setup is here to review. Previous recordings are in Recordings. Monitoring is stopped until you start it in the last step."
+msgstr "Тут можна перевірити наявне налаштування. Попередні записи — у розділі «Записи». Спостереження зупинене, доки ви не запустите його на останньому кроці."
+
+#: src/routes/(admin)/setup/+page.svelte
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Continue<0/>"
+msgstr "Продовжити<0/>"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "<0/>Add more cameras"
+msgstr "<0/>Додати ще камери"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Skip — use the cameras for live viewing only"
+msgstr "Пропустити — камери лише для перегляду"
+
+#: src/lib/cameras.ts
+msgid "Custom source"
+msgstr "Власне джерело"
+
+#. 0: meta.label
+#. 0: meta.label
+#: src/routes/(admin)/detectors/+page.svelte
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Edit {0}"
+msgstr "Змінити: {0}"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Edit"
+msgstr "Змінити"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "<0/>Add another detector"
+msgstr "<0/>Додати ще детектор"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/notifications/add/+page.svelte
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Alerts"
+msgstr "Сповіщення"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "<0/>Add recipient"
+msgstr "<0/>Додати отримувача"
+
+#. 0: assigned.join(', ')
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Alerts from {0}"
+msgstr "Сповіщення від: {0}"
+
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Not used by a detector yet"
+msgstr "Поки не використовується детекторами"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Connect Telegram to get each event on your phone. Monitoring and recording also work without alerts."
+msgstr "Підключіть Telegram, щоб отримувати кожну подію на телефон. Спостереження й запис працюють і без сповіщень."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Connect your phone"
+msgstr "Підключити телефон"
+
+#: src/lib/components/review-buttons.svelte
+msgid "Review removed"
+msgstr "Оцінку видалено"
+
+#: src/lib/components/review-buttons.svelte
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Review"
+msgstr "Оцінити"
+
+#: src/lib/components/review-buttons.svelte
+msgid "Confirmed. Remove your review"
+msgstr "Підтверджено. Видалити вашу оцінку"
+
+#: src/lib/components/review-buttons.svelte
+msgid "Confirmed by AI. Confirm it yourself"
+msgstr "Підтверджено ШІ. Підтвердьте самі"
+
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+msgid "Confirm: this is real"
+msgstr "Підтвердити: це справжнє"
+
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+msgid "Remove your review"
+msgstr "Видалити вашу оцінку"
+
+#: src/lib/components/review-buttons.svelte
+msgid "Confirm"
+msgstr "Підтвердити"
+
+#: src/lib/components/review-buttons.svelte
+msgid "False alarm. Remove your review"
+msgstr "Хибна тривога. Видалити вашу оцінку"
+
+#: src/lib/components/review-buttons.svelte
+msgid "False alarm according to AI. Mark it yourself"
+msgstr "Хибна тривога на думку ШІ. Позначте самі"
+
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+#: src/lib/detections.ts
+msgid "False alarm"
+msgstr "Хибна тривога"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/detectors/+page.svelte
+#: src/routes/(admin)/detectors/add/+page.svelte
+msgid "Detectors"
+msgstr "Детектори"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "A detector watches the cameras you choose, records what it sees and alerts the people you pick."
+msgstr "Детектор спостерігає за вибраними вами камерами, записує те, що бачить, і сповіщає вказаних вами людей."
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "<0/>Add detector"
+msgstr "<0/>Додати детектор"
+
+#. 0: recipients.map(({ label }) => label).join(', ')
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "<0/> Alerts to {0}"
+msgstr "<0/> Сповіщення: {0}"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "No phone alerts"
+msgstr "Без сповіщень на телефон"
+
+#. 0: unwatched[0].label
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "{0} is not watched by a detector, so it is for live viewing only."
+msgstr "Жоден детектор не спостерігає за камерою {0}, тому вона лише для перегляду."
+
+#. 0: unwatched.map((camera) => camera.label).join(', ')
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "{0} are not watched by a detector, so they are for live viewing only."
+msgstr "Жоден детектор не спостерігає за камерами {0}, тому вони лише для перегляду."
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Your cameras show a live picture. Add a detector to record events and get alerts."
+msgstr "Ваші камери показують зображення в реальному часі. Додайте детектор, щоб записувати події й отримувати сповіщення."
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Connect a camera first, then choose what to detect on it."
+msgstr "Спершу підключіть камеру, потім виберіть, що на ній виявляти."
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "No detectors yet"
+msgstr "Детекторів поки немає"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Add a camera"
+msgstr "Додати камеру"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Log unavailable"
+msgstr "Журнал недоступний"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Logs"
+msgstr "Журнали"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Startup and recent activity, to help find what went wrong. The diagnostics download bundles this with system details for support."
+msgstr "Запуск і нещодавні дії — допомагають знайти причину проблеми. Завантажувані діагностичні дані поєднують їх із відомостями про систему для підтримки."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Search logs…"
+msgstr "Пошук у журналах…"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Search logs"
+msgstr "Пошук у журналах"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Logs could not be refreshed"
+msgstr "Не вдалося оновити журнали"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Check that AI Detector is still open. Retrying automatically."
+msgstr "Перевірте, чи AI Detector досі відкритий. Повторна спроба буде автоматично."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Detector logs"
+msgstr "Журнали детектора"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Loading logs…"
+msgstr "Завантаження журналів…"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "No matching log entries."
+msgstr "Немає відповідних записів журналу."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "No diagnostic output yet. Logs appear when monitoring starts."
+msgstr "Діагностичних даних поки немає. Журнали з’являться після запуску спостереження."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Matching messages include their error details."
+msgstr "Відповідні повідомлення містять подробиці помилки."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Updates automatically. Scroll up to read earlier output."
+msgstr "Оновлюється автоматично. Прокрутіть угору, щоб прочитати попередній вивід."
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "<0/>Latest"
+msgstr "<0/>До останніх"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "An AI model looks at each clip before an alert is sent and filters out false alarms. Your presets supply the question it answers."
+msgstr "Модель ШІ переглядає кожен ролик перед надсиланням сповіщення й відсіює хибні тривоги. Запитання, на яке вона відповідає, задають ваші шаблони."
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "<0/>Add connection"
+msgstr "<0/>Додати підключення"
+
+#. 0: assigned.map(({ meta }) => meta.label).join(', ')
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Checks {0}"
+msgstr "Перевіряє: {0}"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Optional. Without it, every detection is recorded and alerted as it is."
+msgstr "Необов’язково. Без неї кожне виявлення записується й надсилається як є."
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Connect Google Gemini"
+msgstr "Підключити Google Gemini"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Storage"
+msgstr "Сховище"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Recordings are kept until you remove them. Nothing is deleted automatically."
+msgstr "Записи зберігаються, доки ви їх не видалите. Нічого не видаляється автоматично."
+
+#. 0: dataSize(data.space.available)
+#: src/routes/(admin)/storage/+page.svelte
+msgid "{0} free"
+msgstr "Вільно: {0}"
+
+#. 0: dataSize(used); 1: dataSize(data.space.total)
+#: src/routes/(admin)/storage/+page.svelte
+msgid "{0} used of {1}"
+msgstr "Зайнято {0} з {1}"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Storage used"
+msgstr "Зайнято"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Storage is almost full"
+msgstr "Сховище майже заповнене"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Free some space so new recordings can be saved."
+msgstr "Звільніть місце, щоб нові записи могли зберігатися."
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Remove old recordings"
+msgstr "Видалити старі записи"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Choose a date to see how many recordings would be removed. Export the ones you want to keep first from <0>Recordings</0>."
+msgstr "Виберіть дату, щоб побачити, скільки записів буде видалено. Спершу експортуйте потрібні записи в розділі <0>Записи</0>."
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Recordings before"
+msgstr "Записи до"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Removing them cannot be undone. Settings and newer recordings are kept."
+msgstr "Видалення не можна скасувати. Налаштування й новіші записи збережуться."
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "There is nothing to remove before this date."
+msgstr "До цієї дати видаляти нічого."
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Model cache"
+msgstr "Кеш моделей"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Prepared models and unused downloads. Pause monitoring before clearing them; the next start prepares models again, which can take several minutes on NVIDIA hardware."
+msgstr "Підготовлені моделі й невикористані завантаження. Перед очищенням призупиніть спостереження; під час наступного запуску моделі буде підготовлено знову, що на обладнанні NVIDIA може тривати кілька хвилин."
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Clear model cache"
+msgstr "Очистити кеш моделей"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "<0/>Add camera"
+msgstr "<0/>Додати камеру"
+
+#. 0: camera.label
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Open {0}"
+msgstr "Відкрити: {0}"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "No cameras yet"
+msgstr "Камер поки немає"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Connect a camera to see its live picture and choose what to detect."
+msgstr "Підключіть камеру, щоб бачити зображення в реальному часі й вибрати, що виявляти."
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Add your first camera"
+msgstr "Додати першу камеру"
+
+#: src/routes/(admin)/detectors/add/+page.svelte
+msgid "Detector not found"
+msgstr "Детектор не знайдено"
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Recipient not found"
+msgstr "Отримувача не знайдено"
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Connect alerts"
+msgstr "Підключити сповіщення"
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Choose which detectors send alerts here, or connect it again."
+msgstr "Виберіть, які детектори надсилають сюди сповіщення, або підключіть знову."
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Connect a phone, group or channel in Telegram, then choose which detectors alert it."
+msgstr "Підключіть телефон, групу або канал у Telegram, потім виберіть, які детектори їх сповіщатимуть."
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Camera not found"
+msgstr "Камеру не знайдено"
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "A detector decides what is recorded and who is alerted."
+msgstr "Детектор вирішує, що записувати й кого сповіщати."
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "This camera is for live viewing only. Add it to a detector to record and alert."
+msgstr "Ця камера лише для перегляду. Додайте її до детектора, щоб записувати й сповіщати."
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Detectors on this camera"
+msgstr "Детектори цієї камери"
+
+#. 0: alerts.join(', ')
+#. 0: camera.alerts.join(', ')
+#: src/lib/components/setup-finish.svelte
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Alerts go to {0}."
+msgstr "Сповіщення отримує: {0}."
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Manage detectors"
+msgstr "Керувати детекторами"
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Choose a detector"
+msgstr "Виберіть детектор"
+
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Connection not found"
+msgstr "Підключення не знайдено"
+
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Connect Google Gemini to check detections before alerts are sent."
+msgstr "Підключіть Google Gemini, щоб перевіряти виявлення перед надсиланням сповіщень."
+
+#: src/lib/components/recording-viewer.svelte
+msgid "<0/> Your browser cannot play this video."
+msgstr "<0/> Ваш браузер не може відтворити це відео."
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Newer recording"
+msgstr "Новіший запис"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Newer (←)"
+msgstr "Новіший (←)"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Older recording"
+msgstr "Старіший запис"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Older (→)"
+msgstr "Старіший (→)"
+
+#. 0: index + 1; 1: entries.length
+#: src/lib/components/recording-viewer.svelte
+msgid "{0} of {1}"
+msgstr "{0} з {1}"
+
+#: src/routes/(admin)/streams/add/+page.svelte
+msgid "Add cameras"
+msgstr "Додати камери"
+
+#: src/routes/(admin)/streams/add/+page.svelte
+msgid "Choose the cameras to connect, or enter a stream URL. Keep them on the same network as this computer."
+msgstr "Виберіть камери для підключення або введіть URL потоку. Вони мають бути в тій самій мережі, що й цей комп’ютер."
+
+#: src/lib/components/ui/breadcrumb/breadcrumb-ellipsis.svelte
+msgid "More"
+msgstr "Ще"
+
+#: src/lib/components/ui/carousel/carousel-next.svelte
+msgid "Next slide"
+msgstr "Наступний слайд"
+
+#: src/lib/components/ui/carousel/carousel-previous.svelte
+msgid "Previous slide"
+msgstr "Попередній слайд"
+
+#: src/lib/components/ui/command/command-dialog.svelte
+msgid "Command Palette"
+msgstr "Палітра команд"
+
+#: src/lib/components/ui/command/command-dialog.svelte
+msgid "Search for a command to run"
+msgstr "Знайдіть команду для запуску"
+
+#: src/lib/components/ui/dialog/dialog-content.svelte
+#: src/lib/components/ui/sheet/sheet-content.svelte
+msgid "Close"
+msgstr "Закрити"
+
+#: src/lib/components/ui/pagination/pagination-ellipsis.svelte
+msgid "More pages"
+msgstr "Інші сторінки"
+
+#: src/lib/components/ui/pagination/pagination-next-button.svelte
+#: src/lib/components/ui/pagination/pagination-next.svelte
+msgid "Next"
+msgstr "Далі"
+
+#: src/lib/components/ui/pagination/pagination-next-button.svelte
+#: src/lib/components/ui/pagination/pagination-next.svelte
+msgid "Go to next page"
+msgstr "Перейти на наступну сторінку"
+
+#: src/lib/components/ui/pagination/pagination-prev-button.svelte
+#: src/lib/components/ui/pagination/pagination-previous.svelte
+msgid "Previous"
+msgstr "Назад"
+
+#: src/lib/components/ui/pagination/pagination-prev-button.svelte
+#: src/lib/components/ui/pagination/pagination-previous.svelte
+msgid "Go to previous page"
+msgstr "Перейти на попередню сторінку"
+
+#: src/lib/components/ui/sidebar/sidebar-rail.svelte
+#: src/lib/components/ui/sidebar/sidebar-rail.svelte
+#: src/lib/components/ui/sidebar/sidebar-trigger.svelte
+msgid "Toggle Sidebar"
+msgstr "Показати або сховати бічну панель"
+
+#: src/lib/components/ui/sidebar/sidebar.svelte
+msgid "Sidebar"
+msgstr "Бічна панель"
+
+#: src/lib/components/ui/sidebar/sidebar.svelte
+msgid "Displays the mobile sidebar."
+msgstr "Показує бічну панель на телефоні."
+
+#: src/lib/components/ui/spinner/spinner.svelte
+msgid "Loading"
+msgstr "Завантаження"
+
+#: src/lib/monitoring.ts
+msgid "# camera offline."
+msgid_plural "# cameras offline."
+msgstr[0] "# камера не в мережі."
+msgstr[1] "# камери не в мережі."
+msgstr[2] "# камер не в мережі."
+msgstr[3] "# камери не в мережі."
+
+#: src/lib/monitoring.ts
+#: src/lib/server/managed-detector.ts
+msgid "Watching # camera."
+msgid_plural "Watching # cameras."
+msgstr[0] "Спостереження: # камера."
+msgstr[1] "Спостереження: # камери."
+msgstr[2] "Спостереження: # камер."
+msgstr[3] "Спостереження: # камери."
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Removed # recording."
+msgid_plural "Removed # recordings."
+msgstr[0] "Видалено # запис."
+msgstr[1] "Видалено # записи."
+msgstr[2] "Видалено # записів."
+msgstr[3] "Видалено # запису."
+
+#: src/lib/components/camera-add.svelte
+msgid "Connect # camera"
+msgid_plural "Connect # cameras"
+msgstr[0] "Підключити # камеру"
+msgstr[1] "Підключити # камери"
+msgstr[2] "Підключити # камер"
+msgstr[3] "Підключити # камери"
+
+#: src/lib/components/camera-add.svelte
+msgid "Add # camera"
+msgid_plural "Add # cameras"
+msgstr[0] "Додати # камеру"
+msgstr[1] "Додати # камери"
+msgstr[2] "Додати # камер"
+msgstr[3] "Додати # камери"
+
+#: src/lib/components/camera-selection.svelte
+msgid "# camera selected"
+msgid_plural "# cameras selected"
+msgstr[0] "Вибрано # камеру"
+msgstr[1] "Вибрано # камери"
+msgstr[2] "Вибрано # камер"
+msgstr[3] "Вибрано # камери"
+
+#: src/lib/components/export-recordings.svelte
+msgid "# recording selected, including all pages."
+msgid_plural "# recordings selected, including all pages."
+msgstr[0] "Вибрано # запис на всіх сторінках."
+msgstr[1] "Вибрано # записи на всіх сторінках."
+msgstr[2] "Вибрано # записів на всіх сторінках."
+msgstr[3] "Вибрано # запису на всіх сторінках."
+
+#: src/lib/components/language-menu.svelte
+msgid "The language could not be changed. Try again."
+msgstr "Не вдалося змінити мову. Спробуйте ще раз."
+
+#: src/lib/components/language-menu.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Language"
+msgstr "Мова"
+
+#: src/lib/cameras.ts
+#: src/lib/components/import-installation.svelte
+msgid "# camera"
+msgid_plural "# cameras"
+msgstr[0] "# камера"
+msgstr[1] "# камери"
+msgstr[2] "# камер"
+msgstr[3] "# камери"
+
+#. 0: calendarDate(form.before); 0: calendarDate(form.before)
+#: src/routes/(admin)/storage/+page.svelte
+msgid "# recording before {0}"
+msgid_plural "# recordings before {0}"
+msgstr[0] "# запис до {0}"
+msgstr[1] "# записи до {0}"
+msgstr[2] "# записів до {0}"
+msgstr[3] "# запису до {0}"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Remove # recording"
+msgid_plural "Remove # recordings"
+msgstr[0] "Видалити # запис"
+msgstr[1] "Видалити # записи"
+msgstr[2] "Видалити # записів"
+msgstr[3] "Видалити # запису"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Used on every device and for replies in Telegram."
+msgstr "Використовується на всіх пристроях і у відповідях у Telegram."
+
+#: src/lib/detections.ts
+msgid "Unreviewed"
+msgstr "Без оцінки"
+
+#: src/lib/detections.ts
+msgid "Enter a date in YYYY-MM-DD format."
+msgstr "Введіть дату у форматі РРРР-ММ-ДД."
+
+#: src/lib/detections.ts
+msgid "Enter a valid date."
+msgstr "Введіть правильну дату."
+
+#: src/lib/detections.ts
+msgid "The end date must be on or after the start date."
+msgstr "Дата завершення не може бути раніше дати початку."
+
+#: src/lib/configuration.ts
+msgid "Enter the complete address, starting with https://."
+msgstr "Введіть повну адресу, що починається з https://."
+
+#: src/lib/configuration.ts
+msgid "Use an address that starts with http:// or https://."
+msgstr "Використовуйте адресу, що починається з http:// або https://."
+
+#: src/lib/configuration.ts
+msgid "Use an interval of at least 5 seconds."
+msgstr "Інтервал має бути не менше 5 секунд."
+
+#: src/lib/configuration.ts
+msgid "Use an interval of at most one day."
+msgstr "Інтервал має бути не більше одного дня."
+
+#: src/lib/navigation.ts
+msgid "Let AI double-check detections before an alert is sent."
+msgstr "ШІ перевіряє виявлення перед надсиланням сповіщення."
+
+#: src/lib/navigation.ts
+msgid "Phones and computers that can open this dashboard."
+msgstr "Телефони й комп’ютери, які можуть відкривати цю панель."
+
+#: src/lib/navigation.ts
+msgid "Free space and old recordings."
+msgstr "Вільне місце й старі записи."
+
+#: src/lib/navigation.ts
+msgid "Edit thresholds, prompts and the detection engine as JSON."
+msgstr "Зміна порогів, промптів і механізму виявлення у форматі JSON."
+
+#: src/lib/navigation.ts
+msgid "Recent activity and a diagnostics download for support."
+msgstr "Нещодавні дії та діагностичні дані для підтримки."
+
+#: src/lib/schema.ts
+msgid "Camera connection details must not contain login details or access tokens."
+msgstr "Дані підключення камери не повинні містити даних для входу чи токенів доступу."
+
+#: src/lib/schema.ts
+msgid "Enter a valid header name."
+msgstr "Введіть правильну назву заголовка."
+
+#: src/lib/schema.ts
+msgid "Use a single-line header value."
+msgstr "Значення заголовка має бути в один рядок."
+
+#: src/lib/schema.ts
+msgid "Enter a model name."
+msgstr "Введіть назву моделі."
+
+#: src/lib/schema.ts
+msgid "Enter a model name, without spaces or a trailing slash."
+msgstr "Введіть назву моделі без пробілів і скісної риски в кінці."
+
+#: src/lib/schema.ts
+msgid "Enter a connection name."
+msgstr "Введіть назву підключення."
+
+#: src/lib/schema.ts
+msgid "Enter at least one model."
+msgstr "Введіть принаймні одну модель."
+
+#: src/lib/schema.ts
+msgid "Use an HTTP or HTTPS API URL."
+msgstr "Використовуйте URL API з HTTP або HTTPS."
+
+#: src/lib/schema.ts
+msgid "Each header name must be unique."
+msgstr "Назви заголовків не повинні повторюватися."
+
+#: src/lib/server/telegram-pairing.ts
+msgid "This Telegram connection link expired. Create a new link and open it in Telegram."
+msgstr "Термін дії посилання для підключення Telegram минув. Створіть нове посилання й відкрийте його в Telegram."
+
+#: src/lib/server/telegram-pairing.ts
+msgid "This Telegram connection was cancelled. Create a new link to try again."
+msgstr "Це підключення Telegram скасовано. Створіть нове посилання, щоб спробувати ще раз."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "One recording could not be read. The others are shown below."
+msgid_plural "# recordings could not be read. The others are shown below."
+msgstr[0] "Не вдалося прочитати записи (#). Решту показано нижче."
+msgstr[1] "Не вдалося прочитати записи (#). Решту показано нижче."
+msgstr[2] "Не вдалося прочитати записи (#). Решту показано нижче."
+msgstr[3] "Не вдалося прочитати записи (#). Решту показано нижче."
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Download diagnostics"
+msgstr "Завантажити діагностичні дані"
+
+#. 0: wait / 1000
+#: src/lib/server/managed-detector.ts
+msgid "Restarting monitoring in {0} seconds…"
+msgstr "Перезапуск спостереження через {0} с…"
+
+#: src/lib/server/telegram-reviews.ts
+msgid "Confirmed. Saved in AI Detector."
+msgstr "Підтверджено. Збережено в AI Detector."
+
+#: src/lib/server/telegram-reviews.ts
+msgid "Marked as a false alarm. Saved in AI Detector."
+msgstr "Позначено як хибну тривогу. Збережено в AI Detector."
+
+#: src/lib/server/telegram-pairing.ts
+msgid "My Telegram group"
+msgstr "Моя група Telegram"
+
+#: src/lib/server/telegram-pairing.ts
+msgid "My Telegram channel"
+msgstr "Мій канал Telegram"
+
+#: src/lib/server/folder-picker.ts
+msgid "Choose your previous AI Detector folder"
+msgstr "Виберіть папку попередньої версії AI Detector"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Example: Calving pen"
+msgstr "Наприклад: Родильне відділення"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Example: Calving pen watch"
+msgstr "Наприклад: Спостереження за отеленням"
+
+#: src/lib/components/import-installation.svelte
+msgid "# detector"
+msgid_plural "# detectors"
+msgstr[0] "# детектор"
+msgstr[1] "# детектори"
+msgstr[2] "# детекторів"
+msgstr[3] "# детектора"
+
+#: src/lib/components/import-installation.svelte
+msgid "# recording"
+msgid_plural "# recordings"
+msgstr[0] "# запис"
+msgstr[1] "# записи"
+msgstr[2] "# записів"
+msgstr[3] "# запису"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Calling the saved address"
+msgstr "Виклик збереженої адреси"
+
+#: src/lib/components/notification-editor.svelte
+#: src/routes/pair/+page.svelte
+msgid "Example: My phone"
+msgstr "Наприклад: Мій телефон"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Picture and recording location checked"
+msgstr "Зображення й місце зберігання записів перевірено"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Picture checked"
+msgstr "Зображення перевірено"
+
+#. 0: meta.llmConnection
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Checked by {0}"
+msgstr "Перевіряє: {0}"
+
+#. 0: amount
+#: src/lib/format.ts
+msgid "{0} GB"
+msgstr "{0} ГБ"
+
+#: src/routes/(admin)/status/+page.svelte
+msgctxt "page name"
+msgid "Monitoring"
+msgstr "Спостереження"
+
+#. 0: percent(entry.confidence)
+#. 0: percent(entry.confidence)
+#: src/lib/components/recording-viewer.svelte
+#: src/routes/(admin)/detections/recording-card.svelte
+msgid "{0} confidence"
+msgstr "Впевненість: {0}"
+
+#. 0: locations.length
+#: src/lib/server/recording-export.ts
+msgid ""
+"AI Detector recordings\n"
+"\n"
+"{0} recorded events.\n"
+"\n"
+"Files are grouped by category, stage and recording timestamp under detections/.\n"
+"clean.jpg is the original image when available; best.jpg includes annotations.\n"
+"Other saved images, video clips and metadata.json are included unchanged.\n"
+"Manual reviews override the original stage. In metadata.json, review records the\n"
+"manual decision and its origin; validated remains the validator's original result.\n"
+"Dates follow the recording dates shown in AI Detector.\n"
+"\n"
+"An accepted event is not a verified bounding-box annotation. Review and annotate\n"
+"the original images or video frames before using them to train a model.\n"
+"\n"
+"This export does not include application settings or camera login details.\n"
+""
+msgstr ""
+"Записи AI Detector\n"
+"\n"
+"Записаних подій: {0}.\n"
+"\n"
+"Файли згруповано в detections/ за категорією, етапом і часом запису.\n"
+"clean.jpg — оригінальне зображення, якщо воно є; best.jpg містить розмітку.\n"
+"Інші збережені зображення, відеоролики й metadata.json включено без змін.\n"
+"Ручна оцінка має пріоритет над початковим етапом. У metadata.json поле review зберігає\n"
+"ручне рішення та його джерело; validated залишається початковим результатом перевірки ШІ.\n"
+"Дати відповідають датам записів, показаним в AI Detector.\n"
+"\n"
+"Прийнята подія — це не перевірена розмітка з рамками. Перегляньте й розмітьте\n"
+"оригінальні зображення або кадри відео, перш ніж навчати на них модель.\n"
+"\n"
+"Цей експорт не містить налаштувань застосунку й даних для входу в камери.\n"
+""
+
+#. 0: file
+#: src/lib/server/configuration/settings-files.ts
+msgid "The settings file {0} is damaged and cannot be read."
+msgstr "Файл налаштувань {0} пошкоджено, його не вдається прочитати."
+
+#: src/lib/components/detector-editor.svelte
+msgid "This detector uses its own settings and does not get new models automatically. Choosing a preset replaces them."
+msgstr "Цей детектор використовує власні налаштування й не отримує нові моделі автоматично. Вибір шаблону замінить їх."
+
+#: src/lib/components/home-screen-hint.svelte
+msgid "Not now"
+msgstr "Не зараз"
+
+#: src/lib/components/home-screen-hint.svelte
+msgid "Put AI Detector on your home screen"
+msgstr "Додайте AI Detector на головний екран"
+
+#: src/lib/components/home-screen-hint.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Show me how"
+msgstr "Як це зробити"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Home screen"
+msgstr "Головний екран"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Open AI Detector with one tap from this device’s home screen."
+msgstr "Відкривайте AI Detector одним дотиком із головного екрана цього пристрою."
+
+#: src/lib/schema.ts
+msgid "Enter a time such as 22:00."
+msgstr "Введіть час, наприклад 22:00."
+
+#: src/lib/server/recording-export.ts
+msgid ""
+"This export holds the original photos only: pictures with boxes and video clips were left out.\n"
+""
+msgstr ""
+"Цей експорт містить лише оригінальні фотографії: зображення з рамками й відеоролики не включено.\n"
+""
+
+#: src/lib/components/export-recordings.svelte
+msgid "Only the original photos"
+msgstr "Лише оригінальні фотографії"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Leaves out videos and pictures with boxes: a much smaller ZIP to share for model improvement."
+msgstr "Без відео й зображень із рамками: значно менший ZIP, щоб поділитися ним для покращення моделі."
+
+#: src/lib/components/notification-editor.svelte
+msgid "Quiet from"
+msgstr "Тиша з"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Until"
+msgstr "До"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Quiet hours"
+msgstr "Тихі години"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Alerts between these times still arrive, but without sound. Leave both empty for sound at any hour."
+msgstr "Сповіщення в цей час і далі надходять, але без звуку. Залиште обидва поля порожніми, щоб звук був у будь-який час."
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Recording deleted"
+msgstr "Запис видалено"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Could not delete the recording. Please try again."
+msgstr "Не вдалося видалити запис. Спробуйте ще раз."
+
+#: src/lib/components/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
+msgid "Delete recording"
+msgstr "Видалити запис"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Delete this recording?"
+msgstr "Видалити цей запис?"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Its pictures and video are removed from this computer and cannot be brought back."
+msgstr "Його зображення й відео буде видалено з цього комп’ютера без можливості відновлення."
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Home screen shortcut"
+msgstr "Ярлик на головному екрані"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Open your browser’s menu (⋮) and choose “Add to Home screen”. The shortcut opens AI Detector in the browser."
+msgstr "Відкрийте меню браузера (⋮) і виберіть «Додати на головний екран». Ярлик відкриває AI Detector у браузері."
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "View"
+msgstr "Вигляд"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Live"
+msgstr "Наживо"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "History"
+msgstr "Історія"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Other recordings"
+msgstr "Інші записи"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Watched"
+msgstr "Під спостереженням"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "AI Detector was not running"
+msgstr "AI Detector не працював"
+
+#. 0: minutes
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "{0} min"
+msgstr "{0} хв"
+
+#. 0: Math.floor(minutes / 60); 1: String(minutes % 60).padStart(2, '0')
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "{0} h {1} min"
+msgstr "{0} год {1} хв"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Period"
+msgstr "Період"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Last 24 hours"
+msgstr "Останні 24 години"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Last 7 days"
+msgstr "Останні 7 днів"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "This installation runs its detector separately, so it does not know when cameras were watched. Recordings are shown."
+msgstr "У цьому встановленні детектор працює окремо, тому невідомо, коли велося спостереження за камерами. Показано записи."
+
+#. 0: duration(watched)
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Watched {0}"
+msgstr "Під спостереженням: {0}"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Not watched"
+msgstr "Без спостереження"
+
+#. 0: label
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Play recording: {0}"
+msgstr "Відтворити запис: {0}"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Last hour"
+msgstr "Остання година"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Update automatically"
+msgstr "Оновлювати автоматично"
+
+#: src/lib/components/detector-editor.svelte
+msgid "When a newer model is published for this preset, this detector takes it by itself, at start and once a day."
+msgstr "Коли для цього шаблону виходить новіша модель, детектор сам переходить на неї — під час запуску й раз на день."
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
+msgstr "Увесь вміст config.json: модель, промпти, пороги й параметри запису кожного детектора, а також health і onnx для всього встановлення. Під час збереження зміни застосовуються до активного спостереження."
+
+#: src/lib/server/runtime-status.ts
+msgid "A recording could not be saved. Check free disk space and the storage folder."
+msgstr "Не вдалося зберегти запис. Перевірте вільне місце на диску й папку сховища."
+
+#: src/lib/server/settings-backup.ts
+msgid ""
+"AI Detector settings backup\n"
+"\n"
+"Includes cameras, detectors and alert settings, including saved passwords and\n"
+"tokens. Keep this ZIP private.\n"
+"\n"
+"To restore into a new installation, extract the ZIP, open Settings, choose\n"
+"Use existing setup and select the extracted folder. Review the imported setup\n"
+"before starting monitoring. Existing setups are never overwritten by import.\n"
+"\n"
+"Recordings, downloaded models, local video sources, custom preset files,\n"
+"computer startup preferences and connected-device access are not included.\n"
+"Keep any local model or video files referenced by config.json alongside this\n"
+"backup, at their original relative paths, or update those paths before\n"
+"importing on another computer.\n"
+""
+msgstr ""
+"Резервна копія налаштувань AI Detector\n"
+"\n"
+"Містить камери, детектори й налаштування сповіщень, зокрема збережені паролі\n"
+"й токени. Нікому не передавайте цей ZIP-архів.\n"
+"\n"
+"Щоб відновити в новому встановленні, розпакуйте ZIP, відкрийте Налаштування, виберіть\n"
+"«Використати наявне налаштування» й укажіть розпаковану папку. Перевірте імпортоване\n"
+"налаштування перед запуском спостереження. Імпорт ніколи не перезаписує наявні налаштування.\n"
+"\n"
+"Записи, завантажені моделі, локальні відеоджерела, власні файли шаблонів,\n"
+"параметри автозапуску комп’ютера й доступ підключених пристроїв не включено.\n"
+"Зберігайте локальні файли моделей або відео, на які посилається config.json, разом із цією\n"
+"копією за їхніми початковими відносними шляхами або оновіть ці шляхи перед\n"
+"імпортом на іншому комп’ютері.\n"
+""
+
+#. 0: amount
+#: src/lib/format.ts
+msgid "{0} MB"
+msgstr "{0} МБ"
+
+#: src/lib/server/configuration/telegrams.ts
+#: src/lib/server/configuration/telegrams.ts
+msgid "This recipient no longer exists."
+msgstr "Цього отримувача більше немає."
+
+#: src/lib/server/configuration/telegrams.ts
+msgid "This recipient or name already exists."
+msgstr "Такий отримувач або назва вже існує."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset. It supplies everything needed to recognize that kind of event."
+msgstr "Виберіть шаблон. У ньому є все потрібне для розпізнавання такої події."
+
+#: src/lib/components/setup-finish.svelte
+msgid "Waiting for the first analyzed picture…"
+msgstr "Очікування першого проаналізованого зображення…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "· Live view only"
+msgstr "· Лише перегляд"
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector stopped responding. Restarting monitoring…"
+msgstr "Детектор перестав відповідати. Перезапуск спостереження…"
+
+#. 0: exitSignal ?? code
+#: src/lib/server/managed-detector.ts
+msgid "The detector keeps stopping unexpectedly ({0}). Restart this computer. If it keeps happening, download the diagnostics in Settings → Logs and ask for help."
+msgstr "Детектор раз у раз несподівано зупиняється ({0}). Перезавантажте цей комп’ютер. Якщо це повторюється, завантажте діагностичні дані в розділі Налаштування → Журнали й зверніться по допомогу."
+
+#. 0: names(together); 1: moment(since); 2: moment(until)
+#: src/lib/server/outage-alerts.ts
+msgid "Watched again: {0}. Not watched from {1} to {2}."
+msgstr "Знову під спостереженням: {0}. Без спостереження з {1} до {2}."
+
+#. 0: names(stopped); 1: moment(since)
+#: src/lib/server/outage-alerts.ts
+msgid "Not watched: {0} (since {1}). Open AI Detector to see why."
+msgstr "Без спостереження: {0} (з {1}). Відкрийте AI Detector, щоб дізнатися причину."
+
+#. 0: names(still)
+#: src/lib/server/outage-alerts.ts
+msgid "Still not watched: {0}."
+msgstr "Досі без спостереження: {0}."
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-editor.svelte
+msgid "Mode"
+msgstr "Режим"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Default"
+msgstr "Типово"
+
+#: src/lib/server/configuration/preset-files.ts
+msgid "Telegram settings in a preset leave out token, chat and quiet: each recipient has its own."
+msgstr "Налаштування Telegram у шаблоні не містять token, chat і quiet: у кожного отримувача вони свої."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Send a Telegram message with the footage when this detector sees something."
+msgstr "Надсилати повідомлення в Telegram із відео, коли цей детектор щось помічає."
+
+#: src/lib/navigation.ts
+#: src/lib/server/runtime-status.ts
+#: src/routes/(admin)/validator/+page.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "AI check"
+msgstr "Перевірка ШІ"
+
+#: src/lib/components/camera-connection-fields.svelte
+msgid "The camera’s own login, which may differ from its phone app. <0/>"
+msgstr "Власні дані для входу в камеру; вони можуть відрізнятися від даних її мобільного застосунку. <0/>"
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-verification.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Connect AI check"
+msgstr "Підключити перевірку ШІ"
+
+#: src/lib/components/detector-verification.svelte
+msgid "AI check <0>(optional)</0>"
+msgstr "Перевірка ШІ <0>(необов’язково)</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset to use its AI check question."
+msgstr "Виберіть шаблон, щоб використати його запитання для перевірки ШІ."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset that supplies an AI check question."
+msgstr "Виберіть шаблон, у якому є запитання для перевірки ШІ."
+
+#: src/lib/components/detector-editor.svelte
+msgid "The detector could not be removed."
+msgstr "Не вдалося видалити детектор."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Remove this detector…"
+msgstr "Видалити цей детектор…"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Remove detector"
+msgstr "Видалити детектор"
+
+#. 0: canTest ? 'The key is checked with a test image before it is saved.' \\: 'Connection testing is available in the desktop application. Save settings here for your separate detector.'
+#: src/lib/components/llm-connection-editor.svelte
+msgid "{0} Detectors waiting for an AI check start using this connection. You can turn it off for each detector."
+msgstr "{0} Детектори, що чекають на перевірку ШІ, почнуть використовувати це підключення. Його можна вимкнути для кожного детектора."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "A detector that uses this connection must be given another one, or none, first."
+msgstr "Спершу призначте детекторам, що використовують це підключення, інше підключення або жодного."
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Keep connection"
+msgstr "Залишити підключення"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "When a detector sees something, the recording appears here and stays until you remove it."
+msgstr "Коли детектор щось помічає, запис з’являється тут і зберігається, доки ви його не видалите."
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Checked with custom settings"
+msgstr "Перевірено з власними налаштуваннями"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Turn the AI check on or off for each detector under <0>Detectors</0>."
+msgstr "Увімкніть або вимкніть перевірку ШІ для кожного детектора в розділі <0>Детектори</0>."
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "No AI check connected"
+msgstr "Перевірку ШІ не підключено"
+
+#: src/routes/(admin)/detectors/add/+page.svelte
+#: src/routes/(admin)/notifications/add/+page.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "It may have been removed or renamed."
+msgstr "Можливо, його видалено або перейменовано."
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "It may have been removed."
+msgstr "Можливо, його видалено."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Camera notifications could not be saved. Try again."
+msgstr "Не вдалося зберегти сповіщення камери. Спробуйте ще раз."
+
+#. 0: app.telegrams.length + 1
+#: src/lib/configuration.ts
+msgid "Telegram {0}"
+msgstr "Telegram {0}"
+
+#. 0: file; 1: fields
+#: src/lib/server/installation-import/configuration.ts
+msgid "Check {0}: {1}. These settings are invalid or missing."
+msgstr "Перевірте {0}: {1}. Ці налаштування неправильні або відсутні."
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Detector"
+msgstr "Детектор"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Telegram"
+msgstr "Telegram"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "AI connection"
+msgstr "Підключення до ШІ"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Filled in missing names and ignored empty optional settings in app.json."
+msgstr "Відсутні назви заповнено, порожні необов’язкові налаштування в app.json пропущено."
+
+#. 0: label; 1: move.host
+#: src/lib/server/cameras/relocation.ts
+msgid "{0} got a new network address ({1}) and is watched there again."
+msgstr "Камера {0} отримала нову мережеву адресу ({1}) і знову під спостереженням."
+
+#: src/lib/server/cameras/relocation.ts
+msgid "Tip: give your cameras a fixed address in your router (a DHCP reservation), so they keep their address."
+msgstr "Порада: задайте камерам постійну адресу в роутері (резервування DHCP), щоб адреса не змінювалася."
+
+#: src/lib/components/camera-settings.svelte
+msgid "Tip: give this camera a fixed address in your router (a DHCP reservation). When its address changes anyway, AI Detector looks for it on the network by itself."
+msgstr "Порада: задайте цій камері постійну адресу в роутері (резервування DHCP). Якщо адреса все ж зміниться, AI Detector сам знайде її в мережі."
+
+#: src/lib/server/ntfy.ts
+msgid "Could not reach ntfy. Check the internet connection of this computer."
+msgstr "Не вдалося зв’язатися з ntfy. Перевірте підключення цього комп’ютера до інтернету."
+
+#: src/lib/server/ntfy.ts
+msgid "Test alarm. This is how a detection sounds."
+msgstr "Тестова тривога. Так звучить виявлення."
+
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Phone alarm"
+msgstr "Тривога на телефоні"
+
+#. 0: alarm.detectorLabels.join(', ')
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Rings for {0}"
+msgstr "Дзвонить для: {0}"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Could not send the test alarm."
+msgstr "Не вдалося надіслати тестову тривогу."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Phone alarm saved."
+msgstr "Тривогу на телефоні збережено."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Could not save the phone alarm. Your choices are still here."
+msgstr "Не вдалося зберегти тривогу на телефоні. Ваш вибір збережено тут."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Could not remove the phone alarm."
+msgstr "Не вдалося видалити тривогу на телефоні."
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "A loud alarm on your phone for each detection, also at night. It comes next to the Telegram alert, through the free ntfy app."
+msgstr "Гучна тривога на телефоні під час кожного виявлення, зокрема вночі. Надходить разом зі сповіщенням Telegram через безкоштовний застосунок ntfy."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Install the ntfy app on your phone."
+msgstr "Установіть застосунок ntfy на телефон."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Google Play"
+msgstr "Google Play"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "App Store"
+msgstr "App Store"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Let the alarm ring through Do Not Disturb."
+msgstr "Дозвольте тривозі дзвонити в режимі «Не турбувати»."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "On Android, open Settings › Apps › ntfy › Notifications, choose the max priority category and turn on Override Do Not Disturb. An iPhone shows the alarm, but stays silent while it is on silent mode."
+msgstr "На Android відкрийте Налаштування › Застосунки › ntfy › Сповіщення, виберіть категорію з найвищим пріоритетом і ввімкніть ігнорування режиму «Не турбувати». iPhone покаже тривогу, але в беззвучному режимі не задзвонить."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Sending…"
+msgstr "Надсилання…"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Send again"
+msgstr "Надіслати знову"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Send a test alarm"
+msgstr "Надіслати тестову тривогу"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "My phone rang"
+msgstr "Телефон задзвонив"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Send a test alarm."
+msgstr "Надішліть тестову тривогу."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "You can save the alarm now and choose it when you add a detector."
+msgstr "Тривогу можна зберегти зараз і вибрати під час додавання детектора."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Which detectors ring the alarm?"
+msgstr "Які детектори вмикають тривогу?"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Phone alarm needs attention"
+msgstr "Тривога на телефоні потребує уваги"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Remove the phone alarm…"
+msgstr "Видалити тривогу на телефоні…"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Remove the phone alarm?"
+msgstr "Видалити тривогу на телефоні?"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Detectors will stop ringing your phone. Telegram alerts stay as they are."
+msgstr "Детектори перестануть дзвонити на ваш телефон. Сповіщення Telegram залишаться без змін."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Keep alarm"
+msgstr "Залишити тривогу"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Remove alarm"
+msgstr "Видалити тривогу"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Ring the phone alarm"
+msgstr "Вмикати тривогу на телефоні"
+
+#: src/lib/components/detector-editor.svelte
+msgid "A loud alarm through the ntfy app."
+msgstr "Гучна тривога через застосунок ntfy."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "No Telegram recipients yet"
+msgstr "Отримувачів у Telegram поки немає"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "<0/> Rings the phone alarm"
+msgstr "<0/> Вмикає тривогу на телефоні"
+
+#: src/lib/components/detector-editor.svelte
+msgid "<0/>Connect ntfy"
+msgstr "<0/>Підключити ntfy"
+
+#: src/lib/components/detector-editor.svelte
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Connect ntfy"
+msgstr "Підключити ntfy"
+
+#: src/lib/components/detector-editor.svelte
+msgid "A loud alarm on your phone for each detection, also at night. Your detector changes stay here until you save the detector."
+msgstr "Гучна тривога на телефоні під час кожного виявлення, зокрема вночі. Зміни детектора залишаються тут, доки ви його не збережете."
+
+#. 0: response.status
+#: src/lib/server/ntfy.ts
+msgid "The ntfy server did not accept the message (status {0})."
+msgstr "Сервер ntfy не прийняв повідомлення (статус {0})."
+
+#: src/lib/server/configuration/store.ts
+msgid "Set up the phone alarm first."
+msgstr "Спершу налаштуйте тривогу на телефоні."
+
+#: src/lib/components/detector-editor.svelte
+msgid "Messages <0>(optional)</0>"
+msgstr "Повідомлення <0>(необов’язково)</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Alarm <0>(optional)</0>"
+msgstr "Тривога <0>(необов’язково)</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Ring your phone loudly through the free ntfy app, also at night, with a picture."
+msgstr "Гучний дзвінок на телефон через безкоштовний застосунок ntfy, зокрема вночі, із зображенням."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Choose how you hear about what a detector sees: a message with the footage, a loud alarm on your phone, or both."
+msgstr "Виберіть, як дізнаватися про те, що бачить детектор: повідомлення з відео, гучна тривога на телефоні або і те, і те."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Messages"
+msgstr "Повідомлення"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Through Telegram, the footage goes to these people. They can confirm it or mark it as a false alarm right there."
+msgstr "Через Telegram відео отримують ці люди. Вони можуть одразу підтвердити його або позначити як хибну тривогу."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Alarm"
+msgstr "Тривога"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Through the free ntfy app, your phone rings loudly, also at night, with a picture of what the detector saw."
+msgstr "Через безкоштовний застосунок ntfy ваш телефон гучно дзвонить, зокрема вночі, і показує зображення того, що побачив детектор."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "After five minutes without monitoring, and when monitoring resumes. A normal notification in ntfy, without the alarm sound."
+msgstr "Через п’ять хвилин без спостереження і під час його відновлення. Звичайне сповіщення в ntfy, без звуку тривоги."
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "No phone alarm yet"
+msgstr "Тривоги на телефоні поки немає"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Connect ntfy to wake up for a detection with a loud alarm."
+msgstr "Підключіть ntfy, щоб прокидатися від гучної тривоги під час виявлення."
+
+#. 0: alarm.topic
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Code with the name {0}"
+msgstr "Код з ім’ям {0}"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Subscribe to this alarm in ntfy."
+msgstr "Підпишіться на цю тривогу в ntfy."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Scan this code with your phone’s camera and copy the name, or type it: <0/>. Then tap + in ntfy, paste the name and tap Subscribe."
+msgstr "Відскануйте цей код камерою телефона й скопіюйте ім’я або введіть його: <0/>. Потім натисніть + у ntfy, вставте ім’я й натисніть Subscribe."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Already on your phone? <0>Open in ntfy</0>."
+msgstr "Уже є на телефоні? <0>Відкрити в ntfy</0>."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Keep it ringing until you look."
+msgstr "Дзвонити, доки ви не подивитеся."
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. The alarm then rings at alarm volume, also when your phone is on silent, until you swipe it away. An iPhone plays the sound once."
+msgstr "На Android відкрийте налаштування ntfy й увімкніть Keep alerting for highest priority. Тоді тривога дзвонить із гучністю будильника, навіть у беззвучному режимі, доки ви її не змахнете. iPhone відтворює звук один раз."
+
+#: src/lib/components/camera-selection.svelte
+msgid "Part of the picture"
+msgstr "Частина зображення"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Whole picture"
+msgstr "Усе зображення"
+
+#. 0: camera.label
+#: src/lib/components/detection-area.svelte
+msgid "Detection area · {0}"
+msgstr "Зона виявлення · {0}"
+
+#: src/lib/components/detection-area.svelte
+msgid "Tap the corners of the area to watch. A detection counts when the middle of its box is inside it."
+msgstr "Торкніться кутів зони для спостереження. Виявлення зараховується, коли центр його рамки всередині зони."
+
+#: src/lib/components/detection-area.svelte
+msgid "Add a corner here"
+msgstr "Додати кут тут"
+
+#: src/lib/components/detection-area.svelte
+msgid "Undo corner"
+msgstr "Скасувати кут"
+
+#: src/lib/components/detection-area.svelte
+msgid "Clear"
+msgstr "Очистити"
+
+#: src/lib/components/detection-area.svelte
+msgid "Save area"
+msgstr "Зберегти зону"
+
+#: src/lib/components/detection-area.svelte
+msgid "Watch the whole picture"
+msgstr "Спостерігати за всім зображенням"
+
+#: src/lib/navigation.ts
+msgid "A message with the footage, a loud alarm on your phone, or both."
+msgstr "Повідомлення з відео, гучна тривога на телефоні або і те, і те."
+
+#: src/lib/server/diagnostics.ts
+msgid ""
+"AI Detector diagnostics\n"
+"\n"
+"Includes available rotated logs, the latest TensorRT and Windows ML build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n"
+""
+msgstr ""
+"Діагностичні дані AI Detector\n"
+"\n"
+"Містять доступні архівні журнали, останні журнали збирання TensorRT і Windows ML, відомості про середовище виконання й налаштування з прихованими секретами. Записів не включено. Перегляньте файли перед надсиланням: журнали можуть містити локальні шляхи й адреси камер.\n"
+""

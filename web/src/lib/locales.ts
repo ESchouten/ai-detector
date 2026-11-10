@@ -1,5 +1,18 @@
 /** Interface languages, the source language first. Each has a catalog in src/locales. */
-export const LOCALES = ['en', 'nl', 'de', 'fr', 'es', 'pt', 'pl', 'tr', 'zh'] as const;
+export const LOCALES = [
+	'en',
+	'nl',
+	'de',
+	'fr',
+	'es',
+	'it',
+	'pt',
+	'pl',
+	'ru',
+	'uk',
+	'tr',
+	'zh'
+] as const;
 export type Locale = (typeof LOCALES)[number];
 export const SOURCE_LOCALE: Locale = 'en';
 
@@ -10,8 +23,11 @@ export const LANGUAGE_NAMES: Record<Locale, string> = {
 	de: 'Deutsch',
 	fr: 'Français',
 	es: 'Español',
+	it: 'Italiano',
 	pt: 'Português',
 	pl: 'Polski',
+	ru: 'Русский',
+	uk: 'Українська',
 	tr: 'Türkçe',
 	zh: '简体中文'
 };

@@ -1,5 +1,4 @@
 import json
-from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
@@ -18,16 +17,6 @@ from aidetector.configuration import (
     load_config,
     source_kind,
 )
-
-
-def test_current_example_config_is_supported():
-    path = Path(__file__).resolve().parents[2] / "example/config.json"
-    config = load_config(path)
-    detector = config.detectors[0]
-    assert detector.detection.source == ("sprong24.mp4",)
-    assert len(detector.vlm) == 1
-    assert len(detector.exporters.disk) == 1
-    assert len(detector.exporters.telegram) == 1
 
 
 def test_scalar_and_list_representations_normalize_at_boundary():

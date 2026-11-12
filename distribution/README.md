@@ -195,8 +195,6 @@ Python is pinned in [`detector/.python-version`](../detector/.python-version); t
 
 To debug a failure, open the first failing step, not the jobs skipped after it; `gh run view RUN_ID --log-failed` prints its log. Failure diagnostics are kept for seven days. Run the matching check locally: `actionlint` for the workflow files, and the [local checks](#local-builds-and-tests) for the rest.
 
-## Existing Linux Docker startup
-
-`linux_startup.py` is a separate helper for an existing Docker Engine installation on a systemd desktop. The [user guide](../README.md#start-automatically-on-a-jetson-or-linux-desktop) has the command and what it sets up; the login entry waits for the dashboard before it opens the browser.
+## Port 80 on Linux
 
 The Linux package grants `cap_net_bind_service` to `/opt/ai-detector/AI Detector` so that the dashboard can use port 80 without running as root. Without that permission the dashboard takes port 8080 or the next free one.

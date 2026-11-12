@@ -164,7 +164,7 @@ The container image is built from the [`Dockerfile`](../Dockerfile) in the repos
 docker build -t ai-detector .
 ```
 
-It serves port 3000 unless `PORT` says otherwise, and reads `/data`. `pnpm start` runs the same server without a container. A container cannot open the host's browser; the [Linux startup helper](../README.md#start-automatically-on-a-jetson-or-linux-desktop) does that at login.
+It serves port 3000 unless `PORT` says otherwise, and reads `/data`. `pnpm start` runs the same server without a container.
 
 ## Quality commands
 

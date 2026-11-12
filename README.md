@@ -47,15 +47,15 @@ docker compose up -d
 
 Open `http://<computer-IP>/`. Settings, models and recordings live in the folder beside the Compose file. The container uses the host's network so the cameras on it can be found; update with `docker compose pull && docker compose up -d`. Coming from the two separate images, read [Docker](detector/MIGRATION.md#docker) first. On a Jetson it is checked on an Orin Nano, not on a Thor; see [Jetson](detector/MIGRATION.md#jetson).
 
-### Start automatically on a Jetson or Linux desktop
+### Start automatically on a Jetson or Linux PC
 
-For an existing Compose installation, run this once from the repository folder as the desktop's user:
+The Compose file starts the application again whenever Docker starts. Make Docker start with the computer, once:
 
 ```sh
-python3 distribution/linux_startup.py install --compose example/compose.yml
+sudo systemctl enable --now docker
 ```
 
-It enables Docker at boot, starts the services and opens the application in the browser at login, so detection runs from boot. Use the Compose file your installation already uses, and add `--url http://localhost:YOUR_PORT/` if you changed the web port. `python3 distribution/linux_startup.py uninstall` removes the browser autostart and nothing else. The helper does not install Docker or GPU drivers.
+Detection then runs from boot, also before anyone signs in. Keep `http://localhost/` as a bookmark or as the browser's start page to see it after login.
 
 ## Where to read on
 

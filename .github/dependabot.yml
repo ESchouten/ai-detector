@@ -23,8 +23,6 @@ updates:
         update-types: ["version-update:semver-major"]
       # Follows the Bun version in distribution/toolchain.json.
       - dependency-name: "@types/bun"
-      # The chart component shadcn-svelte publishes is written for this pre-release.
-      - dependency-name: layerchart
 
   - package-ecosystem: pip
     directory: /distribution

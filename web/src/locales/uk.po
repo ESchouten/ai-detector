@@ -2941,54 +2941,10 @@ msgstr "Додати камери"
 msgid "Choose the cameras to connect, or enter a stream URL. Keep them on the same network as this computer."
 msgstr "Виберіть камери для підключення або введіть URL потоку. Вони мають бути в тій самій мережі, що й цей комп’ютер."
 
-#: src/lib/components/ui/breadcrumb/breadcrumb-ellipsis.svelte
-msgid "More"
-msgstr "Ще"
-
-#: src/lib/components/ui/carousel/carousel-next.svelte
-msgid "Next slide"
-msgstr "Наступний слайд"
-
-#: src/lib/components/ui/carousel/carousel-previous.svelte
-msgid "Previous slide"
-msgstr "Попередній слайд"
-
-#: src/lib/components/ui/command/command-dialog.svelte
-msgid "Command Palette"
-msgstr "Палітра команд"
-
-#: src/lib/components/ui/command/command-dialog.svelte
-msgid "Search for a command to run"
-msgstr "Знайдіть команду для запуску"
-
 #: src/lib/components/ui/dialog/dialog-content.svelte
 #: src/lib/components/ui/sheet/sheet-content.svelte
 msgid "Close"
 msgstr "Закрити"
-
-#: src/lib/components/ui/pagination/pagination-ellipsis.svelte
-msgid "More pages"
-msgstr "Інші сторінки"
-
-#: src/lib/components/ui/pagination/pagination-next-button.svelte
-#: src/lib/components/ui/pagination/pagination-next.svelte
-msgid "Next"
-msgstr "Далі"
-
-#: src/lib/components/ui/pagination/pagination-next-button.svelte
-#: src/lib/components/ui/pagination/pagination-next.svelte
-msgid "Go to next page"
-msgstr "Перейти на наступну сторінку"
-
-#: src/lib/components/ui/pagination/pagination-prev-button.svelte
-#: src/lib/components/ui/pagination/pagination-previous.svelte
-msgid "Previous"
-msgstr "Назад"
-
-#: src/lib/components/ui/pagination/pagination-prev-button.svelte
-#: src/lib/components/ui/pagination/pagination-previous.svelte
-msgid "Go to previous page"
-msgstr "Перейти на попередню сторінку"
 
 #: src/lib/components/ui/sidebar/sidebar-rail.svelte
 #: src/lib/components/ui/sidebar/sidebar-rail.svelte
@@ -3003,10 +2959,6 @@ msgstr "Бічна панель"
 #: src/lib/components/ui/sidebar/sidebar.svelte
 msgid "Displays the mobile sidebar."
 msgstr "Показує бічну панель на телефоні."
-
-#: src/lib/components/ui/spinner/spinner.svelte
-msgid "Loading"
-msgstr "Завантаження"
 
 #: src/lib/monitoring.ts
 msgid "# camera offline."

@@ -2941,54 +2941,10 @@ msgstr "Aggiungi telecamere"
 msgid "Choose the cameras to connect, or enter a stream URL. Keep them on the same network as this computer."
 msgstr "Scegli le telecamere da connettere, oppure inserisci un URL dello stream. Tienile sulla stessa rete di questo computer."
 
-#: src/lib/components/ui/breadcrumb/breadcrumb-ellipsis.svelte
-msgid "More"
-msgstr "Altro"
-
-#: src/lib/components/ui/carousel/carousel-next.svelte
-msgid "Next slide"
-msgstr "Diapositiva successiva"
-
-#: src/lib/components/ui/carousel/carousel-previous.svelte
-msgid "Previous slide"
-msgstr "Diapositiva precedente"
-
-#: src/lib/components/ui/command/command-dialog.svelte
-msgid "Command Palette"
-msgstr "Tavolozza dei comandi"
-
-#: src/lib/components/ui/command/command-dialog.svelte
-msgid "Search for a command to run"
-msgstr "Cerca un comando da eseguire"
-
 #: src/lib/components/ui/dialog/dialog-content.svelte
 #: src/lib/components/ui/sheet/sheet-content.svelte
 msgid "Close"
 msgstr "Chiudi"
-
-#: src/lib/components/ui/pagination/pagination-ellipsis.svelte
-msgid "More pages"
-msgstr "Altre pagine"
-
-#: src/lib/components/ui/pagination/pagination-next-button.svelte
-#: src/lib/components/ui/pagination/pagination-next.svelte
-msgid "Next"
-msgstr "Avanti"
-
-#: src/lib/components/ui/pagination/pagination-next-button.svelte
-#: src/lib/components/ui/pagination/pagination-next.svelte
-msgid "Go to next page"
-msgstr "Vai alla pagina successiva"
-
-#: src/lib/components/ui/pagination/pagination-prev-button.svelte
-#: src/lib/components/ui/pagination/pagination-previous.svelte
-msgid "Previous"
-msgstr "Indietro"
-
-#: src/lib/components/ui/pagination/pagination-prev-button.svelte
-#: src/lib/components/ui/pagination/pagination-previous.svelte
-msgid "Go to previous page"
-msgstr "Vai alla pagina precedente"
 
 #: src/lib/components/ui/sidebar/sidebar-rail.svelte
 #: src/lib/components/ui/sidebar/sidebar-rail.svelte
@@ -3003,10 +2959,6 @@ msgstr "Barra laterale"
 #: src/lib/components/ui/sidebar/sidebar.svelte
 msgid "Displays the mobile sidebar."
 msgstr "Mostra la barra laterale per dispositivi mobili."
-
-#: src/lib/components/ui/spinner/spinner.svelte
-msgid "Loading"
-msgstr "Caricamento"
 
 #: src/lib/monitoring.ts
 msgid "# camera offline."

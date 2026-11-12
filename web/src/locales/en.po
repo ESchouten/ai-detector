@@ -2941,54 +2941,10 @@ msgstr "Add cameras"
 msgid "Choose the cameras to connect, or enter a stream URL. Keep them on the same network as this computer."
 msgstr "Choose the cameras to connect, or enter a stream URL. Keep them on the same network as this computer."
 
-#: src/lib/components/ui/breadcrumb/breadcrumb-ellipsis.svelte
-msgid "More"
-msgstr "More"
-
-#: src/lib/components/ui/carousel/carousel-next.svelte
-msgid "Next slide"
-msgstr "Next slide"
-
-#: src/lib/components/ui/carousel/carousel-previous.svelte
-msgid "Previous slide"
-msgstr "Previous slide"
-
-#: src/lib/components/ui/command/command-dialog.svelte
-msgid "Command Palette"
-msgstr "Command Palette"
-
-#: src/lib/components/ui/command/command-dialog.svelte
-msgid "Search for a command to run"
-msgstr "Search for a command to run"
-
 #: src/lib/components/ui/dialog/dialog-content.svelte
 #: src/lib/components/ui/sheet/sheet-content.svelte
 msgid "Close"
 msgstr "Close"
-
-#: src/lib/components/ui/pagination/pagination-ellipsis.svelte
-msgid "More pages"
-msgstr "More pages"
-
-#: src/lib/components/ui/pagination/pagination-next-button.svelte
-#: src/lib/components/ui/pagination/pagination-next.svelte
-msgid "Next"
-msgstr "Next"
-
-#: src/lib/components/ui/pagination/pagination-next-button.svelte
-#: src/lib/components/ui/pagination/pagination-next.svelte
-msgid "Go to next page"
-msgstr "Go to next page"
-
-#: src/lib/components/ui/pagination/pagination-prev-button.svelte
-#: src/lib/components/ui/pagination/pagination-previous.svelte
-msgid "Previous"
-msgstr "Previous"
-
-#: src/lib/components/ui/pagination/pagination-prev-button.svelte
-#: src/lib/components/ui/pagination/pagination-previous.svelte
-msgid "Go to previous page"
-msgstr "Go to previous page"
 
 #: src/lib/components/ui/sidebar/sidebar-rail.svelte
 #: src/lib/components/ui/sidebar/sidebar-rail.svelte
@@ -3003,10 +2959,6 @@ msgstr "Sidebar"
 #: src/lib/components/ui/sidebar/sidebar.svelte
 msgid "Displays the mobile sidebar."
 msgstr "Displays the mobile sidebar."
-
-#: src/lib/components/ui/spinner/spinner.svelte
-msgid "Loading"
-msgstr "Loading"
 
 #: src/lib/monitoring.ts
 msgid "# camera offline."

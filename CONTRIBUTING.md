@@ -5,8 +5,8 @@ The repository has three deployable responsibilities. The web app owns setup and
 | Start here | Responsibility | Checks |
 | --- | --- | --- |
 | [Web architecture](web/ARCHITECTURE.md) | Svelte pages, validated configuration, process control, archive playback | `cd web && pnpm quality && pnpm build && pnpm test:production` |
-| [Detector reading path](detector/README.md) | Sources, models, events, validation and delivery | VS Code **Detector: check** or the commands in its README |
-| [Distribution](distribution/README.md) | Installers, update feeds, native launchers and release smoke tests | VS Code **Distribution: tests**, including its isolated release dependencies |
+| [Detector reading path](detector/README.md) | Sources, models, events, validation and delivery | The [development checks](detector/README.md#development-checks) in its README |
+| [Distribution](distribution/README.md) | Installers, update feeds, native launchers and release smoke tests | The [fast checks](distribution/README.md#local-builds-and-tests) in its README |
 
 ## How the parts connect
 
@@ -101,7 +101,6 @@ Major versions are not proposed. List them with `pnpm --dir web outdated` and `u
 | `@sveltejs/kit`, `@sveltejs/adapter-node`, `devalue` | SvelteKit 2 | `@jesterkit/exe-sveltekit`, which builds the desktop executable, supports SvelteKit 3 |
 | `typescript` | 6 | `svelte-check` and `typescript-eslint` accept 7 |
 | `@types/node`, `@types/bun` | Node 24 and the Bun version in `distribution/toolchain.json` | Those runtimes move |
-| `@tanstack/table-core`, `sveltekit-superforms`, `layerchart` | What the components in `web/src/lib/components/ui` are written for | shadcn-svelte publishes them for the newer versions |
 | Container base images in the `Dockerfile` | Their pinned digests | Someone qualifies a newer one, as the comments there say |
 
 An update of Ultralytics deserves a comparison of detections before and after on recorded pictures: a release can change which head of a model it runs by default, how a prepared backend is reused or how models are downloaded, without any test failing.
@@ -112,7 +111,7 @@ Follow one request through the relevant feature before adding files: the [web ar
 
 The Python-generated schemas in `config/` are shared contracts. After changing Python configuration or archive metadata, regenerate them as the [configuration guide](config/README.md#who-owns-which-file) describes, and check both applications.
 
-Keep `web/src/lib/components/ui` as published by shadcn-svelte, including components the app does not use yet, and change the look outside that folder: with classes at the call site, or as [appearance and the shadcn components](web/ARCHITECTURE.md#appearance-and-the-shadcn-components) describes. ESLint skips the folder; formatting and Svelte checks still cover it, so an update may need its newer dependencies installed before `pnpm check` passes.
+Keep the components in `web/src/lib/components/ui` as published by shadcn-svelte, and only those the application uses: add one with `pnpx shadcn-svelte@latest add NAME` when a page needs it, and remove one with its last use. Change the look outside that folder: with classes at the call site, or as [appearance and the shadcn components](web/ARCHITECTURE.md#appearance-and-the-shadcn-components) describes. ESLint skips the folder; formatting and Svelte checks still cover it, so an update may need its newer dependencies installed before `pnpm check` passes.
 
 The interface is translated (English, Dutch, German, French, Spanish, Italian, Portuguese, Polish, Russian, Ukrainian, Turkish, Chinese). Write text in `web/src` in sentences a farmer would understand; after adding or changing it, run `pnpm --dir web i18n` and translate the new entries. [Languages](web/ARCHITECTURE.md#languages) in the web architecture guide has the rules that keep text translatable and what stays in English.
 

@@ -2941,54 +2941,10 @@ msgstr "添加摄像头"
 msgid "Choose the cameras to connect, or enter a stream URL. Keep them on the same network as this computer."
 msgstr "选择要连接的摄像头，或输入流地址。请让它们与这台电脑处于同一网络。"
 
-#: src/lib/components/ui/breadcrumb/breadcrumb-ellipsis.svelte
-msgid "More"
-msgstr "更多"
-
-#: src/lib/components/ui/carousel/carousel-next.svelte
-msgid "Next slide"
-msgstr "下一张"
-
-#: src/lib/components/ui/carousel/carousel-previous.svelte
-msgid "Previous slide"
-msgstr "上一张"
-
-#: src/lib/components/ui/command/command-dialog.svelte
-msgid "Command Palette"
-msgstr "命令面板"
-
-#: src/lib/components/ui/command/command-dialog.svelte
-msgid "Search for a command to run"
-msgstr "搜索要运行的命令"
-
 #: src/lib/components/ui/dialog/dialog-content.svelte
 #: src/lib/components/ui/sheet/sheet-content.svelte
 msgid "Close"
 msgstr "关闭"
-
-#: src/lib/components/ui/pagination/pagination-ellipsis.svelte
-msgid "More pages"
-msgstr "更多页面"
-
-#: src/lib/components/ui/pagination/pagination-next-button.svelte
-#: src/lib/components/ui/pagination/pagination-next.svelte
-msgid "Next"
-msgstr "下一页"
-
-#: src/lib/components/ui/pagination/pagination-next-button.svelte
-#: src/lib/components/ui/pagination/pagination-next.svelte
-msgid "Go to next page"
-msgstr "转到下一页"
-
-#: src/lib/components/ui/pagination/pagination-prev-button.svelte
-#: src/lib/components/ui/pagination/pagination-previous.svelte
-msgid "Previous"
-msgstr "上一页"
-
-#: src/lib/components/ui/pagination/pagination-prev-button.svelte
-#: src/lib/components/ui/pagination/pagination-previous.svelte
-msgid "Go to previous page"
-msgstr "转到上一页"
 
 #: src/lib/components/ui/sidebar/sidebar-rail.svelte
 #: src/lib/components/ui/sidebar/sidebar-rail.svelte
@@ -3003,10 +2959,6 @@ msgstr "侧边栏"
 #: src/lib/components/ui/sidebar/sidebar.svelte
 msgid "Displays the mobile sidebar."
 msgstr "显示移动端侧边栏。"
-
-#: src/lib/components/ui/spinner/spinner.svelte
-msgid "Loading"
-msgstr "正在加载"
 
 #: src/lib/monitoring.ts
 msgid "# camera offline."

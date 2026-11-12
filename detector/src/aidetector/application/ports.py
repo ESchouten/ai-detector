@@ -148,6 +148,15 @@ class EventIdentifier(Protocol):
     ) -> tuple[Individual, ...]: ...
 
 
+class TrackIdentities(Protocol):
+    """Who a tracked object is while it is being watched, for live pictures.
+
+    Answers quickly and never raises; None while the track is not known yet.
+    """
+
+    def identity(self, source: str, track_id: int) -> Individual | None: ...
+
+
 class EventExporter(Protocol):
     """Deliver a result without changing the event or its borrowed data.
 

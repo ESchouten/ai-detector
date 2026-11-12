@@ -5,6 +5,7 @@ import path from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
 import writeFileAtomic from 'write-file-atomic';
+import { boxOutline, detectionBoxLabel, pillAnchor, showsPill } from '../src/lib/live-preview.ts';
 import {
 	createCameraOverlayStream,
 	type LivePreviewCamera
@@ -17,7 +18,30 @@ const rules = [
 	{ id: 'detector-2', label: 'Vehicles', interval: 1 }
 ];
 const sourceKey = keyOf('rtsp://user:secret@camera/live', '/data');
-const box = { x1: 1, y1: 2, x2: 10, y2: 12, label: 'cow', confidence: 0.9, trackId: 17 };
+const box = {
+	x1: 1,
+	y1: 2,
+	x2: 10,
+	y2: 12,
+	label: 'cow',
+	confidence: 0.9,
+	trackId: 17,
+	outline: [],
+	identity: null
+};
+
+/** Windows refuses to replace a file the stream is reading at that moment; the
+ * detector's next picture would replace it instead. */
+async function replace(file: string, data: string) {
+	for (let attempt = 1; ; attempt++) {
+		try {
+			return await writeFileAtomic(file, data);
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code !== 'EPERM' || attempt === 10) throw error;
+			await delay(20);
+		}
+	}
+}
 
 async function fixture(t: TestContext) {
 	const directory = await mkdtemp(path.join(tmpdir(), 'detector-live-'));
@@ -30,13 +54,13 @@ async function fixture(t: TestContext) {
 		await rm(directory, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
 	});
 	const session = async (runId = 'run-1', updatedAt = new Date().toISOString()) => {
-		await writeFileAtomic(
+		await replace(
 			path.join(directory, 'session.json'),
 			JSON.stringify({ version: 1, runId, updatedAt })
 		);
 	};
 	const frame = async (ruleId: string, changes = {}, key = sourceKey) => {
-		await writeFileAtomic(
+		await replace(
 			path.join(directory, 'frames', `${key}.${ruleId}.json`),
 			JSON.stringify({
 				version: 1,
@@ -174,6 +198,74 @@ test(
 		assert.equal((await readdir(path.join(directory, 'leases'))).length, 0);
 	}
 );
+
+test('tracked boxes carry who they are to the camera picture', { timeout: 5000 }, async (t) => {
+	const { session, frame, open } = await fixture(t);
+	await session();
+	const identity = { sighting: 'a'.repeat(32), name: '412', candidates: [] };
+	await frame('detector-1', { boxes: [{ ...box, identity }] });
+	await frame('detector-2', { boxes: [{ ...box, identity: { ...identity, sighting: '..' } }] });
+	const { reader } = open();
+	const output = await chunk(reader);
+	assert.ok(output.includes(`"identity":${JSON.stringify(identity)}`));
+	assert.ok(output.endsWith(status('detector-2')));
+});
+
+test('a box shows the name it is recognised by, and only suggests one when unsure', () => {
+	const identity = {
+		sighting: 'a'.repeat(32),
+		name: null,
+		candidates: [
+			{ name: '412', score: 0.4 },
+			{ name: '233', score: 0.1 }
+		]
+	};
+	assert.equal(detectionBoxLabel(box), 'cow · 90% · #17');
+	assert.equal(detectionBoxLabel({ ...box, identity }), '412? · #17');
+	assert.equal(detectionBoxLabel({ ...box, identity: { ...identity, name: '412' } }), '412 · #17');
+	assert.equal(
+		detectionBoxLabel({ ...box, identity: { ...identity, candidates: [] } }),
+		'cow · 90% · #17'
+	);
+});
+
+test('a pill shows who a box is once it resembles someone, and while naming even before', () => {
+	const unnamed = { sighting: 'a'.repeat(32), name: null, candidates: [] };
+	const resembles = { ...unnamed, candidates: [{ name: '412', score: 0.4 }] };
+	assert.equal(showsPill(box, true), false);
+	assert.equal(showsPill({ ...box, identity: unnamed }, false), false);
+	assert.equal(showsPill({ ...box, identity: unnamed }, true), true);
+	assert.equal(showsPill({ ...box, identity: resembles }, false), true);
+});
+
+test('a pill points at the top of the outline nearest its middle', () => {
+	assert.deepEqual(pillAnchor(box), [5.5, 2]);
+	const head: [number, number][] = [
+		[1, 6],
+		[2, 3],
+		[8, 6],
+		[10, 12]
+	];
+	assert.deepEqual(pillAnchor({ ...box, outline: head }), [2, 3]);
+	// Cut off along the picture's top edge.
+	const cut: [number, number][] = [
+		[1, 2],
+		[5, 2],
+		[10, 2],
+		[10, 12]
+	];
+	assert.deepEqual(pillAnchor({ ...box, outline: cut }), [5, 2]);
+});
+
+test('an outlined box is drawn along its outline, any other along its sides', () => {
+	assert.equal(boxOutline(box), '1,2 10,2 10,12 1,12');
+	const outline: [number, number][] = [
+		[3, 2],
+		[10, 7],
+		[3, 12]
+	];
+	assert.equal(boxOutline({ ...box, outline }), '3,2 10,7 3,12');
+});
 
 test(
 	'a slow reader skips intermediate pictures and receives the newest available record',

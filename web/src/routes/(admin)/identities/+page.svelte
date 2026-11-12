@@ -3,12 +3,20 @@
 	import { resolve } from '$app/paths';
 	import { X } from '@lucide/svelte';
 	import * as Alert from '$lib/components/ui/alert';
+	import CameraPicture from '$lib/components/camera-picture.svelte';
+	import FilterChips from '$lib/components/filter-chips.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import { plural } from '$lib/format';
+	import type { DetectionBox } from '$lib/live-preview';
+	import LiveNaming from './live-naming.svelte';
 	import SightingGroup from './sighting-group.svelte';
+	import SightingPicture from './sighting-picture.svelte';
 
 	let { data, form } = $props();
 	const overview = $derived(data.overview);
+	let cameraId = $state<string>();
+	const camera = $derived(data.cameras.find((item) => item.id === cameraId) ?? data.cameras.at(0));
+	let naming = $state<DetectionBox | null>(null);
 </script>
 
 <section class="page-narrow">
@@ -40,6 +48,34 @@
 		{/each}
 	</datalist>
 
+	{#if camera}
+		<section class="flex flex-col gap-3" aria-labelledby="identities-live">
+			<h2 id="identities-live" class="text-base font-semibold">On camera now</h2>
+			<p class="text-sm text-muted-foreground">
+				Tap one in the picture to say who it is. It can be named a few seconds after it appears.
+			</p>
+			{#if data.cameras.length > 1}
+				<FilterChips
+					label="Camera"
+					required
+					options={data.cameras.map((item) => ({ value: item.id, label: item.label }))}
+					value={camera.id}
+					onChange={(value) => (cameraId = value)}
+				/>
+			{/if}
+			{#key camera.id}
+				<CameraPicture
+					id={camera.id}
+					label={camera.label}
+					monitored
+					onselect={(box) => (naming = box)}
+					selected={naming?.identity?.sighting}
+				/>
+			{/key}
+		</section>
+		<LiveNaming bind:box={naming} names="identity-names" />
+	{/if}
+
 	<section class="flex flex-col gap-3" aria-labelledby="identities-unnamed">
 		<h2 id="identities-unnamed" class="text-base font-semibold">To name</h2>
 		{#if overview.groups.length}
@@ -56,8 +92,8 @@
 			{/if}
 		{:else}
 			<p class="text-sm text-muted-foreground">
-				Nothing to name. New sightings appear here when a detector with tracking records an
-				individual.
+				Nothing to name. New sightings appear here when a detector with tracking and a segmentation
+				model records an individual.
 			</p>
 		{/if}
 	</section>
@@ -80,13 +116,7 @@
 							<ul class="flex flex-wrap gap-2 px-4 pb-4">
 								{#each identity.shown as sighting (sighting.id)}
 									<li class="relative size-24 overflow-hidden rounded-lg bg-media">
-										<img
-											src={resolve(`/identities/${sighting.id}/crop-1.jpg`)}
-											alt=""
-											loading="lazy"
-											decoding="async"
-											class="size-full object-contain"
-										/>
+										<SightingPicture {sighting} loading="lazy" />
 										<form
 											method="POST"
 											action="?/unname"

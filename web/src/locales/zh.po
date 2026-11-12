@@ -3793,16 +3793,55 @@ msgid "Alerts only suggest names until named sightings come from at least two da
 msgstr "在已命名的记录覆盖至少两天之前，通知只会建议名称。此后，通知会说出有把握的身份。"
 
 #: src/routes/(admin)/identities/+page.svelte
-msgid "Nothing to name. New sightings appear here when a detector with tracking records an individual."
-msgstr "没有需要命名的内容。带跟踪功能的检测器记录到个体时，新记录会显示在这里。"
-
-#: src/routes/(admin)/identities/+page.svelte
 msgid "No identities named yet."
 msgstr "尚未命名任何身份。"
 
 #: src/routes/(admin)/identities/+page.svelte
 msgid "Named identities"
 msgstr "已命名的身份"
+
+#. 0: detectionBoxLabel(box)
+#: src/lib/components/detection-boxes.svelte
+msgid "Name {0}"
+msgstr "为 {0} 命名"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "On camera now"
+msgstr "当前在画面中"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Could not save the name. Try again."
+msgstr "无法保存名称。请重试。"
+
+#. 0: identity.name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Shown as {0}. Enter another name or number if that is wrong."
+msgstr "显示为 {0}。如果不对，请输入其他名称或编号。"
+
+#. 0: identity.candidates[0].name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Looks most like {0}, but not enough to be sure."
+msgstr "最像 {0}，但还不足以确定。"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Give it a name or number; the camera then recognises it."
+msgstr "为它命名或编号；之后摄像头就能识别它。"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Who is this?"
+msgstr "这是谁？"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Its pictures were removed. Wait for the box to show it again."
+msgstr "它的图片已被删除。请等待方框再次显示它。"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
+msgstr "点按画面中的一个个体，说明它是谁。它出现几秒后即可命名。"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."
+msgstr "没有需要命名的内容。带跟踪功能和分割模型的检测器记录到个体时，新记录会显示在这里。"
 
 #. 0: label; 1: move.host
 #: src/lib/server/cameras/relocation.ts

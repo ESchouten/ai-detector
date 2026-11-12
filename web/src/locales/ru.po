@@ -3842,16 +3842,55 @@ msgid "Alerts only suggest names until named sightings come from at least two da
 msgstr "Пока наблюдения с именами не охватывают хотя бы два дня, уведомления только предлагают имена. После этого они называют особей, в которых уверены."
 
 #: src/routes/(admin)/identities/+page.svelte
-msgid "Nothing to name. New sightings appear here when a detector with tracking records an individual."
-msgstr "Нечего называть. Новые наблюдения появляются здесь, когда детектор с отслеживанием записывает особь."
-
-#: src/routes/(admin)/identities/+page.svelte
 msgid "No identities named yet."
 msgstr "Пока нет особей с именами."
 
 #: src/routes/(admin)/identities/+page.svelte
 msgid "Named identities"
 msgstr "Особи с именами"
+
+#. 0: detectionBoxLabel(box)
+#: src/lib/components/detection-boxes.svelte
+msgid "Name {0}"
+msgstr "Назвать: {0}"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "On camera now"
+msgstr "Сейчас в кадре"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Could not save the name. Try again."
+msgstr "Не удалось сохранить имя. Попробуйте снова."
+
+#. 0: identity.name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Shown as {0}. Enter another name or number if that is wrong."
+msgstr "Показано как {0}. Если это неверно, введите другое имя или номер."
+
+#. 0: identity.candidates[0].name
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Looks most like {0}, but not enough to be sure."
+msgstr "Больше всего похоже на {0}, но недостаточно для уверенности."
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Give it a name or number; the camera then recognises it."
+msgstr "Дайте имя или номер; после этого камера будет узнавать эту особь."
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Who is this?"
+msgstr "Кто это?"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+msgid "Its pictures were removed. Wait for the box to show it again."
+msgstr "Фото этой особи удалены. Дождитесь, пока рамка снова её покажет."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
+msgstr "Нажмите на особь на изображении, чтобы указать, кто это. Назвать её можно через несколько секунд после появления."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."
+msgstr "Нечего называть. Новые наблюдения появляются здесь, когда детектор с отслеживанием и моделью сегментации записывает особь."
 
 #. 0: label; 1: move.host
 #: src/lib/server/cameras/relocation.ts

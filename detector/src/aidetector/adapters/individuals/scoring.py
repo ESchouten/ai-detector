@@ -3,12 +3,13 @@
 A sighting is the L2-normalised embeddings of one track's pictures. An
 individual's score is the mean of her k most similar named pictures, averaged
 over the sighting's pictures, less a share of the runner-up's score, so a
-sighting that resembles two individuals is named less readily.
+sighting that resembles two individuals is named less readily. Sightings seen
+together are decided together: one individual is never in two places at once.
 """
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 from dataclasses import dataclass
 
 import numpy as np
@@ -56,6 +57,10 @@ class Gallery:
 
     def scores(self, vectors: Vectors) -> NDArray[np.float32]:
         """One sighting's score per name, in the order of `names`."""
+        return runner_up_margin(self.similarities(vectors))
+
+    def similarities(self, vectors: Vectors) -> NDArray[np.float32]:
+        """One sighting's score per name before the runner-up's share is taken off."""
         similarity = vectors @ self.vectors.T
         scores = np.empty(len(self.names), np.float32)
         for owner in range(len(self.names)):
@@ -66,11 +71,67 @@ class Gallery:
                 .mean(axis=1)
                 .mean()
             )
-        if len(scores) < 2:
-            return scores
-        best = scores.max()
-        second = np.partition(scores, -2)[-2]
-        return scores - MARGIN * np.where(scores >= best, second, best)
+        return scores
+
+
+def runner_up_margin(similarities: NDArray[np.float32]) -> NDArray[np.float32]:
+    """Each score less a share of the best other one."""
+    if len(similarities) < 2:
+        return similarities
+    best = similarities.max()
+    second = np.partition(similarities, -2)[-2]
+    return similarities - MARGIN * np.where(similarities >= best, second, best)
+
+
+@dataclass(frozen=True)
+class Decision:
+    """A sighting's score per name, minus infinity for names out of the
+    running, and whether the best is recognised."""
+
+    scores: NDArray[np.float32]
+    recognised: bool
+
+
+def decide_together(
+    similarities: Sequence[NDArray[np.float32]],
+    beside: Sequence[Collection[int]],
+    given: Sequence[int | None],
+    threshold: float | None,
+) -> list[Decision]:
+    """Which of the sightings seen together are recognised, and as whom.
+
+    `beside` lists, per sighting, the others seen in the same picture, and
+    `given` the name a person gave it, if any. Given names stand and are
+    decided first; then the surest sightings. A name recognised for one is out
+    of the running for those beside it, also as their runner-up.
+    """
+    taken: list[set[int]] = [set() for _ in similarities]
+    order = sorted(
+        range(len(similarities)),
+        key=lambda i: (given[i] is None, -runner_up_margin(similarities[i]).max()),
+    )
+    decisions: dict[int, Decision] = {}
+    for sighting in order:
+        row = similarities[sighting]
+        best = given[sighting]
+        if best is None:
+            running = np.ones(len(row), bool)
+            running[list(taken[sighting])] = False
+            scores = np.full(len(row), -np.inf, np.float32)
+            scores[running] = runner_up_margin(row[running])
+            best = int(scores.argmax())
+            recognised = (
+                threshold is not None
+                and bool(running[best])
+                and bool(scores[best] >= threshold)
+            )
+        else:
+            scores, recognised = runner_up_margin(row), True
+        decisions[sighting] = Decision(scores, recognised)
+        if recognised:
+            for other in beside[sighting]:
+                taken[other].add(best)
+    return [decisions[sighting] for sighting in range(len(similarities))]
 
 
 def threshold_for(

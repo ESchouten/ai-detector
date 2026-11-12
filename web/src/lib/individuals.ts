@@ -7,6 +7,8 @@ export interface Sighting {
 	seen: string;
 	/** How many pictures it has: crop-1.jpg and onwards. */
 	crops: number;
+	/** Each picture's outline as [x, y] points in its pixels; none without segmentation. */
+	outlines: [number, number][][];
 }
 
 /** Unnamed sightings that look alike, to name at once. */

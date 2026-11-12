@@ -266,14 +266,14 @@ def test_invalid_file_encoding_is_a_config_error_without_exposing_contents(tmp_p
     assert path.read_bytes() == original
 
 
-def tracked(tracking=True):
+def tracked(tracking=True, task="segment"):
     return {
         "detection": {"source": "barn.mp4"},
-        "yolo": {"model": "cows.pt", "tracking": tracking},
+        "yolo": {"model": "cows-seg.pt", "task": task, "tracking": tracking},
     }
 
 
-def test_individuals_are_recognised_only_with_a_tracking_detector():
+def test_individuals_need_a_tracking_detector_with_a_segmentation_model():
     individuals = {"model": "herd.onnx", "labels": "cow"}
     config = Config.model_validate(
         {"detectors": [tracked(False), tracked()], "individuals": individuals}
@@ -281,10 +281,9 @@ def test_individuals_are_recognised_only_with_a_tracking_detector():
     assert config.individuals == IndividualsConfig(
         model="herd.onnx", labels=("cow",), precision=0.99
     )
-    with pytest.raises(ValidationError, match="needs object tracking"):
-        Config.model_validate(
-            {"detectors": [tracked(False)], "individuals": individuals}
-        )
+    for detectors in ([tracked(False)], [tracked(task="detect")]):
+        with pytest.raises(ValidationError, match="tracking and a segmentation model"):
+            Config.model_validate({"detectors": detectors, "individuals": individuals})
 
 
 @pytest.mark.parametrize(

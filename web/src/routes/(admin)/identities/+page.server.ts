@@ -1,11 +1,27 @@
 import { fail } from '@sveltejs/kit';
 import * as v from 'valibot';
 import { nameSightingsInput, sightingIdInput } from '$lib/individuals';
+import { configuration } from '$lib/server/configuration';
 import { individuals } from '$lib/server/individuals';
 import { SightingMissingError } from '$lib/server/individuals-folder';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => ({ overview: await individuals.overview() });
+export const load: PageServerLoad = async () => {
+	const { app, config } = await configuration.read();
+	// Identities are recognised per outlined track, so only cameras a tracking detector with a
+	// segmentation model watches show them.
+	const cameras = app.streams
+		.filter((camera) =>
+			config.detectors.some(
+				(rule) =>
+					rule.yolo?.tracking &&
+					rule.yolo.task === 'segment' &&
+					rule.detection.source.includes(camera.source)
+			)
+		)
+		.map((camera) => ({ id: camera.id, label: camera.label ?? 'Camera' }));
+	return { overview: await individuals.overview(), cameras };
+};
 
 export const actions: Actions = {
 	name: async ({ request }) => {

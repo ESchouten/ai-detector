@@ -1,17 +1,9 @@
 /** Local launcher identity; never trust an arbitrary process occupying the dashboard port. */
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
-import {
-	closeSync,
-	fsyncSync,
-	mkdirSync,
-	openSync,
-	readFileSync,
-	renameSync,
-	rmSync,
-	writeFileSync
-} from 'node:fs';
+import { mkdirSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
+import writeFileAtomic from 'write-file-atomic';
 
 export const CONTROL_PATH = '/.well-known/ai-detector-instance';
 const PROTOCOL = 'ai-detector-desktop/1';
@@ -162,15 +154,7 @@ export class DesktopInstance {
 
 /** Written as the settings store writes app.json: whole, on disk before it replaces the file. */
 function writePrivate(file: string, record: object): void {
-	const temporary = `${file}.${process.pid}.tmp`;
-	const descriptor = openSync(temporary, 'w', 0o600);
-	try {
-		writeFileSync(descriptor, JSON.stringify(record, null, 2) + '\n');
-		fsyncSync(descriptor);
-	} finally {
-		closeSync(descriptor);
-	}
-	renameSync(temporary, file);
+	writeFileAtomic.sync(file, JSON.stringify(record, null, 2) + '\n', { mode: 0o600 });
 }
 
 async function probe(saved: SavedInstance, quit: boolean, deadline: number): Promise<boolean> {

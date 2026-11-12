@@ -15,6 +15,8 @@
 	import { logsNavigation, settingsNavigation, REPOSITORY_URL } from '$lib/navigation';
 	import { version } from '$lib/version';
 
+	let { data } = $props();
+
 	const themes = [
 		{ value: 'light', label: 'Light', icon: Sun },
 		{ value: 'dark', label: 'Dark', icon: Moon },
@@ -33,7 +35,7 @@
 <section class="page-narrow">
 	<PageHeader title="Settings" />
 
-	<LinkRows items={settingsNavigation()} />
+	<LinkRows items={settingsNavigation({ individuals: data.individuals })} />
 
 	<section class="flex flex-col gap-3" aria-labelledby="settings-general">
 		<h2 id="settings-general" class="text-base font-semibold">This installation</h2>

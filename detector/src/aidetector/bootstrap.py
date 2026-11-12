@@ -10,6 +10,12 @@ from aidetector.adapters.exporters.disk import DiskExporter
 from aidetector.adapters.exporters.telegram import TelegramExporter
 from aidetector.adapters.exporters.webhook import WebhookExporter
 from aidetector.adapters.health import Healthcheck
+from aidetector.adapters.individuals.embedding import (
+    EmbeddingModel,
+    input_size,
+    model_key,
+)
+from aidetector.adapters.individuals.herd import SIGHTING_CROPS, Herd, TrackIdentifier
 from aidetector.adapters.inference.model_assets import resolve_model_path
 from aidetector.adapters.inference.onnx import ModelRequirements, inference_runtime
 from aidetector.adapters.live_preview import LivePreview
@@ -19,6 +25,7 @@ from aidetector.adapters.sources.streams import StreamPool, StreamSource
 from aidetector.application.delivery import Destination, EventDelivery
 from aidetector.application.pipeline import DetectionPipeline
 from aidetector.application.ports import (
+    EventIdentifier,
     EventValidator,
     ObjectDetector,
     ReportStatus,
@@ -29,6 +36,7 @@ from aidetector.application.ports import (
 from aidetector.configuration import (
     Config,
     ExportersConfig,
+    IndividualsConfig,
     OnnxConfig,
     SourceConfig,
     source_kind,
@@ -121,6 +129,44 @@ def build_destinations(
     return tuple(destinations)
 
 
+def _individuals_model(
+    config: IndividualsConfig | None,
+    config_directory: Path,
+    data_directory: Path,
+    report_status: ReportStatus,
+) -> str | None:
+    if config is None:
+        return None
+    path = resolve_model_path(
+        config.model, config_directory, data_directory / "models", report_status
+    )
+    if not Path(path).is_file():
+        message = "The model for recognising individuals was not found. Check its path."
+        report_status(StatusEvent("preparation_failed", message=message))
+        raise RuntimeError(message)
+    return path
+
+
+def _model_requirements(
+    config: Config, individuals_model: str | None
+) -> tuple[ModelRequirements, ...]:
+    models = tuple(
+        ModelRequirements(
+            settings.yolo.model, settings.yolo.imgsz, len(settings.detection.source)
+        )
+        for settings in config.detectors
+        if settings.yolo is not None
+    )
+    if individuals_model is None:
+        return models
+    return (
+        *models,
+        ModelRequirements(
+            individuals_model, input_size(individuals_model), SIGHTING_CROPS
+        ),
+    )
+
+
 def _build_type(
     onnx: OnnxConfig, models: tuple[ModelRequirements, ...]
 ) -> tuple[str, OnnxConfig]:
@@ -155,13 +201,10 @@ def run_application(
         log_detector_configuration(
             index, settings, _resolved_sources(settings.detection, config_directory)
         )
-    models = tuple(
-        ModelRequirements(
-            settings.yolo.model, settings.yolo.imgsz, len(settings.detection.source)
-        )
-        for settings in config.detectors
-        if settings.yolo is not None
+    individuals_model = _individuals_model(
+        config.individuals, config_directory, data_directory, report_status
     )
+    models = _model_requirements(config, individuals_model)
     build_type, onnx = _build_type(config.onnx, models)
     with ExitStack() as resources:
         report_status(
@@ -187,6 +230,15 @@ def run_application(
                 stop_requested,
                 report_status,
             )
+        herd = (
+            Herd(
+                data_directory / "individuals",
+                EmbeddingModel(individuals_model, model_key(individuals_model)),
+                config.individuals,
+            )
+            if config.individuals is not None and individuals_model is not None
+            else None
+        )
         streams = StreamPool(report_status)
         preview = LivePreview(data_directory / "live") if live_preview else None
         workers: list[DetectorWorker] = []
@@ -234,6 +286,7 @@ def run_application(
                         cache_directory=data_directory / "models" / "prepared",
                         report_status=rule_status,
                         engines=engines,
+                        outlined=herd.labels if herd is not None else frozenset(),
                         areas={
                             resolved: settings.detection.areas[configured]
                             for configured, resolved in zip(
@@ -255,6 +308,11 @@ def run_application(
                 from aidetector.adapters.vlm import VlmValidator
 
                 validator = VlmValidator(settings.active_vlm, media)
+            identifier: EventIdentifier | None = (
+                TrackIdentifier(herd)
+                if herd is not None and settings.yolo and settings.yolo.tracking
+                else None
+            )
             cooldown = Cooldown(
                 settings.yolo.cooldown if settings.yolo is not None else 0,
                 min_frames=event_policy.min_frames,
@@ -270,6 +328,7 @@ def run_application(
                 cooldown,
                 validator,
                 rule_status,
+                identifier,
             )
             logger.info(
                 "Detector-%d ready: validation %s; destinations: %s",

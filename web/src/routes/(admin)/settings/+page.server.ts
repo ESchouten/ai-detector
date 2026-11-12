@@ -1,0 +1,6 @@
+import { configuration } from '$lib/server/configuration';
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async () => ({
+	individuals: !!(await configuration.read()).config.individuals
+});

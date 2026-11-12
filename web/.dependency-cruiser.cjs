@@ -42,11 +42,11 @@ module.exports = {
 			name: 'shared-models-stay-independent',
 			severity: 'error',
 			from: {
-				path: '^src/lib/((schema|runtime|detections|live-preview|locales)\\.ts$|generated/)'
+				path: '^src/lib/((schema|runtime|detections|individuals|live-preview|locales)\\.ts$|generated/)'
 			},
 			to: {
 				pathNot:
-					'^src/lib/((schema|runtime|detections|live-preview|locales)\\.ts$|generated/)|(?:^|/)node_modules/valibot/'
+					'^src/lib/((schema|runtime|detections|individuals|live-preview|locales)\\.ts$|generated/)|(?:^|/)node_modules/valibot/'
 			}
 		},
 		{

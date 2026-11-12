@@ -3729,6 +3729,130 @@ msgstr "Підключення до ШІ"
 msgid "Filled in missing names and ignored empty optional settings in app.json."
 msgstr "Відсутні назви заповнено, порожні необов’язкові налаштування в app.json пропущено."
 
+#: src/lib/individuals.ts
+msgid "Enter a name or number."
+msgstr "Введіть ім’я або номер."
+
+#: src/lib/individuals.ts
+msgid "Use at most 40 characters."
+msgstr "Використовуйте не більше 40 символів."
+
+#: src/lib/individuals.ts
+msgid "Keep at least one picture to name."
+msgstr "Залиште принаймні одне фото, якому треба дати ім’я."
+
+#: src/lib/server/individuals-folder.ts
+msgid "A picture to name no longer exists. Reload the page."
+msgstr "Фото, якому треба дати ім’я, більше не існує. Оновіть сторінку."
+
+#: src/routes/(admin)/identities/+page.server.ts
+msgid "Reload the page and try again."
+msgstr "Оновіть сторінку й спробуйте ще раз."
+
+#: src/routes/(admin)/identities/[sighting]/[picture]/+server.ts
+msgid "Picture not found."
+msgstr "Фото не знайдено."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Could not save the name"
+msgstr "Не вдалося зберегти ім’я"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name sightings from one more day"
+msgstr "Дайте імена спостереженням ще за один день"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# more group follows once these are named."
+msgid_plural "# more groups follow once these are named."
+msgstr[0] "Ще # група з’явиться, коли ці отримають імена."
+msgstr[1] "Ще # групи з’являться, коли ці отримають імена."
+msgstr[2] "Ще # груп з’явиться, коли ці отримають імена."
+msgstr[3] "Ще # групи з’явиться, коли ці отримають імена."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "To name"
+msgstr "Очікують імені"
+
+#: src/routes/(admin)/identities/+page.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "# sighting"
+msgid_plural "# sightings"
+msgstr[0] "# спостереження"
+msgstr[1] "# спостереження"
+msgstr[2] "# спостережень"
+msgstr[3] "# спостереження"
+
+#. 0: identity.name
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Not {0}: remove the name from this picture"
+msgstr "Не {0}: прибрати ім’я з цього фото"
+
+#. 0: recentMoment(group.shown[0].seen)
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Last seen {0}"
+msgstr "Останнє спостереження: {0}"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Leave this picture out"
+msgstr "Виключити це фото"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Left out"
+msgstr "Виключено"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "# more sighting looks like these."
+msgid_plural "# more sightings look like these."
+msgstr[0] "Ще # спостереження схоже на ці."
+msgstr[1] "Ще # спостереження схожі на ці."
+msgstr[2] "Ще # спостережень схожі на ці."
+msgstr[3] "Ще # спостереження схожі на ці."
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Looks most like"
+msgstr "Найбільше схоже на"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Name or number"
+msgstr "Ім’я або номер"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Identities"
+msgstr "Особини"
+
+#: src/lib/navigation.ts
+msgid "Name the individuals the cameras recognise."
+msgstr "Дайте імена особинам, яких розпізнають камери."
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Left out: a different one"
+msgstr "Виключено: інша особина"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Tap a picture of a different one to leave it out."
+msgstr "Торкніться фото іншої особини, щоб виключити його."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Each group holds sightings that look alike. Give it a name or number once; alerts then name the identities they recognise."
+msgstr "Кожна група об’єднує схожі спостереження. Дайте їй ім’я або номер один раз; після цього сповіщення називають розпізнаних особин."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Alerts only suggest names until named sightings come from at least two days. From then on they name the identities they are sure of."
+msgstr "Поки спостереження з іменами не охоплюють щонайменше двох днів, сповіщення лише пропонують імена. Після цього вони називають особин, у яких упевнені."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking records an individual."
+msgstr "Нічого називати. Нові спостереження з’являються тут, коли детектор із відстеженням записує особину."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "No identities named yet."
+msgstr "Поки немає особин з іменами."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Named identities"
+msgstr "Особини з іменами"
+
 #. 0: label; 1: move.host
 #: src/lib/server/cameras/relocation.ts
 msgid "{0} got a new network address ({1}) and is watched there again."

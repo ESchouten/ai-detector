@@ -10,10 +10,29 @@ from aidetector.configuration import QuietHours, TelegramConfig
 from aidetector.domain.models import EventResult
 
 
+def _names(result: EventResult) -> str:
+    """A recognised individual's name, or her likeliest names as a question."""
+    if result.identification is None:
+        return ""
+    names = []
+    for individual in result.identification.individuals:
+        candidates = [candidate.name for candidate in individual.candidates]
+        if individual.name is not None:
+            names.append(individual.name)
+        elif len(candidates) == 1:
+            names.append(f"{candidates[0]}?")
+        elif candidates:
+            names.append(f"{', '.join(candidates[:-1])} or {candidates[-1]}?")
+    return "\n" + " · ".join(names) if names else ""
+
+
 def _caption(result: EventResult) -> str:
     validated = result.validation.validated
     status = " ✅" if validated is True else " ❌" if validated is False else ""
-    return f"{result.event.best.score:.0%}{status}\n{round(result.event.duration)} second(s)"
+    return (
+        f"{result.event.best.score:.0%}{status}\n"
+        f"{round(result.event.duration)} second(s){_names(result)}"
+    )
 
 
 def _review_buttons(result: EventResult) -> str:

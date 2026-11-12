@@ -2,7 +2,7 @@
 	import { Play } from '@lucide/svelte';
 	import Pill from '$lib/components/pill.svelte';
 	import { categoryName, recordingVerdict, type Detection } from '$lib/detections';
-	import { clipLength, percent, timeOfDay } from '$lib/format';
+	import { clipLength, oneOf, percent, timeOfDay } from '$lib/format';
 	import ReviewButtons from '$lib/components/review-buttons.svelte';
 	import { recordingMedia } from '$lib/components/recording-viewer.svelte';
 
@@ -20,6 +20,18 @@
 	const verdict = $derived(recordingVerdict(entry));
 	const time = $derived(timeOfDay(entry.start));
 	const dismissed = $derived(entry.stage === 'rejected');
+	// A recognised individual by name, otherwise the names it resembles most.
+	const individuals = $derived(
+		(entry.individuals ?? [])
+			.map(
+				(individual) =>
+					individual.name ??
+					(individual.candidates.length
+						? `${oneOf(individual.candidates.map((candidate) => candidate.name))}?`
+						: '')
+			)
+			.filter((name) => name)
+	);
 </script>
 
 <article class="flex min-w-0 flex-col gap-2.5">
@@ -69,6 +81,9 @@
 				{#if verdict}<span>{verdict.source}</span><span aria-hidden="true">·</span>{/if}
 				<span>{percent(entry.confidence)} confidence</span>
 			</p>
+			{#if individuals.length}
+				<p class="text-xs font-medium">{individuals.join(' · ')}</p>
+			{/if}
 		</div>
 		<ReviewButtons {entry} {onReview} />
 	</div>

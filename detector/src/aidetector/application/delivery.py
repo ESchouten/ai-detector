@@ -5,7 +5,9 @@ from uuid import uuid4
 from aidetector.application.ports import (
     DeliveryError,
     EventExporter,
+    EventIdentifier,
     EventValidator,
+    IdentificationUnavailable,
     ReportStatus,
     StatusEvent,
     ValidationUnavailable,
@@ -14,6 +16,7 @@ from aidetector.application.ports import (
 from aidetector.domain.models import (
     DetectionEvent,
     EventResult,
+    Identification,
     ValidationResult,
     ValidationStatus,
 )
@@ -36,7 +39,7 @@ class DeliveryReport:
 
 
 class EventDelivery:
-    """Validate and deliver events in order through domain policies."""
+    """Validate, identify and deliver events in order through domain policies."""
 
     def __init__(
         self,
@@ -44,11 +47,13 @@ class EventDelivery:
         cooldown: Cooldown,
         validator: EventValidator | None = None,
         report_status: ReportStatus = ignore_status,
+        identifier: EventIdentifier | None = None,
     ):
         self.destinations = destinations
         self.cooldown = cooldown
         self.validator = validator
         self.report_status = report_status
+        self.identifier = identifier
 
     def deliver(self, event: DetectionEvent) -> DeliveryReport:
         logger.info(
@@ -63,7 +68,10 @@ class EventDelivery:
 
         validation = self._validate(event)
         logger.info("Event validation: %s", validation.status.value)
-        result = EventResult(event, validation, uuid4().hex)
+        event_id = uuid4().hex
+        result = EventResult(
+            event, validation, event_id, self._identify(event, event_id, validation)
+        )
         self.cooldown.record(result)
         failures = 0
         first_unexpected: Exception | None = None
@@ -102,6 +110,28 @@ class EventDelivery:
         if first_unexpected is not None:
             raise first_unexpected
         return DeliveryReport(result, failures)
+
+    def _identify(
+        self, event: DetectionEvent, event_id: str, validation: ValidationResult
+    ) -> Identification | None:
+        if self.identifier is None or validation.status is ValidationStatus.REJECTED:
+            return None
+        try:
+            individuals = self.identifier.identify(event, event_id)
+        except IdentificationUnavailable as error:
+            logger.error("Recognising individuals failed: %s", error)
+            return Identification(error=str(error))
+        logger.info(
+            "Individuals: %s",
+            ", ".join(
+                individual.name
+                or "/".join(candidate.name for candidate in individual.candidates)
+                or "unnamed"
+                for individual in individuals
+            )
+            or "none tracked",
+        )
+        return Identification(individuals)
 
     def _validate(self, event: DetectionEvent) -> ValidationResult:
         if self.validator is None:

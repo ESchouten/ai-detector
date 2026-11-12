@@ -1,6 +1,6 @@
 # AI Detector
 
-AI Detector watches your cameras on your own computer, records what a detector recognises, and shows it in your browser. Phone alerts through Telegram and a second check by an AI model are optional. Nothing runs on a server of ours.
+AI Detector watches your cameras on your own computer, records what a detector recognises, and shows it in your browser. Alerts on your phone, as a Telegram message or a loud alarm, and a second check by an AI model are optional. Nothing runs on a server of ours.
 
 ## Install
 
@@ -16,7 +16,7 @@ The downloads are not signed with an Apple or Windows publisher certificate, so 
 
 ## Set up
 
-Open **AI Detector**. Setup opens in your browser, in English, Dutch, German or French. If no browser opens, go to [localhost](http://localhost/).
+Open **AI Detector**. Setup opens in your browser, in English, Dutch, German, French, Spanish, Italian, Portuguese, Polish, Russian, Ukrainian, Turkish or Chinese. If no browser opens, go to [localhost](http://localhost/).
 
 1. **Cameras.** The cameras found on your network are already ticked; a camera that needs its own login asks for it. Or paste an RTSP address. Check each picture and give the cameras a name.
 2. **Detection.** Choose a preset, such as Cow Catcher, and the cameras it watches. Phone alerts and the AI check can be added here or later.
@@ -38,29 +38,24 @@ Monitoring keeps running when you close the browser. While it is on, the Windows
 
 ## Docker
 
-One image, `ghcr.io/eschouten/ai-detector`, holds the web application and the detector it starts and supervises, as the desktop application does. The [example Compose file](example/compose.yml) runs it on a Linux PC with an NVIDIA GPU and the NVIDIA Container Toolkit:
+One image, `ghcr.io/eschouten/ai-detector`, holds the web application and the detector it starts and supervises, as the desktop application does. The [example Compose file](example/compose.yml) runs it on a Linux PC with an NVIDIA GPU and the NVIDIA Container Toolkit, or on a Jetson Orin or Thor with JetPack 7.2:
 
 ```sh
 cd example
 docker compose up -d
 ```
 
-Open `http://<computer-IP>/`. Settings, models and recordings live in the folder beside the Compose file. The container uses the host's network so the cameras on it can be found; update with `docker compose pull && docker compose up -d`. Coming from the two separate images, read [Docker](detector/MIGRATION.md#docker) first.
+Open `http://<computer-IP>/`. Settings, models and recordings live in the folder beside the Compose file. The container uses the host's network so the cameras on it can be found; update with `docker compose pull && docker compose up -d`. Coming from the two separate images, read [Docker](detector/MIGRATION.md#docker) first. On a Jetson it is checked on an Orin Nano, not on a Thor; see [Jetson](detector/MIGRATION.md#jetson).
 
-| Host | Compose file |
-| --- | --- |
-| Linux PC with an NVIDIA GPU | [`example/compose.yml`](example/compose.yml) |
-| Jetson Orin or Thor with JetPack 7.2 | [`example/compose.jetson.yml`](example/compose.jetson.yml); checked on an Orin Nano, not on a Thor, see [Jetson](detector/MIGRATION.md#jetson) |
+### Start automatically on a Jetson or Linux PC
 
-### Start automatically on a Jetson or Linux desktop
-
-For an existing Compose installation, run this once from the repository folder as the desktop's user:
+The Compose file starts the application again whenever Docker starts. Make Docker start with the computer, once:
 
 ```sh
-python3 distribution/linux_startup.py install --compose example/compose.jetson.yml
+sudo systemctl enable --now docker
 ```
 
-It enables Docker at boot, starts the services and opens the application in the browser at login, so detection runs from boot. Use the Compose file your installation already uses, and add `--url http://localhost:YOUR_PORT/` if you changed the web port. `python3 distribution/linux_startup.py uninstall` removes the browser autostart and nothing else. The helper does not install Docker or GPU drivers.
+Detection then runs from boot, also before anyone signs in. Keep `http://localhost/` as a bookmark or as the browser's start page to see it after login.
 
 ## Where to read on
 

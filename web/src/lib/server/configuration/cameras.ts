@@ -5,6 +5,7 @@ import type {
 	Camera,
 	CameraDevice,
 	Configuration,
+	DetectorConfig,
 	LoadedConfiguration,
 	StreamMeta
 } from '../../schema.ts';
@@ -26,11 +27,23 @@ export function identifyCameras(document: Configuration): LoadedConfiguration {
 	return document as LoadedConfiguration;
 }
 
+/** The detector watches the camera at its new address, within the same area. */
+function moveSource(detector: DetectorConfig, from: string, to: string): void {
+	if (from === to || !detector.detection.source.includes(from)) return;
+	detector.detection.source = detector.detection.source.map((item) => (item === from ? to : item));
+	const areas = detector.detection.areas;
+	if (areas?.[from]) {
+		areas[to] = areas[from];
+		delete areas[from];
+	}
+}
+
 function detachCamera(document: Configuration, source: string): void {
 	for (let index = document.config.detectors.length - 1; index >= 0; index--) {
 		const detector = document.config.detectors[index];
 		if (!detector.detection.source.includes(source)) continue;
 		detector.detection.source = detector.detection.source.filter((item) => item !== source);
+		delete detector.detection.areas?.[source];
 		if (!detector.detection.source.length) {
 			document.config.detectors.splice(index, 1);
 			document.app.detectors.splice(index, 1);
@@ -73,9 +86,7 @@ export function saveCamera(
 	updateCameraMetadata(camera, input, pictureVerifiedAt);
 	if (!existing) document.app.streams.push(camera);
 	for (const detector of document.config.detectors)
-		detector.detection.source = detector.detection.source.map((source) =>
-			source === previousSource ? input.source : source
-		);
+		moveSource(detector, previousSource, input.source);
 	return { id: camera.id };
 }
 
@@ -112,10 +123,7 @@ export function relocateCameras(document: Configuration, moves: CameraMove[]): C
 			camera.source = source;
 			if (camera.connection)
 				camera.connection.address = movedSource(camera.connection.address, move.host);
-			for (const detector of document.config.detectors)
-				detector.detection.source = detector.detection.source.map((item) =>
-					item === move.source ? source : item
-				);
+			for (const detector of document.config.detectors) moveSource(detector, move.source, source);
 		});
 		return true;
 	});

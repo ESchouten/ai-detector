@@ -5,7 +5,6 @@ on:
     paths: &paths
       - "detector/**"
       - "config/**"
-      - "example/config.json"
       - "ruff.toml"
       - ".github/workflows/detector-tests.yml"
       - ".github/actions/setup-detector/**"

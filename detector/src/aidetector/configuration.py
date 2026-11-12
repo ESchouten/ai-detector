@@ -31,6 +31,15 @@ SourceList = Annotated[
 ]
 ProbabilityMap = Annotated[dict[NonEmptyString, Probability], Field(min_length=1)]
 DurationMap = Annotated[dict[NonEmptyString, Duration], Field(min_length=1)]
+# Two numbers, written so that the schema gives both coordinates a type.
+Point = Annotated[tuple[Probability, ...], Field(min_length=2, max_length=2)]
+Area = Annotated[
+    tuple[Point, ...],
+    Field(
+        min_length=3,
+        description="Polygon corners as x, y fractions of the picture's width and height.",
+    ),
+]
 HttpMethod = Literal["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"]
 _HTTP_URL = TypeAdapter(AnyHttpUrl)
 _SOURCE_URL = TypeAdapter(
@@ -130,6 +139,11 @@ class SourceConfig(_ConfigModel):
     interval: Duration = 0
     frame_retention: PositiveInt = 15
     frames_width: Annotated[int, Field(ge=2)] = 1280
+    areas: dict[NonEmptyString, Area] = Field(
+        default_factory=dict,
+        repr=False,
+        description="Per source, the area a detection's box centre must lie in to count.",
+    )
 
     @field_validator(
         "source", mode="before", json_schema_input_type=NonEmptyString | SourceList
@@ -150,6 +164,12 @@ class SourceConfig(_ConfigModel):
                 "Put finite files and live streams in separate detector definitions"
             )
         return sources
+
+    @model_validator(mode="after")
+    def areas_of_sources(self) -> SourceConfig:
+        if not set(self.areas) <= set(self.source):
+            raise ValueError("An area must belong to one of the detector's sources")
+        return self
 
 
 class VLMConfig(_ConfigModel):
@@ -252,7 +272,13 @@ class TelegramConfig(MediaConfig):
 class WebhookConfig(MediaConfig, HttpConfig):
     method: HttpMethod = "POST"
     token: str | None = Field(default=None, repr=False)
-    data_type: Literal["binary", "base64", "none"] = "binary"
+    data_type: Literal["binary", "base64", "none", "file"] = Field(
+        default="binary",
+        description=(
+            "binary: form fields and files; base64: JSON; none: no content; file: the "
+            "first chosen picture or video as the whole body, or `body` without one."
+        ),
+    )
     data_max: PositiveInt | None = None
     include_crop: bool = True
 

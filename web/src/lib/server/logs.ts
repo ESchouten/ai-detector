@@ -11,7 +11,7 @@ function sanitizeParameters(text: string): string {
 	);
 }
 
-export function sanitizeSourceForLogs(source: string): string {
+function sanitizeSourceForLogs(source: string): string {
 	const sanitized = sanitizeParameters(source);
 
 	try {

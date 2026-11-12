@@ -5,8 +5,8 @@ The repository has three deployable responsibilities. The web app owns setup and
 | Start here | Responsibility | Checks |
 | --- | --- | --- |
 | [Web architecture](web/ARCHITECTURE.md) | Svelte pages, validated configuration, process control, archive playback | `cd web && pnpm quality && pnpm build && pnpm test:production` |
-| [Detector reading path](detector/README.md) | Sources, models, events, validation and delivery | VS Code **Detector: check** or the commands in its README |
-| [Distribution](distribution/README.md) | Installers, update feeds, native launchers and release smoke tests | VS Code **Distribution: tests**, including its isolated release dependencies |
+| [Detector reading path](detector/README.md) | Sources, models, events, validation and delivery | The [development checks](detector/README.md#development-checks) in its README |
+| [Distribution](distribution/README.md) | Installers, update feeds, native launchers and release smoke tests | The [fast checks](distribution/README.md#local-builds-and-tests) in its README |
 
 ## How the parts connect
 
@@ -40,7 +40,8 @@ flowchart TB
     Detector <-->|optional AI check| VLM["AI provider"]
     Detector -->|alerts| Telegram["Telegram"]
     Detector -->|alerts| Webhooks["Webhooks"]
-    Web <-->|pairing, review buttons, outage notices| Telegram
+    Web <-->|pairing, review buttons| Telegram
+    Web -->|test alarm, outage notices| Ntfy["ntfy"]
     Web -->|newer presets, daily| GitHub["Presets on GitHub"]
 ```
 
@@ -60,7 +61,7 @@ uv sync --project detector --locked --extra default
 pnpm --dir web install --frozen-lockfile
 ```
 
-Then run **Repository: check** in VS Code (**Run Build Task**). It runs detector checks, distribution lint/tests, web quality checks, the production build and HTTP smoke tests. Each check is also an independent task for a faster edit loop. The distribution task supplies its additional Python dependencies automatically; desktop TypeScript checks are included in web quality checks. Native Windows tray tests and the .NET SDK commands are described in the distribution guide. Tests use temporary files and generated media; they do not need farm cameras or notification credentials.
+Then run the checks in the table at the top for the part you changed. Native Windows tray tests and the .NET SDK commands are described in the distribution guide. Tests use temporary files and generated media; they do not need farm cameras or notification credentials.
 
 Run the web app with a disposable data folder while developing setup or configuration changes:
 
@@ -82,7 +83,7 @@ To build a complete desktop preview with the same stages used in CI, follow the 
 | `distribution/` | Build stages, native launchers, installers, toolchain pins and packaging tests |
 | `ruff.toml` | Shared Python formatting, import and complexity rules |
 | `.github/` | CI orchestration using those same build stages and quality tools |
-| `.vscode/` | Editor tasks that run the existing commands |
+| `.vscode/` | Editor settings and recommended extensions |
 
 Python tools discover the root `ruff.toml` from either the repository or component directory. Do not copy its rules into another project file. The [configuration guide](config/README.md) identifies each settings file's owner; the [distribution guide](distribution/README.md) identifies build outputs and tool versions.
 
@@ -113,6 +114,6 @@ The Python-generated schemas in `config/` are shared contracts. After changing P
 
 Keep `web/src/lib/components/ui` as published by shadcn-svelte, including components the app does not use yet, and change the look outside that folder: with classes at the call site, or as [appearance and the shadcn components](web/ARCHITECTURE.md#appearance-and-the-shadcn-components) describes. ESLint skips the folder; formatting and Svelte checks still cover it, so an update may need its newer dependencies installed before `pnpm check` passes.
 
-The interface is translated (English, Dutch, German, French). Write text in `web/src` in sentences a farmer would understand; after adding or changing it, run `pnpm --dir web i18n` and translate the new entries. [Languages](web/ARCHITECTURE.md#languages) in the web architecture guide has the rules that keep text translatable and what stays in English.
+The interface is translated (English, Dutch, German, French, Spanish, Italian, Portuguese, Polish, Russian, Ukrainian, Turkish, Chinese). Write text in `web/src` in sentences a farmer would understand; after adding or changing it, run `pnpm --dir web i18n` and translate the new entries. [Languages](web/ARCHITECTURE.md#languages) in the web architecture guide has the rules that keep text translatable and what stays in English.
 
 Before handing off a change, state what behavior changed, which tests establish it, and what still requires a target machine. A passing CPU smoke test does not establish GPU acceleration, live camera behavior or signed installer support.

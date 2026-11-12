@@ -8,7 +8,7 @@ export interface CameraLogin {
 }
 
 /** A camera that answered: the stream to use, its other streams, and how to find it again. */
-export interface CameraConnection {
+interface CameraConnection {
 	source: string;
 	profiles: CameraProfile[];
 	connection?: StreamMeta['connection'];

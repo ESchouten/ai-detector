@@ -7,7 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ffmpeg from 'ffmpeg-static';
 
-const clip = fileURLToPath(new URL('../../../example/sprong24.mp4', import.meta.url));
+const clip = fileURLToPath(new URL('sprong24.mp4', import.meta.url));
 
 async function freePort() {
 	const server = createServer().listen(0, '127.0.0.1');

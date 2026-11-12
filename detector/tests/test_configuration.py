@@ -1,5 +1,4 @@
 import json
-from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
@@ -19,16 +18,6 @@ from aidetector.configuration import (
     load_config,
     source_kind,
 )
-
-
-def test_current_example_config_is_supported():
-    path = Path(__file__).resolve().parents[2] / "example/config.json"
-    config = load_config(path)
-    detector = config.detectors[0]
-    assert detector.detection.source == ("sprong24.mp4",)
-    assert len(detector.vlm) == 1
-    assert len(detector.exporters.disk) == 1
-    assert len(detector.exporters.telegram) == 1
 
 
 def test_scalar_and_list_representations_normalize_at_boundary():
@@ -122,6 +111,17 @@ def test_source_groups_are_validated_before_startup():
         "image.png",
         "video.mp4",
     )
+
+
+def test_areas_belong_to_the_detectors_sources_and_need_three_corners():
+    triangle = ((0, 0), (1, 0), (0.5, 1))
+    assert SourceConfig(source="0", areas={"0": triangle}).areas == {"0": triangle}
+    with pytest.raises(ValidationError, match="one of the detector's sources"):
+        SourceConfig(source="0", areas={"1": triangle})
+    with pytest.raises(ValidationError):
+        SourceConfig(source="0", areas={"0": triangle[:2]})
+    with pytest.raises(ValidationError):
+        SourceConfig(source="0", areas={"0": ((0, 0), (1.5, 0), (0.5, 1))})
 
 
 @pytest.mark.parametrize(

@@ -13,6 +13,7 @@ from typing import Any, cast
 logger = logging.getLogger(__name__)
 PREPARATION_TIMEOUT = 120.0
 HELPER_TIMEOUT = 150.0
+WEBGPU_PROVIDER = "WebGpuExecutionProvider"
 
 
 def prepare_windows_ml(requested: str | None) -> dict[str, str]:
@@ -73,6 +74,9 @@ def _discover_windows_ml(requested: str | None) -> dict[str, str]:
         failed = False
         catalog = winml.ExecutionProviderCatalog.get_default()
         for provider in catalog.find_all_providers():
+            if requested is None and provider.name == WEBGPU_PROVIDER:
+                logger.info("Skipping experimental WebGPU in automatic mode")
+                continue
             if requested is not None and provider.name != requested:
                 continue
             try:

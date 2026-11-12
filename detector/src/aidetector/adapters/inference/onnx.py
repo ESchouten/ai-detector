@@ -15,8 +15,9 @@ from time import perf_counter
 from typing import Any
 from urllib.parse import urlsplit
 
+from aidetector.adapters.inference.compiled_models import Accelerator, CompiledModels
 from aidetector.adapters.inference.provider_probe import probe_provider
-from aidetector.adapters.inference.windows_ml import prepare_windows_ml
+from aidetector.adapters.inference.windows_ml import WEBGPU_PROVIDER, prepare_windows_ml
 from aidetector.application.ports import ReportStatus, StatusEvent, ignore_status
 from aidetector.configuration import OnnxConfig
 
@@ -116,7 +117,7 @@ def _cuda_libraries(resources: ExitStack) -> None:
 
 def _register_windows_ml(
     resources: ExitStack, ort: Any, requested: str | None, report_status: ReportStatus
-) -> set[str]:
+) -> dict[str, str]:
     registration_error = import_module(
         "onnxruntime.capi.onnxruntime_pybind11_state"
     ).Fail
@@ -128,7 +129,7 @@ def _register_windows_ml(
         )
     )
     libraries = prepare_windows_ml(requested)
-    registered: set[str] = set()
+    registered: dict[str, str] = {}
     failed = False
     for name, library_path in libraries.items():
         report_status(
@@ -165,7 +166,7 @@ def _register_windows_ml(
                 faulthandler.cancel_dump_traceback_later()
             provider_resources.callback(ort.unregister_execution_provider_library, name)
             resources.enter_context(provider_resources.pop_all())
-        registered.add(name)
+        registered[name] = library_path
     if failed and not registered:
         raise RuntimeError("No Windows ML execution provider could be prepared")
     logger.info("Registered Windows ML providers: %s", sorted(registered))
@@ -173,7 +174,7 @@ def _register_windows_ml(
 
 
 def select_devices(devices: list[Any]) -> list[Any]:
-    """Prefer GPUs to CPUs, with experimental WebGPU after vendor GPU providers."""
+    """Prefer GPUs to CPUs, with DirectML after vendor GPU providers."""
     selected: dict[str, Any] = {}
     for device in devices:
         if device.ep_name not in selected or str(device.device.type).endswith("GPU"):
@@ -182,7 +183,6 @@ def select_devices(devices: list[Any]) -> list[Any]:
         selected,
         key=lambda name: (
             str(selected[name].device.type).endswith("CPU"),
-            name == "WebGpuExecutionProvider",
             name == "DmlExecutionProvider",
             name == "OpenVINOExecutionProvider",
             name,
@@ -200,9 +200,20 @@ def select_providers(
         if requested not in available and not devices:
             raise ValueError(f"Configured ONNX provider is unavailable: {requested}")
         available = [requested]
-    selected = tuple(select_devices(devices))
-    names = tuple(device.ep_name for device in selected) or tuple(available)
-    return ProviderSelection(names, selected)
+    else:
+        available = [name for name in available if name != WEBGPU_PROVIDER]
+        devices = [device for device in devices if device.ep_name != WEBGPU_PROVIDER]
+    selected = select_devices(devices)
+    names = [device.ep_name for device in selected] or available
+    if "DmlExecutionProvider" in names:
+        # DirectML shares a session only with CPU: it leads alone or is left out.
+        if names[0] == "DmlExecutionProvider":
+            cpu = {"DmlExecutionProvider", "CPUExecutionProvider"}
+            names = [name for name in names if name in cpu]
+        else:
+            names = [name for name in names if name != "DmlExecutionProvider"]
+        selected = [device for device in selected if device.ep_name in names]
+    return ProviderSelection(tuple(names), tuple(selected))
 
 
 def tensorrt_profiles(models: tuple[ModelRequirements, ...]) -> dict[str, str]:
@@ -227,8 +238,13 @@ def inference_runtime(
     models: tuple[ModelRequirements, ...],
     build_type: str,
     report_status: ReportStatus = ignore_status,
+    cache: Path | None = None,
 ) -> Generator[InferenceOptions]:
-    """Keep provider libraries, session hooks and environment in one cleanup scope."""
+    """Keep provider libraries, session hooks and environment in one cleanup scope.
+
+    With a cache, a Windows ML accelerator that would compile at the first
+    inference waits for a compiled model while DirectML runs instead.
+    """
     with ExitStack() as resources:
         # Installed dependencies belong to the distribution, never to an
         # inference library's opportunistic pip-install path.
@@ -263,8 +279,37 @@ def inference_runtime(
         if uses_cuda and hasattr(ort, "preload_dlls"):
             ort.preload_dlls(directory="")
 
-        providers = _providers(config, build_type, resources, ort, report_status)
-        _install_sessions(tensorrt_profiles(onnx_models), resources, ort, providers)
+        providers, directml, libraries = _providers(
+            config, build_type, resources, ort, report_status
+        )
+        profiles = tensorrt_profiles(onnx_models)
+        scratch = Path(
+            resources.enter_context(
+                tempfile.TemporaryDirectory(prefix="aidetector-ort-")
+            )
+        )
+        compiled = None
+        if directml is not None and cache is not None:
+            compiled = CompiledModels(
+                cache / "compiled",
+                tuple(
+                    Accelerator(
+                        device.ep_name,
+                        str(device.device.type),
+                        _device_options(profiles, device, scratch),
+                    )
+                    for device in providers.devices
+                ),
+                libraries,
+                ort.__version__,
+                tuple(sorted({model.image_size for model in onnx_models})),
+                max(model.batch_size for model in onnx_models),
+                report_status,
+            )
+            resources.callback(compiled.close)
+        _install_sessions(
+            profiles, scratch, resources, ort, providers, directml, compiled
+        )
         logger.info(
             "ONNX execution providers: %s; CPU worker spinning disabled",
             providers.names,
@@ -278,8 +323,9 @@ def _providers(
     resources: ExitStack,
     ort: Any,
     report_status: ReportStatus = ignore_status,
-) -> ProviderSelection:
-    registered: set[str] = set()
+) -> tuple[ProviderSelection, ProviderSelection | None, dict[str, str]]:
+    """The providers to use, DirectML to use until they have a compiled model, and the libraries."""
+    registered: dict[str, str] = {}
     available = ort.get_available_providers()
     logger.info("Built-in ONNX execution providers: %s", available)
     if (
@@ -317,13 +363,13 @@ def _providers(
             logger.warning(message, exc_info=True)
             report_status(StatusEvent("notice", message=message))
             if not built_in_acceleration:
-                return ProviderSelection(("CPUExecutionProvider",))
+                return ProviderSelection(("CPUExecutionProvider",)), None, {}
     if build_type == "windowsml":
         available = sorted(
             available,
             key=lambda name: name in {"CPUExecutionProvider", "AzureExecutionProvider"},
         )
-    device_providers = registered | (
+    device_providers = set(registered) | (
         set(available) - {"CPUExecutionProvider", "AzureExecutionProvider"}
         if build_type == "windowsml"
         else set()
@@ -338,23 +384,55 @@ def _providers(
         if device_providers
         else []
     )
-    return select_providers(available, devices, config.provider)
+    selection = select_providers(available, devices, config.provider)
+    directml = None
+    if config.provider is None and selection.names[0] in registered:
+        built_in = select_providers(
+            available,
+            [device for device in devices if device.ep_name not in registered],
+            None,
+        )
+        # Only a model prepared for both may start on one and move to the other.
+        if (
+            built_in.names[0] == "DmlExecutionProvider"
+            and built_in.inference_options == selection.inference_options
+        ):
+            directml = built_in
+    return selection, directml, registered
 
 
 def _install_sessions(
     profiles: dict[str, str],
+    scratch: Path,
     resources: ExitStack,
     ort: Any,
     selection: ProviderSelection,
+    directml: ProviderSelection | None,
+    compiled: CompiledModels | None,
 ) -> None:
     # Ultralytics exposes neither session options nor Windows ML devices, so its
     # sessions are created through this factory until the runtime scope ends.
     original_session = ort.InferenceSession
-    scratch = Path(
-        resources.enter_context(tempfile.TemporaryDirectory(prefix="aidetector-ort-"))
-    )
+    errors = _session_errors() if compiled is not None else ()
 
     def session(path_or_bytes, sess_options=None, providers=None, **kwargs):
+        if compiled is None or directml is None or isinstance(path_or_bytes, bytes):
+            return create(path_or_bytes, selection, sess_options, kwargs)
+        source = Path(path_or_bytes)
+        model = compiled.model(source)
+        if model is None:
+            return create(path_or_bytes, directml, sess_options, kwargs)
+        try:
+            return create(str(model), selection, sess_options, kwargs)
+        except errors as error:
+            logger.warning(
+                "Windows ML model could not be opened; using DirectML: %s", error
+            )
+            compiled.reject(source, str(error))
+        # The supplied options already name the accelerator's devices.
+        return create(path_or_bytes, directml, None, kwargs)
+
+    def create(path_or_bytes, selection, sess_options, kwargs):
         options = sess_options if sess_options is not None else ort.SessionOptions()
         # Camera capture and other detectors need the CPU while this session waits.
         options.add_session_config_entry("session.intra_op.allow_spinning", "0")
@@ -378,6 +456,21 @@ def _install_sessions(
 
     resources.callback(setattr, ort, "InferenceSession", original_session)
     ort.InferenceSession = session
+
+
+def _session_errors() -> tuple[type[BaseException], ...]:
+    # ONNX Runtime's native errors share no base class narrower than Exception.
+    state = import_module("onnxruntime.capi.onnxruntime_pybind11_state")
+    return (
+        OSError,
+        RuntimeError,
+        state.Fail,
+        state.EPFail,
+        state.InvalidGraph,
+        state.InvalidProtobuf,
+        state.NoSuchFile,
+        state.RuntimeException,
+    )
 
 
 def _device_options(

@@ -14,6 +14,7 @@ import {
 	restoreDetectorChoices,
 	selectTelegram,
 	validDetectorDraft,
+	withArea,
 	type DetectorEdit,
 	type DetectorOptions
 } from '../src/lib/detector-editor.ts';
@@ -323,7 +324,7 @@ test('an unfinished edit comes back from references alone, in the order it was m
 	assert.equal(restored.detector.vlm?.[0].key, 'api-key');
 	// What is kept in the browser names saved settings and holds none of their secrets.
 	const kept = detectorChoices(restored, options);
-	assert.deepEqual(kept, { ...draft, cameras: [yard.id], telegrams: ['Phone'] });
+	assert.deepEqual(kept, { ...draft, cameras: [yard.id], telegrams: ['Phone'], areas: {} });
 	assert.doesNotMatch(JSON.stringify(kept), /secret|bot-token|api-key|rtsp:/);
 });
 
@@ -414,4 +415,36 @@ test('a connection chosen for a preset rule takes the preset’s question when t
 	assert.equal(questionPreset(connected, options.presets), undefined);
 	assert.equal(lacksQuestion(connected.detector), false);
 	assert.equal(lacksQuestion(chooseConnection(blank(), gemini).detector), true);
+});
+
+test('an area is kept per camera, by its id in the browser, and fewer than three corners clear it', async () => {
+	const area: [number, number][] = [
+		[0.1, 0.1],
+		[0.9, 0.1],
+		[0.5, 0.9]
+	];
+	const edit = blank();
+	edit.detector.detection.source = [barn.source, yard.source];
+	edit.detector.detection.areas = withArea(undefined, yard.source, area);
+	const kept = detectorChoices(edit, options);
+	assert.deepEqual(kept.areas, { [yard.id]: area });
+	const { edit: restored } = await restoreDetectorChoices(
+		blank(),
+		kept,
+		options,
+		{ keepDelivery: false },
+		presetDetector
+	);
+	assert.deepEqual(restored.detector.detection.areas, { [yard.source]: area });
+	assert.equal(
+		withArea(restored.detector.detection.areas, yard.source, area.slice(0, 2)),
+		undefined
+	);
+	// Choosing another preset keeps where each camera is watched, and the rule still follows it.
+	const next = choosePreset(restored, { id: 'calving', mode: '', detector: calving }, options, {
+		keepDelivery: true,
+		suggestConnection: false
+	});
+	assert.deepEqual(next.detector.detection.areas, { [yard.source]: area });
+	assert.ok(followsPreset(next.detector, next.presetSettings));
 });

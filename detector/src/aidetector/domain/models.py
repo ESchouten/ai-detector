@@ -38,6 +38,19 @@ class BoundingBox:
         )
 
 
+Area = Sequence[Sequence[float]]
+"""Polygon corners as x, y fractions of a picture's width and height."""
+
+
+def inside(area: Area, x: float, y: float) -> bool:
+    """Whether a point, in fractions of the picture, lies within the polygon."""
+    result = False
+    for (x1, y1), (x2, y2) in zip(area, (*area[1:], area[0]), strict=True):
+        if (y1 > y) != (y2 > y) and x < x1 + (y - y1) * (x2 - x1) / (y2 - y1):
+            result = not result
+    return result
+
+
 @dataclass(frozen=True)
 class Frame:
     """Source timestamp and borrowed read-only uint8 H×W×3 BGR pixels."""

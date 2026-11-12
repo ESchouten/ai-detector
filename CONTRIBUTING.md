@@ -61,7 +61,7 @@ uv sync --project detector --locked --extra default
 pnpm --dir web install --frozen-lockfile
 ```
 
-Then run **Repository: check** in VS Code (**Run Build Task**). It runs detector checks, distribution lint/tests, web quality checks, the production build and HTTP smoke tests. Each check is also an independent task for a faster edit loop. The distribution task supplies its additional Python dependencies automatically; desktop TypeScript checks are included in web quality checks. Native Windows tray tests and the .NET SDK commands are described in the distribution guide. Tests use temporary files and generated media; they do not need farm cameras or notification credentials.
+Then run the checks in the table at the top for the part you changed. Native Windows tray tests and the .NET SDK commands are described in the distribution guide. Tests use temporary files and generated media; they do not need farm cameras or notification credentials.
 
 Run the web app with a disposable data folder while developing setup or configuration changes:
 
@@ -83,7 +83,7 @@ To build a complete desktop preview with the same stages used in CI, follow the 
 | `distribution/` | Build stages, native launchers, installers, toolchain pins and packaging tests |
 | `ruff.toml` | Shared Python formatting, import and complexity rules |
 | `.github/` | CI orchestration using those same build stages and quality tools |
-| `.vscode/` | Editor tasks that run the existing commands |
+| `.vscode/` | Editor settings and recommended extensions |
 
 Python tools discover the root `ruff.toml` from either the repository or component directory. Do not copy its rules into another project file. The [configuration guide](config/README.md) identifies each settings file's owner; the [distribution guide](distribution/README.md) identifies build outputs and tool versions.
 

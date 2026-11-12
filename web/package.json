@@ -8,10 +8,8 @@
 		"dev": "vite dev",
 		"start": "node node-server.mjs",
 		"build": "vite build",
-		"preview": "vite preview",
 		"prepare": "svelte-kit sync",
 		"check": "svelte-kit sync && wuchale && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
-		"check:watch": "svelte-kit sync && wuchale && svelte-check --tsconfig ./tsconfig.json --watch",
 		"schema:generate": "node tools/generate-schema-types.mjs",
 		"schema:check": "node tools/generate-schema-types.mjs --check",
 		"i18n": "wuchale --clean",
@@ -25,7 +23,6 @@
 		"test:production": "node --test tests/production/*.test.mjs",
 		"test:e2e": "node --test --test-concurrency=1 tests/e2e/*.test.mjs",
 		"architecture": "svelte-kit sync && wuchale && depcruise src desktop --config .dependency-cruiser.cjs",
-		"architecture:graph": "svelte-kit sync && node -e \"require('node:fs').mkdirSync('.reports', {recursive:true})\" && depcruise src/lib/server --config .dependency-cruiser.cjs --include-only \"^(src/|../config/)\" --output-type mermaid --output-to .reports/dependencies.mmd",
 		"quality:static": "pnpm schema:check && pnpm lint && pnpm i18n:check && pnpm check && pnpm check:desktop && pnpm architecture",
 		"quality": "pnpm quality:static && pnpm test && pnpm test:desktop"
 	},

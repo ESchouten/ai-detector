@@ -36,7 +36,7 @@ export function detectorDraftMeta(
 	};
 }
 
-export type DetectorDraft = DetectorConfig & {
+type DetectorDraft = DetectorConfig & {
 	exporters: NonNullable<DetectorConfig['exporters']>;
 };
 

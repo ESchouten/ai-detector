@@ -52,7 +52,7 @@ async function keepHistory(): Promise<Date | undefined> {
 }
 
 /** How the settings follow a camera to a new address; the settings store does it. */
-export type CameraMoves = Pick<RelocationWatch, 'remember' | 'relocate'>;
+type CameraMoves = Pick<RelocationWatch, 'remember' | 'relocate'>;
 
 /**
  * While monitoring is on, the native shell keeps the computer awake, and the people who get a

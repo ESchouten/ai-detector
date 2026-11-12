@@ -164,13 +164,13 @@ The container image is built from the [`Dockerfile`](../Dockerfile) in the repos
 docker build -t ai-detector .
 ```
 
-It serves port 3000 unless `PORT` says otherwise, and reads `/data`. `pnpm start` runs the same server without a container. A container cannot open the host's browser; the [Linux startup helper](../README.md#start-automatically-on-a-jetson-or-linux-desktop) does that at login.
+It serves port 3000 unless `PORT` says otherwise, and reads `/data`. `pnpm start` runs the same server without a container.
 
 ## Quality commands
 
 `pnpm quality` checks the generated schema declarations, formatting, ESLint, translation catalogs, types, dependency rules and unit tests. Functions have a complexity ceiling of 15 and a nesting ceiling of 4; treat a hit as a prompt to look, not as a reason to split a coherent function. `pnpm build` and `pnpm test:production` check the real server; CI runs all three.
 
-`.dependency-cruiser.cjs` rejects cycles, server code that imports components, browser code that imports server code or Node modules, remote handlers that call each other, shared models that depend on anything else, and unresolved imports. `pnpm architecture:graph` writes a Mermaid graph to `.reports/dependencies.mmd`.
+`.dependency-cruiser.cjs` rejects cycles, server code that imports components, browser code that imports server code or Node modules, remote handlers that call each other, shared models that depend on anything else, and unresolved imports.
 
 ### Appearance and the shadcn components
 

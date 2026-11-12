@@ -87,7 +87,7 @@ const cameraDevice = v.object({
 	/** The serial number the camera gives over ONVIF. */
 	serial: v.optional(text)
 });
-export const streamMeta = v.object({
+const streamMeta = v.object({
 	id: v.optional(text),
 	label: v.optional(text),
 	source: text,

@@ -144,7 +144,7 @@ export function monitoringSummary(
 	};
 }
 
-export type CameraTone = 'neutral' | 'ok' | 'warn' | 'bad';
+type CameraTone = 'neutral' | 'ok' | 'warn' | 'bad';
 
 /** One camera's state in two words, for its badge. */
 export function cameraStatusBadge(

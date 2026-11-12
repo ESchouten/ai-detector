@@ -3689,6 +3689,121 @@ msgstr "AI 连接"
 msgid "Filled in missing names and ignored empty optional settings in app.json."
 msgstr "已补全 app.json 中缺失的名称，并忽略了空的可选设置。"
 
+#: src/lib/individuals.ts
+msgid "Enter a name or number."
+msgstr "请输入名称或编号。"
+
+#: src/lib/individuals.ts
+msgid "Use at most 40 characters."
+msgstr "最多使用 40 个字符。"
+
+#: src/lib/individuals.ts
+msgid "Keep at least one picture to name."
+msgstr "请至少保留一张待命名的图片。"
+
+#: src/lib/server/individuals-folder.ts
+msgid "A picture to name no longer exists. Reload the page."
+msgstr "一张待命名的图片已不存在。请重新加载页面。"
+
+#: src/routes/(admin)/identities/+page.server.ts
+msgid "Reload the page and try again."
+msgstr "请重新加载页面后重试。"
+
+#: src/routes/(admin)/identities/[sighting]/[picture]/+server.ts
+msgid "Picture not found."
+msgstr "未找到图片。"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Could not save the name"
+msgstr "无法保存名称"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name sightings from one more day"
+msgstr "再为一天的记录命名"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# more group follows once these are named."
+msgid_plural "# more groups follow once these are named."
+msgstr[0] "为这些命名后，还会出现 # 个组。"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "To name"
+msgstr "待命名"
+
+#: src/routes/(admin)/identities/+page.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "# sighting"
+msgid_plural "# sightings"
+msgstr[0] "# 条记录"
+
+#. 0: identity.name
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Not {0}: remove the name from this picture"
+msgstr "不是 {0}：从这张图片移除名称"
+
+#. 0: recentMoment(group.shown[0].seen)
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Last seen {0}"
+msgstr "最后出现：{0}"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Leave this picture out"
+msgstr "排除这张图片"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Left out"
+msgstr "已排除"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "# more sighting looks like these."
+msgid_plural "# more sightings look like these."
+msgstr[0] "还有 # 条记录与这些相似。"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Looks most like"
+msgstr "最像"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Name or number"
+msgstr "名称或编号"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Identities"
+msgstr "身份"
+
+#: src/lib/navigation.ts
+msgid "Name the individuals the cameras recognise."
+msgstr "为摄像头识别出的个体命名。"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Left out: a different one"
+msgstr "已排除：是另一个"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Tap a picture of a different one to leave it out."
+msgstr "点按另一个个体的图片即可将其排除。"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Each group holds sightings that look alike. Give it a name or number once; alerts then name the identities they recognise."
+msgstr "每组包含外观相似的记录。只需为它命名或编号一次；之后通知会说出它们识别出的身份。"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Alerts only suggest names until named sightings come from at least two days. From then on they name the identities they are sure of."
+msgstr "在已命名的记录覆盖至少两天之前，通知只会建议名称。此后，通知会说出有把握的身份。"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking records an individual."
+msgstr "没有需要命名的内容。带跟踪功能的检测器记录到个体时，新记录会显示在这里。"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "No identities named yet."
+msgstr "尚未命名任何身份。"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Named identities"
+msgstr "已命名的身份"
+
 #. 0: label; 1: move.host
 #: src/lib/server/cameras/relocation.ts
 msgid "{0} got a new network address ({1}) and is watched there again."

@@ -29,7 +29,7 @@ export interface WatchedCamera {
 	recipients: OutageRecipient[];
 }
 
-export interface OutageNotice {
+interface OutageNotice {
 	recipient: OutageRecipient;
 	text: string;
 	/** The cameras this notice warns about, by id. */

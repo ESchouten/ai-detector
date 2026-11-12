@@ -1,7 +1,7 @@
 import type { WebhookConfig } from './generated/config.js';
 
 /** The public ntfy server. Its phone apps deliver alarms without an account. */
-export const NTFY_SERVER = 'https://ntfy.sh';
+const NTFY_SERVER = 'https://ntfy.sh';
 const TOPIC_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
 /** Anyone who knows the topic can read and send its alarms, so it is long and random. */

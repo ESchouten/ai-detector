@@ -168,7 +168,7 @@ uv run --no-sync generate-schema --check
 uv build --wheel
 ```
 
-In VS Code, the **Detector: check** task runs all but the wheel build. Ruff limits a function to complexity 10, 12 branches and 50 statements ([`ruff.toml`](../ruff.toml)); split one where that names a useful operation, never suppress the rule or raise the limit. CI runs the full suite on Linux, Windows and macOS and reports branch coverage on Linux (`coverage run -m pytest`, `coverage combine`, `coverage report`), without a percentage gate. [PERFORMANCE.md](PERFORMANCE.md) covers measuring inference.
+Ruff limits a function to complexity 10, 12 branches and 50 statements ([`ruff.toml`](../ruff.toml)); split one where that names a useful operation, never suppress the rule or raise the limit. CI runs the full suite on Linux, Windows and macOS and reports branch coverage on Linux (`coverage run -m pytest`, `coverage combine`, `coverage report`), without a percentage gate. [PERFORMANCE.md](PERFORMANCE.md) covers measuring inference.
 
 Executables are built with [distribution/build.py](../distribution/build.py). After building one, `uv run --no-sync python -m tests.support.smoke_package /path/to/executable` runs it through a model download, tracking, verification, archives, delivery and shutdown; `--model-format pt` also checks a Torch checkpoint.
 

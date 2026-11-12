@@ -7,16 +7,14 @@ import metadataSchema from '../../../../config/metadata.schema.json' with { type
 import { STAGES, type Metadata, type Stage } from '../schema.ts';
 import {
 	detectionKey,
-	type Detection,
-	type DetectionFilter,
-	type DetectionPage,
-	type RecordingAddress
-} from '../detections.ts';
-import {
 	isArchiveSegment,
 	manualReviewSchema,
 	reviewedStage,
+	type Detection,
+	type DetectionFilter,
+	type DetectionPage,
 	type ManualReview,
+	type RecordingAddress,
 	type RecordingExportFilter
 } from '../detections.ts';
 import { calendarDay } from '../format.ts';

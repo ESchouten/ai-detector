@@ -3729,6 +3729,130 @@ msgstr "Połączenie AI"
 msgid "Filled in missing names and ignored empty optional settings in app.json."
 msgstr "Uzupełniono brakujące nazwy i pominięto puste ustawienia opcjonalne w app.json."
 
+#: src/lib/individuals.ts
+msgid "Enter a name or number."
+msgstr "Wpisz nazwę lub numer."
+
+#: src/lib/individuals.ts
+msgid "Use at most 40 characters."
+msgstr "Użyj najwyżej 40 znaków."
+
+#: src/lib/individuals.ts
+msgid "Keep at least one picture to name."
+msgstr "Zostaw co najmniej jedno zdjęcie do nazwania."
+
+#: src/lib/server/individuals-folder.ts
+msgid "A picture to name no longer exists. Reload the page."
+msgstr "Zdjęcie do nazwania już nie istnieje. Odśwież stronę."
+
+#: src/routes/(admin)/identities/+page.server.ts
+msgid "Reload the page and try again."
+msgstr "Odśwież stronę i spróbuj ponownie."
+
+#: src/routes/(admin)/identities/[sighting]/[picture]/+server.ts
+msgid "Picture not found."
+msgstr "Nie znaleziono zdjęcia."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Could not save the name"
+msgstr "Nie udało się zapisać nazwy"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name sightings from one more day"
+msgstr "Nazwij obserwacje z jeszcze jednego dnia"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# more group follows once these are named."
+msgid_plural "# more groups follow once these are named."
+msgstr[0] "Jeszcze # grupa pojawi się, gdy te dostaną nazwę."
+msgstr[1] "Jeszcze # grupy pojawią się, gdy te dostaną nazwę."
+msgstr[2] "Jeszcze # grup pojawi się, gdy te dostaną nazwę."
+msgstr[3] "Jeszcze # grupy pojawi się, gdy te dostaną nazwę."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "To name"
+msgstr "Do nazwania"
+
+#: src/routes/(admin)/identities/+page.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "# sighting"
+msgid_plural "# sightings"
+msgstr[0] "# obserwacja"
+msgstr[1] "# obserwacje"
+msgstr[2] "# obserwacji"
+msgstr[3] "# obserwacji"
+
+#. 0: identity.name
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Not {0}: remove the name from this picture"
+msgstr "To nie {0}: usuń nazwę z tego zdjęcia"
+
+#. 0: recentMoment(group.shown[0].seen)
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Last seen {0}"
+msgstr "Ostatnia obserwacja: {0}"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Leave this picture out"
+msgstr "Pomiń to zdjęcie"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Left out"
+msgstr "Pominięte"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "# more sighting looks like these."
+msgid_plural "# more sightings look like these."
+msgstr[0] "Jeszcze # obserwacja jest do nich podobna."
+msgstr[1] "Jeszcze # obserwacje są do nich podobne."
+msgstr[2] "Jeszcze # obserwacji jest do nich podobnych."
+msgstr[3] "Jeszcze # obserwacji jest do nich podobnych."
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Looks most like"
+msgstr "Najbardziej przypomina"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Name or number"
+msgstr "Nazwa lub numer"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Identities"
+msgstr "Osobniki"
+
+#: src/lib/navigation.ts
+msgid "Name the individuals the cameras recognise."
+msgstr "Nazwij osobniki rozpoznawane przez kamery."
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Left out: a different one"
+msgstr "Pominięte: to inny osobnik"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Tap a picture of a different one to leave it out."
+msgstr "Dotknij zdjęcia innego osobnika, aby je pominąć."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Each group holds sightings that look alike. Give it a name or number once; alerts then name the identities they recognise."
+msgstr "Każda grupa zawiera podobne do siebie obserwacje. Nadaj jej nazwę lub numer jeden raz; potem powiadomienia podają nazwy rozpoznanych osobników."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Alerts only suggest names until named sightings come from at least two days. From then on they name the identities they are sure of."
+msgstr "Dopóki nazwane obserwacje nie pochodzą z co najmniej dwóch dni, powiadomienia tylko podpowiadają nazwy. Od tej chwili podają nazwy osobników, których są pewne."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking records an individual."
+msgstr "Nie ma nic do nazwania. Nowe obserwacje pojawiają się tutaj, gdy detektor ze śledzeniem zarejestruje osobnika."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "No identities named yet."
+msgstr "Żaden osobnik nie ma jeszcze nazwy."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Named identities"
+msgstr "Nazwane osobniki"
+
 #. 0: label; 1: move.host
 #: src/lib/server/cameras/relocation.ts
 msgid "{0} got a new network address ({1}) and is watched there again."

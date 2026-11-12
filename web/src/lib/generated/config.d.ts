@@ -114,7 +114,10 @@ export type IncludeVideo1 = boolean;
 export type VideoWidth1 = number | null;
 export type VideoCrf1 = number;
 export type Token1 = string | null;
-export type DataType = 'binary' | 'base64' | 'none';
+/**
+ * binary: form fields and files; base64: JSON; none: no content; file: the first chosen picture or video as the whole body, or `body` without one.
+ */
+export type DataType = 'binary' | 'base64' | 'none' | 'file';
 export type DataMax = number | null;
 export type Provider = string | null;
 export type Winml = boolean;
@@ -158,6 +161,21 @@ export interface SourceConfig {
 	interval?: Interval;
 	frame_retention?: FrameRetention;
 	frames_width?: FramesWidth;
+	areas?: Areas;
+}
+/**
+ * Per source, the area a detection's box centre must lie in to count.
+ */
+export interface Areas {
+	/**
+	 * Polygon corners as x, y fractions of the picture's width and height.
+	 *
+	 * @minItems 3
+	 *
+	 * This interface was referenced by `Areas`'s JSON-Schema definition
+	 * via the `patternProperty` "\S".
+	 */
+	[k: string]: [[number, number], [number, number], [number, number], ...[number, number][]];
 }
 export interface YoloConfig {
 	model: Model;

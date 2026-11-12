@@ -16,6 +16,8 @@ import { DEFAULT_SCHEMA_URL, type StreamMeta } from '../src/lib/schema.ts';
 import { writeJson } from '../src/lib/server/json-file.ts';
 import { newerPresets, presetVersion } from '../src/lib/server/configuration/followed-presets.ts';
 import { configurationAction } from '../src/lib/server/configuration/request.ts';
+import { phoneAlarmDetectors } from '../src/lib/server/configuration/phone-alarm.ts';
+import { phoneAlarmExporter } from '../src/lib/phone-alarm.ts';
 import { isHttpError } from '@sveltejs/kit';
 
 const source = 'rtsp://camera.local/first';
@@ -69,15 +71,17 @@ test('camera outage notifications are opt-in and saved only in app.json without 
 	await writeJson(files.config, { detectors: [detector] });
 	const outages = { barn: '2026-10-16T12:00:00.000Z' };
 	await writeJson(files.app, { monitoring: true, outages });
-	assert.equal((await store.read()).app.notifyCameraOutages, undefined);
+	await assert.rejects(store.saveAlarmOutages(true), /Set up the phone alarm first/);
+	await writeJson(files.app, { monitoring: true, outages, phoneAlarm: { topic: 'aidetector-x' } });
+	assert.equal((await store.read()).app.phoneAlarm?.outages, undefined);
 	const config = await readFile(files.config, 'utf8');
 	for (const enabled of [true, false]) {
-		await store.saveOutageNotifications(enabled);
+		await store.saveAlarmOutages(enabled);
 		const app = JSON.parse(await readFile(files.app, 'utf8'));
-		assert.equal(app.notifyCameraOutages, enabled);
+		assert.equal(app.phoneAlarm.outages, enabled);
 		assert.equal(app.monitoring, true);
 		assert.deepEqual(app.outages, outages);
-		assert.equal((await new ConfigurationStore(files).read()).app.notifyCameraOutages, enabled);
+		assert.equal((await new ConfigurationStore(files).read()).app.phoneAlarm?.outages, enabled);
 		assert.equal(await readFile(files.config, 'utf8'), config);
 	}
 	assert.deepEqual(calls, []);
@@ -572,6 +576,13 @@ test('a detector that follows a preset takes its new model and keeps what the pe
 	await addPresetDetector(store, { label: 'Calving pen', source: other }, 'calving-catcher');
 	const chosen = (await store.read()).config.detectors[0];
 	chosen.detection.source = [source, other];
+	chosen.detection.areas = {
+		[other]: [
+			[0, 0],
+			[0.5, 0],
+			[0.5, 1]
+		]
+	};
 	chosen.exporters = { telegram: [{ token: 'fixture-token', chat: '123' }] };
 	chosen.vlm = [
 		{
@@ -804,8 +815,13 @@ test('duplicate and stale notification edits fail without creating extra channel
 });
 
 test('a changed camera address reaches every detector that uses it, and duplicates are refused', async (t) => {
+	const area: [number, number][] = [
+		[0, 0],
+		[1, 0],
+		[1, 0.5]
+	];
 	const { store } = await fixture(t, {
-		detectors: [detector, { detection: { source: [source, other] } }]
+		detectors: [detector, { detection: { source: [source, other], areas: { [source]: area } } }]
 	});
 	const [camera, second] = (await store.read()).app.streams;
 	const replacement = 'rtsp://camera.local/new';
@@ -818,6 +834,10 @@ test('a changed camera address reaches every detector that uses it, and duplicat
 		(await store.read()).config.detectors.map((item) => item.detection.source),
 		[[replacement], [replacement, other]]
 	);
+	// The camera is watched within the same area at its new address.
+	assert.deepEqual((await store.read()).config.detectors[1].detection.areas, {
+		[replacement]: area
+	});
 	await assert.rejects(
 		store.saveCamera({ id: camera.id, source: other, label: 'Duplicate' }),
 		/already saved/
@@ -869,4 +889,42 @@ test('concurrent detector additions each save their rules and preserve notificat
 	assert.equal(document.app.streams.length, 2);
 	assert.equal(document.app.telegrams.length, 1);
 	assert.deepEqual(document.config.onnx, { provider: 'CPUExecutionProvider' });
+});
+
+test('the phone alarm rings for the chosen detectors, follows a renamed detector and leaves other webhooks alone', async (t) => {
+	const hook = { url: 'https://farm.example/hook' };
+	const { store } = await fixture(t, {
+		detectors: [{ ...detector, exporters: { webhook: [hook] } }, { detection: { source: [other] } }]
+	});
+	const topic = 'aidetector-fixture';
+	const alarm = (label: string) => phoneAlarmExporter(topic, label);
+	await store.savePhoneAlarm({ topic, detectorLabels: ['Detector 1'] });
+	let saved = await store.read();
+	assert.deepEqual(saved.app.phoneAlarm, { topic });
+	assert.deepEqual(saved.config.detectors[0].exporters?.webhook, [hook, alarm('Detector 1')]);
+	assert.deepEqual(saved.config.detectors[1].exporters?.webhook, undefined);
+	assert.deepEqual(phoneAlarmDetectors(saved), ['Detector 1']);
+
+	await store.saveDetector({
+		original: 'Detector 1',
+		detector: saved.config.detectors[0],
+		meta: { label: 'Calving pen' }
+	});
+	saved = await store.read();
+	assert.deepEqual(saved.config.detectors[0].exporters?.webhook, [hook, alarm('Calving pen')]);
+
+	await store.savePhoneAlarm({ topic, detectorLabels: ['Detector 2'] });
+	saved = await store.read();
+	assert.deepEqual(saved.config.detectors[0].exporters?.webhook, [hook]);
+	assert.deepEqual(saved.config.detectors[1].exporters?.webhook, [alarm('Detector 2')]);
+	await assert.rejects(
+		store.savePhoneAlarm({ topic, detectorLabels: ['Gone'] }),
+		/no longer exists/
+	);
+
+	await store.deletePhoneAlarm();
+	saved = await store.read();
+	assert.equal(saved.app.phoneAlarm, undefined);
+	assert.deepEqual(saved.config.detectors[0].exporters?.webhook, [hook]);
+	assert.deepEqual(saved.config.detectors[1].exporters?.webhook, []);
 });

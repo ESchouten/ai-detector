@@ -390,6 +390,31 @@
           "minimum": 2,
           "title": "Frames Width",
           "type": "integer"
+        },
+        "areas": {
+          "description": "Per source, the area a detection's box centre must lie in to count.",
+          "patternProperties": {
+            "\\S": {
+              "description": "Polygon corners as x, y fractions of the picture's width and height.",
+              "items": {
+                "items": {
+                  "maximum": 1,
+                  "minimum": 0,
+                  "type": "number"
+                },
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
+              },
+              "minItems": 3,
+              "type": "array"
+            }
+          },
+          "propertyNames": {
+            "minLength": 1
+          },
+          "title": "Areas",
+          "type": "object"
         }
       },
       "required": [
@@ -794,10 +819,12 @@
         },
         "data_type": {
           "default": "binary",
+          "description": "binary: form fields and files; base64: JSON; none: no content; file: the first chosen picture or video as the whole body, or `body` without one.",
           "enum": [
             "binary",
             "base64",
-            "none"
+            "none",
+            "file"
           ],
           "title": "Data Type",
           "type": "string"

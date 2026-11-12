@@ -3,7 +3,7 @@ from typing import Any
 
 from aidetector.adapters.http import send_request
 from aidetector.adapters.media import MediaError
-from aidetector.adapters.media.event_media import EventMedia
+from aidetector.adapters.media.event_media import Attachment, EventMedia
 from aidetector.application.ports import DeliveryError
 from aidetector.configuration import WebhookConfig
 from aidetector.domain.models import EventResult
@@ -18,15 +18,30 @@ class WebhookExporter:
         headers = dict(self.config.headers or {})
         if self.config.token is not None:
             headers["Authorization"] = self.config.token
+        content = self._content(result)
+        headers.update(content.pop("headers", {}))
         send_request(
             self.config.method,
             self.config.url,
             timeout=self.config.timeout,
             headers=headers,
-            **self._content(result),
+            **content,
         )
 
     def _content(self, result: EventResult) -> dict[str, Any]:
+        if self.config.data_type == "file":
+            try:
+                attachments = self._attachments(result)
+            except DeliveryError:
+                # Without its picture, the text still has to arrive.
+                attachments = []
+            if not attachments:
+                return {"data": self.config.body}
+            [first, *_] = attachments
+            return {
+                "data": first.content,
+                "headers": {"Content-Type": first.content_type},
+            }
         if self.config.body is not None or self.config.data_type == "none":
             return {"data": self.config.body}
         event = result.event
@@ -36,15 +51,7 @@ class WebhookExporter:
             "duration": event.duration,
             "validated": result.validation.validated,
         }
-        try:
-            attachments = self.media.attachments(
-                event,
-                self.config,
-                image_max=self.config.data_max,
-                video_max=self.config.data_max,
-            )
-        except MediaError as error:
-            raise DeliveryError(str(error)) from error
+        attachments = self._attachments(result)
         if self.config.data_type == "base64":
             payload.update(
                 (item.name, base64.b64encode(item.content).decode("ascii"))
@@ -58,3 +65,14 @@ class WebhookExporter:
                 for item in attachments
             },
         }
+
+    def _attachments(self, result: EventResult) -> list[Attachment]:
+        try:
+            return self.media.attachments(
+                result.event,
+                self.config,
+                image_max=self.config.data_max,
+                video_max=self.config.data_max,
+            )
+        except MediaError as error:
+            raise DeliveryError(str(error)) from error

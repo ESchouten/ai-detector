@@ -102,7 +102,7 @@ def test_tracked_boxes_of_outlined_classes_carry_their_segmentation_outline():
     classes = {0: ("cow", 0.5), 1: ("horse", 0.5)}
 
     [cow, horse, _] = map_observations(
-        segmented, (frame(),), classes, frozenset({"cow"})
+        segmented, (frame(),), classes, outlined=frozenset({"cow"})
     )[0].boxes
     xs, ys = zip(*cow.outline, strict=True)
     assert (min(xs), min(ys), max(xs), max(ys)) == (12, 22, 27, 37)
@@ -115,6 +115,33 @@ def test_no_boxes_still_produce_unscored_observations_for_trailing_footage():
     observations = map_observations(result(), (frame(0), frame(1)), {0: ("cow", 0.5)})
     assert len(observations) == 2
     assert all(not item.confidence and not item.boxes for item in observations)
+
+
+def test_only_boxes_centred_in_the_area_count():
+    left_half = ((0, 0), (0.5, 0), (0.5, 1), (0, 1))
+    observations = map_observations(
+        result([[10, 20, 30, 40, 0.6, 0], [40, 20, 60, 40, 0.9, 0]]),
+        (frame(0), frame(1)),
+        {0: ("cow", 0.5)},
+        left_half,
+    )
+    assert [box.x1 for box in observations[1].boxes] == [10]
+    assert observations[1].confidence == {"cow": pytest.approx(0.6)}
+
+
+def test_detector_applies_each_sources_own_area():
+    model = Model()
+    nowhere = ((0, 0), (0.01, 0), (0, 0.01))
+    detector = YoloDetector(
+        model,
+        YoloConfig(model="model.onnx", tracking=True),
+        ("one", "two"),
+        InferenceOptions(),
+        {"one": nowhere},
+    )
+    observations = detector.detect({"one": (frame(0),), "two": (frame(0),)})
+    assert observations["one"][-1].boxes == ()
+    assert len(observations["two"][-1].boxes) == 1
 
 
 class Model:

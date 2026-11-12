@@ -37,6 +37,7 @@ from aidetector.configuration import (
     Config,
     ExportersConfig,
     IndividualsConfig,
+    OnnxConfig,
     SourceConfig,
     source_kind,
 )
@@ -166,6 +167,26 @@ def _model_requirements(
     )
 
 
+def _build_type(
+    onnx: OnnxConfig, models: tuple[ModelRequirements, ...]
+) -> tuple[str, OnnxConfig]:
+    if TYPE != "cuda" or not models:
+        return TYPE, onnx
+    from aidetector.adapters.inference.prepared_engines import gpu_available
+
+    if gpu_available():
+        return TYPE, onnx
+    # A container started without a GPU detects as the CPU builds do: through
+    # ONNX Runtime, which is faster on the processor than PyTorch.
+    logger.warning(
+        "No NVIDIA GPU is available to this process; detection runs on the CPU "
+        "through ONNX Runtime"
+    )
+    if onnx.provider is None:
+        onnx = onnx.model_copy(update={"provider": "CPUExecutionProvider"})
+    return "default", onnx
+
+
 def run_application(
     config: Config,
     config_directory: Path,
@@ -184,32 +205,31 @@ def run_application(
         config.individuals, config_directory, data_directory, report_status
     )
     models = _model_requirements(config, individuals_model)
+    build_type, onnx = _build_type(config.onnx, models)
     with ExitStack() as resources:
         report_status(
             StatusEvent("preparing", message="Preparing detection on this computer…")
         )
         options = resources.enter_context(
-            inference_runtime(config.onnx, models, TYPE, report_status)
+            inference_runtime(
+                onnx,
+                models,
+                build_type,
+                report_status,
+                data_directory / "models" / "prepared",
+            )
         )
         engines = None
-        if prefer_tensorrt and TYPE == "cuda":
+        if prefer_tensorrt and build_type == "cuda":
             from aidetector.adapters.inference.prepared_engines import (
                 EnginePreparation,
-                gpu_available,
             )
 
-            if gpu_available():
-                engines = EnginePreparation(
-                    data_directory / "models" / "prepared",
-                    stop_requested,
-                    report_status,
-                )
-            else:
-                # A container started without its GPU still detects, on the processor.
-                logger.warning(
-                    "TensorRT was preferred but no NVIDIA GPU is available to this "
-                    "process; detection continues without it"
-                )
+            engines = EnginePreparation(
+                data_directory / "models" / "prepared",
+                stop_requested,
+                report_status,
+            )
         herd = (
             Herd(
                 data_directory / "individuals",
@@ -259,14 +279,21 @@ def run_application(
                 detector = resources.enter_context(
                     open_detector(
                         model_settings,
-                        config.onnx,
+                        onnx,
                         source.sources,
-                        TYPE,
+                        build_type,
                         options,
                         cache_directory=data_directory / "models" / "prepared",
                         report_status=rule_status,
                         engines=engines,
                         outlined=herd.labels if herd is not None else frozenset(),
+                        areas={
+                            resolved: settings.detection.areas[configured]
+                            for configured, resolved in zip(
+                                settings.detection.source, source.sources, strict=True
+                            )
+                            if configured in settings.detection.areas
+                        },
                     )
                 )
                 event_policy = EventPolicy(

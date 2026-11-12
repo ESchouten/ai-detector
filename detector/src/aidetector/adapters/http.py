@@ -24,7 +24,8 @@ def send_request(
             url,
             timeout=timeout,
             headers=headers,
-            data=data,
+            # requests would send a text body as Latin-1.
+            data=data.encode() if isinstance(data, str) else data,
             files=files,
             json=json_body,
         )

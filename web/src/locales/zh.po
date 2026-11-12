@@ -1,0 +1,3973 @@
+msgid ""
+msgstr ""
+"Source-Language: en\n"
+"Language: zh\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1\n"
+"X-Plurals-Order: other\n"
+
+#: src/lib/camera-batch.ts
+msgid "Could not connect. Check this camera’s login and network."
+msgstr "无法连接。请检查此摄像头的登录信息和网络。"
+
+#: src/lib/cameras.ts
+msgid "The camera check could not finish. Please try again."
+msgstr "摄像头检查未能完成。请重试。"
+
+#: src/lib/components/recording-viewer.svelte
+#: src/routes/(admin)/detections/recording-card.svelte
+msgid "AI check failed"
+msgstr "AI 复核失败"
+
+#: src/lib/detections.ts
+msgid "Not checked"
+msgstr "未检查"
+
+#: src/lib/detections.ts
+msgid "Checked by AI"
+msgstr "已由 AI 检查"
+
+#: src/lib/detections.ts
+msgid "Reviewed in Telegram"
+msgstr "已在 Telegram 中审核"
+
+#: src/lib/detections.ts
+msgid "Reviewed by you"
+msgstr "已由你审核"
+
+#: src/lib/components/setup-finish.svelte
+#: src/lib/monitoring.ts
+msgid "Status unavailable"
+msgstr "状态不可用"
+
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Paused"
+msgstr "已暂停"
+
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+msgid "Detection stopped"
+msgstr "检测已停止"
+
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+msgid "Preparing"
+msgstr "正在准备"
+
+#: src/lib/monitoring.ts
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Camera offline"
+msgstr "摄像头离线"
+
+#: src/lib/monitoring.ts
+msgid "Recording failed"
+msgstr "录像失败"
+
+#: src/lib/monitoring.ts
+msgid "Detection delayed"
+msgstr "检测延迟"
+
+#: src/lib/components/setup-finish.svelte
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+msgid "Monitoring"
+msgstr "监控中"
+
+#: src/lib/monitoring.ts
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Connecting"
+msgstr "正在连接"
+
+#: src/lib/format.ts
+msgid "Today"
+msgstr "今天"
+
+#: src/lib/format.ts
+msgid "Yesterday"
+msgstr "昨天"
+
+#. 0: ajv.errorsText(errors)
+#: src/lib/configuration.ts
+msgid "Invalid detector configuration: {0}"
+msgstr "检测器配置无效：{0}"
+
+#: src/lib/configuration.ts
+msgid "A detector cannot use the same source more than once."
+msgstr "一个检测器不能多次使用同一个来源。"
+
+#. 0: index + 1
+#. 0: index + 1
+#. 0: index + 1
+#: src/lib/configuration.ts
+#: src/lib/server/configuration/advanced.ts
+#: src/lib/server/runtime-status.ts
+msgid "Detector {0}"
+msgstr "检测器 {0}"
+
+#. 0: index + 1
+#. 0: streams.size + 1
+#. 0: parsed.output.$.token
+#. 0: this.cameras.size + 1
+#: src/lib/configuration.ts
+#: src/lib/configuration.ts
+#: src/lib/server/cameras/discovery.ts
+#: src/lib/server/runtime-status.ts
+msgid "Camera {0}"
+msgstr "摄像头 {0}"
+
+#: src/lib/telegram-pairing.ts
+msgid "This connection link expired. Choose Connect Telegram to try again."
+msgstr "此连接链接已过期。请选择“连接 Telegram”重试。"
+
+#: src/lib/telegram-pairing.ts
+msgid "Telegram could not connect. Try again."
+msgstr "Telegram 无法连接。请重试。"
+
+#: src/lib/monitoring.ts
+msgid "Connection lost"
+msgstr "连接已断开"
+
+#: src/lib/monitoring.ts
+msgid "This page has not heard from AI Detector. Reopen the app if it does not reconnect."
+msgstr "此页面未收到 AI Detector 的消息。如果没有自动重新连接，请重新打开应用。"
+
+#: src/lib/monitoring.ts
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Live view only"
+msgstr "仅实时画面"
+
+#: src/lib/monitoring.ts
+msgid "Add a detector to start monitoring your cameras."
+msgstr "添加一个检测器，开始监控你的摄像头。"
+
+#: src/lib/monitoring.ts
+msgid "Runs separately"
+msgstr "独立运行"
+
+#: src/lib/monitoring.ts
+msgid "Detection is started and stopped outside this app, so its status is not shown here."
+msgstr "检测在此应用之外启动和停止，因此这里不显示其状态。"
+
+#: src/lib/monitoring.ts
+msgid "Stopping…"
+msgstr "正在停止…"
+
+#: src/lib/monitoring.ts
+#: src/lib/monitoring.ts
+msgid "Monitoring stopped"
+msgstr "监控已停止"
+
+#: src/lib/monitoring.ts
+msgid "Starting…"
+msgstr "正在启动…"
+
+#: src/lib/monitoring.ts
+msgid "Nothing is detected or recorded while monitoring is paused."
+msgstr "监控暂停期间，不会检测或录制任何内容。"
+
+#: src/lib/monitoring.ts
+msgid "Needs attention"
+msgstr "需要处理"
+
+#: src/lib/monitoring.ts
+msgid "Connecting cameras…"
+msgstr "正在连接摄像头…"
+
+#: src/lib/monitoring.ts
+msgid "Preparing…"
+msgstr "正在准备…"
+
+#: src/lib/remote/llm.remote.ts
+msgid "Connection testing requires the desktop application. You can still save this connection."
+msgstr "测试连接需要桌面应用。你仍可以保存此连接。"
+
+#: src/lib/remote/installation-import.remote.ts
+msgid "Open the localhost dashboard on the computer running AI Detector to import its files."
+msgstr "请在运行 AI Detector 的电脑上打开 localhost 控制面板来导入其文件。"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/remote/camera.remote.ts
+#: src/lib/remote/camera.remote.ts
+#: src/lib/server/cameras/relocation.ts
+#: src/lib/server/configuration/camera-setup.ts
+#: src/lib/server/installation-import/metadata.ts
+msgid "Camera"
+msgstr "摄像头"
+
+#: src/lib/remote/detector.remote.ts
+msgid "This preset is no longer available. Choose another preset."
+msgstr "此预设已不可用。请选择其他预设。"
+
+#: src/lib/remote/runtime.remote.ts
+msgid "Use the complete application download to start detection here."
+msgstr "请使用完整版应用下载，以便在这里启动检测。"
+
+#: src/lib/remote/settings.remote.ts
+msgid "Invalid JSON."
+msgstr "JSON 无效。"
+
+#: src/lib/server/access.ts
+msgid "Open the dashboard directly to make changes."
+msgstr "请直接打开控制面板进行更改。"
+
+#: src/lib/server/access.ts
+msgid "Connect this device to AI Detector first."
+msgstr "请先将此设备连接到 AI Detector。"
+
+#: src/lib/detections.ts
+#: src/lib/server/archive.ts
+msgid "Invalid category."
+msgstr "类别无效。"
+
+#: src/lib/server/folder-picker.ts
+msgid "The folder chooser could not open. Use “Enter folder path” instead."
+msgstr "无法打开文件夹选择器。请改用“输入文件夹路径”。"
+
+#: src/lib/server/device-access.ts
+msgid "This code has expired. Create a new code on a connected device."
+msgstr "此代码已过期。请在已连接的设备上生成新代码。"
+
+#: src/lib/server/device-access.ts
+msgid "The code did not match. Check the six digits and try again."
+msgstr "代码不匹配。请检查这六位数字后重试。"
+
+#: src/lib/server/device-access.ts
+msgid "Remove an old connected device before adding another."
+msgstr "请先移除一个旧的已连接设备，再添加新设备。"
+
+#: src/lib/server/device-access.ts
+msgid "Browser"
+msgstr "浏览器"
+
+#: src/lib/server/detector-preparation.ts
+msgid "NVIDIA acceleration could not be prepared. Check your internet connection and graphics driver, then try again. Details are available below."
+msgstr "无法准备 NVIDIA 加速。请检查网络连接和显卡驱动后重试。详细信息见下方。"
+
+#: src/lib/server/detector-preparation.ts
+msgid "Could not open the detector. Extract the complete download and keep its files together."
+msgstr "无法打开检测器。请完整解压下载的文件，并将所有文件放在一起。"
+
+#: src/lib/server/detector-preparation.ts
+msgid "The detector check did not finish. Please try again."
+msgstr "检测器检查未能完成。请重试。"
+
+#. 0: (space.available / 1024 ** 3).toFixed(1)
+#: src/lib/server/detector-service.ts
+msgid "Storage is almost full ({0} GB free). Free space in Settings → Storage so recordings can continue."
+msgstr "存储空间快满了（剩余 {0} GB）。请在“设置 → 存储”中释放空间，以便继续录像。"
+
+#: src/lib/server/detector-service.ts
+msgid "This web server uses a separately managed detector. Download the complete application to start and stop it here."
+msgstr "此网页服务器使用单独管理的检测器。请下载完整应用，以便在这里启动和停止它。"
+
+#: src/lib/server/managed-detector.ts
+msgid "Ready to set up your camera."
+msgstr "可以开始设置摄像头了。"
+
+#: src/lib/server/managed-detector.ts
+msgid "Monitoring needs attention."
+msgstr "监控需要处理。"
+
+#: src/lib/server/managed-detector.ts
+msgid "Pause monitoring before clearing the model cache."
+msgstr "清除模型缓存前请先暂停监控。"
+
+#: src/lib/server/managed-detector.ts
+msgid "Checking this computer…"
+msgstr "正在检查此电脑…"
+
+#: src/lib/server/managed-detector.ts
+msgid "Add a camera and choose what to detect first."
+msgstr "请先添加摄像头并选择要检测的内容。"
+
+#: src/lib/server/managed-detector.ts
+msgid "Start cancelled."
+msgstr "已取消启动。"
+
+#: src/lib/server/managed-detector.ts
+msgid "Starting the detector…"
+msgstr "正在启动检测器…"
+
+#: src/lib/server/managed-detector.ts
+msgid "Preparing detection and connecting cameras. Monitoring will be confirmed after frames are processed."
+msgstr "正在准备检测并连接摄像头。处理画面后将确认监控状态。"
+
+#. 0: exitSignal ?? code
+#: src/lib/server/managed-detector.ts
+msgid "The detector stopped unexpectedly ({0})."
+msgstr "检测器意外停止（{0}）。"
+
+#: src/lib/server/managed-detector.ts
+msgid "Detector stopped."
+msgstr "检测器已停止。"
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector stopped unexpectedly. Check the details below, then try again."
+msgstr "检测器意外停止。请查看下方详细信息后重试。"
+
+#: src/lib/server/managed-detector.ts
+msgid "Restart cancelled."
+msgstr "已取消重启。"
+
+#: src/lib/server/managed-detector.ts
+msgid "Finishing detections and stopping…"
+msgstr "正在完成检测并停止…"
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector did not finish shutting down within 30 seconds. It was forced to stop; the last detection may be incomplete."
+msgstr "检测器未能在 30 秒内关闭，已被强制停止；最后一次检测可能不完整。"
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector could not start."
+msgstr "检测器无法启动。"
+
+#: src/lib/components/export-recordings.svelte
+#: src/lib/server/recording-export.ts
+msgid "No recordings match these filters."
+msgstr "没有符合这些筛选条件的录像。"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Update the NVIDIA graphics driver, then try again to enable GPU acceleration."
+msgstr "请更新 NVIDIA 显卡驱动后重试，以启用 GPU 加速。"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "The NVIDIA runtime files are missing. Reinstall AI Detector."
+msgstr "缺少 NVIDIA 运行文件。请重新安装 AI Detector。"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Preparing NVIDIA acceleration. The first download may take several minutes…"
+msgstr "正在准备 NVIDIA 加速。首次下载可能需要几分钟…"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Downloading and installing NVIDIA acceleration…"
+msgstr "正在下载并安装 NVIDIA 加速…"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Checking NVIDIA acceleration…"
+msgstr "正在检查 NVIDIA 加速…"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "TensorRT preparation is deferred after an earlier failure. Using PyTorch/CUDA."
+msgstr "由于之前失败，TensorRT 准备已推迟。正在使用 PyTorch/CUDA。"
+
+#: src/lib/server/nvidia-runtime.ts
+msgid "Preparing faster NVIDIA detection. Downloading TensorRT once for this computer…"
+msgstr "正在准备更快的 NVIDIA 检测。为此电脑下载一次 TensorRT…"
+
+#. 0: String(error)
+#: src/lib/server/nvidia-runtime.ts
+msgid "TensorRT could not be prepared. Using PyTorch/CUDA. {0}"
+msgstr "无法准备 TensorRT。正在使用 PyTorch/CUDA。{0}"
+
+#. 0: String(error)
+#: src/lib/server/nvidia-runtime.ts
+msgid "Could not save the TensorRT retry time: {0}"
+msgstr "无法保存 TensorRT 重试时间：{0}"
+
+#: src/lib/server/storage.ts
+msgid "The recordings changed. Check the number of recordings and confirm again."
+msgstr "录像已发生变化。请检查录像数量后再次确认。"
+
+#: src/lib/server/runtime-status.ts
+msgid "Telegram alert"
+msgstr "Telegram 通知"
+
+#: src/lib/server/runtime-status.ts
+msgid "Webhook"
+msgstr "Webhook"
+
+#: src/lib/server/runtime-status.ts
+msgid "Model preparation failed. Check the details and try again."
+msgstr "模型准备失败。请查看详细信息后重试。"
+
+#: src/lib/server/runtime-status.ts
+msgid "Connection failed."
+msgstr "连接失败。"
+
+#: src/lib/server/runtime-status.ts
+msgid "No recent camera frames. Waiting for the connection to recover."
+msgstr "最近没有摄像头画面。正在等待连接恢复。"
+
+#. 0: stale.label
+#: src/lib/server/runtime-status.ts
+msgid "{0}: waiting for AI validation or delivery to finish."
+msgstr "{0}：正在等待 AI 复核或发送完成。"
+
+#. 0: stale.label
+#: src/lib/server/runtime-status.ts
+msgid "{0}: processing has not completed recently."
+msgstr "{0}：最近没有完成处理。"
+
+#: src/lib/server/telegram-pairing.ts
+msgid "My Telegram"
+msgstr "我的 Telegram"
+
+#: src/lib/server/telegram-pairing.ts
+msgid "This bot already has a connection in progress. Finish or cancel it before starting another."
+msgstr "此机器人已有一个正在进行的连接。请先完成或取消它，再开始新的连接。"
+
+#: src/lib/server/stream-preview.ts
+msgid "Invalid live picture received."
+msgstr "收到的实时画面无效。"
+
+#: src/lib/server/stream-preview.ts
+msgid "Live stream ended."
+msgstr "实时视频流已结束。"
+
+#: src/lib/server/stream-preview.ts
+#: src/lib/server/stream-preview.ts
+#: src/lib/server/stream-preview.ts
+msgid "Live stream unavailable."
+msgstr "实时视频流不可用。"
+
+#: src/lib/server/stream-preview.ts
+msgid "Live stream stopped receiving frames."
+msgstr "实时视频流已停止接收画面。"
+
+#: src/lib/server/telegram.ts
+#: src/lib/server/telegram.ts
+msgid "Telegram returned an unexpected reply. Please try again later."
+msgstr "Telegram 返回了意外的回复。请稍后重试。"
+
+#: src/lib/server/telegram.ts
+msgid "Telegram could not be reached. Check this computer’s internet connection, then try again. Local monitoring can continue without alerts."
+msgstr "无法访问 Telegram。请检查此电脑的网络连接后重试。本地监控可在没有通知的情况下继续运行。"
+
+#: src/lib/server/telegram.ts
+msgid "This bot token is not valid. Copy the current token from BotFather."
+msgstr "此机器人令牌无效。请从 BotFather 复制当前令牌。"
+
+#: src/lib/server/telegram.ts
+msgid "This bot is receiving messages in another application or has a webhook. Use a dedicated bot for AI Detector, or enter its chat ID manually."
+msgstr "此机器人正在其他应用中接收消息，或已设置 webhook。请为 AI Detector 使用专用机器人，或手动输入其聊天 ID。"
+
+#: src/lib/server/telegram.ts
+msgid "Telegram could not complete this request. Check your bot token and try again."
+msgstr "Telegram 无法完成此请求。请检查机器人令牌后重试。"
+
+#: src/lib/server/telegram.ts
+msgid "This bot is connected to another application through a webhook. Its connection has not been changed. Use a dedicated bot for AI Detector, or enter its chat ID manually."
+msgstr "此机器人已通过 webhook 连接到其他应用，其连接未被更改。请为 AI Detector 使用专用机器人，或手动输入其聊天 ID。"
+
+#: src/lib/server/telegram.ts
+msgid "AI Detector setup test. If you received this message on the intended device, confirm receipt in AI Detector to enable alerts."
+msgstr "AI Detector 设置测试。如果你在目标设备上收到了此消息，请在 AI Detector 中确认收到，以启用通知。"
+
+#: src/lib/server/telegram.ts
+msgid "Choose a group for AI Detector alerts. Add this bot to your group first if it is not listed."
+msgstr "请为 AI Detector 通知选择一个群组。如果群组未列出，请先将此机器人添加到群组中。"
+
+#: src/lib/server/telegram.ts
+msgid "Choose a channel for AI Detector alerts. Telegram will ask for permission to post there."
+msgstr "请为 AI Detector 通知选择一个频道。Telegram 会请求在该频道发布消息的权限。"
+
+#: src/lib/server/telegram.ts
+msgid "Choose group"
+msgstr "选择群组"
+
+#: src/lib/server/telegram.ts
+msgid "Choose channel"
+msgstr "选择频道"
+
+#: src/lib/server/telegram.ts
+msgid "AI Detector test alert. Choose Confirm connection to receive detector alerts in this chat."
+msgstr "AI Detector 测试通知。请选择“确认连接”，以便在此聊天中接收检测器通知。"
+
+#: src/lib/server/telegram.ts
+msgid "Confirm connection"
+msgstr "确认连接"
+
+#: src/lib/server/telegram.ts
+msgid "Connected. Return to AI Detector to save your settings."
+msgstr "已连接。请返回 AI Detector 保存设置。"
+
+#: src/lib/server/telegram-reviews.ts
+msgid "This chat is not connected to AI Detector."
+msgstr "此聊天未连接到 AI Detector。"
+
+#: src/lib/components/review-buttons.svelte
+#: src/lib/server/telegram-reviews.ts
+msgid "Could not save this review. Please try again."
+msgstr "无法保存此审核。请重试。"
+
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+#: src/lib/detections.ts
+msgid "Confirmed"
+msgstr "已确认"
+
+#: src/lib/components/review-buttons.svelte
+msgid "Marked as a false alarm"
+msgstr "已标记为误报"
+
+#: src/lib/server/telegram-reviews.ts
+msgid "This recording is no longer available in AI Detector."
+msgstr "此录像在 AI Detector 中已不可用。"
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The recording location contains a file or linked folder. Choose a regular recording folder before testing it."
+msgstr "录像位置包含文件或链接的文件夹。测试前请选择一个普通的录像文件夹。"
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The recording location is invalid. Check the camera settings."
+msgstr "录像位置无效。请检查摄像头设置。"
+
+#: src/lib/server/cameras/connection.ts
+msgid "The camera software is missing. Repair or reinstall AI Detector and try again."
+msgstr "缺少摄像头软件。请修复或重新安装 AI Detector 后重试。"
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The test recording was saved but could not be played. Check the camera picture and try again."
+msgstr "测试录像已保存，但无法播放。请检查摄像头画面后重试。"
+
+#: src/lib/server/cameras/archive-check.ts
+msgid "The camera test recording is no longer available. Check its picture again."
+msgstr "摄像头测试录像已不可用。请重新检查其画面。"
+
+#: src/routes/recovery/+page.server.ts
+msgid "The saved settings could not be restored. Download diagnostics for help."
+msgstr "无法恢复已保存的设置。请下载诊断信息以获取帮助。"
+
+#: src/lib/server/cameras/connection.ts
+msgid "Enter the camera username and password in their separate fields."
+msgstr "请在各自的输入框中分别输入摄像头用户名和密码。"
+
+#: src/lib/server/cameras/connection.ts
+msgid "Enter the camera’s address, for example 192.168.1.50."
+msgstr "请输入摄像头地址，例如 192.168.1.50。"
+
+#: src/lib/server/cameras/connection.ts
+msgid "Enter a complete camera stream address starting with rtsp:// or http://."
+msgstr "请输入以 rtsp:// 或 http:// 开头的完整摄像头流地址。"
+
+#: src/lib/server/cameras/connection.ts
+msgid "There is not enough space to save the test recording. Free some space on this computer and try again."
+msgstr "空间不足，无法保存测试录像。请在此电脑上释放一些空间后重试。"
+
+#: src/lib/server/cameras/connection.ts
+msgid "The camera rejected the login. Check its username and password, then try again."
+msgstr "摄像头拒绝登录。请检查用户名和密码后重试。"
+
+#: src/lib/server/cameras/connection.ts
+msgid "The camera did not respond. Check its power, network connection and address, then try again."
+msgstr "摄像头没有响应。请检查其电源、网络连接和地址后重试。"
+
+#: src/lib/server/cameras/connection.ts
+msgid "The camera did not provide a supported video stream. Try another channel or ask your camera installer for its stream address."
+msgstr "摄像头未提供受支持的视频流。请尝试其他通道，或向摄像头安装人员询问流地址。"
+
+#: src/lib/server/cameras/connection.ts
+msgid "Could not connect to this camera. Check that local camera access is enabled, or enter its stream URL manually."
+msgstr "无法连接到此摄像头。请检查是否已启用本地摄像头访问，或手动输入其流地址。"
+
+#: src/lib/server/cameras/connection.ts
+msgid "The test recording could not be saved. Check that AI Detector’s data folder is writable, or repair the installation."
+msgstr "无法保存测试录像。请检查 AI Detector 的数据文件夹是否可写，或修复安装。"
+
+#: src/lib/server/configuration/advanced.ts
+msgid "Each AI connection needs a unique name."
+msgstr "每个 AI 连接都需要一个唯一的名称。"
+
+#: src/lib/server/configuration/camera-setup.ts
+#: src/lib/server/configuration/cameras.ts
+#: src/lib/server/configuration/cameras.ts
+msgid "This camera no longer exists."
+msgstr "此摄像头已不存在。"
+
+#: src/lib/server/configuration/camera-setup.ts
+msgid "Camera settings changed during the recording check. Check the recording location again."
+msgstr "录像检查期间摄像头设置已更改。请重新检查录像位置。"
+
+#: src/lib/server/configuration/camera-setup.ts
+msgid "Confirm the picture and check the recording location before finishing."
+msgstr "完成前请确认画面并检查录像位置。"
+
+#: src/lib/server/configuration/camera-setup.ts
+msgid "Monitoring has not been verified yet. Start monitoring and wait for the camera to process pictures before finishing."
+msgstr "监控尚未验证。请启动监控，等待摄像头处理画面后再完成。"
+
+#: src/lib/server/configuration/cameras.ts
+msgid "Camera identities are duplicated. Restore your camera settings from a backup."
+msgstr "摄像头标识重复。请从备份恢复摄像头设置。"
+
+#: src/lib/server/configuration/cameras.ts
+msgid "This camera is already saved. Edit it from Cameras."
+msgstr "此摄像头已保存。请在“摄像头”中编辑。"
+
+#: src/lib/server/configuration/cameras.ts
+msgid "A camera with this name already exists. Choose another name."
+msgstr "已存在同名摄像头。请选择其他名称。"
+
+#: src/lib/server/cameras/checks.ts
+msgid "The camera check took too long. Try again or choose another camera channel."
+msgstr "摄像头检查耗时过长。请重试或选择其他摄像头通道。"
+
+#: src/lib/server/cameras/checks.ts
+msgid "Camera check failed"
+msgstr "摄像头检查失败"
+
+#: src/lib/server/cameras/checks.ts
+msgid "Check the camera picture again before saving. The previous check has expired or the camera address changed."
+msgstr "保存前请重新检查摄像头画面。之前的检查已过期，或摄像头地址已更改。"
+
+#: src/lib/server/configuration/llms.ts
+#: src/lib/server/configuration/llms.ts
+msgid "This AI connection no longer exists."
+msgstr "此 AI 连接已不存在。"
+
+#: src/lib/server/configuration/llms.ts
+msgid "An AI connection with this name already exists."
+msgstr "已存在同名 AI 连接。"
+
+#: src/lib/server/configuration/llms.ts
+msgid "This connection is in use. Change its detectors before removing it."
+msgstr "此连接正在使用中。请先更改使用它的检测器，再将其移除。"
+
+#: src/lib/server/configuration/detectors.ts
+#: src/lib/server/configuration/detectors.ts
+msgid "This detector no longer exists."
+msgstr "此检测器已不存在。"
+
+#: src/lib/server/configuration/detectors.ts
+msgid "A detector with this name already exists."
+msgstr "已存在同名检测器。"
+
+#: src/lib/server/configuration/detectors.ts
+msgid "Choose an existing AI connection."
+msgstr "请选择一个现有的 AI 连接。"
+
+#: src/lib/server/configuration/detectors.ts
+msgid "Enter a question for AI verification."
+msgstr "请输入 AI 复核的问题。"
+
+#: src/lib/server/configuration/preset-files.ts
+msgid "A preset must contain a detector configuration."
+msgstr "预设必须包含检测器配置。"
+
+#. 0: file; 1: cause.message
+#: src/lib/server/configuration/preset-files.ts
+msgid "Invalid preset \"{0}\": {1}"
+msgstr "预设“{0}”无效：{1}"
+
+#. 0: file
+#: src/lib/server/configuration/preset-files.ts
+msgid "Could not read preset file \"{0}\"."
+msgstr "无法读取预设文件“{0}”。"
+
+#. 0: file
+#: src/lib/server/configuration/preset-files.ts
+msgid "Preset file \"{0}\" is not valid JSON."
+msgstr "预设文件“{0}”不是有效的 JSON。"
+
+#. 0: directory
+#: src/lib/server/configuration/preset-files.ts
+msgid "Could not read preset folder \"{0}\"."
+msgstr "无法读取预设文件夹“{0}”。"
+
+#: src/lib/server/cameras/discovery.ts
+msgid "Camera search was incomplete. Check local network access, or enter a stream URL manually."
+msgstr "摄像头搜索未完成。请检查本地网络访问权限，或手动输入流地址。"
+
+#: src/lib/server/cameras/discovery.ts
+msgid "No cameras found. Check that this computer and camera use the same network and allow local network access, or enter its stream URL manually."
+msgstr "未找到摄像头。请检查此电脑和摄像头是否在同一网络中并允许本地网络访问，或手动输入其流地址。"
+
+#: src/lib/server/cameras/discovery.ts
+msgid "This device did not provide a video stream. Check that camera streaming is enabled or enter its stream URL manually."
+msgstr "此设备未提供视频流。请检查摄像头是否已启用视频流，或手动输入其流地址。"
+
+#: src/lib/server/cameras/discovery.ts
+msgid "That camera channel is no longer available. Connect again and choose a channel."
+msgstr "该摄像头通道已不可用。请重新连接并选择一个通道。"
+
+#: src/lib/server/cameras/discovery.ts
+msgid "The camera did not return a stream address."
+msgstr "摄像头未返回流地址。"
+
+#: src/lib/server/configuration/telegrams.ts
+msgid "Confirm that you received the test alert before enabling new or changed connection details."
+msgstr "启用新的或已更改的连接信息前，请确认你已收到测试通知。"
+
+#: src/lib/server/configuration/phone-alarm.ts
+#: src/lib/server/configuration/telegrams.ts
+msgid "A selected detector no longer exists."
+msgstr "所选的检测器已不存在。"
+
+#: src/lib/server/configuration/settings-files.ts
+msgid "A settings file is missing. Restore the last valid settings to continue."
+msgstr "缺少设置文件。请恢复最后一次有效的设置以继续。"
+
+#: src/lib/server/configuration/store.ts
+msgid "No previous valid settings are available."
+msgstr "没有可用的旧版有效设置。"
+
+#: src/lib/server/configuration/store.ts
+msgid "This application already has a setup. Import into a new installation to avoid replacing your settings."
+msgstr "此应用已完成设置。请导入到新的安装中，以免替换你的设置。"
+
+#: src/lib/server/configuration/store.ts
+msgid "Add a camera before finishing setup."
+msgstr "完成设置前请添加一个摄像头。"
+
+#: src/lib/server/configuration/store.ts
+msgid "Settings changed since you opened the editor. Reload the saved settings before applying your changes."
+msgstr "自打开编辑器以来设置已更改。请先重新加载已保存的设置，再应用你的更改。"
+
+#. 0: file.source
+#: src/lib/server/installation-import/files.ts
+msgid "Expected a file: {0}"
+msgstr "此处应为文件：{0}"
+
+#. 0: relative
+#. 0: next
+#: src/lib/server/installation-import/files.ts
+#: src/lib/server/installation-import/files.ts
+msgid "The old folder contains a symbolic link at {0}. Select a folder with the original files."
+msgstr "旧文件夹中的 {0} 是一个符号链接。请选择包含原始文件的文件夹。"
+
+#: src/lib/server/installation-import/files.ts
+msgid "There is not enough free space. Free some space or keep recordings in their current folder."
+msgstr "可用空间不足。请释放一些空间，或将录像保留在当前文件夹中。"
+
+#: src/lib/server/installation-import/files.ts
+msgid "The old installation changed during import. Stop the old detector and choose its folder again."
+msgstr "导入期间旧安装已发生变化。请停止旧的检测器，然后重新选择其文件夹。"
+
+#: src/lib/server/installation-import/files.ts
+msgid "An incomplete import file has changed. Choose the old folder again to restart the import."
+msgstr "一个未完成的导入文件已更改。请重新选择旧文件夹以重新开始导入。"
+
+#: src/lib/server/installation-import/files.ts
+msgid "Choose the folder containing config.json, rather than the file itself."
+msgstr "请选择包含 config.json 的文件夹，而不是文件本身。"
+
+#: src/lib/server/installation-import/files.ts
+msgid "Choose the old installation, outside the new application data folder."
+msgstr "请选择位于新应用数据文件夹之外的旧安装。"
+
+#: src/lib/server/installation-import/configuration.ts
+msgid "Choose the old application folder containing config.json."
+msgstr "请选择包含 config.json 的旧应用文件夹。"
+
+#. 0: path.basename(file)
+#: src/lib/server/installation-import/configuration.ts
+msgid "{0} is not valid JSON. The original file has not been changed."
+msgstr "{0} 不是有效的 JSON。原始文件未被更改。"
+
+#: src/lib/server/installation-import/configuration.ts
+msgid "Removed the old strategy option, which the previous detector did not use."
+msgstr "已移除旧检测器未使用的旧 strategy 选项。"
+
+#. 0: value
+#: src/lib/server/installation-import/configuration.ts
+msgid "The model {0} is not in the old folder. Ultralytics will try to download it when monitoring starts."
+msgstr "旧文件夹中没有模型 {0}。监控启动时 Ultralytics 会尝试下载它。"
+
+#. 0: model ? 'model' \\: 'video'; 1: value
+#: src/lib/server/installation-import/configuration.ts
+msgid "A local {0} file is missing: {1}. Restore it before importing."
+msgstr "缺少本地 {0} 文件：{1}。请在导入前恢复它。"
+
+#: src/routes/(admin)/camera-checks/+server.ts
+msgid "Choose a camera stream before checking its picture."
+msgstr "检查画面前请先选择摄像头流。"
+
+#: src/lib/components/page-error.svelte
+#: src/routes/(admin)/[...catchall]/+page.ts
+msgid "Page not found"
+msgstr "未找到页面"
+
+#: src/routes/(admin)/devices/+page.server.ts
+msgid "Connect this computer to your local network and try again."
+msgstr "请将此电脑连接到本地网络后重试。"
+
+#: src/routes/(admin)/devices/+page.server.ts
+msgid "Use another connected device to remove this browser."
+msgstr "请使用另一台已连接的设备来移除此浏览器。"
+
+#: src/lib/server/installation-import/service.ts
+msgid "An unfinished import is ready to resume."
+msgstr "有一个未完成的导入可以继续。"
+
+#: src/lib/server/installation-import/service.ts
+msgid "Finish the current import before leaving setup."
+msgstr "离开设置前请先完成当前导入。"
+
+#: src/lib/server/installation-import/service.ts
+msgid "Finish the current import before choosing another folder."
+msgstr "选择其他文件夹前请先完成当前导入。"
+
+#: src/lib/server/installation-import/service.ts
+msgid "Choose the previous installation again."
+msgstr "请重新选择之前的安装。"
+
+#: src/lib/server/installation-import/service.ts
+msgid "Resume with the same recording option, or choose the folder again."
+msgstr "请使用相同的录像选项继续，或重新选择文件夹。"
+
+#: src/lib/server/installation-import/service.ts
+msgid "This application already has a setup. Import is available before adding cameras or detectors."
+msgstr "此应用已完成设置。只能在添加摄像头或检测器之前导入。"
+
+#. 0: folder
+#: src/lib/server/installation-import/service.ts
+msgid "The new application already has a {0} folder. Import will not overwrite existing data."
+msgstr "新应用已有 {0} 文件夹。导入不会覆盖现有数据。"
+
+#: src/lib/server/installation-import/service.ts
+msgid "Saving your setup…"
+msgstr "正在保存设置…"
+
+#: src/lib/server/installation-import/service.ts
+msgid "An imported folder is missing. Restore the drive before resuming the import."
+msgstr "一个已导入的文件夹缺失。请先恢复磁盘，再继续导入。"
+
+#: src/lib/server/installation-import/service.ts
+msgid "The old folder or a file could not be found. Connect the drive and choose the folder again."
+msgstr "找不到旧文件夹或某个文件。请连接磁盘并重新选择文件夹。"
+
+#: src/lib/server/installation-import/service.ts
+msgid "There is not enough free space. Free some space and resume the import."
+msgstr "可用空间不足。请释放一些空间后继续导入。"
+
+#: src/lib/server/installation-import/service.ts
+msgid "AI Detector cannot access this folder. Check its permissions and try again."
+msgstr "AI Detector 无法访问此文件夹。请检查其权限后重试。"
+
+#: src/lib/server/installation-import/service.ts
+msgid "The import could not finish. Your original files are unchanged. Check the drive and try again."
+msgstr "导入未能完成。你的原始文件未被更改。请检查磁盘后重试。"
+
+#: src/routes/(admin)/storage/+page.server.ts
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Choose a valid date, today or earlier."
+msgstr "请选择有效日期：今天或更早。"
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Recordings could not be removed."
+msgstr "无法移除录像。"
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Cache cleanup requires the desktop application so monitoring can be checked."
+msgstr "清理缓存需要桌面应用，以便检查监控状态。"
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Prepared models and unused model downloads removed. Current source models were kept."
+msgstr "已移除准备好的模型和未使用的模型下载。当前的源模型已保留。"
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "The cache could not be cleared."
+msgstr "无法清除缓存。"
+
+#: src/routes/(admin)/cameras/live/+server.ts
+#: src/routes/(admin)/cameras/pictures/+server.ts
+msgid "Camera not found."
+msgstr "未找到摄像头。"
+
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+msgid "The recording check request was not valid."
+msgstr "录像检查请求无效。"
+
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+msgid "This camera has no local recording destination to check."
+msgstr "此摄像头没有可检查的本地录像位置。"
+
+#: src/routes/(admin)/cameras/[id]/archive-check/+server.ts
+msgid "Check the camera picture again. The test recording has expired."
+msgstr "请重新检查摄像头画面。测试录像已过期。"
+
+#: src/routes/(admin)/camera-checks/[id]/picture.jpg/+server.ts
+msgid "This camera check has expired. Check the camera again."
+msgstr "此摄像头检查已过期。请重新检查摄像头。"
+
+#: src/routes/recovery/+page.svelte
+msgid "Recover settings · AI Detector"
+msgstr "恢复设置 · AI Detector"
+
+#: src/routes/recovery/+page.svelte
+msgid "Recover settings"
+msgstr "恢复设置"
+
+#: src/routes/recovery/+page.svelte
+msgid "Restore the last settings AI Detector could read. The current files are kept as copies for troubleshooting. Recordings are kept."
+msgstr "恢复 AI Detector 最后能读取的设置。当前文件会保留副本以便排查问题。录像会保留。"
+
+#: src/routes/recovery/+page.svelte
+msgid "Recovery did not finish"
+msgstr "恢复未完成"
+
+#: src/routes/recovery/+page.svelte
+msgid "Restore saved settings"
+msgstr "恢复已保存的设置"
+
+#: src/routes/recovery/+page.svelte
+msgid "No valid recovery snapshot is available. Restore config.json and app.json from your settings backup, or ask for help using the diagnostics download."
+msgstr "没有可用的有效恢复快照。请从设置备份中恢复 config.json 和 app.json，或通过下载诊断信息寻求帮助。"
+
+#: src/lib/components/page-error.svelte
+#: src/routes/(admin)/logs/+page.svelte
+#: src/routes/(admin)/status/+page.svelte
+#: src/routes/recovery/+page.svelte
+msgid "<0/>Download diagnostics"
+msgstr "<0/>下载诊断信息"
+
+#: src/routes/recovery/+page.svelte
+msgid "Back to the app"
+msgstr "返回应用"
+
+#: src/routes/pair/+page.svelte
+msgid "Connect device · AI Detector"
+msgstr "连接设备 · AI Detector"
+
+#: src/routes/pair/+page.svelte
+msgid "Your code is filled in. Tap Connect device to open the dashboard here."
+msgstr "代码已填好。点按“连接设备”即可在这里打开控制面板。"
+
+#: src/routes/pair/+page.svelte
+msgid "On the computer running AI Detector, open Settings → Devices and choose Connect a device. Enter the code it shows."
+msgstr "在运行 AI Detector 的电脑上，打开“设置 → 设备”并选择“连接设备”。输入它显示的代码。"
+
+#: src/routes/pair/+page.svelte
+msgid "Connect to AI Detector"
+msgstr "连接到 AI Detector"
+
+#: src/routes/pair/+page.svelte
+msgid "Six-digit code"
+msgstr "六位数代码"
+
+#: src/routes/pair/+page.svelte
+msgid "Name for this device <0>(optional)</0>"
+msgstr "此设备的名称<0>（可选）</0>"
+
+#: src/lib/components/camera-add.svelte
+#: src/routes/pair/+page.svelte
+msgid "Could not connect"
+msgstr "无法连接"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-picture.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/llm-connection-editor.svelte
+#: src/routes/pair/+page.svelte
+msgid "Connecting…"
+msgstr "正在连接…"
+
+#: src/routes/pair/+page.svelte
+msgid "Connect device"
+msgstr "连接设备"
+
+#. 0: title
+#: src/lib/components/page-header.svelte
+msgid "{0} · AI Detector"
+msgstr "{0} · AI Detector"
+
+#: src/lib/components/page-error.svelte
+msgid "This page needs attention"
+msgstr "此页面需要处理"
+
+#: src/lib/components/page-error.svelte
+msgid "Go to the start"
+msgstr "返回首页"
+
+#: src/lib/components/page-error.svelte
+msgid "<0/>Recover settings"
+msgstr "<0/>恢复设置"
+
+#: src/lib/hooks/runtime-status.svelte.ts
+msgid "Status is unavailable."
+msgstr "状态不可用。"
+
+#: src/lib/hooks/setup-verifier.svelte.ts
+msgid "This camera could not be checked. Try again."
+msgstr "无法检查此摄像头。请重试。"
+
+#: src/lib/hooks/setup-verifier.svelte.ts
+msgid "The recording check could not finish. Try again."
+msgstr "录像检查未能完成。请重试。"
+
+#: src/lib/components/app-sidebar.svelte
+#: src/lib/components/guided-header.svelte
+#: src/lib/components/mobile-header.svelte
+#: src/lib/phone-alarm.ts
+msgid "AI Detector"
+msgstr "AI Detector"
+
+#: src/lib/components/app-sidebar.svelte
+msgid "View monitoring status"
+msgstr "查看监控状态"
+
+#: src/lib/components/app-sidebar.svelte
+#: src/lib/components/guided-header.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Help on GitHub"
+msgstr "GitHub 上的帮助"
+
+#. 0: version
+#: src/lib/components/app-sidebar.svelte
+msgid "Version {0}"
+msgstr "版本 {0}"
+
+#: src/lib/components/camera-add.svelte
+msgid "Waiting"
+msgstr "等待中"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Connected"
+msgstr "已连接"
+
+#: src/lib/components/camera-add.svelte
+msgid "Added"
+msgstr "已添加"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera search failed. Check the network and try again."
+msgstr "摄像头搜索失败。请检查网络后重试。"
+
+#: src/lib/components/camera-add.svelte
+msgid "Could not connect to the camera. Check the stream URL and try again."
+msgstr "无法连接到摄像头。请检查流地址后重试。"
+
+#: src/lib/components/camera-add.svelte
+msgid "Could not check this picture. Try again."
+msgstr "无法检查此画面。请重试。"
+
+#: src/lib/components/camera-add.svelte
+msgid "Could not add this camera. Try again."
+msgstr "无法添加此摄像头。请重试。"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Searching…"
+msgstr "正在搜索…"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Search again"
+msgstr "重新搜索"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Cameras on your network"
+msgstr "你网络中的摄像头"
+
+#: src/lib/components/camera-add.svelte
+msgid "Looking for cameras…"
+msgstr "正在查找摄像头…"
+
+#: src/lib/components/camera-add.svelte
+msgid "Already added"
+msgstr "已添加"
+
+#: src/lib/components/camera-connection-fields.svelte
+msgid "Camera username"
+msgstr "摄像头用户名"
+
+#: src/lib/components/camera-connection-fields.svelte
+msgid "Camera password"
+msgstr "摄像头密码"
+
+#: src/lib/components/camera-add.svelte
+msgid "Select cameras that share this login."
+msgstr "选择使用相同登录信息的摄像头。"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-picture.svelte
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/setup-finish.svelte
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Try again"
+msgstr "重试"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-discovery.svelte
+msgid "Enter a stream URL instead"
+msgstr "改为输入流地址"
+
+#: src/lib/components/camera-connection-fields.svelte
+msgid "RTSP URL"
+msgstr "RTSP 地址"
+
+#: src/lib/components/camera-connection-fields.svelte
+msgid "Paste the full stream URL, including the username and password if the camera needs them."
+msgstr "粘贴完整的流地址；如果摄像头需要，请包含用户名和密码。"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera needs attention"
+msgstr "摄像头需要处理"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Connect camera"
+msgstr "连接摄像头"
+
+#: src/lib/components/camera-add.svelte
+msgid "Enter a stream URL"
+msgstr "输入流地址"
+
+#: src/lib/components/camera-add.svelte
+msgid "Check the picture"
+msgstr "检查画面"
+
+#: src/lib/components/camera-add.svelte
+msgid "Check the pictures"
+msgstr "检查画面"
+
+#: src/lib/components/camera-add.svelte
+msgid "Give each camera a name you’ll recognize. A short test recording is checked for you."
+msgstr "为每个摄像头起一个你认得出的名称。系统会自动检查一段简短的测试录像。"
+
+#. 0: camera.name
+#. 0: label || 'Camera'
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "{0} connection preview"
+msgstr "{0} 连接预览"
+
+#. 0: camera.name
+#: src/lib/components/camera-add.svelte
+msgid "Leave out {0}"
+msgstr "跳过 {0}"
+
+#: src/lib/components/camera-add.svelte
+msgid "Leave out"
+msgstr "跳过"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera name"
+msgstr "摄像头名称"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Camera channel or stream"
+msgstr "摄像头通道或视频流"
+
+#: src/lib/components/camera-add.svelte
+msgid "Refresh picture"
+msgstr "刷新画面"
+
+#: src/lib/components/camera-add.svelte
+msgid "Adding…"
+msgstr "正在添加…"
+
+#: src/lib/components/camera-add.svelte
+msgid "Change login and retry"
+msgstr "更改登录信息并重试"
+
+#: src/lib/components/camera-add.svelte
+msgid "Add more cameras"
+msgstr "添加更多摄像头"
+
+#: src/lib/components/camera-add.svelte
+msgid "Done"
+msgstr "完成"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/heartbeat-settings.svelte
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/phone-alarm-editor.svelte
+#: src/lib/components/recording-viewer.svelte
+#: src/lib/components/setup-finish.svelte
+msgid "Cancel"
+msgstr "取消"
+
+#. 0: label
+#: src/lib/components/camera-picture.svelte
+msgid "{0} live picture"
+msgstr "{0} 实时画面"
+
+#: src/lib/components/camera-picture.svelte
+msgid "The live picture is unavailable."
+msgstr "实时画面不可用。"
+
+#: src/lib/components/camera-picture.svelte
+msgid "Preview paused"
+msgstr "预览已暂停"
+
+#: src/lib/components/camera-picture.svelte
+msgid "Show live picture"
+msgstr "显示实时画面"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Custom settings from JSON"
+msgstr "来自 JSON 的自定义设置"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Off — alert on every detection"
+msgstr "关闭：每次检测都发送通知"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Check detections with"
+msgstr "复核检测所用的连接"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Add another connection"
+msgstr "添加其他连接"
+
+#: src/lib/components/detector-verification.svelte
+msgid "Let AI look at each clip before an alert is sent, to filter out false alarms. The preset supplies the question."
+msgstr "在发送通知前让 AI 查看每个片段，以过滤误报。问题由预设提供。"
+
+#: src/lib/components/camera-discovery.svelte
+msgid "Discovered cameras"
+msgstr "发现的摄像头"
+
+#: src/lib/components/camera-discovery.svelte
+msgid "Choose from the list instead"
+msgstr "改为从列表中选择"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Which cameras should it watch?"
+msgstr "要监控哪些摄像头？"
+
+#: src/lib/components/camera-selection.svelte
+msgid "A camera can be watched by several detectors."
+msgstr "一个摄像头可以被多个检测器监控。"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Clear selection"
+msgstr "清除选择"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Select all cameras"
+msgstr "选择所有摄像头"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Choose at least one camera to continue."
+msgstr "请至少选择一个摄像头以继续。"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Could not connect to the camera. Check its connection details."
+msgstr "无法连接到摄像头。请检查其连接信息。"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Camera saved."
+msgstr "摄像头已保存。"
+
+#: src/lib/components/camera-settings.svelte
+msgid "The camera could not be saved. Your choices are still here."
+msgstr "无法保存摄像头。你的选择仍保留在这里。"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Could not remove this camera."
+msgstr "无法移除此摄像头。"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Connect to see the new picture."
+msgstr "连接摄像头以查看新画面。"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Camera settings"
+msgstr "摄像头设置"
+
+#. 0: address
+#: src/lib/components/camera-settings.svelte
+msgid "Camera selected: {0}"
+msgstr "已选择摄像头：{0}"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Choose camera channel again"
+msgstr "重新选择摄像头通道"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Reconnect camera"
+msgstr "重新连接摄像头"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Keep current connection"
+msgstr "保留当前连接"
+
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/heartbeat-settings.svelte
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Saving…"
+msgstr "正在保存…"
+
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/notification-editor.svelte
+msgid "Save changes"
+msgstr "保存更改"
+
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Change connection"
+msgstr "更改连接"
+
+#. 0: initial.label
+#. 0: originalLabel
+#. 0: connection.label
+#. 0: initial.label
+#: src/lib/components/camera-settings.svelte
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/notification-editor.svelte
+msgid "Remove “{0}”?"
+msgstr "移除“{0}”？"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Monitoring and alerts for this camera will stop. Its existing recordings stay on this computer."
+msgstr "此摄像头的监控和通知将停止。已有录像会保留在这台电脑上。"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Keep camera"
+msgstr "保留摄像头"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Remove camera"
+msgstr "移除摄像头"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Remove this camera…"
+msgstr "移除此摄像头…"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Export recordings"
+msgstr "导出录像"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Download images, videos and detection details in one ZIP to share for model improvement."
+msgstr "将图片、视频和检测详情下载为一个 ZIP 文件，用于分享以改进模型。"
+
+#: src/lib/components/export-recordings.svelte
+msgid "All categories"
+msgstr "所有类别"
+
+#: src/lib/components/export-recordings.svelte
+msgid "All results"
+msgstr "所有结果"
+
+#: src/lib/components/export-recordings.svelte
+msgid "From date"
+msgstr "开始日期"
+
+#: src/lib/components/export-recordings.svelte
+msgid "To date"
+msgstr "结束日期"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Optional. Leave both empty to include all dates."
+msgstr "可选。两项都留空即包含所有日期。"
+
+#: src/lib/components/export-recordings.svelte
+msgid "<0/>Download ZIP"
+msgstr "<0/>下载 ZIP"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Counting recordings…"
+msgstr "正在统计录像…"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Could not read the recordings. Close this window and try again."
+msgstr "无法读取录像。请关闭此窗口后重试。"
+
+#: src/lib/components/export-recordings.svelte
+msgid "<0/>Export"
+msgstr "<0/>导出"
+
+#: src/lib/components/detector-editor.svelte
+msgid "The preset could not be loaded."
+msgstr "无法加载预设。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Could not load the preset question."
+msgstr "无法加载预设问题。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset for this detector."
+msgstr "请为此检测器选择一个预设。"
+
+#. 0: savedLabel
+#: src/lib/components/detector-editor.svelte
+msgid "Detector '{0}' saved."
+msgstr "检测器“{0}”已保存。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "The detector could not be saved."
+msgstr "无法保存检测器。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Your unsaved choices were restored. Review them before saving."
+msgstr "已恢复你未保存的选择。保存前请检查。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Monitoring presets are unavailable"
+msgstr "监控预设不可用"
+
+#. 0: presetWarning
+#: src/lib/components/detector-editor.svelte
+msgid "{0} You can still edit and save the current configuration."
+msgstr "{0} 你仍可以编辑并保存当前配置。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Preset"
+msgstr "预设"
+
+#: src/lib/components/detector-editor.svelte
+msgid "What do you want to detect?"
+msgstr "你想检测什么？"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Detector name"
+msgstr "检测器名称"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Add a camera first"
+msgstr "请先添加摄像头"
+
+#: src/lib/components/detector-editor.svelte
+msgid "A detector watches cameras you have connected. <0><0/>Add cameras</0>"
+msgstr "检测器会监控你已连接的摄像头。<0><0/>添加摄像头</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Connect another phone or group"
+msgstr "连接其他手机或群组"
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Connect Telegram"
+msgstr "连接 Telegram"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Could not update detector"
+msgstr "无法更新检测器"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Save detector"
+msgstr "保存检测器"
+
+#: src/lib/components/detector-editor.svelte
+msgid "This stops this detector on all of its cameras. Other detectors, camera connections and saved recordings are kept. This cannot be undone."
+msgstr "此操作会在所有摄像头上停止此检测器。其他检测器、摄像头连接和已保存的录像会保留。此操作无法撤销。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Keep detector"
+msgstr "保留检测器"
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-editor.svelte
+msgid "Your detector changes stay here until you save the detector."
+msgstr "在保存检测器之前，你的更改会保留在这里。"
+
+#: src/lib/components/guided-header.svelte
+msgid "<0/>Help"
+msgstr "<0/>帮助"
+
+#: src/lib/components/guided-header.svelte
+msgid "Open on a phone or other computer"
+msgstr "在手机或其他电脑上打开"
+
+#: src/lib/components/guided-header.svelte
+msgid "Logs and diagnostics"
+msgstr "日志和诊断"
+
+#: src/lib/components/import-installation.svelte
+msgid "Could not read the import progress. Reopen setup to try again."
+msgstr "无法读取导入进度。请重新打开设置后重试。"
+
+#: src/lib/components/import-installation.svelte
+msgid "Import could not finish. Try again."
+msgstr "导入未能完成。请重试。"
+
+#: src/lib/components/import-installation.svelte
+msgid "Reconnecting to the import…"
+msgstr "正在重新连接导入…"
+
+#: src/lib/components/import-installation.svelte
+msgid "Moving from an earlier AI Detector?"
+msgstr "从旧版 AI Detector 迁移？"
+
+#: src/lib/components/import-installation.svelte
+msgid "Bring its cameras, detectors, alerts and recordings along."
+msgstr "带上它的摄像头、检测器、通知和录像。"
+
+#: src/lib/components/import-installation.svelte
+msgid "Use existing setup"
+msgstr "使用现有设置"
+
+#: src/lib/components/import-installation.svelte
+msgid "Import previous installation"
+msgstr "导入之前的安装"
+
+#: src/lib/components/import-installation.svelte
+msgid "Use your existing setup"
+msgstr "使用你现有的设置"
+
+#: src/lib/components/import-installation.svelte
+msgid "Bring your cameras, detectors, alerts and recordings from your previous AI Detector folder."
+msgstr "从之前的 AI Detector 文件夹中导入摄像头、检测器、通知和录像。"
+
+#: src/lib/components/import-installation.svelte
+msgid "Open the localhost dashboard on the computer running AI Detector to choose its old folder."
+msgstr "请在运行 AI Detector 的电脑上打开 localhost 控制面板来选择旧文件夹。"
+
+#: src/lib/components/import-installation.svelte
+msgid "<0/>Choose old folder"
+msgstr "<0/>选择旧文件夹"
+
+#: src/lib/components/import-installation.svelte
+msgid "Enter folder path"
+msgstr "输入文件夹路径"
+
+#: src/lib/components/import-installation.svelte
+msgid "Choose the folder containing your old config.json, usually next to the old application."
+msgstr "请选择包含旧 config.json 的文件夹，通常位于旧应用旁边。"
+
+#. 0: summary.source
+#: src/lib/components/import-installation.svelte
+msgid "From: {0}"
+msgstr "来源：{0}"
+
+#. 0: summary.destination
+#: src/lib/components/import-installation.svelte
+msgid "To: {0}"
+msgstr "目标：{0}"
+
+#: src/lib/components/import-installation.svelte
+msgid "Copying your files…"
+msgstr "正在复制文件…"
+
+#: src/lib/components/import-installation.svelte
+msgid "Import progress"
+msgstr "导入进度"
+
+#: src/lib/components/import-installation.svelte
+msgid "Keep AI Detector open. You can close this browser tab."
+msgstr "请保持 AI Detector 打开。你可以关闭此浏览器标签页。"
+
+#: src/lib/components/import-installation.svelte
+msgid "<0/>Keep recordings in their current folder"
+msgstr "<0/>将录像保留在当前文件夹"
+
+#. 0: dataSize(summary.recordingBytes)
+#: src/lib/components/import-installation.svelte
+msgid "Saves {0} of copying. Keep the old folder and drive connected; new recordings will also be saved there."
+msgstr "可省去复制 {0}。请保持旧文件夹和磁盘连接；新录像也会保存在那里。"
+
+#: src/lib/components/import-installation.svelte
+msgid "Recording storage"
+msgstr "录像存储"
+
+#: src/lib/components/import-installation.svelte
+msgid "Resume import"
+msgstr "继续导入"
+
+#: src/lib/components/import-installation.svelte
+msgid "Import and review setup"
+msgstr "导入并检查设置"
+
+#: src/lib/components/import-installation.svelte
+msgid "Choose another folder"
+msgstr "选择其他文件夹"
+
+#: src/lib/components/import-installation.svelte
+msgid "Your original files will stay in place. Monitoring starts when you’re ready in the final setup step."
+msgstr "你的原始文件会保留在原处。在最后一步设置中，准备好后即可开始监控。"
+
+#: src/lib/components/import-installation.svelte
+msgid "<0/>I’ve closed the previous AI Detector"
+msgstr "<0/>我已关闭之前的 AI Detector"
+
+#: src/lib/components/import-installation.svelte
+msgid "Old application folder"
+msgstr "旧应用文件夹"
+
+#: src/lib/components/import-installation.svelte
+msgid "Find existing setup"
+msgstr "查找现有设置"
+
+#: src/lib/components/import-installation.svelte
+msgid "Cancel import"
+msgstr "取消导入"
+
+#: src/lib/components/import-installation.svelte
+msgid "Back"
+msgstr "返回"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat saved."
+msgstr "心跳已保存。"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat turned off."
+msgstr "心跳已关闭。"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "The heartbeat could not be saved. Your changes are still here."
+msgstr "无法保存心跳。你的更改仍保留在这里。"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat"
+msgstr "心跳"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Get warned when this computer or AI Detector stops. While monitoring runs, the detector calls an address you choose; a service such as Healthchecks.io or Uptime Kuma alerts you when the calls stop coming."
+msgstr "当这台电脑或 AI Detector 停止运行时收到警告。监控运行期间，检测器会调用你选择的地址；当调用停止时，Healthchecks.io 或 Uptime Kuma 等服务会提醒你。"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Address to call"
+msgstr "调用地址"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "The ping or push address your monitoring service gives you."
+msgstr "你的监控服务提供的 ping 或 push 地址。"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Call every (seconds)"
+msgstr "调用间隔（秒）"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Heartbeat needs attention"
+msgstr "心跳需要处理"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Saving restarts monitoring for a moment so the detector picks up the change."
+msgstr "保存时监控会短暂重启，以便检测器应用更改。"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Restart your detector after saving so it picks up the change."
+msgstr "保存后请重启检测器，以便应用更改。"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Save heartbeat"
+msgstr "保存心跳"
+
+#. 0: host
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Calling {0}"
+msgstr "正在调用 {0}"
+
+#. 0: saved.interval
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Every {0} seconds while monitoring runs"
+msgstr "监控运行期间每 {0} 秒一次"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Off"
+msgstr "关闭"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Nothing is called."
+msgstr "不调用任何地址。"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Change"
+msgstr "更改"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Set up"
+msgstr "设置"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Turn off"
+msgstr "关闭"
+
+#: src/lib/components/json-editor.svelte
+msgid "The editor could not load. Reload this page to try again."
+msgstr "无法加载编辑器。请重新加载此页面后重试。"
+
+#: src/lib/components/json-editor.svelte
+msgid "Editor unavailable"
+msgstr "编辑器不可用"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Google Gemini"
+msgstr "Google Gemini"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Could not save this connection."
+msgstr "无法保存此连接。"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Could not remove this connection."
+msgstr "无法移除此连接。"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Connection name"
+msgstr "连接名称"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Open Google AI Studio and copy or create an API key. <0>Open Google AI Studio<0/></0>"
+msgstr "打开 Google AI Studio，复制或创建一个 API 密钥。<0>打开 Google AI Studio<0/></0>"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Paste the key below."
+msgstr "将密钥粘贴到下方。"
+
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/llm-connection-editor.svelte
+msgid "API key"
+msgstr "API 密钥"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Kept on this computer. Clips of detected events are sent to Google to be checked."
+msgstr "保存在这台电脑上。检测到的事件片段会发送给 Google 进行检查。"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Google offers a limited free tier. Quotas and billing depend on your project. <0>Google’s pricing and data-use terms</0>."
+msgstr "Google 提供有限的免费额度。配额和计费取决于你的项目。<0>Google 的价格和数据使用条款</0>。"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "This connection uses custom settings. You can edit these in Advanced."
+msgstr "此连接使用自定义设置。你可以在“高级”中编辑。"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Open Advanced"
+msgstr "打开“高级”"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "The key is checked with a test image before it is saved."
+msgstr "保存前会用一张测试图片检查密钥。"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Connection testing is available in the desktop application. Save settings here for your separate detector."
+msgstr "连接测试仅在桌面应用中可用。请在这里为你的独立检测器保存设置。"
+
+#: src/lib/components/llm-connection-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Connection needs attention"
+msgstr "连接需要处理"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Connect"
+msgstr "连接"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Save connection"
+msgstr "保存连接"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Remove connection"
+msgstr "移除连接"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Remove this connection…"
+msgstr "移除此连接…"
+
+#: src/lib/components/mobile-nav.svelte
+msgid "Main"
+msgstr "主菜单"
+
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/setup-finish.svelte
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Start monitoring"
+msgstr "开始监控"
+
+#: src/lib/components/monitoring-control.svelte
+#: src/lib/components/setup-finish.svelte
+msgid "Pause monitoring"
+msgstr "暂停监控"
+
+#: src/lib/components/monitoring-control.svelte
+msgid "The request could not be completed. Check that AI Detector is still open."
+msgstr "无法完成请求。请检查 AI Detector 是否仍处于打开状态。"
+
+#: src/lib/components/monitoring-banner.svelte
+msgid "Details"
+msgstr "详细信息"
+
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "My phone"
+msgstr "我的手机"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Alert settings saved."
+msgstr "通知设置已保存。"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Could not save alerts. Your choices are still here."
+msgstr "无法保存通知。你的选择仍保留在这里。"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Could not remove this recipient."
+msgstr "无法移除此接收者。"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Already connected as <0/>. We’ll reuse this recipient."
+msgstr "已作为 <0/> 连接。将重复使用此接收者。"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Recipient name"
+msgstr "接收者名称"
+
+#: src/lib/components/notification-editor.svelte
+msgid "You can connect now and choose this recipient when you add a detector."
+msgstr "你可以现在连接，并在添加检测器时选择此接收者。"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Which detectors alert this recipient?"
+msgstr "哪些检测器向此接收者发送通知？"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Each detector alerts for all of its cameras."
+msgstr "每个检测器会为其所有摄像头发送通知。"
+
+#: src/lib/components/notification-editor.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Alerts need attention"
+msgstr "通知需要处理"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Use this recipient"
+msgstr "使用此接收者"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Save recipient"
+msgstr "保存接收者"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Every detector will stop sending alerts to this recipient. Monitoring and saved recordings are kept. You can reconnect the recipient later."
+msgstr "所有检测器都将停止向此接收者发送通知。监控和已保存的录像会保留。你之后可以重新连接此接收者。"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Keep recipient"
+msgstr "保留接收者"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Remove recipient"
+msgstr "移除接收者"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Remove this recipient…"
+msgstr "移除此接收者…"
+
+#. 0: name
+#. 0: name
+#: src/lib/components/secret-input.svelte
+#: src/lib/components/secret-input.svelte
+msgid "Hide {0}"
+msgstr "隐藏{0}"
+
+#. 0: name
+#. 0: name
+#: src/lib/components/secret-input.svelte
+#: src/lib/components/secret-input.svelte
+msgid "Show {0}"
+msgstr "显示{0}"
+
+#: src/routes/(admin)/settings/+page.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Back up settings"
+msgstr "备份设置"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Save your cameras, detectors and alert settings in one ZIP."
+msgstr "将你的摄像头、检测器和通知设置保存到一个 ZIP 文件中。"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "<0/>Download backup"
+msgstr "<0/>下载备份"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Includes saved passwords and tokens. Keep this backup private."
+msgstr "包含已保存的密码和令牌。请妥善保管此备份。"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Recordings and model files are not included. To restore, extract the ZIP and choose Use existing setup in a new installation."
+msgstr "不包含录像和模型文件。如需恢复，请解压 ZIP，并在新安装中选择“使用现有设置”。"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "<0/>Back up"
+msgstr "<0/>备份"
+
+#: src/lib/components/setup-steps.svelte
+#: src/lib/navigation.ts
+#: src/routes/(admin)/status/+page.svelte
+#: src/routes/(admin)/streams/+page.svelte
+#: src/routes/(admin)/streams/[id]/+page.svelte
+#: src/routes/(admin)/streams/add/+page.svelte
+msgid "Cameras"
+msgstr "摄像头"
+
+#: src/lib/components/setup-steps.svelte
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Detection"
+msgstr "检测"
+
+#: src/lib/components/setup-steps.svelte
+msgid "Start"
+msgstr "开始"
+
+#: src/lib/components/setup-steps.svelte
+msgid "Setup progress"
+msgstr "设置进度"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Copied. Paste /newbot into BotFather."
+msgstr "已复制。请将 /newbot 粘贴到 BotFather 中。"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Type /newbot into BotFather."
+msgstr "在 BotFather 中输入 /newbot。"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Open BotFather below, send <0/> and follow its instructions for a name and username."
+msgstr "打开下方的 BotFather，发送 <0/>，然后按照提示设置名称和用户名。"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Copy the bot token from BotFather into AI Detector. Keep this token private."
+msgstr "将 BotFather 提供的机器人令牌复制到 AI Detector 中。请妥善保管此令牌。"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Choose Connect Telegram below. Open the link or scan the code with your phone."
+msgstr "选择下方的“连接 Telegram”。打开链接，或用手机扫描二维码。"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Open BotFather"
+msgstr "打开 BotFather"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "Copy /newbot"
+msgstr "复制 /newbot"
+
+#: src/lib/components/telegram-bot-help.svelte
+msgid "How to create your Telegram bot"
+msgstr "如何创建 Telegram 机器人"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Your progress could not be saved. Try again."
+msgstr "无法保存你的进度。请重试。"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Could not start monitoring. Try again."
+msgstr "无法开始监控。请重试。"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Could not pause monitoring. Try again."
+msgstr "无法暂停监控。请重试。"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Connection to the app was lost. Reconnecting…"
+msgstr "与应用的连接已断开。正在重新连接…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Checking the recording location…"
+msgstr "正在检查录像位置…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Checking the picture…"
+msgstr "正在检查画面…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Waiting to be checked…"
+msgstr "等待检查…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Open camera"
+msgstr "打开摄像头"
+
+#: src/lib/components/setup-finish.svelte
+msgid "No phone alerts. Recordings still appear in this app."
+msgstr "没有手机通知。录像仍会显示在此应用中。"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Add phone alerts"
+msgstr "添加手机通知"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Detection runs separately from this app. Restart your detector so it uses these settings."
+msgstr "检测独立于此应用运行。请重启检测器，使其使用这些设置。"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Setup needs attention"
+msgstr "设置需要处理"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Open recordings"
+msgstr "打开录像"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Open cameras"
+msgstr "打开摄像头"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Starting monitoring…"
+msgstr "正在开始监控…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Finishing…"
+msgstr "正在完成…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Finish setup"
+msgstr "完成设置"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Open Telegram"
+msgstr "打开 Telegram"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose your recipient below."
+msgstr "请在下方选择接收者。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Send a message to your bot, then try again. In a group, mention the bot in your message."
+msgstr "请给你的机器人发送一条消息，然后重试。在群组中，请在消息里提及机器人。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Could not find Telegram chats."
+msgstr "找不到 Telegram 聊天。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "The test could not be sent. Check your bot and recipient."
+msgstr "无法发送测试。请检查你的机器人和接收者。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "<0/> Connected in Telegram."
+msgstr "<0/> 已在 Telegram 中连接。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Connect again"
+msgstr "重新连接"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "<0/> Telegram connected and test alert confirmed."
+msgstr "<0/> Telegram 已连接，测试通知已确认。"
+
+#. 0: pairingState.session.bot.name
+#: src/lib/components/telegram-connection.svelte
+msgid "Scan to connect to {0} in Telegram"
+msgstr "扫码在 Telegram 中连接 {0}"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose your group or channel in Telegram."
+msgstr "请在 Telegram 中选择你的群组或频道。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose Confirm connection on the test alert in Telegram."
+msgstr "请在 Telegram 的测试通知中选择“确认连接”。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Waiting for Telegram…"
+msgstr "正在等待 Telegram…"
+
+#. 0: pairingState.state === 'choosing' ? 'Choose your group or channel in Telegram.' \\: pairingState.state === 'confirming' ? 'Choose Confirm connection on the test alert in Telegram.' \\: 'Waiting for Telegram…'
+#: src/lib/components/telegram-connection.svelte
+msgid "{0} Keep this page open. The link expires in five minutes."
+msgstr "{0} 请保持此页面打开。链接将在五分钟后过期。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Scan with your phone, or open Telegram on this device. Choose <0>Start</0>, then follow the message to confirm your connection."
+msgstr "用手机扫码，或在此设备上打开 Telegram。选择<0>开始</0>，然后按照消息提示确认连接。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Cancel connection"
+msgstr "取消连接"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Use bot from"
+msgstr "使用以下来源的机器人"
+
+#. 0: bots[0].label
+#: src/lib/components/telegram-connection.svelte
+msgid "Using the Telegram bot you set up for {0}."
+msgstr "正在使用你为 {0} 设置的 Telegram 机器人。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Bot token from BotFather"
+msgstr "来自 BotFather 的机器人令牌"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Paste the token here. If you already have a bot, use its token."
+msgstr "在此粘贴令牌。如果你已有机器人，请使用它的令牌。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "A group"
+msgstr "群组"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "A channel"
+msgstr "频道"
+
+#: src/lib/components/telegram-connection.svelte
+#: src/lib/components/telegram-connection.svelte
+msgid "Send alerts to"
+msgstr "通知发送到"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Finding chats…"
+msgstr "正在查找聊天…"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Find chats"
+msgstr "查找聊天"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose a recipient"
+msgstr "选择接收者"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Telegram chat ID"
+msgstr "Telegram 聊天 ID"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "For a group, add your bot and send a message mentioning it. Find the chat below, or enter its chat ID."
+msgstr "如果是群组，请添加你的机器人并发送一条提及它的消息。在下方找到该聊天，或输入其聊天 ID。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Checking your bot…"
+msgstr "正在检查你的机器人…"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Use another bot"
+msgstr "使用其他机器人"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Use saved bot"
+msgstr "使用已保存的机器人"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Choose in Telegram"
+msgstr "在 Telegram 中选择"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Enter chat ID manually"
+msgstr "手动输入聊天 ID"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Sending test…"
+msgstr "正在发送测试…"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Send test alert"
+msgstr "发送测试通知"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Test alert sent."
+msgstr "测试通知已发送。"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "<0/> I received the test on the intended phone or chat"
+msgstr "<0/> 我已在目标手机或聊天中收到测试"
+
+#: src/lib/components/telegram-connection.svelte
+msgid "Send test again"
+msgstr "重新发送测试"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/devices/+page.svelte
+#: src/routes/(admin)/logs/+page.svelte
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/settings/+page.svelte
+#: src/routes/(admin)/storage/+page.svelte
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Settings"
+msgstr "设置"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Advanced"
+msgstr "高级"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Everything the presets decide for you, as JSON: thresholds, prompts, delivery and the detection engine. Changes are checked before they are saved."
+msgstr "预设替你决定的所有内容，以 JSON 显示：阈值、提示词、发送方式和检测引擎。更改会在保存前检查。"
+
+#: src/lib/components/theme-toggle.svelte
+msgid "Switch light or dark theme"
+msgstr "切换浅色或深色主题"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Enter valid JSON."
+msgstr "请输入有效的 JSON。"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "AI connections"
+msgstr "AI 连接"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Shared AI connections in app.json. Use a LiteLLM model name, API key, optional URL and headers. Changes apply to assigned detectors. Unassign a connection before removing or renaming it here."
+msgstr "app.json 中的共享 AI 连接。使用 LiteLLM 模型名称、API 密钥，以及可选的 URL 和请求头。更改会应用到已分配的检测器。在这里移除或重命名连接前，请先取消其分配。"
+
+#: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Discard unsaved JSON changes?"
+msgstr "放弃未保存的 JSON 更改？"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Could not load settings."
+msgstr "无法加载设置。"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Settings saved."
+msgstr "设置已保存。"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Could not save settings."
+msgstr "无法保存设置。"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Settings file"
+msgstr "设置文件"
+
+#: src/lib/components/json-editor.svelte
+msgid "Advanced settings JSON"
+msgstr "高级设置 JSON"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Correct the JSON before saving"
+msgstr "保存前请修正 JSON"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Settings need attention"
+msgstr "设置需要处理"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Please wait…"
+msgstr "请稍候…"
+
+#: src/lib/components/phone-alarm-editor.svelte
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Save"
+msgstr "保存"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Invalid JSON"
+msgstr "JSON 无效"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Valid · Unsaved changes"
+msgstr "有效 · 有未保存的更改"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Valid JSON"
+msgstr "JSON 有效"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "<0/>Discard changes"
+msgstr "<0/>放弃更改"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Devices"
+msgstr "设备"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Open this dashboard on a phone or another computer on the same network. Each browser is remembered until you remove it."
+msgstr "在同一网络中的手机或其他电脑上打开此控制面板。每个浏览器都会被记住，直到你将其移除。"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Scan to connect to AI Detector"
+msgstr "扫码连接 AI Detector"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Scan this code with your phone’s camera, then tap <0>Connect device</0>."
+msgstr "用手机相机扫描此二维码，然后点按<0>连接设备</0>。"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Or open the pairing page and enter"
+msgstr "或打开配对页面并输入"
+
+#. 0: clockTime(form.expires!)
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Valid until {0}. Keep this code private."
+msgstr "有效期至 {0}。请勿泄露此代码。"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Open pairing page"
+msgstr "打开配对页面"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Network"
+msgstr "网络"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Choose the network your phone is connected to."
+msgstr "请选择你的手机所连接的网络。"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Creating code…"
+msgstr "正在生成代码…"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Create a new code"
+msgstr "生成新代码"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Connect a device"
+msgstr "连接设备"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Could not connect device"
+msgstr "无法连接设备"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "This browser"
+msgstr "此浏览器"
+
+#. 0: calendarDate(device.created)
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Connected {0}"
+msgstr "连接于 {0}"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Remove access"
+msgstr "移除访问权限"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "No other devices yet. The computer running AI Detector always has access."
+msgstr "暂无其他设备。运行 AI Detector 的电脑始终拥有访问权限。"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "Connected devices"
+msgstr "已连接的设备"
+
+#: src/routes/(admin)/devices/+page.svelte
+msgid "This dashboard uses HTTP, so use it on a network you trust. Pairing limits who can open it; HTTPS or a secure tunnel is needed to encrypt the traffic."
+msgstr "此控制面板使用 HTTP，请在你信任的网络中使用。配对可限制谁能打开它；如需加密流量，需要 HTTPS 或安全隧道。"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Failed to load recordings."
+msgstr "无法加载录像。"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Recordings"
+msgstr "录像"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Category"
+msgstr "类别"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Review result"
+msgstr "审核结果"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "<0/>Show new recordings"
+msgstr "<0/>显示新录像"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Could not check for new recordings. Retrying automatically."
+msgstr "无法检查新录像。将自动重试。"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Loading recordings"
+msgstr "正在加载录像"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Nothing matches these filters"
+msgstr "没有符合这些筛选条件的内容"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "No recordings yet"
+msgstr "暂无录像"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Try another category or result."
+msgstr "请尝试其他类别或结果。"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Show everything"
+msgstr "显示全部"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Loading more…"
+msgstr "正在加载更多…"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "That’s everything."
+msgstr "已全部显示。"
+
+#. 0: categoryName(entry.type); 1: time
+#: src/routes/(admin)/detections/recording-card.svelte
+msgid "Play {0} recording from {1}"
+msgstr "播放录像（{0}，{1}）"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Light"
+msgstr "浅色"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Dark"
+msgstr "深色"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Automatic"
+msgstr "自动"
+
+#: src/routes/(admin)/settings/+page.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Appearance"
+msgstr "外观"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Automatic follows this device."
+msgstr "“自动”会跟随此设备的设置。"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Download cameras, detectors and alert settings to keep them safe."
+msgstr "下载摄像头、检测器和通知设置，以便妥善保存。"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "This installation"
+msgstr "此安装"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Monitoring status"
+msgstr "监控状态"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "What each camera is doing right now."
+msgstr "每个摄像头当前的状态。"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Guides, questions and bug reports."
+msgstr "指南、问题和错误报告。"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Support"
+msgstr "支持"
+
+#. 0: version
+#: src/routes/(admin)/settings/+page.svelte
+msgid "AI Detector version {0}"
+msgstr "AI Detector 版本 {0}"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Whether your cameras are being watched right now, and what needs attention if they are not."
+msgstr "你的摄像头当前是否正在被监控，如果没有，需要处理什么。"
+
+#: src/routes/(admin)/detectors/+page.svelte
+#: src/routes/(admin)/detectors/add/+page.svelte
+#: src/routes/(admin)/status/+page.svelte
+msgid "Add a detector"
+msgstr "添加检测器"
+
+#. 0: clockTime(monitor.lastCheckedAt)
+#: src/routes/(admin)/status/+page.svelte
+msgid "Last heard from the app at {0}."
+msgstr "最后一次收到应用消息的时间：{0}。"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Picture received; waiting for detection."
+msgstr "已收到画面，正在等待检测。"
+
+#. 0: camera.recordingError
+#. 0: status.recordingError
+#: src/routes/(admin)/status/+page.svelte
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Recording: {0}"
+msgstr "录像：{0}"
+
+#. 0: clockTime(camera.lastFrameAt)
+#: src/routes/(admin)/status/+page.svelte
+msgid "Last picture {0}"
+msgstr "最后画面 {0}"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Technical details <0>For troubleshooting</0>"
+msgstr "技术详情<0>用于排查问题</0>"
+
+#. 0: backend.label
+#: src/routes/(admin)/status/+page.svelte
+msgid "{0} runs on"
+msgstr "{0} 运行于"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Settings and recordings folder"
+msgstr "设置和录像文件夹"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Setup instructions<0/>"
+msgstr "安装说明<0/>"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "<0/>View logs"
+msgstr "<0/>查看日志"
+
+#: src/routes/(admin)/status/+page.svelte
+msgid "Monitoring keeps running when you close this page. If AI Detector opens when you log in, it resumes by itself — unless you paused it here."
+msgstr "关闭此页面后监控仍会继续运行。如果 AI Detector 在你登录时自动打开，监控会自动恢复，除非你在这里暂停了它。"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Connect your cameras"
+msgstr "连接你的摄像头"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "AI Detector looks for cameras on your network. Keep this computer on the same network as the cameras."
+msgstr "AI Detector 会在你的网络中查找摄像头。请让这台电脑与摄像头处于同一网络。"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Choose what to detect"
+msgstr "选择要检测的内容"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Pick a preset and the cameras it should watch. You can add more detectors later."
+msgstr "选择一个预设以及它要监控的摄像头。之后你可以添加更多检测器。"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Each camera is checked once. Monitoring then keeps running in the background, also when this page is closed."
+msgstr "每个摄像头会检查一次。之后监控会在后台持续运行，即使关闭此页面也是如此。"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Set up · AI Detector"
+msgstr "设置 · AI Detector"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Your existing setup is here to review. Previous recordings are in Recordings. Monitoring is stopped until you start it in the last step."
+msgstr "你可以在这里检查现有设置。之前的录像在“录像”中。在最后一步启动之前，监控处于停止状态。"
+
+#: src/routes/(admin)/setup/+page.svelte
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Continue<0/>"
+msgstr "继续<0/>"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "<0/>Add more cameras"
+msgstr "<0/>添加更多摄像头"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Skip — use the cameras for live viewing only"
+msgstr "跳过：摄像头仅用于实时观看"
+
+#: src/lib/cameras.ts
+msgid "Custom source"
+msgstr "自定义来源"
+
+#. 0: meta.label
+#. 0: meta.label
+#: src/routes/(admin)/detectors/+page.svelte
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Edit {0}"
+msgstr "编辑 {0}"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "Edit"
+msgstr "编辑"
+
+#: src/routes/(admin)/setup/+page.svelte
+msgid "<0/>Add another detector"
+msgstr "<0/>添加其他检测器"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/notifications/add/+page.svelte
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Alerts"
+msgstr "通知"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "<0/>Add recipient"
+msgstr "<0/>添加接收者"
+
+#. 0: assigned.join(', ')
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Alerts from {0}"
+msgstr "来自 {0} 的通知"
+
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Not used by a detector yet"
+msgstr "尚未被任何检测器使用"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Connect Telegram to get each event on your phone. Monitoring and recording also work without alerts."
+msgstr "连接 Telegram，即可在手机上收到每个事件。没有通知时，监控和录像同样可以运行。"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Connect your phone"
+msgstr "连接你的手机"
+
+#: src/lib/components/review-buttons.svelte
+msgid "Review removed"
+msgstr "审核已移除"
+
+#: src/lib/components/review-buttons.svelte
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Review"
+msgstr "审核"
+
+#: src/lib/components/review-buttons.svelte
+msgid "Confirmed. Remove your review"
+msgstr "已确认。移除你的审核"
+
+#: src/lib/components/review-buttons.svelte
+msgid "Confirmed by AI. Confirm it yourself"
+msgstr "AI 已确认。请你亲自确认"
+
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+msgid "Confirm: this is real"
+msgstr "确认：这是真实的"
+
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+msgid "Remove your review"
+msgstr "移除你的审核"
+
+#: src/lib/components/review-buttons.svelte
+msgid "Confirm"
+msgstr "确认"
+
+#: src/lib/components/review-buttons.svelte
+msgid "False alarm. Remove your review"
+msgstr "误报。移除你的审核"
+
+#: src/lib/components/review-buttons.svelte
+msgid "False alarm according to AI. Mark it yourself"
+msgstr "AI 判断为误报。请你亲自标记"
+
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+#: src/lib/components/review-buttons.svelte
+#: src/lib/detections.ts
+msgid "False alarm"
+msgstr "误报"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/detectors/+page.svelte
+#: src/routes/(admin)/detectors/add/+page.svelte
+msgid "Detectors"
+msgstr "检测器"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "A detector watches the cameras you choose, records what it sees and alerts the people you pick."
+msgstr "检测器会监控你选择的摄像头，录下看到的内容，并通知你指定的人。"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "<0/>Add detector"
+msgstr "<0/>添加检测器"
+
+#. 0: recipients.map(({ label }) => label).join(', ')
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "<0/> Alerts to {0}"
+msgstr "<0/> 通知发送给 {0}"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "No phone alerts"
+msgstr "没有手机通知"
+
+#. 0: unwatched[0].label
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "{0} is not watched by a detector, so it is for live viewing only."
+msgstr "{0} 未被任何检测器监控，因此仅用于实时观看。"
+
+#. 0: unwatched.map((camera) => camera.label).join(', ')
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "{0} are not watched by a detector, so they are for live viewing only."
+msgstr "{0} 未被任何检测器监控，因此仅用于实时观看。"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Your cameras show a live picture. Add a detector to record events and get alerts."
+msgstr "你的摄像头正在显示实时画面。添加检测器即可录制事件并接收通知。"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Connect a camera first, then choose what to detect on it."
+msgstr "请先连接摄像头，然后选择要在其上检测的内容。"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "No detectors yet"
+msgstr "暂无检测器"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Add a camera"
+msgstr "添加摄像头"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Log unavailable"
+msgstr "日志不可用"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Logs"
+msgstr "日志"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Startup and recent activity, to help find what went wrong. The diagnostics download bundles this with system details for support."
+msgstr "启动过程和最近的活动，帮助找出问题所在。诊断信息下载会将其与系统详情打包，供技术支持使用。"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Search logs…"
+msgstr "搜索日志…"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Search logs"
+msgstr "搜索日志"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Logs could not be refreshed"
+msgstr "无法刷新日志"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Check that AI Detector is still open. Retrying automatically."
+msgstr "请检查 AI Detector 是否仍处于打开状态。将自动重试。"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Detector logs"
+msgstr "检测器日志"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Loading logs…"
+msgstr "正在加载日志…"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "No matching log entries."
+msgstr "没有匹配的日志条目。"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "No diagnostic output yet. Logs appear when monitoring starts."
+msgstr "暂无诊断输出。监控启动后会显示日志。"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Matching messages include their error details."
+msgstr "匹配的消息包含其错误详情。"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "Updates automatically. Scroll up to read earlier output."
+msgstr "自动更新。向上滚动可查看更早的输出。"
+
+#: src/routes/(admin)/logs/+page.svelte
+msgid "<0/>Latest"
+msgstr "<0/>最新"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "An AI model looks at each clip before an alert is sent and filters out false alarms. Your presets supply the question it answers."
+msgstr "在发送通知前，AI 模型会查看每个片段并过滤误报。它要回答的问题由你的预设提供。"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "<0/>Add connection"
+msgstr "<0/>添加连接"
+
+#. 0: assigned.map(({ meta }) => meta.label).join(', ')
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Checks {0}"
+msgstr "复核 {0}"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Optional. Without it, every detection is recorded and alerted as it is."
+msgstr "可选。如果不使用，每次检测都会按原样录制并发送通知。"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Connect Google Gemini"
+msgstr "连接 Google Gemini"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Storage"
+msgstr "存储"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Recordings are kept until you remove them. Nothing is deleted automatically."
+msgstr "录像会一直保留，直到你移除它们。不会自动删除任何内容。"
+
+#. 0: dataSize(data.space.available)
+#: src/routes/(admin)/storage/+page.svelte
+msgid "{0} free"
+msgstr "可用 {0}"
+
+#. 0: dataSize(used); 1: dataSize(data.space.total)
+#: src/routes/(admin)/storage/+page.svelte
+msgid "{0} used of {1}"
+msgstr "已用 {0}，共 {1}"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Storage used"
+msgstr "已用存储"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Storage is almost full"
+msgstr "存储空间快满了"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Free some space so new recordings can be saved."
+msgstr "请释放一些空间，以便保存新录像。"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Remove old recordings"
+msgstr "移除旧录像"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Choose a date to see how many recordings would be removed. Export the ones you want to keep first from <0>Recordings</0>."
+msgstr "选择一个日期，查看将移除多少录像。请先在<0>录像</0>中导出你想保留的录像。"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Recordings before"
+msgstr "早于此日期的录像"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Removing them cannot be undone. Settings and newer recordings are kept."
+msgstr "移除后无法撤销。设置和较新的录像会保留。"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "There is nothing to remove before this date."
+msgstr "此日期之前没有可移除的内容。"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Model cache"
+msgstr "模型缓存"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Prepared models and unused downloads. Pause monitoring before clearing them; the next start prepares models again, which can take several minutes on NVIDIA hardware."
+msgstr "已准备的模型和未使用的下载。清除前请先暂停监控；下次启动时会重新准备模型，在 NVIDIA 硬件上可能需要几分钟。"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Clear model cache"
+msgstr "清除模型缓存"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "<0/>Add camera"
+msgstr "<0/>添加摄像头"
+
+#. 0: camera.label
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Open {0}"
+msgstr "打开 {0}"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "No cameras yet"
+msgstr "暂无摄像头"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Connect a camera to see its live picture and choose what to detect."
+msgstr "连接摄像头以查看其实时画面并选择要检测的内容。"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Add your first camera"
+msgstr "添加你的第一个摄像头"
+
+#: src/routes/(admin)/detectors/add/+page.svelte
+msgid "Detector not found"
+msgstr "未找到检测器"
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Recipient not found"
+msgstr "未找到接收者"
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Connect alerts"
+msgstr "连接通知"
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Choose which detectors send alerts here, or connect it again."
+msgstr "选择哪些检测器向这里发送通知，或重新连接。"
+
+#: src/routes/(admin)/notifications/add/+page.svelte
+msgid "Connect a phone, group or channel in Telegram, then choose which detectors alert it."
+msgstr "在 Telegram 中连接手机、群组或频道，然后选择由哪些检测器向其发送通知。"
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Camera not found"
+msgstr "未找到摄像头"
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "A detector decides what is recorded and who is alerted."
+msgstr "检测器决定录制什么以及通知谁。"
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "This camera is for live viewing only. Add it to a detector to record and alert."
+msgstr "此摄像头仅用于实时观看。将其添加到检测器即可录制和发送通知。"
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Detectors on this camera"
+msgstr "此摄像头上的检测器"
+
+#. 0: alerts.join(', ')
+#. 0: camera.alerts.join(', ')
+#: src/lib/components/setup-finish.svelte
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Alerts go to {0}."
+msgstr "通知发送给 {0}。"
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Manage detectors"
+msgstr "管理检测器"
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "Choose a detector"
+msgstr "选择检测器"
+
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Connection not found"
+msgstr "未找到连接"
+
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Connect Google Gemini to check detections before alerts are sent."
+msgstr "连接 Google Gemini，在发送通知前复核检测结果。"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "<0/> Your browser cannot play this video."
+msgstr "<0/> 你的浏览器无法播放此视频。"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Newer recording"
+msgstr "较新的录像"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Newer (←)"
+msgstr "较新（←）"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Older recording"
+msgstr "较旧的录像"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Older (→)"
+msgstr "较旧（→）"
+
+#. 0: index + 1; 1: entries.length
+#: src/lib/components/recording-viewer.svelte
+msgid "{0} of {1}"
+msgstr "{0} / {1}"
+
+#: src/routes/(admin)/streams/add/+page.svelte
+msgid "Add cameras"
+msgstr "添加摄像头"
+
+#: src/routes/(admin)/streams/add/+page.svelte
+msgid "Choose the cameras to connect, or enter a stream URL. Keep them on the same network as this computer."
+msgstr "选择要连接的摄像头，或输入流地址。请让它们与这台电脑处于同一网络。"
+
+#: src/lib/components/ui/breadcrumb/breadcrumb-ellipsis.svelte
+msgid "More"
+msgstr "更多"
+
+#: src/lib/components/ui/carousel/carousel-next.svelte
+msgid "Next slide"
+msgstr "下一张"
+
+#: src/lib/components/ui/carousel/carousel-previous.svelte
+msgid "Previous slide"
+msgstr "上一张"
+
+#: src/lib/components/ui/command/command-dialog.svelte
+msgid "Command Palette"
+msgstr "命令面板"
+
+#: src/lib/components/ui/command/command-dialog.svelte
+msgid "Search for a command to run"
+msgstr "搜索要运行的命令"
+
+#: src/lib/components/ui/dialog/dialog-content.svelte
+#: src/lib/components/ui/sheet/sheet-content.svelte
+msgid "Close"
+msgstr "关闭"
+
+#: src/lib/components/ui/pagination/pagination-ellipsis.svelte
+msgid "More pages"
+msgstr "更多页面"
+
+#: src/lib/components/ui/pagination/pagination-next-button.svelte
+#: src/lib/components/ui/pagination/pagination-next.svelte
+msgid "Next"
+msgstr "下一页"
+
+#: src/lib/components/ui/pagination/pagination-next-button.svelte
+#: src/lib/components/ui/pagination/pagination-next.svelte
+msgid "Go to next page"
+msgstr "转到下一页"
+
+#: src/lib/components/ui/pagination/pagination-prev-button.svelte
+#: src/lib/components/ui/pagination/pagination-previous.svelte
+msgid "Previous"
+msgstr "上一页"
+
+#: src/lib/components/ui/pagination/pagination-prev-button.svelte
+#: src/lib/components/ui/pagination/pagination-previous.svelte
+msgid "Go to previous page"
+msgstr "转到上一页"
+
+#: src/lib/components/ui/sidebar/sidebar-rail.svelte
+#: src/lib/components/ui/sidebar/sidebar-rail.svelte
+#: src/lib/components/ui/sidebar/sidebar-trigger.svelte
+msgid "Toggle Sidebar"
+msgstr "显示或隐藏侧边栏"
+
+#: src/lib/components/ui/sidebar/sidebar.svelte
+msgid "Sidebar"
+msgstr "侧边栏"
+
+#: src/lib/components/ui/sidebar/sidebar.svelte
+msgid "Displays the mobile sidebar."
+msgstr "显示移动端侧边栏。"
+
+#: src/lib/components/ui/spinner/spinner.svelte
+msgid "Loading"
+msgstr "正在加载"
+
+#: src/lib/monitoring.ts
+msgid "# camera offline."
+msgid_plural "# cameras offline."
+msgstr[0] "# 个摄像头离线。"
+
+#: src/lib/monitoring.ts
+#: src/lib/server/managed-detector.ts
+msgid "Watching # camera."
+msgid_plural "Watching # cameras."
+msgstr[0] "正在监控 # 个摄像头。"
+
+#: src/routes/(admin)/storage/+page.server.ts
+msgid "Removed # recording."
+msgid_plural "Removed # recordings."
+msgstr[0] "已移除 # 个录像。"
+
+#: src/lib/components/camera-add.svelte
+msgid "Connect # camera"
+msgid_plural "Connect # cameras"
+msgstr[0] "连接 # 个摄像头"
+
+#: src/lib/components/camera-add.svelte
+msgid "Add # camera"
+msgid_plural "Add # cameras"
+msgstr[0] "添加 # 个摄像头"
+
+#: src/lib/components/camera-selection.svelte
+msgid "# camera selected"
+msgid_plural "# cameras selected"
+msgstr[0] "已选择 # 个摄像头"
+
+#: src/lib/components/export-recordings.svelte
+msgid "# recording selected, including all pages."
+msgid_plural "# recordings selected, including all pages."
+msgstr[0] "已选择 # 个录像，包括所有页面。"
+
+#: src/lib/components/language-menu.svelte
+msgid "The language could not be changed. Try again."
+msgstr "无法更改语言。请重试。"
+
+#: src/lib/components/language-menu.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Language"
+msgstr "语言"
+
+#: src/lib/cameras.ts
+#: src/lib/components/import-installation.svelte
+msgid "# camera"
+msgid_plural "# cameras"
+msgstr[0] "# 个摄像头"
+
+#. 0: calendarDate(form.before); 0: calendarDate(form.before)
+#: src/routes/(admin)/storage/+page.svelte
+msgid "# recording before {0}"
+msgid_plural "# recordings before {0}"
+msgstr[0] "{0} 之前的 # 个录像"
+
+#: src/routes/(admin)/storage/+page.svelte
+msgid "Remove # recording"
+msgid_plural "Remove # recordings"
+msgstr[0] "移除 # 个录像"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Used on every device and for replies in Telegram."
+msgstr "用于所有设备以及 Telegram 中的回复。"
+
+#: src/lib/detections.ts
+msgid "Unreviewed"
+msgstr "未审核"
+
+#: src/lib/detections.ts
+msgid "Enter a date in YYYY-MM-DD format."
+msgstr "请按 YYYY-MM-DD 格式输入日期。"
+
+#: src/lib/detections.ts
+msgid "Enter a valid date."
+msgstr "请输入有效日期。"
+
+#: src/lib/detections.ts
+msgid "The end date must be on or after the start date."
+msgstr "结束日期不能早于开始日期。"
+
+#: src/lib/configuration.ts
+msgid "Enter the complete address, starting with https://."
+msgstr "请输入以 https:// 开头的完整地址。"
+
+#: src/lib/configuration.ts
+msgid "Use an address that starts with http:// or https://."
+msgstr "请使用以 http:// 或 https:// 开头的地址。"
+
+#: src/lib/configuration.ts
+msgid "Use an interval of at least 5 seconds."
+msgstr "间隔至少为 5 秒。"
+
+#: src/lib/configuration.ts
+msgid "Use an interval of at most one day."
+msgstr "间隔最多为一天。"
+
+#: src/lib/navigation.ts
+msgid "Let AI double-check detections before an alert is sent."
+msgstr "在发送通知前让 AI 复核检测结果。"
+
+#: src/lib/navigation.ts
+msgid "Phones and computers that can open this dashboard."
+msgstr "可以打开此控制面板的手机和电脑。"
+
+#: src/lib/navigation.ts
+msgid "Free space and old recordings."
+msgstr "可用空间和旧录像。"
+
+#: src/lib/navigation.ts
+msgid "Edit thresholds, prompts and the detection engine as JSON."
+msgstr "以 JSON 编辑阈值、提示词和检测引擎。"
+
+#: src/lib/navigation.ts
+msgid "Recent activity and a diagnostics download for support."
+msgstr "最近的活动，以及供技术支持使用的诊断信息下载。"
+
+#: src/lib/schema.ts
+msgid "Camera connection details must not contain login details or access tokens."
+msgstr "摄像头连接信息中不得包含登录信息或访问令牌。"
+
+#: src/lib/schema.ts
+msgid "Enter a valid header name."
+msgstr "请输入有效的请求头名称。"
+
+#: src/lib/schema.ts
+msgid "Use a single-line header value."
+msgstr "请使用单行的请求头值。"
+
+#: src/lib/schema.ts
+msgid "Enter a model name."
+msgstr "请输入模型名称。"
+
+#: src/lib/schema.ts
+msgid "Enter a model name, without spaces or a trailing slash."
+msgstr "请输入模型名称，不要包含空格或结尾斜杠。"
+
+#: src/lib/schema.ts
+msgid "Enter a connection name."
+msgstr "请输入连接名称。"
+
+#: src/lib/schema.ts
+msgid "Enter at least one model."
+msgstr "请至少输入一个模型。"
+
+#: src/lib/schema.ts
+msgid "Use an HTTP or HTTPS API URL."
+msgstr "请使用 HTTP 或 HTTPS 的 API 地址。"
+
+#: src/lib/schema.ts
+msgid "Each header name must be unique."
+msgstr "每个请求头名称必须唯一。"
+
+#: src/lib/server/telegram-pairing.ts
+msgid "This Telegram connection link expired. Create a new link and open it in Telegram."
+msgstr "此 Telegram 连接链接已过期。请创建新链接并在 Telegram 中打开。"
+
+#: src/lib/server/telegram-pairing.ts
+msgid "This Telegram connection was cancelled. Create a new link to try again."
+msgstr "此 Telegram 连接已取消。请创建新链接后重试。"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "One recording could not be read. The others are shown below."
+msgid_plural "# recordings could not be read. The others are shown below."
+msgstr[0] "# 个录像无法读取。其他录像显示在下方。"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "Download diagnostics"
+msgstr "下载诊断信息"
+
+#. 0: wait / 1000
+#: src/lib/server/managed-detector.ts
+msgid "Restarting monitoring in {0} seconds…"
+msgstr "{0} 秒后重新启动监控…"
+
+#: src/lib/server/telegram-reviews.ts
+msgid "Confirmed. Saved in AI Detector."
+msgstr "已确认。已保存到 AI Detector。"
+
+#: src/lib/server/telegram-reviews.ts
+msgid "Marked as a false alarm. Saved in AI Detector."
+msgstr "已标记为误报。已保存到 AI Detector。"
+
+#: src/lib/server/telegram-pairing.ts
+msgid "My Telegram group"
+msgstr "我的 Telegram 群组"
+
+#: src/lib/server/telegram-pairing.ts
+msgid "My Telegram channel"
+msgstr "我的 Telegram 频道"
+
+#: src/lib/server/folder-picker.ts
+msgid "Choose your previous AI Detector folder"
+msgstr "选择之前的 AI Detector 文件夹"
+
+#: src/lib/components/camera-add.svelte
+#: src/lib/components/camera-settings.svelte
+msgid "Example: Calving pen"
+msgstr "示例：产犊栏"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Example: Calving pen watch"
+msgstr "示例：产犊监控"
+
+#: src/lib/components/import-installation.svelte
+msgid "# detector"
+msgid_plural "# detectors"
+msgstr[0] "# 个检测器"
+
+#: src/lib/components/import-installation.svelte
+msgid "# recording"
+msgid_plural "# recordings"
+msgstr[0] "# 个录像"
+
+#: src/lib/components/heartbeat-settings.svelte
+msgid "Calling the saved address"
+msgstr "正在调用已保存的地址"
+
+#: src/lib/components/notification-editor.svelte
+#: src/routes/pair/+page.svelte
+msgid "Example: My phone"
+msgstr "示例：我的手机"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Picture and recording location checked"
+msgstr "画面和录像位置已检查"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Picture checked"
+msgstr "画面已检查"
+
+#. 0: meta.llmConnection
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Checked by {0}"
+msgstr "由 {0} 检查"
+
+#. 0: amount
+#: src/lib/format.ts
+msgid "{0} GB"
+msgstr "{0} GB"
+
+#: src/routes/(admin)/status/+page.svelte
+msgctxt "page name"
+msgid "Monitoring"
+msgstr "监控"
+
+#. 0: percent(entry.confidence)
+#. 0: percent(entry.confidence)
+#: src/lib/components/recording-viewer.svelte
+#: src/routes/(admin)/detections/recording-card.svelte
+msgid "{0} confidence"
+msgstr "置信度 {0}"
+
+#. 0: locations.length
+#: src/lib/server/recording-export.ts
+msgid ""
+"AI Detector recordings\n"
+"\n"
+"{0} recorded events.\n"
+"\n"
+"Files are grouped by category, stage and recording timestamp under detections/.\n"
+"clean.jpg is the original image when available; best.jpg includes annotations.\n"
+"Other saved images, video clips and metadata.json are included unchanged.\n"
+"Manual reviews override the original stage. In metadata.json, review records the\n"
+"manual decision and its origin; validated remains the validator's original result.\n"
+"Dates follow the recording dates shown in AI Detector.\n"
+"\n"
+"An accepted event is not a verified bounding-box annotation. Review and annotate\n"
+"the original images or video frames before using them to train a model.\n"
+"\n"
+"This export does not include application settings or camera login details.\n"
+""
+msgstr ""
+"AI Detector 录像\n"
+"\n"
+"已录制 {0} 个事件。\n"
+"\n"
+"文件位于 detections/ 下，按类别、阶段和录制时间分组。\n"
+"clean.jpg 是原始图片（如有）；best.jpg 包含标注。\n"
+"其他已保存的图片、视频片段和 metadata.json 均原样包含。\n"
+"人工审核优先于原始阶段。在 metadata.json 中，review 记录\n"
+"人工决定及其来源；validated 保留 AI 复核的原始结果。\n"
+"日期与 AI Detector 中显示的录制日期一致。\n"
+"\n"
+"被接受的事件并不是经过验证的边界框标注。在用于训练模型之前，\n"
+"请检查并标注原始图片或视频帧。\n"
+"\n"
+"此导出不包含应用设置或摄像头登录信息。\n"
+""
+
+#. 0: file
+#: src/lib/server/configuration/settings-files.ts
+msgid "The settings file {0} is damaged and cannot be read."
+msgstr "设置文件 {0} 已损坏，无法读取。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "This detector uses its own settings and does not get new models automatically. Choosing a preset replaces them."
+msgstr "此检测器使用自己的设置，不会自动获取新模型。选择预设将替换这些设置。"
+
+#: src/lib/components/home-screen-hint.svelte
+msgid "Not now"
+msgstr "以后再说"
+
+#: src/lib/components/home-screen-hint.svelte
+msgid "Put AI Detector on your home screen"
+msgstr "将 AI Detector 添加到主屏幕"
+
+#: src/lib/components/home-screen-hint.svelte
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Show me how"
+msgstr "查看方法"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Home screen"
+msgstr "主屏幕"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Open AI Detector with one tap from this device’s home screen."
+msgstr "在此设备的主屏幕上一点即可打开 AI Detector。"
+
+#: src/lib/schema.ts
+msgid "Enter a time such as 22:00."
+msgstr "请输入时间，例如 22:00。"
+
+#: src/lib/server/recording-export.ts
+msgid ""
+"This export holds the original photos only: pictures with boxes and video clips were left out.\n"
+""
+msgstr ""
+"此导出仅包含原始照片：带框的图片和视频片段已被排除。\n"
+""
+
+#: src/lib/components/export-recordings.svelte
+msgid "Only the original photos"
+msgstr "仅原始照片"
+
+#: src/lib/components/export-recordings.svelte
+msgid "Leaves out videos and pictures with boxes: a much smaller ZIP to share for model improvement."
+msgstr "不包含视频和带框的图片：ZIP 文件小得多，便于分享以改进模型。"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Quiet from"
+msgstr "静音开始"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Until"
+msgstr "结束"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Quiet hours"
+msgstr "静音时段"
+
+#: src/lib/components/notification-editor.svelte
+msgid "Alerts between these times still arrive, but without sound. Leave both empty for sound at any hour."
+msgstr "此时段内的通知仍会送达，但没有声音。两项都留空则任何时间都有声音。"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Recording deleted"
+msgstr "录像已删除"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Could not delete the recording. Please try again."
+msgstr "无法删除录像。请重试。"
+
+#: src/lib/components/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
+#: src/lib/components/recording-viewer.svelte
+msgid "Delete recording"
+msgstr "删除录像"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Delete this recording?"
+msgstr "删除此录像？"
+
+#: src/lib/components/recording-viewer.svelte
+msgid "Its pictures and video are removed from this computer and cannot be brought back."
+msgstr "其图片和视频将从这台电脑中删除，且无法恢复。"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Home screen shortcut"
+msgstr "主屏幕快捷方式"
+
+#: src/routes/(admin)/settings/+page.svelte
+msgid "Open your browser’s menu (⋮) and choose “Add to Home screen”. The shortcut opens AI Detector in the browser."
+msgstr "打开浏览器菜单（⋮），选择“添加到主屏幕”。该快捷方式会在浏览器中打开 AI Detector。"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "View"
+msgstr "视图"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "Live"
+msgstr "实时"
+
+#: src/routes/(admin)/streams/+page.svelte
+msgid "History"
+msgstr "历史"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Other recordings"
+msgstr "其他录像"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Watched"
+msgstr "已监控"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "AI Detector was not running"
+msgstr "AI Detector 未运行"
+
+#. 0: minutes
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "{0} min"
+msgstr "{0} 分钟"
+
+#. 0: Math.floor(minutes / 60); 1: String(minutes % 60).padStart(2, '0')
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "{0} h {1} min"
+msgstr "{0} 小时 {1} 分钟"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Period"
+msgstr "时间段"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Last 24 hours"
+msgstr "最近 24 小时"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Last 7 days"
+msgstr "最近 7 天"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "This installation runs its detector separately, so it does not know when cameras were watched. Recordings are shown."
+msgstr "此安装的检测器是单独运行的，因此无法得知摄像头何时被监控。下面显示的是录像。"
+
+#. 0: duration(watched)
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Watched {0}"
+msgstr "已监控 {0}"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Not watched"
+msgstr "未监控"
+
+#. 0: label
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Play recording: {0}"
+msgstr "播放录像：{0}"
+
+#: src/routes/(admin)/streams/camera-history.svelte
+msgid "Last hour"
+msgstr "最近一小时"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Update automatically"
+msgstr "自动更新"
+
+#: src/lib/components/detector-editor.svelte
+msgid "When a newer model is published for this preset, this detector takes it by itself, at start and once a day."
+msgstr "当此预设发布新模型时，此检测器会在启动时以及每天一次自动采用新模型。"
+
+#: src/routes/(admin)/advanced/+page.svelte
+msgid "Everything in config.json: each detector’s model, prompts, thresholds and recording options, plus health and onnx for the whole installation. Saving applies the changes to active monitoring."
+msgstr "config.json 中的所有内容：每个检测器的模型、提示词、阈值和录像选项，以及整个安装的 health 和 onnx。保存后更改会应用到正在运行的监控。"
+
+#: src/lib/server/runtime-status.ts
+msgid "A recording could not be saved. Check free disk space and the storage folder."
+msgstr "无法保存录像。请检查磁盘可用空间和存储文件夹。"
+
+#: src/lib/server/settings-backup.ts
+msgid ""
+"AI Detector settings backup\n"
+"\n"
+"Includes cameras, detectors and alert settings, including saved passwords and\n"
+"tokens. Keep this ZIP private.\n"
+"\n"
+"To restore into a new installation, extract the ZIP, open Settings, choose\n"
+"Use existing setup and select the extracted folder. Review the imported setup\n"
+"before starting monitoring. Existing setups are never overwritten by import.\n"
+"\n"
+"Recordings, downloaded models, local video sources, custom preset files,\n"
+"computer startup preferences and connected-device access are not included.\n"
+"Keep any local model or video files referenced by config.json alongside this\n"
+"backup, at their original relative paths, or update those paths before\n"
+"importing on another computer.\n"
+""
+msgstr ""
+"AI Detector 设置备份\n"
+"\n"
+"包含摄像头、检测器和通知设置，以及已保存的密码和令牌。\n"
+"请妥善保管此 ZIP 文件。\n"
+"\n"
+"如需恢复到新安装：解压 ZIP，打开“设置”，选择\n"
+"“使用现有设置”，然后选择解压后的文件夹。开始监控前，\n"
+"请检查导入的设置。导入绝不会覆盖现有设置。\n"
+"\n"
+"不包含录像、已下载的模型、本地视频来源、自定义预设文件、\n"
+"电脑启动偏好设置以及已连接设备的访问权限。\n"
+"请将 config.json 引用的本地模型或视频文件按原始相对路径与此备份放在一起，\n"
+"或在其他电脑上导入前更新这些路径。\n"
+""
+
+#. 0: amount
+#: src/lib/format.ts
+msgid "{0} MB"
+msgstr "{0} MB"
+
+#: src/lib/server/configuration/telegrams.ts
+#: src/lib/server/configuration/telegrams.ts
+msgid "This recipient no longer exists."
+msgstr "此接收者已不存在。"
+
+#: src/lib/server/configuration/telegrams.ts
+msgid "This recipient or name already exists."
+msgstr "此接收者或名称已存在。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset. It supplies everything needed to recognize that kind of event."
+msgstr "请选择一个预设。它提供识别此类事件所需的一切。"
+
+#: src/lib/components/setup-finish.svelte
+msgid "Waiting for the first analyzed picture…"
+msgstr "正在等待第一张分析后的画面…"
+
+#: src/lib/components/setup-finish.svelte
+msgid "· Live view only"
+msgstr "· 仅实时画面"
+
+#: src/lib/server/managed-detector.ts
+msgid "The detector stopped responding. Restarting monitoring…"
+msgstr "检测器停止响应。正在重新启动监控…"
+
+#. 0: exitSignal ?? code
+#: src/lib/server/managed-detector.ts
+msgid "The detector keeps stopping unexpectedly ({0}). Restart this computer. If it keeps happening, download the diagnostics in Settings → Logs and ask for help."
+msgstr "检测器反复意外停止（{0}）。请重启这台电脑。如果问题仍然存在，请在“设置 → 日志”中下载诊断信息并寻求帮助。"
+
+#. 0: names(together); 1: moment(since); 2: moment(until)
+#: src/lib/server/outage-alerts.ts
+msgid "Watched again: {0}. Not watched from {1} to {2}."
+msgstr "已恢复监控：{0}。{1} 至 {2} 期间未监控。"
+
+#. 0: names(stopped); 1: moment(since)
+#: src/lib/server/outage-alerts.ts
+msgid "Not watched: {0} (since {1}). Open AI Detector to see why."
+msgstr "未监控：{0}（自 {1} 起）。请打开 AI Detector 查看原因。"
+
+#. 0: names(still)
+#: src/lib/server/outage-alerts.ts
+msgid "Still not watched: {0}."
+msgstr "仍未监控：{0}。"
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-editor.svelte
+msgid "Mode"
+msgstr "模式"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Default"
+msgstr "默认"
+
+#: src/lib/server/configuration/preset-files.ts
+msgid "Telegram settings in a preset leave out token, chat and quiet: each recipient has its own."
+msgstr "预设中的 Telegram 设置不包含 token、chat 和 quiet：每个接收者都有自己的设置。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Send a Telegram message with the footage when this detector sees something."
+msgstr "当此检测器发现情况时，发送一条附带画面的 Telegram 消息。"
+
+#: src/lib/navigation.ts
+#: src/lib/server/runtime-status.ts
+#: src/routes/(admin)/validator/+page.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "AI check"
+msgstr "AI 复核"
+
+#: src/lib/components/camera-connection-fields.svelte
+msgid "The camera’s own login, which may differ from its phone app. <0/>"
+msgstr "摄像头本身的登录信息，可能与其手机应用的登录信息不同。<0/>"
+
+#: src/lib/components/detector-editor.svelte
+#: src/lib/components/detector-verification.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "Connect AI check"
+msgstr "连接 AI 复核"
+
+#: src/lib/components/detector-verification.svelte
+msgid "AI check <0>(optional)</0>"
+msgstr "AI 复核<0>（可选）</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset to use its AI check question."
+msgstr "选择一个预设以使用其 AI 复核问题。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Choose a preset that supplies an AI check question."
+msgstr "请选择一个提供 AI 复核问题的预设。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "The detector could not be removed."
+msgstr "无法移除检测器。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Remove this detector…"
+msgstr "移除此检测器…"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Remove detector"
+msgstr "移除检测器"
+
+#. 0: canTest ? 'The key is checked with a test image before it is saved.' \\: 'Connection testing is available in the desktop application. Save settings here for your separate detector.'
+#: src/lib/components/llm-connection-editor.svelte
+msgid "{0} Detectors waiting for an AI check start using this connection. You can turn it off for each detector."
+msgstr "{0} 等待 AI 复核的检测器将开始使用此连接。你可以为每个检测器单独关闭它。"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "A detector that uses this connection must be given another one, or none, first."
+msgstr "必须先为使用此连接的检测器指定其他连接，或不使用连接。"
+
+#: src/lib/components/llm-connection-editor.svelte
+msgid "Keep connection"
+msgstr "保留连接"
+
+#: src/routes/(admin)/detections/+page.svelte
+msgid "When a detector sees something, the recording appears here and stays until you remove it."
+msgstr "当检测器发现情况时，录像会显示在这里，并一直保留到你将其移除。"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "Checked with custom settings"
+msgstr "已使用自定义设置检查"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "Turn the AI check on or off for each detector under <0>Detectors</0>."
+msgstr "在<0>检测器</0>中为每个检测器开启或关闭 AI 复核。"
+
+#: src/routes/(admin)/validator/+page.svelte
+msgid "No AI check connected"
+msgstr "未连接 AI 复核"
+
+#: src/routes/(admin)/detectors/add/+page.svelte
+#: src/routes/(admin)/notifications/add/+page.svelte
+#: src/routes/(admin)/validator/add/+page.svelte
+msgid "It may have been removed or renamed."
+msgstr "它可能已被移除或重命名。"
+
+#: src/routes/(admin)/streams/[id]/+page.svelte
+msgid "It may have been removed."
+msgstr "它可能已被移除。"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Camera notifications could not be saved. Try again."
+msgstr "无法保存摄像头通知。请重试。"
+
+#. 0: app.telegrams.length + 1
+#: src/lib/configuration.ts
+msgid "Telegram {0}"
+msgstr "Telegram {0}"
+
+#. 0: file; 1: fields
+#: src/lib/server/installation-import/configuration.ts
+msgid "Check {0}: {1}. These settings are invalid or missing."
+msgstr "请检查 {0}：{1}。这些设置无效或缺失。"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Detector"
+msgstr "检测器"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Telegram"
+msgstr "Telegram"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "AI connection"
+msgstr "AI 连接"
+
+#: src/lib/server/installation-import/metadata.ts
+msgid "Filled in missing names and ignored empty optional settings in app.json."
+msgstr "已补全 app.json 中缺失的名称，并忽略了空的可选设置。"
+
+#. 0: label; 1: move.host
+#: src/lib/server/cameras/relocation.ts
+msgid "{0} got a new network address ({1}) and is watched there again."
+msgstr "{0} 获得了新的网络地址（{1}），已在新地址上恢复监控。"
+
+#: src/lib/server/cameras/relocation.ts
+msgid "Tip: give your cameras a fixed address in your router (a DHCP reservation), so they keep their address."
+msgstr "提示：在路由器中为摄像头设置固定地址（DHCP 保留），以便它们保持地址不变。"
+
+#: src/lib/components/camera-settings.svelte
+msgid "Tip: give this camera a fixed address in your router (a DHCP reservation). When its address changes anyway, AI Detector looks for it on the network by itself."
+msgstr "提示：在路由器中为此摄像头设置固定地址（DHCP 保留）。即使地址仍然发生变化，AI Detector 也会自动在网络中找到它。"
+
+#: src/lib/server/ntfy.ts
+msgid "Could not reach ntfy. Check the internet connection of this computer."
+msgstr "无法访问 ntfy。请检查这台电脑的网络连接。"
+
+#: src/lib/server/ntfy.ts
+msgid "Test alarm. This is how a detection sounds."
+msgstr "测试警报。检测到情况时就是这个声音。"
+
+#: src/routes/(admin)/notifications/+page.svelte
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "Phone alarm"
+msgstr "手机警报"
+
+#. 0: alarm.detectorLabels.join(', ')
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Rings for {0}"
+msgstr "响铃对象：{0}"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Could not send the test alarm."
+msgstr "无法发送测试警报。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Phone alarm saved."
+msgstr "手机警报已保存。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Could not save the phone alarm. Your choices are still here."
+msgstr "无法保存手机警报。你的选择仍保留在这里。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Could not remove the phone alarm."
+msgstr "无法移除手机警报。"
+
+#: src/routes/(admin)/notifications/alarm/+page.svelte
+msgid "A loud alarm on your phone for each detection, also at night. It comes next to the Telegram alert, through the free ntfy app."
+msgstr "每次检测到情况时，手机都会响起响亮的警报，夜间也会。它通过免费的 ntfy 应用发送，与 Telegram 通知同时到达。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Install the ntfy app on your phone."
+msgstr "在手机上安装 ntfy 应用。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Google Play"
+msgstr "Google Play"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "App Store"
+msgstr "App Store"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Let the alarm ring through Do Not Disturb."
+msgstr "允许警报在勿扰模式下响铃。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "On Android, open Settings › Apps › ntfy › Notifications, choose the max priority category and turn on Override Do Not Disturb. An iPhone shows the alarm, but stays silent while it is on silent mode."
+msgstr "在 Android 上，打开“设置 › 应用 › ntfy › 通知”，选择最高优先级类别，并开启“覆盖勿扰模式”。iPhone 会显示警报，但处于静音模式时不会响铃。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Sending…"
+msgstr "正在发送…"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Send again"
+msgstr "重新发送"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Send a test alarm"
+msgstr "发送测试警报"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "My phone rang"
+msgstr "我的手机响了"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Send a test alarm."
+msgstr "发送一个测试警报。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "You can save the alarm now and choose it when you add a detector."
+msgstr "你可以现在保存警报，并在添加检测器时选择它。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Which detectors ring the alarm?"
+msgstr "哪些检测器触发警报？"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Phone alarm needs attention"
+msgstr "手机警报需要处理"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Remove the phone alarm…"
+msgstr "移除手机警报…"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Remove the phone alarm?"
+msgstr "移除手机警报？"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Detectors will stop ringing your phone. Telegram alerts stay as they are."
+msgstr "检测器将不再让你的手机响铃。Telegram 通知保持不变。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Keep alarm"
+msgstr "保留警报"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Remove alarm"
+msgstr "移除警报"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Ring the phone alarm"
+msgstr "触发手机警报"
+
+#: src/lib/components/detector-editor.svelte
+msgid "A loud alarm through the ntfy app."
+msgstr "通过 ntfy 应用发出响亮警报。"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "No Telegram recipients yet"
+msgstr "暂无 Telegram 接收者"
+
+#: src/routes/(admin)/detectors/+page.svelte
+msgid "<0/> Rings the phone alarm"
+msgstr "<0/> 触发手机警报"
+
+#: src/lib/components/detector-editor.svelte
+msgid "<0/>Connect ntfy"
+msgstr "<0/>连接 ntfy"
+
+#: src/lib/components/detector-editor.svelte
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Connect ntfy"
+msgstr "连接 ntfy"
+
+#: src/lib/components/detector-editor.svelte
+msgid "A loud alarm on your phone for each detection, also at night. Your detector changes stay here until you save the detector."
+msgstr "每次检测到情况时，手机都会响起响亮的警报，夜间也会。在保存检测器之前，你的更改会保留在这里。"
+
+#. 0: response.status
+#: src/lib/server/ntfy.ts
+msgid "The ntfy server did not accept the message (status {0})."
+msgstr "ntfy 服务器未接受该消息（状态 {0}）。"
+
+#: src/lib/server/configuration/store.ts
+msgid "Set up the phone alarm first."
+msgstr "请先设置手机警报。"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Messages <0>(optional)</0>"
+msgstr "消息<0>（可选）</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Alarm <0>(optional)</0>"
+msgstr "警报<0>（可选）</0>"
+
+#: src/lib/components/detector-editor.svelte
+msgid "Ring your phone loudly through the free ntfy app, also at night, with a picture."
+msgstr "通过免费的 ntfy 应用让手机大声响铃，夜间也会，并附带一张图片。"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Choose how you hear about what a detector sees: a message with the footage, a loud alarm on your phone, or both."
+msgstr "选择你如何得知检测器看到的内容：附带画面的消息、手机上的响亮警报，或两者都要。"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Messages"
+msgstr "消息"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Through Telegram, the footage goes to these people. They can confirm it or mark it as a false alarm right there."
+msgstr "通过 Telegram，画面会发送给这些人。他们可以直接在那里确认或标记为误报。"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Alarm"
+msgstr "警报"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Through the free ntfy app, your phone rings loudly, also at night, with a picture of what the detector saw."
+msgstr "通过免费的 ntfy 应用，你的手机会大声响铃，夜间也会，并附带检测器所见内容的图片。"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "After five minutes without monitoring, and when monitoring resumes. A normal notification in ntfy, without the alarm sound."
+msgstr "在监控中断五分钟后以及监控恢复时发送。这是 ntfy 中的普通通知，没有警报声。"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "No phone alarm yet"
+msgstr "暂无手机警报"
+
+#: src/routes/(admin)/notifications/+page.svelte
+msgid "Connect ntfy to wake up for a detection with a loud alarm."
+msgstr "连接 ntfy，检测到情况时用响亮的警报叫醒你。"
+
+#. 0: alarm.topic
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Code with the name {0}"
+msgstr "名称为 {0} 的二维码"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Subscribe to this alarm in ntfy."
+msgstr "在 ntfy 中订阅此警报。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Scan this code with your phone’s camera and copy the name, or type it: <0/>. Then tap + in ntfy, paste the name and tap Subscribe."
+msgstr "用手机相机扫描此二维码并复制名称，或手动输入：<0/>。然后在 ntfy 中点按 +，粘贴名称并点按 Subscribe。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Already on your phone? <0>Open in ntfy</0>."
+msgstr "手机上已经有了？<0>在 ntfy 中打开</0>。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "Keep it ringing until you look."
+msgstr "持续响铃，直到你查看。"
+
+#: src/lib/components/phone-alarm-editor.svelte
+msgid "On Android, open Settings in ntfy and turn on Keep alerting for highest priority. The alarm then rings at alarm volume, also when your phone is on silent, until you swipe it away. An iPhone plays the sound once."
+msgstr "在 Android 上，打开 ntfy 的设置并开启 Keep alerting for highest priority。这样警报会以闹钟音量响铃，即使手机处于静音状态，直到你滑动关闭。iPhone 只会播放一次声音。"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Part of the picture"
+msgstr "画面的一部分"
+
+#: src/lib/components/camera-selection.svelte
+msgid "Whole picture"
+msgstr "整个画面"
+
+#. 0: camera.label
+#: src/lib/components/detection-area.svelte
+msgid "Detection area · {0}"
+msgstr "检测区域 · {0}"
+
+#: src/lib/components/detection-area.svelte
+msgid "Tap the corners of the area to watch. A detection counts when the middle of its box is inside it."
+msgstr "点按要监控区域的各个角。当检测框的中心位于区域内时，检测才会计入。"
+
+#: src/lib/components/detection-area.svelte
+msgid "Add a corner here"
+msgstr "在此处添加角点"
+
+#: src/lib/components/detection-area.svelte
+msgid "Undo corner"
+msgstr "撤销角点"
+
+#: src/lib/components/detection-area.svelte
+msgid "Clear"
+msgstr "清除"
+
+#: src/lib/components/detection-area.svelte
+msgid "Save area"
+msgstr "保存区域"
+
+#: src/lib/components/detection-area.svelte
+msgid "Watch the whole picture"
+msgstr "监控整个画面"
+
+#: src/lib/navigation.ts
+msgid "A message with the footage, a loud alarm on your phone, or both."
+msgstr "附带画面的消息、手机上的响亮警报，或两者都要。"
+
+#: src/lib/server/diagnostics.ts
+msgid ""
+"AI Detector diagnostics\n"
+"\n"
+"Includes available rotated logs, the latest TensorRT and Windows ML build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n"
+""
+msgstr ""
+"AI Detector 诊断信息\n"
+"\n"
+"包含可用的轮转日志、最新的 TensorRT 和 Windows ML 构建日志、运行时详情以及已隐去敏感信息的设置。不包含任何录像。分享前请检查这些文件：日志中可能包含本地路径和摄像头地址。\n"
+""

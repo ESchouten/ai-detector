@@ -385,7 +385,7 @@ test(
 		assert.match(dutch, /<title>Instellen · AI Detector<\/title>/);
 		assert.doesNotMatch(dutch, /Connect your cameras/);
 		// A language without a catalog is served in English rather than refused.
-		assert.match(await open('pl-PL,pl;q=0.9'), /<html lang="en"/);
+		assert.match(await open('ja-JP,ja;q=0.9'), /<html lang="en"/);
 
 		// Messages raised on the server follow the request too, not only the pages.
 		const refused = await send(`${base}/pair`, {

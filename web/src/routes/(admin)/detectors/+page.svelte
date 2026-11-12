@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { Bell, BellOff, ChevronRight, Plus, ScanSearch, Sparkles } from '@lucide/svelte';
+	import {
+		Bell,
+		BellOff,
+		BellRing,
+		ChevronRight,
+		Plus,
+		ScanSearch,
+		Sparkles
+	} from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Empty from '$lib/components/ui/empty';
 	import CategoryDot from '$lib/components/category-dot.svelte';
@@ -8,12 +16,19 @@
 	import PageHeader from '$lib/components/page-header.svelte';
 	import { sameTelegram } from '$lib/configuration';
 	import { getDetectors, getDetectorPresets } from '$lib/remote/detector.remote';
-	import { getTelegrams } from '$lib/remote/alerts.remote';
+	import { getPhoneAlarm, getTelegrams } from '$lib/remote/alerts.remote';
+	import { isPhoneAlarm } from '$lib/phone-alarm';
 	import { getCameras } from '$lib/remote/camera.remote';
 	import { cameraSummary } from '$lib/cameras';
 
-	const [detectors, cameras, telegrams, { presets }] = $derived(
-		await Promise.all([getDetectors(), getCameras(), getTelegrams(), getDetectorPresets()])
+	const [detectors, cameras, telegrams, { presets }, alarm] = $derived(
+		await Promise.all([
+			getDetectors(),
+			getCameras(),
+			getTelegrams(),
+			getDetectorPresets(),
+			getPhoneAlarm()
+		])
 	);
 	const unwatched = $derived(cameras.filter((camera) => !camera.monitored));
 </script>
@@ -41,6 +56,9 @@
 				)}
 				{@const presetName = presets.find((preset) => preset.id === meta.preset)?.name}
 				{@const validated = detector.vlm?.some((step) => step.key != null)}
+				{@const rings =
+					alarm.saved &&
+					detector.exporters?.webhook?.some((item) => isPhoneAlarm(item, alarm.topic))}
 				<li>
 					<a
 						href={resolve(`/detectors/add?label=${encodeURIComponent(meta.label)}`)}
@@ -59,15 +77,23 @@
 								{cameraSummary(detector.detection.source, cameras)}
 							</p>
 							<div class="flex flex-wrap gap-x-5 gap-y-1.5 text-sm">
-								<span class="flex items-center gap-1.5">
-									{#if recipients.length}
+								{#if recipients.length}
+									<span class="flex items-center gap-1.5">
 										<Bell class="size-4 text-muted-foreground" aria-hidden="true" />
 										Alerts to {recipients.map(({ label }) => label).join(', ')}
-									{:else}
+									</span>
+								{:else if !rings}
+									<span class="flex items-center gap-1.5">
 										<BellOff class="size-4 text-muted-foreground" aria-hidden="true" />
 										<span class="text-muted-foreground">No phone alerts</span>
-									{/if}
-								</span>
+									</span>
+								{/if}
+								{#if rings}
+									<span class="flex items-center gap-1.5">
+										<BellRing class="size-4 text-muted-foreground" aria-hidden="true" />
+										Rings the phone alarm
+									</span>
+								{/if}
 								{#if validated}
 									<span class="flex items-center gap-1.5">
 										<Sparkles class="size-4 text-muted-foreground" aria-hidden="true" />

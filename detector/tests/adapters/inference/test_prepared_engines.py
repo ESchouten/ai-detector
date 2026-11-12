@@ -409,7 +409,7 @@ def test_builder_parent_pipe_closes_without_leaving_an_orphan():
     command = [
         sys.executable,
         "-c",
-        "from aidetector.adapters.inference.tensorrt_worker import exit_with_parent; print('ready', flush=True); exit_with_parent()",
+        "from aidetector.adapters.inference.parent_control import exit_with_parent; print('ready', flush=True); exit_with_parent()",
     ]
     with subprocess.Popen(
         command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True
@@ -600,7 +600,7 @@ def test_real_sdk_builds_and_runs_dynamic_engine_in_helper(tmp_path):
         )
 
 
-def test_a_tensorrt_preference_without_a_gpu_detects_without_it(
+def test_a_tensorrt_preference_without_a_gpu_detects_through_onnx_runtime(
     tmp_path, gpu_builder, monkeypatch, caplog
 ):
     config = cuda_monitoring(
@@ -610,5 +610,9 @@ def test_a_tensorrt_preference_without_a_gpu_detects_without_it(
         config, tmp_path, tmp_path, prefer_tensorrt=True
     )
     assert len(results) == 1
-    assert gpu_builder.processes == []
-    assert "no NVIDIA GPU is available" in caplog.text
+    # The ONNX export may start tools of its own; no TensorRT helper starts.
+    assert not any(
+        "tensorrt_worker" in str(command) for command in gpu_builder.commands
+    )
+    assert "No NVIDIA GPU is available" in caplog.text
+    assert list((tmp_path / "models" / "prepared").glob("*/model.onnx"))

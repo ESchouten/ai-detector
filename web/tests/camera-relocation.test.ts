@@ -9,6 +9,7 @@ import {
 	onvifIdentity,
 	type CameraMove
 } from '../src/lib/server/cameras/identity.ts';
+import { phoneAlarmExporter } from '../src/lib/phone-alarm.ts';
 import { CameraRelocation, relocationNotices } from '../src/lib/server/cameras/relocation.ts';
 import { cameraSetupStatus } from '../src/lib/server/configuration/camera-setup.ts';
 import { sourceKey } from '../src/lib/server/source-key.ts';
@@ -122,7 +123,7 @@ function settings(overrides: Partial<Configuration['app']> = {}): Configuration 
 			detectors: [
 				{
 					detection: { source: [source] },
-					exporters: { telegram: [{ token: 'bot', chat: 'farm' }] }
+					exporters: { webhook: [phoneAlarmExporter('aidetector-farm', 'Cows')] }
 				}
 			]
 		},
@@ -130,7 +131,7 @@ function settings(overrides: Partial<Configuration['app']> = {}): Configuration 
 			streams: [{ id: 'pen', label: 'Pen', source, device: { mac: 'a4:14:37:0b:2c:9e' } }],
 			detectors: [{ label: 'Cows' }],
 			telegrams: [],
-			notifyCameraOutages: true,
+			phoneAlarm: { topic: 'aidetector-farm', outages: true },
 			...overrides
 		}
 	} as unknown as Configuration;
@@ -200,7 +201,10 @@ test('a watched camera is asked once what tells it apart; a lost one without tha
 });
 
 test('a camera that moved is told only to those who asked for outage notices', async () => {
-	const { watch, sent, located } = relocation(settings({ notifyCameraOutages: false }), 'failed');
+	const { watch, sent, located } = relocation(
+		settings({ phoneAlarm: { topic: 'aidetector-farm', outages: false } }),
+		'failed'
+	);
 	await watch.sample(0);
 	await watch.sample(120000);
 	assert.equal(located.length, 1);

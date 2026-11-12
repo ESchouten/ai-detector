@@ -167,6 +167,26 @@ def test_empty_catalog_is_valid_on_a_machine_without_accelerators(sdk_directory)
     assert prepare_windows_ml(None) == {}
 
 
+@pytest.mark.parametrize("explicit", [False, True])
+@pytest.mark.parametrize("other_provider", [False, True])
+def test_experimental_webgpu_is_not_downloaded_without_an_explicit_request(
+    sdk_directory, caplog, explicit, other_provider
+):
+    webgpu = "WebGpuExecutionProvider"
+    providers = [(webgpu, "pending")]
+    if other_provider:
+        providers.append((PROVIDER, "pending"))
+    trace = write_windows_ml_sdk(sdk_directory, providers)
+    libraries = prepare_windows_ml(webgpu if explicit else None)
+    expected = [webgpu] if explicit else [PROVIDER] if other_provider else []
+    assert libraries == {
+        name: str(sdk_directory / (name + ".dll")) for name in expected
+    }
+    events = [json.loads(line)[1] for line in trace.read_text().splitlines()]
+    assert ("prepare:" + webgpu in events) is explicit
+    assert ("Skipping experimental WebGPU" in caplog.text) is not explicit
+
+
 def test_blocked_helper_is_killed_and_reaped_with_its_diagnostics(
     sdk_directory, monkeypatch, caplog
 ):

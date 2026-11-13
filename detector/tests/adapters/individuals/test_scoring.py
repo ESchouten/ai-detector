@@ -42,6 +42,21 @@ def test_a_close_runner_up_lowers_the_best_score():
     assert look_alike.scores(query).max() < alone.scores(query).max()
 
 
+def test_once_an_individual_is_named_on_two_occasions_the_light_no_longer_decides():
+    # Dimensions: the place's look, daylight, and one per individual.
+    at_night_412 = sighting("412", 1, unit(3, -1, 1, 0, 0))
+    by_day_233 = sighting("233", 2, unit(3, 1, 0, 1, 0))
+    by_day_87 = sighting("87", 1, unit(3, 1, 0, 0, 1))
+    at_night_87 = sighting("87", 2, unit(3, -1, 0, 0, 1))
+    by_day_412 = np.stack([unit(3, 1, 1, 0, 0)])
+
+    once = Gallery.of([at_night_412, by_day_233, by_day_87])
+    twice = Gallery.of([at_night_412, by_day_233, by_day_87, at_night_87])
+
+    assert once.names[once.scores(by_day_412).argmax()] != "412"
+    assert twice.names[twice.scores(by_day_412).argmax()] == "412"
+
+
 def test_an_individual_is_recognised_once_among_sightings_seen_together():
     # Similarities to 233, 412 and 87; the first two are seen together.
     rows = [

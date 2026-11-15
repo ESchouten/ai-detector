@@ -7,7 +7,8 @@ individuals/
 └── sightings/<sighting ID>/
     ├── sighting.json          written once by the detector
     ├── crop-1.jpg, ...        the track's best pictures, whole
-    └── vectors-<model>.npy    their embeddings, per model file
+    ├── vectors-<model>.npy    their embeddings, per model file
+    └── later-<model>.npy      embeddings of the track's later pictures
 ```
 """
 

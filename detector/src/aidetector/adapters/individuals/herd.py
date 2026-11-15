@@ -20,7 +20,7 @@ from numpy.typing import NDArray
 from pydantic import ValidationError
 
 from aidetector.adapters.individuals.embedding import EmbeddingModel
-from aidetector.adapters.individuals.grouping import group
+from aidetector.adapters.individuals.grouping import GROUPING, group
 from aidetector.adapters.individuals.records import (
     GroupsFile,
     NamesFile,
@@ -74,6 +74,16 @@ SETTLED = 4.0
 PARTIAL = 15.0
 GONE = 10.0
 FORGOTTEN = 600.0
+# After its sighting is saved, a track goes on showing the individual from
+# other sides. One picture is embedded every LATER seconds of source time, as
+# long as fewer than WAITING_MAX wait for the model, and LATER_MAX at most are
+# kept, thinned so they stay spread over the track's life. They are written to
+# its sighting every KEEPING seconds. Once the sighting has a name they are
+# compared against like its pictures; nothing is asked with them.
+LATER = 3.0
+LATER_MAX = 128
+WAITING_MAX = 4
+KEEPING = 30.0
 # Seconds between rewrites of groups.json while new sightings keep coming.
 REGROUPING = 30.0
 # Seconds between looks at names.json for live pictures.
@@ -82,7 +92,7 @@ LOOKING = 1.0
 
 @dataclass(frozen=True)
 class Known:
-    signature: tuple[int, int] | None
+    signature: tuple[int, int, int] | None
     names: dict[str, str]
     gallery: Gallery
     threshold: float | None
@@ -224,6 +234,34 @@ class _Sighting:
     vectors: NDArray[np.float32]
 
 
+class _Later:
+    """Embeddings of a track's pictures after its sighting, spread over its life.
+
+    Filled on the herd's thread; `spacing` and `unkept` are also read while
+    observing.
+    """
+
+    def __init__(self) -> None:
+        self.vectors: list[NDArray[np.float32]] = []
+        self.spacing = LATER
+        self.unkept = False
+
+    def add(self, vector: NDArray[np.float32], sighting: _Sighting) -> None:
+        known = np.concatenate(
+            [sighting.vectors, *(kept[None] for kept in self.vectors)]
+        )
+        # A tracker's number can jump to another individual, whose pictures
+        # must not count for this one: a picture is kept only when it looks
+        # like one already kept, as sightings must to share a group.
+        if float((known @ vector).max()) < GROUPING:
+            return
+        self.vectors.append(vector)
+        self.unkept = True
+        if len(self.vectors) > LATER_MAX:
+            del self.vectors[1::2]
+            self.spacing *= 2
+
+
 def _individual(
     track_id: int,
     label: str,
@@ -273,6 +311,11 @@ class Herd:
         self._known = _NOTHING_KNOWN
         self._index: dict[str, tuple[str, NDArray[np.float32]]] | None = None
         self._work = ThreadPoolExecutor(1, thread_name_prefix="individuals")
+        # Later pictures waiting for the model, and those of named sightings.
+        self._waiting = 0
+        self._counting = Lock()
+        self._later: dict[str, NDArray[np.float32]] = {}
+        self._richer = 0
         self._grouping = Lock()
         self._ungrouped = False
         self._regrouped = monotonic()
@@ -303,16 +346,33 @@ class Herd:
         np.save(stored, vectors)
         return vectors
 
+    def _later_vectors(self, sighting: str) -> NDArray[np.float32] | None:
+        """A named sighting's later pictures as embeddings, read once."""
+        if sighting not in self._later:
+            stored = self.sightings / sighting / f"later-{self.model.key}.npy"
+            if not stored.exists():
+                return None
+            vectors = np.load(stored).astype(np.float32)
+            self._later[sighting] = vectors / np.linalg.norm(
+                vectors, axis=1, keepdims=True
+            )
+        return self._later[sighting]
+
     def _load(self) -> Known:
         path = self.directory / "names.json"
         try:
             status = path.stat()
         except FileNotFoundError:
             return _NOTHING_KNOWN
-        signature = (status.st_mtime_ns, status.st_size)
+        signature = (status.st_mtime_ns, status.st_size, self._richer)
         if signature == self._known.signature:
             return self._known
         names = NamesFile.model_validate_json(path.read_bytes()).names
+        self._later = {
+            sighting: vectors
+            for sighting, vectors in self._later.items()
+            if sighting in names
+        }
         named: list[NamedSighting] = []
         for sighting_id, name in names.items():
             sighting = self.sightings / sighting_id
@@ -324,14 +384,24 @@ class Herd:
                 logger.warning("Named sighting %s no longer exists", sighting_id)
                 continue
             named.append(
-                NamedSighting(name, record.seen[:10], self._vectors(sighting, record))
+                NamedSighting(
+                    name,
+                    record.seen[:10],
+                    self._vectors(sighting, record),
+                    self._later_vectors(sighting_id),
+                )
             )
         gallery = Gallery.of(named)
         threshold = self_set_threshold(named, self.precision)
         logger.info(
-            "Named individuals: %d from %d sighting(s); naming threshold %s",
+            "Named individuals: %d from %d sighting(s) and %d later picture(s); "
+            "naming threshold %s",
             len(gallery.names),
             len(named),
+            sum(
+                0 if sighting.later is None else len(sighting.later)
+                for sighting in named
+            ),
             "not set yet" if threshold is None else f"{threshold:.3f}",
         )
         return Known(signature, names, gallery, threshold)
@@ -447,9 +517,49 @@ class Herd:
         with self._grouping:
             self._ungrouped = True
 
+    def keep_later(self, sighting: str, vectors: NDArray[np.float32]) -> None:
+        """Replace the embeddings of a sighting's later pictures; a sighting
+        removed meanwhile keeps nothing."""
+        stored = self.sightings / sighting / f"later-{self.model.key}.npy"
+        pending = stored.with_suffix(f".{uuid4().hex}.tmp")
+        try:
+            with pending.open("wb") as file:
+                np.save(file, vectors.astype(np.float16))
+            pending.replace(stored)
+        except FileNotFoundError:
+            return
+        except OSError as error:
+            pending.unlink(missing_ok=True)
+            raise IdentificationUnavailable(
+                f"Cannot save a sighting's later pictures: {error}"
+            ) from error
+        with self._lock:
+            if sighting in self._known.names:
+                self._later[sighting] = vectors
+                self._richer += 1
+
     def submit[T](self, job: Callable[[], T]) -> Future[T]:
         """Run work on the herd's thread, after the work submitted before it."""
         return self._work.submit(job)
+
+    @property
+    def spare(self) -> bool:
+        """Whether the model has time for pictures that can be skipped."""
+        return self._waiting < WAITING_MAX
+
+    def submit_spare(self, job: Callable[[], None]) -> None:
+        """Run work that could have been skipped; `spare` counts it until done."""
+
+        def run() -> None:
+            try:
+                job()
+            finally:
+                with self._counting:
+                    self._waiting -= 1
+
+        with self._counting:
+            self._waiting += 1
+        self._work.submit(run).add_done_callback(_report_failure)
 
     def _regroup_in_background(self) -> None:
         try:
@@ -494,6 +604,10 @@ class _Track:
         self.last = seen
         self.pictures = _Pictures()
         self.sighting: Future[_Sighting | None] | None = None
+        # Pictures after the sighting, when the last was taken and last kept.
+        self.later = _Later()
+        self.asked = seen
+        self.kept = seen
         # Tracks seen in the same picture: other individuals.
         self.beside: set[int] = set()
         # The sighting's similarity to each named individual, with the names it
@@ -609,7 +723,32 @@ class TrackIdentifier:
 
         track.sighting = self.herd.submit(save)
         track.sighting.add_done_callback(_report_failure)
+        track.asked = track.kept = track.last
         return track.sighting
+
+    def _look_later(
+        self, track: _Track, observation: Observation, box: BoundingBox
+    ) -> None:
+        """Embed one more picture of a saved track, when the model has time."""
+        if min(box.x2 - box.x1, box.y2 - box.y1) < SIDE_MIN or not self.herd.spare:
+            return
+        track.asked = observation.date
+        picture, outline = _cut(observation.image, box)
+
+        def embed() -> None:
+            if (sighting := track.saved) is not None:
+                vector = self.herd.model.embed([_masked(picture, outline)])[0]
+                track.later.add(vector, sighting)
+
+        self.herd.submit_spare(embed)
+
+    def _keep_later(self, track: _Track) -> None:
+        def keep() -> None:
+            if (sighting := track.saved) is not None and track.later.unkept:
+                track.later.unkept = False
+                self.herd.keep_later(sighting.id, np.stack(track.later.vectors))
+
+        self.herd.submit(keep).add_done_callback(_report_failure)
 
     def _seen_together(
         self, source: str, tracks: dict[int, _Track], seen: set[int]
@@ -638,6 +777,8 @@ class TrackIdentifier:
                     # One coming in from the edge waits for a whole picture.
                     if since >= SETTLED and (track.pictures.whole or since >= PARTIAL):
                         self._save(source, track_id, track)
+                elif (now - track.asked).total_seconds() >= track.later.spacing:
+                    self._look_later(track, observation, box)
             self._seen_together(source, tracks, seen)
             for track_id, track in list(tracks.items()):
                 away = (now - track.last).total_seconds()
@@ -645,6 +786,11 @@ class TrackIdentifier:
                     del tracks[track_id]
                 elif away >= GONE and track.sighting is None:
                     self._save(source, track_id, track)
+                elif (
+                    track.later.unkept and (now - track.kept).total_seconds() >= KEEPING
+                ):
+                    track.kept = now
+                    self._keep_later(track)
         self.herd.regroup_soon()
 
     def _latest_known(self) -> Known:

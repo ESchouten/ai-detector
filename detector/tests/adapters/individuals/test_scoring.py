@@ -104,3 +104,17 @@ def test_the_threshold_needs_named_sightings_from_two_days():
     # against the other individuals only, stays below the threshold.
     others = Gallery.of([s for s in herd([1, 2]) if s.name != "412"])
     assert others.scores(herd([3])[0].vectors).max() < threshold
+
+
+def test_later_pictures_are_compared_against_but_never_asked_with():
+    seen = NamedSighting(
+        "412", "2026-10-01", np.stack([unit(1, 0, 0)]), np.stack([unit(0, 1, 0)])
+    )
+    other = sighting("233", 1, unit(0, 0, 1))
+    gallery = Gallery.of([seen, other])
+    assert len(gallery.vectors) == 3
+    # Her other side is recognised through a later picture.
+    assert gallery.names[gallery.scores(np.stack([unit(0, 1, 0.1)])).argmax()] == "412"
+
+    # A sighting asks with its own pictures only, as new tracks do.
+    assert len(seen.vectors) == 1

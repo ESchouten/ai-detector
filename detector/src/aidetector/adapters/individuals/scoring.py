@@ -28,6 +28,16 @@ class NamedSighting:
     # The day the pictures were taken; the threshold check asks each day in turn.
     session: str
     vectors: Vectors
+    # Later pictures of the same track, which show her from more sides. They
+    # are only ever compared against: a sighting asks with `vectors` alone, as
+    # new tracks do.
+    later: Vectors | None = None
+
+    @property
+    def known(self) -> Vectors:
+        if self.later is None or not len(self.later):
+            return self.vectors
+        return np.concatenate([self.vectors, self.later])
 
 
 @dataclass(frozen=True)
@@ -46,10 +56,10 @@ class Gallery:
             return cls(names, np.empty((0, 0), np.float32), np.empty(0, np.intp))
         return cls(
             names,
-            np.concatenate([sighting.vectors for sighting in sightings]),
+            np.concatenate([sighting.known for sighting in sightings]),
             np.concatenate(
                 [
-                    np.full(len(sighting.vectors), index[sighting.name], np.intp)
+                    np.full(len(sighting.known), index[sighting.name], np.intp)
                     for sighting in sightings
                 ]
             ),

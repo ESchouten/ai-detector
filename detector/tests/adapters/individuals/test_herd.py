@@ -359,3 +359,88 @@ def test_only_the_latest_unnamed_sightings_are_kept(tmp_path, monkeypatch):
         [".pending", oldest.sighting, newer.sighting, newest.sighting]
     )
     assert older.sighting not in {s for g in groups(herd) for s in g.sightings}
+
+
+def watch_waiting(identifier, seconds, cows, start=0):
+    """Observe cows once a second, letting the model finish in between."""
+    for second in range(start, start + seconds):
+        identifier.observe(SOURCE, observation(1, second, cows))
+        identifier.herd.submit(lambda: None).result()
+
+
+def later(herd, individual):
+    [stored] = (herd.sightings / individual.sighting).glob("later-*.npy")
+    return np.load(stored)
+
+
+def test_a_saved_track_goes_on_teaching_what_its_individual_looks_like(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "LOOKING", 0)
+    monkeypatch.setattr(herd_module, "KEEPING", 10)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    # Saved after 4 seconds; then a picture every 3, written every 10.
+    watch_waiting(identifier, 14, [(1, "412", PLACES[0])])
+    saved = identifier.identity(SOURCE, 1)
+    assert saved is not None
+    assert not list((herd.sightings / saved.sighting).glob("later-*.npy"))
+    watch_waiting(identifier, 2, [(1, "412", PLACES[0])], start=14)
+    assert later(herd, saved).shape[0] == 3
+    assert later(herd, saved).dtype == np.float16
+
+    # Once named, the later pictures are compared against like its own, and
+    # more of them count without the names changing.
+    name(herd, {saved.sighting: "412"})
+    known = herd.known()
+    assert len(known.gallery.vectors) == 4 + 3
+    watch_waiting(identifier, 19, [(1, "412", PLACES[0])], start=16)
+    richer = herd.known()
+    assert richer is not known
+    assert len(richer.gallery.vectors) == 4 + 10
+    assert herd.known() is richer
+
+    # After a restart they are read from the sighting.
+    again = herd_of(tmp_path)
+    assert len(again.known().gallery.vectors) == 4 + 10
+
+
+def test_a_track_that_jumps_to_another_individual_teaches_nothing_wrong(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "KEEPING", 5)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    watch_waiting(identifier, 8, [(1, "412", PLACES[0])])
+    # The tracker's number 1 moves to a cow with another coat.
+    watch_waiting(identifier, 12, [(1, "233", PLACES[0])], start=8)
+    saved = identifier.identity(SOURCE, 1)
+    assert saved is not None
+    [own] = herd.model.embed([np.full((60, 60, 3), COATS["412"], np.uint8)])
+    kept = later(herd, saved).astype(np.float32)
+    assert len(kept) == 1
+    assert (kept @ own).min() > 0.9
+
+
+def test_later_pictures_stay_spread_over_a_long_track(tmp_path, monkeypatch):
+    monkeypatch.setattr(herd_module, "LATER", 1.0)
+    monkeypatch.setattr(herd_module, "LATER_MAX", 4)
+    monkeypatch.setattr(herd_module, "KEEPING", 5)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    watch_waiting(identifier, 40, [(1, "412", PLACES[0])])
+    saved = identifier.identity(SOURCE, 1)
+    assert saved is not None
+    # Every picture a second would be 35; thinned by half each time it is full.
+    assert 3 <= len(later(herd, saved)) <= 4
+
+
+def test_later_pictures_wait_while_the_model_is_busy(tmp_path, monkeypatch):
+    monkeypatch.setattr(herd_module, "WAITING_MAX", 0)
+    monkeypatch.setattr(herd_module, "KEEPING", 5)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    watch_waiting(identifier, 20, [(1, "412", PLACES[0])])
+    saved = identifier.identity(SOURCE, 1)
+    assert saved is not None
+    assert not list((herd.sightings / saved.sighting).glob("later-*.npy"))

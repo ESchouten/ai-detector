@@ -380,46 +380,59 @@ def test_a_saved_track_goes_on_teaching_what_its_individual_looks_like(
     monkeypatch.setattr(herd_module, "KEEPING", 10)
     herd = herd_of(tmp_path)
     identifier = TrackIdentifier(herd)
-    # Saved after 4 seconds; then a picture every 3, written every 10.
+    # Saved after 4 seconds; then a picture every 2, written every 10.
     watch_waiting(identifier, 14, [(1, "412", PLACES[0])])
     saved = identifier.identity(SOURCE, 1)
     assert saved is not None
     assert not list((herd.sightings / saved.sighting).glob("later-*.npy"))
     watch_waiting(identifier, 2, [(1, "412", PLACES[0])], start=14)
-    assert later(herd, saved).shape[0] == 3
+    assert later(herd, saved).shape[0] == 5
     assert later(herd, saved).dtype == np.float16
 
     # Once named, the later pictures are compared against like its own, and
     # more of them count without the names changing.
     name(herd, {saved.sighting: "412"})
     known = herd.known()
-    assert len(known.gallery.vectors) == 4 + 3
+    assert len(known.gallery.vectors) == 4 + 5
     watch_waiting(identifier, 19, [(1, "412", PLACES[0])], start=16)
     richer = herd.known()
     assert richer is not known
-    assert len(richer.gallery.vectors) == 4 + 10
+    assert len(richer.gallery.vectors) == 4 + 15
     assert herd.known() is richer
 
     # After a restart they are read from the sighting.
     again = herd_of(tmp_path)
-    assert len(again.known().gallery.vectors) == 4 + 10
+    assert len(again.known().gallery.vectors) == 4 + 15
 
 
-def test_a_track_that_jumps_to_another_individual_teaches_nothing_wrong(
+def test_a_track_that_jumps_to_its_neighbour_teaches_nothing_wrong(
     tmp_path, monkeypatch
 ):
     monkeypatch.setattr(herd_module, "KEEPING", 5)
     herd = herd_of(tmp_path)
     identifier = TrackIdentifier(herd)
-    watch_waiting(identifier, 8, [(1, "412", PLACES[0])])
-    # The tracker's number 1 moves to a cow with another coat.
-    watch_waiting(identifier, 12, [(1, "233", PLACES[0])], start=8)
+    watch_waiting(identifier, 8, [(1, "412", PLACES[0]), (2, "233", PLACES[1])])
+    # The tracker's number 1 moves to the cow beside it.
+    watch_waiting(identifier, 12, [(1, "233", PLACES[1])], start=8)
     saved = identifier.identity(SOURCE, 1)
     assert saved is not None
     [own] = herd.model.embed([np.full((60, 60, 3), COATS["412"], np.uint8)])
     kept = later(herd, saved).astype(np.float32)
     assert len(kept) == 1
     assert (kept @ own).min() > 0.9
+
+
+def test_a_side_unlike_the_first_pictures_is_still_her(tmp_path, monkeypatch):
+    monkeypatch.setattr(herd_module, "KEEPING", 5)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    watch_waiting(identifier, 8, [(1, "412", PLACES[0])])
+    # She turns and shows a side with another pattern.
+    watch_waiting(identifier, 12, [(1, "87", PLACES[0])], start=8)
+    saved = identifier.identity(SOURCE, 1)
+    assert saved is not None
+    [turned] = herd.model.embed([np.full((60, 60, 3), COATS["87"], np.uint8)])
+    assert (later(herd, saved).astype(np.float32) @ turned).max() > 0.9
 
 
 def test_later_pictures_stay_spread_over_a_long_track(tmp_path, monkeypatch):

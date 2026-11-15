@@ -20,7 +20,7 @@ from numpy.typing import NDArray
 from pydantic import ValidationError
 
 from aidetector.adapters.individuals.embedding import EmbeddingModel
-from aidetector.adapters.individuals.grouping import GROUPING, group
+from aidetector.adapters.individuals.grouping import group
 from aidetector.adapters.individuals.records import (
     GroupsFile,
     NamesFile,
@@ -80,7 +80,7 @@ FORGOTTEN = 600.0
 # kept, thinned so they stay spread over the track's life. They are written to
 # its sighting every KEEPING seconds. Once the sighting has a name they are
 # compared against like its pictures; nothing is asked with them.
-LATER = 3.0
+LATER = 2.0
 LATER_MAX = 128
 WAITING_MAX = 4
 KEEPING = 30.0
@@ -246,14 +246,21 @@ class _Later:
         self.spacing = LATER
         self.unkept = False
 
-    def add(self, vector: NDArray[np.float32], sighting: _Sighting) -> None:
+    def add(
+        self,
+        vector: NDArray[np.float32],
+        sighting: _Sighting,
+        beside: Sequence[NDArray[np.float32]],
+    ) -> None:
+        """Keep a picture, unless it looks more like a sighting seen beside this
+        track: a tracker's number can jump to a neighbour, whose pictures must
+        not count for this one. Her own other sides do count, however little
+        they look like her first pictures."""
         known = np.concatenate(
             [sighting.vectors, *(kept[None] for kept in self.vectors)]
         )
-        # A tracker's number can jump to another individual, whose pictures
-        # must not count for this one: a picture is kept only when it looks
-        # like one already kept, as sightings must to share a group.
-        if float((known @ vector).max()) < GROUPING:
+        own = float((known @ vector).max())
+        if any(float((other @ vector).max()) > own for other in beside):
             return
         self.vectors.append(vector)
         self.unkept = True
@@ -727,18 +734,27 @@ class TrackIdentifier:
         return track.sighting
 
     def _look_later(
-        self, track: _Track, observation: Observation, box: BoundingBox
+        self,
+        tracks: dict[int, _Track],
+        track: _Track,
+        observation: Observation,
+        box: BoundingBox,
     ) -> None:
         """Embed one more picture of a saved track, when the model has time."""
         if min(box.x2 - box.x1, box.y2 - box.y1) < SIDE_MIN or not self.herd.spare:
             return
         track.asked = observation.date
         picture, outline = _cut(observation.image, box)
+        others = [tracks[other] for other in track.beside if other in tracks]
 
         def embed() -> None:
-            if (sighting := track.saved) is not None:
-                vector = self.herd.model.embed([_masked(picture, outline)])[0]
-                track.later.add(vector, sighting)
+            if (sighting := track.saved) is None:
+                return
+            vector = self.herd.model.embed([_masked(picture, outline)])[0]
+            beside = [
+                saved.vectors for other in others if (saved := other.saved) is not None
+            ]
+            track.later.add(vector, sighting, beside)
 
         self.herd.submit_spare(embed)
 
@@ -778,7 +794,7 @@ class TrackIdentifier:
                     if since >= SETTLED and (track.pictures.whole or since >= PARTIAL):
                         self._save(source, track_id, track)
                 elif (now - track.asked).total_seconds() >= track.later.spacing:
-                    self._look_later(track, observation, box)
+                    self._look_later(tracks, track, observation, box)
             self._seen_together(source, tracks, seen)
             for track_id, track in list(tracks.items()):
                 away = (now - track.last).total_seconds()

@@ -6,6 +6,7 @@ benchmark loads the result as an ordinary checkpoint.
 
 from __future__ import annotations
 
+import io
 import json
 import math
 import os
@@ -17,7 +18,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 from reid.backbones import default_device, features, load_network, preset
 from reid.manifest import Crop
@@ -44,6 +45,9 @@ class TrainOptions:
     # Share of pictures showing only part of the cow, as a barn camera often
     # does (see `hide`).
     partial: float = 0.0
+    # Share of pictures made as small and soft as a far cow on a camera's
+    # low-resolution stream (see `soften`).
+    small: float = 0.0
     seed: int = 0
     # Pictures through the network at once. A smaller chunk saves memory; every
     # picture's loss stands alone, so only batch-norm statistics change.
@@ -142,6 +146,37 @@ def hide(picture: Image.Image, rng: np.random.Generator) -> Image.Image:
     return picture
 
 
+# The long side, in pixels, of a cow far from a camera on its second stream.
+SMALL = (64, 256)
+
+
+def soften(picture: Image.Image, rng: np.random.Generator) -> Image.Image:
+    """The picture as a camera's low-resolution stream shows a far cow: a few
+    dozen to a couple of hundred pixels long, sometimes a little blurred, and
+    compressed. Mild on purpose: heavy made-up damage teaches a network damage
+    that real streams do not have.
+    """
+    long_side = math.exp(rng.uniform(math.log(SMALL[0]), math.log(SMALL[1])))
+    scale = min(1.0, long_side / max(picture.size))
+    size = (
+        max(1, round(picture.width * scale)),
+        max(1, round(picture.height * scale)),
+    )
+    filters = (
+        Image.Resampling.BOX,
+        Image.Resampling.BILINEAR,
+        Image.Resampling.BICUBIC,
+    )
+    small = picture.resize(size, filters[int(rng.integers(len(filters)))])
+    if rng.random() < 0.3:
+        small = small.filter(ImageFilter.GaussianBlur(rng.uniform(0.3, 1.0)))
+    if rng.random() < 0.7:
+        stored = io.BytesIO()
+        small.save(stored, "JPEG", quality=int(rng.integers(30, 86)))
+        small = Image.open(stored).convert("RGB")
+    return small
+
+
 def _augmented(
     path: Path,
     size: int,
@@ -149,11 +184,14 @@ def _augmented(
     gray_chance: float,
     rng: np.random.Generator,
     partial: float = 0.0,
+    small: float = 0.0,
 ) -> np.ndarray:
     """Random crop, scale, brightness and grayscale; no mirroring, which would
-    invent a coat. A `partial` share of pictures is hidden in part (`hide`)."""
+    invent a coat. A `partial` share of pictures is hidden in part (`hide`), a
+    `small` share is as small and soft as a far cow (`soften`)."""
     gray = gray_chance >= 1 or (gray_chance > 0 and rng.random() < gray_chance)
     hidden = partial > 0 and rng.random() < partial
+    far = small > 0 and rng.random() < small
     with Image.open(path) as picture:
         picture = picture.convert("L" if gray else "RGB").convert("RGB")
         width, height = picture.size
@@ -161,9 +199,10 @@ def _augmented(
         w, h = max(1, round(width * keep)), max(1, round(height * keep))
         left = int(rng.integers(0, width - w + 1))
         top = int(rng.integers(0, height - h + 1))
-        picture = picture.crop((left, top, left + w, top + h)).resize(
-            (size, size), Image.Resampling.BICUBIC
-        )
+        picture = picture.crop((left, top, left + w, top + h))
+        if far:
+            picture = soften(picture, rng)
+        picture = picture.resize((size, size), Image.Resampling.BICUBIC)
         if hidden:
             picture = hide(picture, rng)
         pixels = np.asarray(picture, dtype=np.float32) / 255
@@ -266,6 +305,7 @@ def train(
                                     1.0 if options.grayscale else options.gray_chance,
                                     np.random.default_rng(seed),
                                     options.partial,
+                                    options.small,
                                 ),
                                 part,
                                 seeds[start : start + size],

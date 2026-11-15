@@ -928,6 +928,7 @@ def _train(arguments: argparse.Namespace) -> None:
         grayscale=arguments.grayscale,
         gray_chance=arguments.gray_chance,
         partial=arguments.partial,
+        small=arguments.small,
         seed=arguments.seed,
         chunk=arguments.chunk,
     )
@@ -990,6 +991,13 @@ def _add_training(commands: argparse._SubParsersAction) -> None:
         default=0.0,
         help="share of pictures showing only part of the cow: a band of her, "
         "rails across her or a patch hidden, as a barn camera often sees her",
+    )
+    training.add_argument(
+        "--small",
+        type=float,
+        default=0.0,
+        help="share of pictures made as small and soft as a far cow on a "
+        "camera's low-resolution stream (64 to 256 pixels long, compressed)",
     )
     training.add_argument("--seed", type=int, default=0)
     training.add_argument("--device", help="mps, cuda or cpu")

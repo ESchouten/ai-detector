@@ -170,6 +170,8 @@ Training uses sub-centre ArcFace on P×K batches (16 animals × 4 crops by defau
 
 On a barn camera most pictures show only part of a cow: a head at the feed fence, a cow behind rails or behind another cow (about 80% on the Pinken footage), while the public sets show mostly whole cows. `--partial 0.5` hides part of half the training pictures: it keeps only a band of the cow, filling the picture as her own box would, draws one to three rails across her in gray or a shade of steel, or paints a patch gray, as ai-detector paints what lies outside a cow's outline. `reid hide <manifest> --out <folder>` writes a copy of a test farm with every picture hidden the same way, to see how a network copes with partial cows; since it hides pictures as `--partial` trains on, it flatters a network trained that way, so real barn footage is the fairer test.
 
+A camera's low-resolution stream shows a far cow only about 150 pixels long (Pinken), while the public sets have pictures of about 550. `--small 0.5` makes half the training pictures that small: 64 to 256 pixels on the long side, sometimes slightly blurred, usually JPEG-compressed, then enlarged again as the application would. It is mild on purpose; in published tests heavy made-up damage hurt on real low-resolution pictures while training on mildly degraded ones gave most of the gain.
+
 MiewID's weights come without a licence, so `efficientnetv2-m-440` is the same network starting from timm's Apache 2.0 ImageNet weights. Fine-tuning both on the same farms shows whether MiewID's animal pretraining still matters once the network has seen cows; if it doesn't, the second can be shipped without asking anyone.
 
 ## Using a model in ai-detector

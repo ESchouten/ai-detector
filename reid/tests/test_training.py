@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 
 from reid.backbones import IMAGENET, PRESETS, build
-from reid.training import TrainOptions, _augmented, batches, hide, train
+from reid.training import TrainOptions, _augmented, batches, hide, soften, train
 
 torch = pytest.importorskip("torch")
 timm = pytest.importorskip("timm")
@@ -156,3 +156,36 @@ def test_partial_hides_part_of_that_share_of_pictures(tmp_path: Path):
 
     assert not any(painted(0.0, seed) for seed in range(20))
     assert 5 < sum(painted(1.0, seed) for seed in range(40)) < 40
+
+
+def test_softened_pictures_are_small_and_have_lost_detail():
+    from PIL import Image
+
+    coat = np.random.default_rng(0).integers(0, 256, (300, 400, 3), np.uint8)
+    picture = Image.fromarray(coat)
+    for seed in range(20):
+        small = soften(picture, np.random.default_rng(seed))
+        assert 64 <= max(small.size) <= 256
+        assert abs(small.width / small.height - 4 / 3) < 0.05
+        assert small.mode == "RGB"
+    # A picture already that small keeps its size.
+    tiny = picture.resize((40, 30))
+    assert soften(tiny, np.random.default_rng(0)).size == (40, 30)
+
+
+def test_small_softens_that_share_of_pictures(tmp_path: Path):
+    from PIL import Image
+
+    path = tmp_path / "coat.png"
+    rng = np.random.default_rng(0)
+    Image.fromarray(rng.integers(0, 256, (300, 400, 3), np.uint8)).save(path)
+
+    def detail(small: float, seed: int) -> float:
+        raw = _augmented(
+            path, 224, IMAGENET, 0.0, np.random.default_rng(seed), small=small
+        )
+        return float(np.abs(np.diff(raw, axis=2)).mean())
+
+    sharp = [detail(0.0, seed) for seed in range(10)]
+    soft = [detail(1.0, seed) for seed in range(10)]
+    assert sum(soft) < 0.7 * sum(sharp)

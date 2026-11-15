@@ -63,7 +63,8 @@ def subsample(
 def embeddings(
     crops: Sequence[Crop], embedder: Embedder, cache: Path | None = None
 ) -> NDArray[np.float32]:
-    """Embed every crop once; cached by model name and the pictures' paths and dates."""
+    """Embed every crop once; cached by model name and the pictures' paths and
+    dates, and embedded again when the model's weights file changed since."""
     if cache is None:
         return embedder.embed([crop.path for crop in crops])
     digest = hashlib.sha256(
@@ -75,7 +76,10 @@ def embeddings(
         ).encode()
     ).hexdigest()[:16]
     path = cache / f"{re.sub(r'[^\w.+-]', '_', embedder.name)}-{digest}.npy"
-    if path.exists():
+    if path.exists() and (
+        embedder.weights is None
+        or path.stat().st_mtime_ns >= embedder.weights.stat().st_mtime_ns
+    ):
         return np.load(path)
     vectors = embedder.embed([crop.path for crop in crops])
     cache.mkdir(parents=True, exist_ok=True)

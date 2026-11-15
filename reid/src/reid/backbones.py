@@ -24,6 +24,9 @@ class Embedder(Protocol):
     """Describe pictures as L2-normalised float32 rows, one per path, in order."""
 
     name: str
+    # The file its weights came from, if any: embeddings cached before that
+    # file last changed belong to other weights.
+    weights: Path | None
 
     def embed(self, paths: Sequence[Path]) -> NDArray[np.float32]: ...
 
@@ -119,10 +122,12 @@ class TorchEmbedder:
         batch_size: int = 32,
         device: str | None = None,
         half: bool = False,
+        weights: Path | None = None,
     ):
         import torch
 
         self.name = name
+        self.weights = weights
         self.half = half
         self.size = size
         self.grayscale = grayscale
@@ -277,4 +282,5 @@ def build(
         batch_size=batch_size,
         device=device,
         half=half,
+        weights=checkpoint,
     )

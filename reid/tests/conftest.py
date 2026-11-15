@@ -30,6 +30,7 @@ class FakeEmbedder:
 
     def __init__(self, dimensions: int = 16, noise: float = 0.15, seed: int = 0):
         self.name = "fake"
+        self.weights = None
         self.device = SimpleNamespace(type="fake")
         self.calls = 0
         self.noise = noise

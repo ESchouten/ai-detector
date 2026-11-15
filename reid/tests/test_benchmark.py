@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from conftest import FakeEmbedder
@@ -67,6 +68,22 @@ def test_embeddings_are_cached_per_model_and_pictures(herd, tmp_path: Path):
     embeddings(herd[:5], embedder, tmp_path)
 
     assert (first == second).all()
+    assert embedder.calls == 2
+
+
+def test_embeddings_are_made_again_after_the_weights_changed(herd, tmp_path: Path):
+    embedder = FakeEmbedder()
+    embedder.weights = tmp_path / "model.pt"
+    embedder.weights.write_bytes(b"first")
+    embeddings(herd, embedder, tmp_path / "cache")
+    embeddings(herd, embedder, tmp_path / "cache")
+    assert embedder.calls == 1
+
+    # Trained again into the same file.
+    [cached] = (tmp_path / "cache").iterdir()
+    later = cached.stat().st_mtime_ns + 1_000_000_000
+    os.utime(embedder.weights, ns=(later, later))
+    embeddings(herd, embedder, tmp_path / "cache")
     assert embedder.calls == 2
 
 

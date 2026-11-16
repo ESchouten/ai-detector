@@ -83,6 +83,14 @@ PRESETS: dict[str, Preset] = {
     "dinov3-l": Preset(
         "timm", "vit_large_patch16_dinov3.lvd1689m", 224, IMAGENET, {"img_size": 224}
     ),
+    # Built as Wild Me's MiewID v5 DINOv3 variant, to fine-tune beside MiewID.
+    "dinov3-b-448": Preset(
+        "timm-tokens",
+        "vit_base_patch16_dinov3.lvd1689m",
+        448,
+        IMAGENET,
+        {"img_size": 448},
+    ),
 }
 
 
@@ -214,6 +222,39 @@ def _timm_network(
     return network
 
 
+def _tokens_network(
+    model: str, checkpoint: Path | None, options: dict[str, Any]
+) -> torch.nn.Module:
+    """A vision transformer described by its class token beside its pooled patches.
+
+    The class token sums up the whole picture and the patches keep the coat's
+    detail. Patches are pooled by a generalised mean with a learnt power, and
+    the registers are left out.
+    """
+    import timm
+    import torch
+
+    class Tokens(torch.nn.Module):
+        def __init__(self) -> None:
+            super().__init__()
+            self.backbone = timm.create_model(
+                model, pretrained=checkpoint is None, num_classes=0, **options
+            )
+            self.power = torch.nn.Parameter(torch.tensor(3.0))
+            self.norm = torch.nn.BatchNorm1d(2 * self.backbone.num_features)
+
+        def forward(self, images: torch.Tensor) -> torch.Tensor:
+            tokens = self.backbone.forward_features(images)
+            patches = tokens[:, self.backbone.num_prefix_tokens :].clamp(min=1e-6)
+            pooled = patches.pow(self.power).mean(1).pow(1 / self.power)
+            return self.norm(torch.cat([tokens[:, 0], pooled], dim=1))
+
+    network = Tokens()
+    if checkpoint is not None:
+        _load_checkpoint(network, checkpoint)
+    return network
+
+
 def _transformers_network(
     model: str, checkpoint: Path | None, options: dict[str, Any]
 ) -> torch.nn.Module:
@@ -247,6 +288,7 @@ def _load_checkpoint(network: torch.nn.Module, path: Path) -> None:
 
 _LOADERS: dict[str, Callable[[str, Path | None, dict[str, Any]], torch.nn.Module]] = {
     "timm": _timm_network,
+    "timm-tokens": _tokens_network,
     "transformers": _transformers_network,
 }
 

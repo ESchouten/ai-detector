@@ -211,6 +211,7 @@ uv run --extra local --extra export reid export-coat --out ~/reid-cache/onnx/coa
 | `efficientnetv2-m-440` | The same EfficientNetV2 with ImageNet weights, as a start for fine-tuning | Apache 2.0 |
 | `dinov2-s`, `-b`, `-l` | DINOv2 at 224 px | Apache 2.0 |
 | `dinov3-s`, `-b`, `-l` | DINOv3 at 224 px; Hugging Face may ask to accept Meta's licence first | DINOv3 licence |
+| `dinov3-b-448` | DINOv3 ViT-B/16 at 448 px, built as Wild Me's MiewID v5 DINOv3 variant: the class token beside the pooled patches, 1,536 numbers; a start for fine-tuning | DINOv3 licence |
 | `timm:<name>[@size]` | Any timm model; with `--checkpoint`, weights from a file (`.safetensors` or a PyTorch state dict) | — |
 
 `--grayscale` drops colour before embedding. In the earlier herd study this kept red strangers from passing as the herd's red cow and made daylight and infrared pictures alike. For training, `--gray-chance 0.3` turns that share of pictures gray at random, so one network learns daylight colour and infrared night; the public sets hold few night pictures.

@@ -925,6 +925,7 @@ def _train(arguments: argparse.Namespace) -> None:
         identities_per_batch=arguments.identities_per_batch,
         crops_per_identity=arguments.crops_per_identity,
         learning_rate=arguments.learning_rate,
+        head_learning_rate=arguments.head_learning_rate,
         grayscale=arguments.grayscale,
         gray_chance=arguments.gray_chance,
         partial=arguments.partial,
@@ -972,6 +973,12 @@ def _add_training(commands: argparse._SubParsersAction) -> None:
     training.add_argument("--identities-per-batch", type=int, default=16)
     training.add_argument("--crops-per-identity", type=int, default=4)
     training.add_argument("--learning-rate", type=float, default=3e-5)
+    training.add_argument(
+        "--head-learning-rate",
+        type=float,
+        default=1e-3,
+        help="for the identities' centres, which start from nothing",
+    )
     training.add_argument("--max-per-identity", type=int)
     training.add_argument(
         "--chunk",

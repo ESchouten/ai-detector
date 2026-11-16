@@ -4,7 +4,15 @@ import numpy as np
 import pytest
 from PIL import Image
 
-from reid.backbones import HALF, PRESETS, TorchEmbedder, _load_checkpoint, preset
+from reid.backbones import (
+    HALF,
+    PRESETS,
+    Preset,
+    TorchEmbedder,
+    _load_checkpoint,
+    load_network,
+    preset,
+)
 
 torch = pytest.importorskip("torch")
 timm = pytest.importorskip("timm")
@@ -72,3 +80,40 @@ def test_a_checkpoint_for_another_network_is_refused(tmp_path: Path):
 
     with pytest.raises(ValueError, match="no weights"):
         _load_checkpoint(timm.create_model("resnet18", pretrained=False), path)
+
+
+def test_a_transformer_is_described_by_its_class_token_and_pooled_patches(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    # Untrained weights: nothing is downloaded.
+    create = timm.create_model
+    monkeypatch.setattr(
+        timm, "create_model", lambda *a, **k: create(*a, **{**k, "pretrained": False})
+    )
+    small = Preset(
+        "timm-tokens", "vit_small_patch16_dinov3", 64, HALF, {"img_size": 64}
+    )
+    network = load_network(small).eval()
+    images = torch.rand(2, 3, 64, 64)
+
+    rows = network(images)
+
+    tokens = network.backbone.forward_features(images)
+    assert tokens.shape[1] == 1 + 4 + 16  # class token, registers, 4 x 4 patches
+    assert rows.shape == (2, 2 * 384)
+    assert torch.isfinite(rows).all()
+    # Token 0 is the class token, tokens 1 to 4 the registers, left out.
+    patches = tokens[:, 5:].clamp(min=1e-6)
+    pooled = patches.pow(3).mean(1).pow(1 / 3)
+    expected = network.norm(torch.cat([tokens[:, 0], pooled], dim=1))
+    torch.testing.assert_close(rows, expected)
+
+    # A saved fine-tune loads back into the same network.
+    from safetensors.torch import save_file
+
+    path = tmp_path / "tuned.safetensors"
+    with torch.no_grad():
+        network.power.fill_(2.0)
+    save_file(network.state_dict(), path)
+    again = load_network(small, path).eval()
+    torch.testing.assert_close(again(images), network(images))

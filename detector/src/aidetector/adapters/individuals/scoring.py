@@ -19,7 +19,7 @@ Vectors = NDArray[np.float32]
 NEAREST = 2
 MARGIN = 0.75
 STRANGERS = 0.25
-FOLDS = 3
+FOLDS = 5
 
 
 @dataclass(frozen=True)

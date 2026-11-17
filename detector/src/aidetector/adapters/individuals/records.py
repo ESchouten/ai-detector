@@ -8,7 +8,8 @@ individuals/
     ├── sighting.json          written once by the detector
     ├── crop-1.jpg, ...        the track's best pictures, whole
     ├── vectors-<model>.npy    their embeddings, per model file
-    └── later-<model>.npy      embeddings of the track's later pictures
+    ├── later-<model>.npy      embeddings of the track's later pictures
+    └── coat-<models>.json     coat details shared with named pictures
 ```
 """
 
@@ -38,6 +39,16 @@ class SightingRecord(BaseModel):
     # Each picture's outline as [x, y] points in its pixels, empty without a
     # segmentation model; the model sees the pictures grey outside them.
     outlines: list[list[tuple[int, int]]] = []
+
+
+class CoatRecord(BaseModel):
+    """The coat details a named sighting shares with other sightings' pictures."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    version: Literal[1] = 1
+    # Per other sighting, the count for each of its pictures compared, by place.
+    shared: dict[SightingId, dict[int, int]]
 
 
 class NamesFile(BaseModel):

@@ -19,6 +19,8 @@ import cv2
 import numpy as np
 from numpy.typing import NDArray
 
+from aidetector.adapters.individuals.embedding import model_key
+
 SIZE = 512
 SIDE_MIN = 32
 # A keypoint counts as shared when the matcher is at least this sure of it.
@@ -40,11 +42,13 @@ class CoatModel:
     Create it outside the inference runtime's scope, which would put the
     sessions on its accelerator: pictures and keypoint counts vary in size,
     and accelerators run such models several times slower than the processor.
+    `key` names the counts they make by the two model files.
     """
 
     def __init__(self, keypoints: str, matcher: str):
         import onnxruntime as ort
 
+        self.key = model_key(keypoints)[:8] + model_key(matcher)[:8]
         options = ort.SessionOptions()
         # Camera capture and the detectors need the processor between runs.
         options.add_session_config_entry("session.intra_op.allow_spinning", "0")

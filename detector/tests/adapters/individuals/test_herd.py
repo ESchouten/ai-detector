@@ -471,9 +471,9 @@ def named_on_two_days(herd):
     return named
 
 
-def test_shared_coat_details_count_once_their_own_threshold_is_set(tmp_path):
+def test_shared_coat_details_count_once_their_own_threshold_is_set(tmp_path, caplog):
     herd = herd_of(tmp_path, coat=True)
-    named_on_two_days(herd)
+    named = named_on_two_days(herd)
     identifier = TrackIdentifier(herd)
 
     # The threshold for scores with coat details is set in the background;
@@ -493,11 +493,38 @@ def test_shared_coat_details_count_once_their_own_threshold_is_set(tmp_path):
     # The threshold was set on scores with coat details too.
     assert known.coat_threshold == pytest.approx(known.threshold + 0.2, abs=1e-3)
 
-    # A restart sets it again, from the pictures the named sightings saved.
+    # The details each named sighting shares were kept with it, so a restart
+    # sets the threshold again without comparing their pictures once more.
+    for sighting in named:
+        for picture in (herd.sightings / sighting).glob("crop-*.jpg"):
+            picture.unlink()
     again = herd_of(tmp_path, coat=True)
     assert again.known().coat_threshold is None
     again.flush()
     assert again.known().coat_threshold == pytest.approx(known.coat_threshold)
+    assert "Comparing coat details failed" not in caplog.text
+
+
+def test_kept_coat_details_that_cannot_be_read_leave_the_embedding_to_decide(
+    tmp_path, caplog
+):
+    herd = herd_of(tmp_path, coat=True)
+    named = named_on_two_days(herd)
+    herd.known()
+    herd.flush()
+    [kept] = (herd.sightings / next(iter(named))).glob("coat-*.json")
+    kept.write_text("{}", encoding="utf-8")
+
+    again = herd_of(tmp_path, coat=True)
+    again.known()
+    again.flush()
+
+    assert again.known().coat_threshold is None
+    assert "Comparing coat details failed: The coat details of sighting" in caplog.text
+    [plain] = TrackIdentifier(again).identify(
+        event(3, [(9, "412", PLACES[2])]), "a" * 32
+    )
+    assert plain.name == "412"
 
 
 def test_live_pictures_go_by_the_embedding_until_a_tracks_coat_is_compared(
@@ -512,10 +539,10 @@ def test_live_pictures_go_by_the_embedding_until_a_tracks_coat_is_compared(
     watch(identifier, 6, [(1, "412", PLACES[0])])
     herd.flush()
 
-    # The herd's thread is busy: her coat is not compared yet, and her
+    # The coat thread is busy: her coat is not compared yet, and her
     # embedding alone does not clear the threshold for scores with coat details.
     busy = Event()
-    herd.submit(busy.wait)
+    herd.submit_coat(busy.wait)
     waiting = identifier.identity(SOURCE, 1)
     assert waiting is not None
     assert waiting.name is None
@@ -529,6 +556,35 @@ def test_live_pictures_go_by_the_embedding_until_a_tracks_coat_is_compared(
     assert compared.candidates[0].score == pytest.approx(
         waiting.candidates[0].score + 0.2, abs=1e-3
     )
+
+
+def test_an_event_compares_its_own_tracks_coats_and_waits_for_no_other(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "LOOKING", 0)
+    herd = herd_of(tmp_path, coat=True)
+    named_on_two_days(herd)
+    herd.known()
+    herd.flush()
+    identifier = TrackIdentifier(herd)
+    watch(identifier, 6, [(1, "412", PLACES[0]), (2, "233", PLACES[1])])
+    herd.flush()
+    # Live pictures asked for both coats, and the coat thread is busy.
+    busy = Event()
+    herd.submit_coat(busy.wait)
+    for track in (1, 2):
+        waiting = identifier.identity(SOURCE, track)
+        assert waiting is not None and waiting.name is None
+
+    [individual] = identifier.identify(event(1, [(1, "412", PLACES[0])]), "a" * 32)
+
+    assert individual.name == "412"
+    beside = identifier.identity(SOURCE, 2)
+    assert beside is not None and beside.name is None
+    busy.set()
+    herd.flush()
+    beside = identifier.identity(SOURCE, 2)
+    assert beside is not None and beside.name == "233"
 
 
 def test_a_named_picture_that_cannot_be_read_makes_identification_unavailable(
@@ -561,9 +617,9 @@ def test_closing_does_not_compare_the_coats_still_waiting(
     watch(identifier, 6, [(1, "412", PLACES[0])])
     herd.flush()
     assert herd.coat is not None
-    # The herd's thread is busy until closing begins, so her coat waits; were
+    # The coat thread is busy until closing begins, so her coat waits; were
     # it compared after all, the missing pictures would be reported.
-    herd.submit(herd.coat.stopping.wait)
+    herd.submit_coat(herd.coat.stopping.wait)
     assert identifier.identity(SOURCE, 1) is not None
     for sighting in named:
         for picture in (herd.sightings / sighting).glob("crop-*.jpg"):

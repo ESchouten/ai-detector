@@ -6,7 +6,7 @@ import logging
 import shutil
 import tempfile
 from collections import OrderedDict
-from collections.abc import Callable, Iterator, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, replace
 from datetime import datetime
@@ -24,6 +24,7 @@ from aidetector.adapters.individuals.coat import CoatModel, Described
 from aidetector.adapters.individuals.embedding import EmbeddingModel
 from aidetector.adapters.individuals.grouping import group
 from aidetector.adapters.individuals.records import (
+    CoatRecord,
     GroupsFile,
     NamesFile,
     SightingGroup,
@@ -193,8 +194,10 @@ class CoatCheck:
     """The coat details a saved sighting shares with pictures of named individuals.
 
     Keypoints are found in the pictures a sighting saved, and remembered for
-    the latest DESCRIBED_MAX sightings; any thread may ask. Once `stopping`
-    is set, comparisons that have not begun are not worth their seconds.
+    the latest DESCRIBED_MAX sightings; any thread may ask. A named sighting's
+    counts are kept in its folder, so only new pairs of pictures are compared
+    after a restart. Once `stopping` is set, comparisons that have not begun
+    are not worth their seconds.
     """
 
     def __init__(self, model: CoatModel, sightings: Path):
@@ -253,6 +256,46 @@ class CoatCheck:
                     )
             counts[owner] = max(shared[picture] for picture in pictures)
         return with_coat(similarities, counts)
+
+    def kept(self, sighting: str) -> dict[Picture, int]:
+        """The counts kept for a sighting; none before it was first compared."""
+        stored = self.sightings / sighting / f"coat-{self.model.key}.json"
+        try:
+            record = CoatRecord.model_validate_json(stored.read_bytes())
+        except FileNotFoundError:
+            return {}
+        except OSError as error:
+            raise IdentificationUnavailable(
+                f"Cannot read the coat details of sighting {sighting}: {error}"
+            ) from error
+        except ValidationError as error:
+            raise IdentificationUnavailable(
+                f"The coat details of sighting {sighting} are invalid"
+            ) from error
+        return {
+            (other, place): count
+            for other, places in record.shared.items()
+            for place, count in places.items()
+        }
+
+    def keep(self, sighting: str, shared: Mapping[Picture, int]) -> None:
+        """Replace the counts kept for a sighting; one removed meanwhile keeps
+        nothing."""
+        record = CoatRecord(shared={})
+        for (other, place), count in shared.items():
+            record.shared.setdefault(other, {})[place] = count
+        stored = self.sightings / sighting / f"coat-{self.model.key}.json"
+        pending = stored.with_suffix(f".{uuid4().hex}.tmp")
+        try:
+            pending.write_text(record.model_dump_json(), encoding="utf-8")
+            pending.replace(stored)
+        except FileNotFoundError:
+            return
+        except OSError as error:
+            pending.unlink(missing_ok=True)
+            raise IdentificationUnavailable(
+                f"Cannot save a sighting's coat details: {error}"
+            ) from error
 
 
 class _Stopping(Exception):
@@ -394,8 +437,9 @@ class Herd:
     sightings while monitoring runs. Embeddings are kept per model file; a
     named sighting without one for the current model is embedded again from
     its pictures. Sightings are embedded and saved one at a time on the herd's
-    own thread, so detection never waits for the model. With a coat check, the
-    threshold for its scores is set on a second thread.
+    own thread, so detection never waits for the model. With a coat check, a
+    second thread sets the threshold for its scores and compares the coats of
+    tracks on live pictures.
     """
 
     def __init__(
@@ -429,9 +473,7 @@ class Herd:
         self._richer = 0
         # The coat details each named sighting shares with the others' pictures.
         self._shared: dict[str, dict[Picture, int]] = {}
-        self._thresholds = ThreadPoolExecutor(
-            1, thread_name_prefix="individuals-threshold"
-        )
+        self._coats = ThreadPoolExecutor(1, thread_name_prefix="individuals-coat")
         self._grouping = Lock()
         self._ungrouped = False
         self._regrouped = monotonic()
@@ -515,7 +557,7 @@ class Herd:
             None if threshold is None else self._known.coat_threshold,
         )
         if self.coat is not None:
-            self._thresholds.submit(
+            self._coats.submit(
                 self._set_coat_threshold, self.coat, known, named
             ).add_done_callback(_report_coat_failure)
         return known
@@ -525,21 +567,30 @@ class Herd:
     ) -> None:
         """Set the threshold for scores with the coat check, as the plain one is
         set. Comparing every named sighting's coat takes minutes the first
-        time; until then the threshold of the names before stands."""
+        time; until then the threshold of the names before stands. The counts
+        are kept as they are made, so a restart goes on where this one stopped."""
         with self._lock:
             if self._known is not known:
                 # The names changed again; their own threshold follows.
                 return
         self._shared = {
-            sighting.id: self._shared.get(sighting.id, {}) for sighting in named
+            sighting.id: self._shared[sighting.id]
+            if sighting.id in self._shared
+            else coat.kept(sighting.id)
+            for sighting in named
         }
 
         def compare(sighting: NamedSighting, gallery: Gallery) -> NDArray[np.float32]:
             if coat.stopping.is_set():
                 raise _Stopping
-            return coat.similarities(
-                sighting.id, sighting.vectors, gallery, self._shared[sighting.id]
+            shared = self._shared[sighting.id]
+            before = len(shared)
+            similarities = coat.similarities(
+                sighting.id, sighting.vectors, gallery, shared
             )
+            if len(shared) > before:
+                coat.keep(sighting.id, shared)
+            return similarities
 
         started = perf_counter()
         try:
@@ -690,6 +741,10 @@ class Herd:
         """Run work on the herd's thread, after the work submitted before it."""
         return self._work.submit(job)
 
+    def submit_coat[T](self, job: Callable[[], T]) -> Future[T]:
+        """Compare coats on the second thread, after those submitted before."""
+        return self._coats.submit(job)
+
     @property
     def spare(self) -> bool:
         """Whether the model has time for pictures that can be skipped."""
@@ -726,10 +781,10 @@ class Herd:
         self._work.submit(self._regroup_in_background)
 
     def flush(self) -> None:
-        """Wait for the sightings being saved and the coat check's threshold
-        being set, then group any new ones."""
+        """Wait for the sightings being saved and the coats being compared,
+        then group any new ones."""
         self._work.submit(lambda: None).result()
-        self._thresholds.submit(lambda: None).result()
+        self._coats.submit(lambda: None).result()
         with self._grouping:
             ungrouped, self._ungrouped = self._ungrouped, False
             self._regrouped = monotonic()
@@ -745,7 +800,7 @@ class Herd:
             logger.error("Grouping sightings for naming failed: %s", error)
         finally:
             self._work.shutdown()
-            self._thresholds.shutdown()
+            self._coats.shutdown()
 
 
 class _Track:
@@ -766,10 +821,11 @@ class _Track:
         # The sighting's similarity to each named individual, with the names it
         # was compared against.
         self.compared: tuple[Known, NDArray[np.float32]] | None = None
-        # The same with the coat check, done on the herd's thread: the names it
-        # was last asked for, its last answer, and the coat details the
-        # sighting shares with every picture it was compared with.
-        self.check: tuple[Known, Future[None]] | None = None
+        # The same with the coat check, by one thread at a time: the names
+        # live pictures last asked it for, its last answer, and the coat
+        # details the sighting shares with every picture it was compared with.
+        self.check: Known | None = None
+        self.checking = Lock()
         self.checked: tuple[Known, NDArray[np.float32]] | None = None
         self.shared: dict[Picture, int] = {}
 
@@ -845,9 +901,10 @@ class TrackIdentifier:
     events then compare that sighting with the named individuals; an event
     saves its tracks that are not saved yet, and waits for them. A source's
     saved tracks are decided together, since tracks seen in one picture are
-    different individuals. With a coat check, each saved track is compared
-    again on the herd's thread; live pictures go by the embedding until that
-    is done, and an event waits for it.
+    different individuals. With a coat check, the coat of a track on live
+    pictures is compared on the herd's second thread, and the track goes by
+    its embedding until that is done; an event compares its own tracks' coats
+    before it decides, and waits for no other.
     """
 
     def __init__(self, herd: Herd):
@@ -856,7 +913,7 @@ class TrackIdentifier:
         # Per source, how often a track was first seen beside another.
         self._together: dict[str, int] = {}
         self._named: dict[str, _Naming] = {}
-        # How many coat checks are done; the herd's thread counts.
+        # How many coat checks are done.
         self._checked = 0
         self._lock = Lock()
         self._known = _NOTHING_KNOWN
@@ -981,49 +1038,60 @@ class TrackIdentifier:
                     self._failure = str(error)
         return self._known
 
-    def _similarities(
-        self, track: _Track, known: Known, sighting: _Sighting, wait: bool
-    ) -> NDArray[np.float32]:
-        """A track's similarity to each name: with the coat check once there
-        is a threshold for it, and by the embedding until the check is done,
-        or by the last check when that asked for the same names."""
+    def _check(
+        self, coat: CoatCheck, track: _Track, known: Known, sighting: _Sighting
+    ) -> None:
+        """Compare a track's coat with the names it resembles most, once for
+        the same names."""
+        with track.checking:
+            if track.checked is not None and track.checked[0] is known:
+                return
+            track.checked = (
+                known,
+                coat.similarities(
+                    sighting.id, sighting.vectors, known.gallery, track.shared
+                ),
+            )
+        with self._lock:
+            self._checked += 1
+
+    def _check_soon(self, track: _Track, known: Known, sighting: _Sighting) -> None:
+        """Have the coat of a track on live pictures compared, unless that was
+        asked for these names before."""
         coat = self.herd.coat
-        if coat is None or known.coat_threshold is None:
-            return track.similarities(known, sighting)
-        if track.check is None or track.check[0] is not known:
+        if coat is None or known.coat_threshold is None or track.check is known:
+            return
+        track.check = known
 
-            def check() -> None:
-                if coat.stopping.is_set():
-                    return
-                track.checked = (
-                    known,
-                    coat.similarities(
-                        sighting.id, sighting.vectors, known.gallery, track.shared
-                    ),
-                )
-                self._checked += 1
+        def check() -> None:
+            # Not worth its seconds once the names changed or the herd closes.
+            if track.check is known and not coat.stopping.is_set():
+                self._check(coat, track, known, sighting)
 
-            future = self.herd.submit(check)
-            future.add_done_callback(_report_coat_failure)
-            track.check = (known, future)
-        if wait:
-            track.check[1].result()
+        self.herd.submit_coat(check).add_done_callback(_report_coat_failure)
+
+    def _similarities(
+        self, track: _Track, known: Known, sighting: _Sighting
+    ) -> NDArray[np.float32]:
+        """A track's similarity to each name: with the coat details of its
+        last check, when there is a threshold for those and that check asked
+        for the same names, and by the embedding otherwise."""
         checked = track.checked
-        if checked is not None and checked[0].gallery.names == known.gallery.names:
+        if (
+            known.coat_threshold is not None
+            and checked is not None
+            and checked[0].gallery.names == known.gallery.names
+        ):
             return checked[1]
         return track.similarities(known, sighting)
 
-    def _decided(
-        self, source: str, known: Known, wait: bool = False
-    ) -> dict[int, Individual]:
+    def _decided(self, source: str, known: Known) -> dict[int, Individual]:
         """A source's saved tracks, compared with the named individuals and
-        decided together; decided again only after something changed. An event
-        waits for its tracks' coat checks."""
-        checked = self._checked
-        wait = wait and known.coat_threshold is not None
+        decided together; decided again only after something changed."""
         with self._lock:
             tracks = dict(self._tracks.get(source, {}))
             together = self._together.get(source, 0)
+            checked = self._checked
         saved = {
             track_id: (track, sighting)
             for track_id, track in tracks.items()
@@ -1036,13 +1104,12 @@ class TrackIdentifier:
             and naming.together == together
             and naming.saved == frozenset(saved)
             and naming.checked == checked
-            and not wait
         ):
             return naming.individuals
         individuals = _decide(
             saved,
             known,
-            lambda track, sighting: self._similarities(track, known, sighting, wait),
+            lambda track, sighting: self._similarities(track, known, sighting),
             known.threshold if known.coat_threshold is None else known.coat_threshold,
         )
         self._named[source] = _Naming(
@@ -1058,9 +1125,11 @@ class TrackIdentifier:
         """
         with self._lock:
             track = self._tracks.get(source, {}).get(track_id)
-        if track is None or track.saved is None:
+        if track is None or (sighting := track.saved) is None:
             return None
-        return self._decided(source, self._latest_known()).get(track_id)
+        known = self._latest_known()
+        self._check_soon(track, known, sighting)
+        return self._decided(source, known).get(track_id)
 
     def _event_tracks(self, event: DetectionEvent) -> dict[int, _Track]:
         """The event's tracks, in the order they appear. Those live pictures
@@ -1100,12 +1169,18 @@ class TrackIdentifier:
                 )
                 for track_id, track in tracks.items()
             ]
-        saved = [
-            track_id for track_id, future in pending if future.result() is not None
-        ]
+        saved = {
+            track_id: sighting
+            for track_id, future in pending
+            if (sighting := future.result()) is not None
+        }
         if not saved:
             return ()
-        decided = self._decided(event.source, self.herd.known(), wait=True)
+        known = self.herd.known()
+        if (coat := self.herd.coat) is not None and known.coat_threshold is not None:
+            for track_id, sighting in saved.items():
+                self._check(coat, tracks[track_id], known, sighting)
+        decided = self._decided(event.source, known)
         individuals = tuple(decided[track_id] for track_id in saved)
         logger.info(
             "Compared %d track(s) with the named individuals in %.0fms",

@@ -148,7 +148,7 @@ Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected
 - With `--live-preview`, the live boxes carry each track's sighting and name, so a person can name an individual straight from the camera picture.
 - Two tracks seen in the same picture are never recognised as the same individual.
 - Alerts show `412` for a recognised individual and `412, 233 or 87?` when the herd only suggests names. `metadata.json` lists them under `individuals`, or the reason they could not be recognised under `individuals_error`.
-- With `coat`, a track's pictures are also compared, detail by detail, with the saved pictures of the three names it resembles most, and shared details count towards a name. It needs individuals a few hundred pixels across, so a camera's main stream, and several seconds of processor time for every new track.
+- With `coat`, a track's pictures are also compared, detail by detail, with the saved pictures of the three names it resembles most, and shared details count towards a name. It needs individuals a few hundred pixels across, so a camera's main stream, and several seconds of processor time for every new track. Once names from two days are there it first compares the named sightings with each other, which takes minutes of processor time once; until that is done names are given without the coat details.
 - Recognition starts once the named sightings come from at least two days, the least from which an installation can check its own threshold; until then alerts only suggest names. See [individuals](ARCHITECTURE.md#individuals) for the model contract, the files and the scoring.
 
 ### Runtime and health

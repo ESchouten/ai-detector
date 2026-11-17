@@ -1,5 +1,31 @@
 {
   "$defs": {
+    "CoatConfig": {
+      "additionalProperties": false,
+      "description": "Compare the coat details of a track and the individuals it resembles most.",
+      "properties": {
+        "keypoints": {
+          "description": "ONNX model that finds a picture's keypoints, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Keypoints",
+          "type": "string"
+        },
+        "matcher": {
+          "description": "ONNX model that matches two pictures' keypoints, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Matcher",
+          "type": "string"
+        }
+      },
+      "required": [
+        "keypoints",
+        "matcher"
+      ],
+      "title": "CoatConfig",
+      "type": "object"
+    },
     "DetectorConfig": {
       "additionalProperties": false,
       "properties": {
@@ -287,6 +313,18 @@
           "maximum": 1,
           "title": "Precision",
           "type": "number"
+        },
+        "coat": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoatConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Also compare coat details; needs pictures of individuals a few hundred pixels across."
         }
       },
       "required": [

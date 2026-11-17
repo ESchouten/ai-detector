@@ -303,3 +303,13 @@ def test_the_individuals_model_must_be_onnx(model, valid):
         assert "must be an ONNX file" in str(error)
     else:
         assert valid
+
+
+def test_a_coat_check_needs_both_of_its_models_as_onnx():
+    coat = {"keypoints": "keypoints.onnx", "matcher": "https://example.invalid/m.onnx"}
+    config = IndividualsConfig(model="herd.onnx", labels="cow", coat=coat)
+    assert config.coat is not None
+    assert config.coat.keypoints == "keypoints.onnx"
+    for invalid in ({"keypoints": "keypoints.onnx"}, coat | {"matcher": "matcher.pt"}):
+        with pytest.raises(ValidationError):
+            IndividualsConfig(model="herd.onnx", labels="cow", coat=invalid)

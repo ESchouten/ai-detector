@@ -142,11 +142,13 @@ Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected
 | `model` | required | ONNX embedding model, a local file or HTTP(S) URL; you bring your own |
 | `labels` | required | Detection classes whose tracked objects are individuals |
 | `precision` | `0.99` | Share of names that must be right when the installation sets its naming threshold |
+| `coat` | off | `{"keypoints": …, "matcher": …}`: two more ONNX models, local files or HTTP(S) URLs, that also compare coat details |
 
 - Each track of those classes is saved once as a sighting, a few seconds after it appears: its best pictures, with the object's outline; recognition looks only inside the outline, under `individuals/sightings/` in the data folder. While the track is still in view, a picture every few seconds is added to what the sighting knows of the individual, so a name given once also covers her other sides. People name sightings in `individuals/names.json`; a name covers every sighting given it, from every camera. Unnamed sightings that look alike are listed together in `individuals/groups.json`, so a whole group can be named at once. The latest 2000 unnamed sightings are kept; named ones always are.
 - With `--live-preview`, the live boxes carry each track's sighting and name, so a person can name an individual straight from the camera picture.
 - Two tracks seen in the same picture are never recognised as the same individual.
 - Alerts show `412` for a recognised individual and `412, 233 or 87?` when the herd only suggests names. `metadata.json` lists them under `individuals`, or the reason they could not be recognised under `individuals_error`.
+- With `coat`, a track's pictures are also compared, detail by detail, with the saved pictures of the three names it resembles most, and shared details count towards a name. It needs individuals a few hundred pixels across, so a camera's main stream, and several seconds of processor time for every new track.
 - Recognition starts once the named sightings come from at least two days, the least from which an installation can check its own threshold; until then alerts only suggest names. See [individuals](ARCHITECTURE.md#individuals) for the model contract, the files and the scoring.
 
 ### Runtime and health

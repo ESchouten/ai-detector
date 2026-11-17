@@ -5,12 +5,15 @@ individual's score is the mean of her k most similar named pictures, averaged
 over the sighting's pictures, less a share of the runner-up's score, so a
 sighting that resembles two individuals is named less readily. Sightings seen
 together are decided together: one individual is never in two places at once.
+
+A coat check adds to the similarity of the few names a sighting resembles most:
+the details its pictures share with her saved pictures, counted by the caller.
 """
 
 from __future__ import annotations
 
-from collections.abc import Collection, Sequence
-from dataclasses import dataclass
+from collections.abc import Callable, Collection, Mapping, Sequence
+from dataclasses import dataclass, field
 
 import numpy as np
 from numpy.typing import NDArray
@@ -20,10 +23,20 @@ NEAREST = 2
 MARGIN = 0.75
 STRANGERS = 0.25
 FOLDS = 5
+# A coat check compares a sighting with the SHORTLIST names most like it, with
+# COAT_PICTURES saved pictures of each; COAT_FULL shared details or more add
+# COAT_WEIGHT to a similarity.
+SHORTLIST = 3
+COAT_PICTURES = 3
+COAT_FULL = 100
+COAT_WEIGHT = 0.2
+# A saved picture: its sighting's ID and its place among the sighting's pictures.
+Picture = tuple[str, int]
 
 
 @dataclass(frozen=True)
 class NamedSighting:
+    id: str
     name: str
     # The day the pictures were taken; the threshold check asks each day in turn.
     session: str
@@ -47,6 +60,10 @@ class Gallery:
     names: tuple[str, ...]
     vectors: Vectors
     owners: NDArray[np.intp]
+    # The saved pictures, and which of the vectors each one is. Later pictures
+    # are kept as vectors only.
+    pictures: tuple[Picture, ...] = ()
+    saved: NDArray[np.intp] = field(default_factory=lambda: np.empty(0, np.intp))
 
     @classmethod
     def of(cls, sightings: Sequence[NamedSighting]) -> Gallery:
@@ -54,6 +71,7 @@ class Gallery:
         index = {name: position for position, name in enumerate(names)}
         if not sightings:
             return cls(names, np.empty((0, 0), np.float32), np.empty(0, np.intp))
+        starts = np.cumsum([0, *(len(sighting.known) for sighting in sightings)])
         return cls(
             names,
             np.concatenate([sighting.known for sighting in sightings]),
@@ -61,6 +79,17 @@ class Gallery:
                 [
                     np.full(len(sighting.known), index[sighting.name], np.intp)
                     for sighting in sightings
+                ]
+            ),
+            tuple(
+                (sighting.id, place)
+                for sighting in sightings
+                for place in range(len(sighting.vectors))
+            ),
+            np.concatenate(
+                [
+                    start + np.arange(len(sighting.vectors))
+                    for start, sighting in zip(starts, sightings, strict=False)
                 ]
             ),
         )
@@ -82,6 +111,29 @@ class Gallery:
                 .mean()
             )
         return scores
+
+    def shortlist(
+        self, vectors: Vectors, similarities: NDArray[np.float32]
+    ) -> dict[int, list[Picture]]:
+        """What a coat check compares a sighting with: the names most like it,
+        each with her saved pictures most like it."""
+        likeness = self.vectors[self.saved] @ vectors.mean(axis=0)
+        chosen = {}
+        for owner in np.argsort(-similarities, kind="stable")[:SHORTLIST]:
+            own = np.flatnonzero(self.owners[self.saved] == owner)
+            nearest = own[np.argsort(-likeness[own], kind="stable")[:COAT_PICTURES]]
+            chosen[int(owner)] = [self.pictures[place] for place in nearest]
+        return chosen
+
+
+def with_coat(
+    similarities: NDArray[np.float32], shared: Mapping[int, int]
+) -> NDArray[np.float32]:
+    """Similarities with the coat details each shortlisted name shares added."""
+    fused = similarities.copy()
+    for owner, details in shared.items():
+        fused[owner] += COAT_WEIGHT * min(details, COAT_FULL) / COAT_FULL
+    return fused
 
 
 def runner_up_margin(similarities: NDArray[np.float32]) -> NDArray[np.float32]:
@@ -158,15 +210,23 @@ def threshold_for(
     return float(ranked[good[-1]]) if good.size else None
 
 
+def by_embedding(sighting: NamedSighting, known: Gallery) -> NDArray[np.float32]:
+    return known.similarities(sighting.vectors)
+
+
 def self_set_threshold(
-    sightings: Sequence[NamedSighting], precision: float, seed: int = 1
+    sightings: Sequence[NamedSighting],
+    precision: float,
+    seed: int = 1,
+    compare: Callable[[NamedSighting, Gallery], NDArray[np.float32]] = by_embedding,
 ) -> float | None:
     """The threshold an installation sets from its own named sightings.
 
     Every day's sightings are asked in turn against those of the other days,
     each time with a share of the individuals withheld as strangers, and one
-    threshold is set on all answers pooled. None until two days have names, or
-    when no threshold reaches the precision.
+    threshold is set on all answers pooled. `compare` gives a sighting's
+    similarity to each name, as new tracks are compared. None until two days
+    have names, or when no threshold reaches the precision.
     """
     sessions = sorted({sighting.session for sighting in sightings})
     if len(sessions) < 2:
@@ -196,7 +256,7 @@ def self_set_threshold(
                 [sighting for sighting in gallery if sighting.name not in strangers]
             )
             for query in queries:
-                scores = known.scores(query.vectors)
+                scores = runner_up_margin(compare(query, known))
                 top = int(scores.argmax())
                 best.append(float(scores[top]))
                 correct.append(known.names[top] == query.name)

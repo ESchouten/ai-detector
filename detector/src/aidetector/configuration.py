@@ -7,6 +7,7 @@ from typing import Annotated, Literal
 from urllib.parse import urlsplit
 
 from pydantic import (
+    AfterValidator,
     AnyHttpUrl,
     AnyUrl,
     BaseModel,
@@ -356,10 +357,34 @@ class DetectorConfig(_ConfigModel):
         return {} if value is None else value
 
 
+def _onnx_file(value: str) -> str:
+    url = urlsplit(value)
+    path = url.path if url.scheme in {"http", "https"} else value
+    if Path(path).suffix.lower() != ".onnx":
+        raise ValueError("A model for recognising individuals must be an ONNX file")
+    return value
+
+
+OnnxFile = Annotated[NonEmptyString, AfterValidator(_onnx_file)]
+
+
+class CoatConfig(_ConfigModel):
+    """Compare the coat details of a track and the individuals it resembles most."""
+
+    keypoints: OnnxFile = Field(
+        description="ONNX model that finds a picture's keypoints, as a path or an "
+        "http(s) URL ending in .onnx."
+    )
+    matcher: OnnxFile = Field(
+        description="ONNX model that matches two pictures' keypoints, as a path or "
+        "an http(s) URL ending in .onnx."
+    )
+
+
 class IndividualsConfig(_ConfigModel):
     """Recognise individual animals of tracked classes, shared by every detector."""
 
-    model: NonEmptyString = Field(
+    model: OnnxFile = Field(
         description="ONNX embedding model, as a path or an http(s) URL ending in .onnx."
     )
     labels: Annotated[tuple[NonEmptyString, ...], Field(min_length=1)] = Field(
@@ -370,6 +395,11 @@ class IndividualsConfig(_ConfigModel):
         description="Share of names that must be right when the installation sets "
         "its naming threshold from its own named sightings.",
     )
+    coat: CoatConfig | None = Field(
+        default=None,
+        description="Also compare coat details; needs pictures of individuals a "
+        "few hundred pixels across.",
+    )
 
     @field_validator(
         "labels",
@@ -379,15 +409,6 @@ class IndividualsConfig(_ConfigModel):
     @classmethod
     def normalize_labels(cls, value: object) -> object:
         return _sequence(value)
-
-    @field_validator("model")
-    @classmethod
-    def onnx_model(cls, value: str) -> str:
-        url = urlsplit(value)
-        path = url.path if url.scheme in {"http", "https"} else value
-        if Path(path).suffix.lower() != ".onnx":
-            raise ValueError("The individuals model must be an ONNX file")
-        return value
 
 
 class OnnxConfig(_ConfigModel):

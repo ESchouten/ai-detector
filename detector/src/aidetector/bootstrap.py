@@ -11,6 +11,7 @@ from aidetector.adapters.exporters.disk import DiskExporter
 from aidetector.adapters.exporters.telegram import TelegramExporter
 from aidetector.adapters.exporters.webhook import WebhookExporter
 from aidetector.adapters.health import Healthcheck
+from aidetector.adapters.individuals.coat import CoatModel
 from aidetector.adapters.individuals.embedding import (
     EmbeddingModel,
     input_size,
@@ -131,22 +132,33 @@ def build_destinations(
     return tuple(destinations)
 
 
-def _individuals_model(
+def _individuals_models(
     config: IndividualsConfig | None,
     config_directory: Path,
     data_directory: Path,
     report_status: ReportStatus,
-) -> str | None:
+) -> tuple[str | None, CoatModel | None]:
+    """The embedding model's file and, when configured, the coat check."""
     if config is None:
-        return None
-    path = resolve_model_path(
-        config.model, config_directory, data_directory / "models", report_status
-    )
-    if not Path(path).is_file():
-        message = "The model for recognising individuals was not found. Check its path."
-        report_status(StatusEvent("preparation_failed", message=message))
-        raise RuntimeError(message)
-    return path
+        return None, None
+
+    def file(model: str) -> str:
+        path = resolve_model_path(
+            model, config_directory, data_directory / "models", report_status
+        )
+        if not Path(path).is_file():
+            message = (
+                "A model for recognising individuals was not found. Check its path."
+            )
+            report_status(StatusEvent("preparation_failed", message=message))
+            raise RuntimeError(message)
+        return path
+
+    model = file(config.model)
+    if config.coat is None:
+        return model, None
+    # Opened before the inference runtime: the coat check runs on the processor.
+    return model, CoatModel(file(config.coat.keypoints), file(config.coat.matcher))
 
 
 def _model_requirements(
@@ -172,13 +184,17 @@ def _model_requirements(
 def _open_herd(
     config: IndividualsConfig | None,
     model: str | None,
+    coat: CoatModel | None,
     data_directory: Path,
     resources: ExitStack,
 ) -> Herd | None:
     if config is None or model is None:
         return None
     herd = Herd(
-        data_directory / "individuals", EmbeddingModel(model, model_key(model)), config
+        data_directory / "individuals",
+        EmbeddingModel(model, model_key(model)),
+        config,
+        coat,
     )
     # Registered before the detectors, so it saves their last sightings after them.
     resources.callback(herd.close)
@@ -241,7 +257,7 @@ def run_application(
         log_detector_configuration(
             index, settings, _resolved_sources(settings.detection, config_directory)
         )
-    individuals_model = _individuals_model(
+    individuals_model, coat = _individuals_models(
         config.individuals, config_directory, data_directory, report_status
     )
     models = _model_requirements(config, individuals_model)
@@ -271,7 +287,7 @@ def run_application(
                 report_status,
             )
         herd = _open_herd(
-            config.individuals, individuals_model, data_directory, resources
+            config.individuals, individuals_model, coat, data_directory, resources
         )
         streams = StreamPool(report_status)
         preview = LivePreview(data_directory / "live") if live_preview else None

@@ -286,7 +286,11 @@ def test_launcher_inference_status_follows_real_onnx_prediction(
 def test_tracked_detections_become_sightings_and_their_names_reach_the_archive(
     tmp_path,
 ):
-    from tests.support.onnx_model import write_detection_model, write_embedding_model
+    from tests.support.onnx_model import (
+        write_coat_models,
+        write_detection_model,
+        write_embedding_model,
+    )
 
     source = tmp_path / "input.png"
     image = np.full((64, 64, 3), 90, dtype=np.uint8)
@@ -294,11 +298,16 @@ def test_tracked_detections_become_sightings_and_their_names_reach_the_archive(
     assert cv2.imwrite(str(source), image)
     write_detection_model(tmp_path / "model.onnx", box=(6, 6, 58, 58), segment=True)
     write_embedding_model(tmp_path / "herd.onnx")
+    write_coat_models(tmp_path)
     (tmp_path / "config.json").write_text(
         json.dumps(
             {
                 "onnx": {"provider": "CPUExecutionProvider"},
-                "individuals": {"model": "herd.onnx", "labels": "cow"},
+                "individuals": {
+                    "model": "herd.onnx",
+                    "labels": "cow",
+                    "coat": {"keypoints": "keypoints.onnx", "matcher": "matcher.onnx"},
+                },
                 "detectors": [
                     {
                         "detection": {"source": str(source)},
@@ -345,6 +354,7 @@ def test_tracked_detections_become_sightings_and_their_names_reach_the_archive(
     assert suggested["name"] is None
     assert [candidate["name"] for candidate in suggested["candidates"]] == ["412"]
     assert "Individuals: 412" in logs
+    assert "Comparing coat details too" in logs
 
 
 def test_launcher_keeps_shared_camera_rule_and_archive_failures_distinct(tmp_path):

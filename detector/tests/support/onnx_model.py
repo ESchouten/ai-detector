@@ -99,3 +99,76 @@ def write_embedding_model(path, size=32, metadata=None):
         helper.set_model_props(model, metadata)
     onnx.checker.check_model(model)
     onnx.save(model, path)
+
+
+# The coat models compare pictures on a grid of this many cells a side.
+CELLS = 10
+
+
+def write_coat_models(directory, metadata=None):
+    """Real, tiny coat models: a keypoint in every cell of a grid over the
+    picture, described by its colour and matched with the same cell of the
+    other picture when their colours agree."""
+    keypoints = helper.make_graph(
+        [
+            helper.make_node(
+                "Resize", ["image", "", "", "grid"], ["cells"], mode="nearest"
+            ),
+            helper.make_node("Transpose", ["cells"], ["last"], perm=[0, 2, 3, 1]),
+            helper.make_node("Reshape", ["last", "rows"], ["descriptors"]),
+            helper.make_node("Identity", ["places"], ["keypoints"]),
+        ],
+        "keypoints-contract",
+        [
+            helper.make_tensor_value_info(
+                "image", TensorProto.FLOAT, [1, 3, "height", "width"]
+            )
+        ],
+        [
+            helper.make_tensor_value_info("keypoints", TensorProto.FLOAT, ["found", 2]),
+            helper.make_tensor_value_info(
+                "descriptors", TensorProto.FLOAT, ["found", 3]
+            ),
+        ],
+        initializer=[
+            numpy_helper.from_array(np.array([1, 3, CELLS, CELLS], np.int64), "grid"),
+            numpy_helper.from_array(np.array([CELLS * CELLS, 3], np.int64), "rows"),
+            numpy_helper.from_array(
+                np.indices((CELLS, CELLS), np.float32).reshape(2, -1).T, "places"
+            ),
+        ],
+    )
+    sides = [
+        helper.make_tensor_value_info(name, TensorProto.FLOAT, shape)
+        for side in "01"
+        for name, shape in (
+            (f"keypoints{side}", [1, f"found{side}", 2]),
+            (f"descriptors{side}", [1, f"found{side}", 3]),
+            (f"size{side}", [1, 2]),
+        )
+    ]
+    matcher = helper.make_graph(
+        [
+            helper.make_node("Sub", ["descriptors0", "descriptors1"], ["apart"]),
+            helper.make_node("Abs", ["apart"], ["distance"]),
+            helper.make_node(
+                "ReduceMax", ["distance"], ["furthest"], axes=[2], keepdims=0
+            ),
+            helper.make_node("Sub", ["one", "furthest"], ["scores"]),
+        ],
+        "matcher-contract",
+        sides,
+        [helper.make_tensor_value_info("scores", TensorProto.FLOAT, [1, "found0"])],
+        initializer=[numpy_helper.from_array(np.array(1, np.float32), "one")],
+    )
+    paths = []
+    for name, graph in (("keypoints", keypoints), ("matcher", matcher)):
+        model = helper.make_model(
+            graph, opset_imports=[helper.make_opsetid("", 13)], ir_version=9
+        )
+        if metadata:
+            helper.set_model_props(model, metadata)
+        onnx.checker.check_model(model)
+        onnx.save(model, directory / f"{name}.onnx")
+        paths.append(str(directory / f"{name}.onnx"))
+    return paths

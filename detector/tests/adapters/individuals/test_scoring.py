@@ -7,6 +7,7 @@ from aidetector.adapters.individuals.scoring import (
     decide_together,
     self_set_threshold,
     threshold_for,
+    with_coat,
 )
 
 
@@ -16,7 +17,9 @@ def unit(*values):
 
 
 def sighting(name, day, *vectors):
-    return NamedSighting(name, f"2026-10-{day:02d}", np.stack(vectors))
+    return NamedSighting(
+        f"{name} on day {day}", name, f"2026-10-{day:02d}", np.stack(vectors)
+    )
 
 
 def test_a_sighting_scores_highest_for_the_individual_with_the_nearest_pictures():
@@ -108,7 +111,11 @@ def test_the_threshold_needs_named_sightings_from_two_days():
 
 def test_later_pictures_are_compared_against_but_never_asked_with():
     seen = NamedSighting(
-        "412", "2026-10-01", np.stack([unit(1, 0, 0)]), np.stack([unit(0, 1, 0)])
+        "seen",
+        "412",
+        "2026-10-01",
+        np.stack([unit(1, 0, 0)]),
+        np.stack([unit(0, 1, 0)]),
     )
     other = sighting("233", 1, unit(0, 0, 1))
     gallery = Gallery.of([seen, other])
@@ -118,3 +125,65 @@ def test_later_pictures_are_compared_against_but_never_asked_with():
 
     # A sighting asks with its own pictures only, as new tracks do.
     assert len(seen.vectors) == 1
+
+
+def test_a_coat_check_compares_with_the_saved_pictures_of_the_likeliest_names():
+    turned = NamedSighting(
+        "turned",
+        "412",
+        "2026-10-02",
+        np.stack([unit(0.2, 1, 0)]),
+        # Her later pictures look most like the sighting, but were not saved.
+        np.stack([unit(1, 0, 0)]),
+    )
+    gallery = Gallery.of(
+        [
+            sighting("412", 1, unit(1, 0.4, 0), unit(1, 0.1, 0), unit(1, 0.3, 0)),
+            turned,
+            sighting("233", 1, unit(0.6, 0, 1)),
+            sighting("87", 1, unit(0.3, 0, 1)),
+            sighting("15", 1, unit(0, 0, 1)),
+        ]
+    )
+    asked = np.stack([unit(1, 0, 0), unit(1, 0.1, 0)])
+
+    chosen = gallery.shortlist(asked, gallery.similarities(asked))
+
+    # The three names most like the sighting, best first, each with her three
+    # saved pictures most like it.
+    assert [gallery.names[owner] for owner in chosen] == ["412", "233", "87"]
+    assert chosen[gallery.names.index("412")] == [
+        ("412 on day 1", 1),
+        ("412 on day 1", 2),
+        ("412 on day 1", 0),
+    ]
+    assert chosen[gallery.names.index("233")] == [("233 on day 1", 0)]
+
+
+def test_shared_coat_details_settle_what_the_embedding_leaves_too_close_to_call():
+    # Similarities to 233 and 412.
+    row = np.asarray([0.68, 0.7], np.float32)
+    [unsure] = decide_together([row], [set()], [None], 0.3)
+    assert not unsure.recognised
+
+    # Details beyond a hundred count no further.
+    fused = with_coat(row, {0: 150, 1: 10})
+    np.testing.assert_allclose(fused, [0.88, 0.72])
+    [sure] = decide_together([fused], [set()], [None], 0.3)
+    assert sure.recognised and sure.scores.argmax() == 0
+
+
+def test_the_threshold_is_set_on_sightings_compared_as_new_tracks_are():
+    plain = self_set_threshold(herd([1, 2]), 0.99)
+    assert plain is not None
+
+    def compare(sighting, known):
+        # Every sighting shares all its coat details with her own name only.
+        similarities = known.similarities(sighting.vectors)
+        if sighting.name not in known.names:
+            return similarities
+        return with_coat(similarities, {known.names.index(sighting.name): 100})
+
+    assert self_set_threshold(herd([1, 2]), 0.99, compare=compare) == pytest.approx(
+        plain + 0.2, abs=1e-6
+    )

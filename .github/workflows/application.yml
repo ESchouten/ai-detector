@@ -444,7 +444,7 @@ jobs:
             gh release create apt --title "Ubuntu apt repository" --notes "Signed apt repository with the latest official Ubuntu package. The package adds it to the system's software sources." --prerelease --latest=false
           fi
           previous=$(gh release view apt --json assets --jq '.assets[].name | select(endswith(".deb"))')
-          gh release upload apt *.deb --clobber
+          gh release upload apt ./*.deb --clobber
           gh release upload apt Packages Release InRelease --clobber
           for asset in $previous; do
             [ -e "$asset" ] || gh release delete-asset apt "$asset" --yes

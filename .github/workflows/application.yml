@@ -386,6 +386,16 @@ jobs:
             python3 -m zipfile --create "${installer%.exe}.zip" "$installer"
             rm "$installer"
           done
+      - name: Sign an apt index, so Ubuntu updates from the latest official release
+        working-directory: downloads
+        # Bash by name fails the step when either side of the pipe fails.
+        shell: bash
+        env:
+          APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
+        run: |
+          gpg --batch --import <<< "$APT_SIGNING_KEY"
+          apt-ftparchive packages . > Packages
+          apt-ftparchive release . | gpg --batch --clearsign > InRelease
       - uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.RELEASE_TOKEN || github.token }}
@@ -424,31 +434,6 @@ jobs:
             gh release create app-update-channels --title "Application update channels" --notes "Signed desktop updater metadata for official and preview releases." --prerelease --latest=false
           fi
           gh release upload app-update-channels update-feeds/channels/appcast.xml update-feeds/channels/releases.win.json --clobber
-      - name: Publish the Ubuntu package in the apt repository
-        # Installed packages read this release's assets as a flat apt repository.
-        if: needs.configuration.outputs.channel == 'stable'
-        env:
-          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
-          GH_REPO: ${{ github.repository }}
-          APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
-        run: |
-          sudo apt-get update && sudo apt-get install -y --no-install-recommends apt-utils
-          mkdir apt
-          cp downloads/*-linux-amd64.deb apt/
-          cd apt
-          apt-ftparchive packages . > Packages
-          apt-ftparchive release . > ../Release && mv ../Release .
-          gpg --batch --import <<< "$APT_SIGNING_KEY"
-          gpg --batch --clearsign --output InRelease Release
-          if ! gh release view apt >/dev/null 2>&1; then
-            gh release create apt --title "Ubuntu apt repository" --notes "Signed apt repository with the latest official Ubuntu package. The package adds it to the system's software sources." --prerelease --latest=false
-          fi
-          previous=$(gh release view apt --json assets --jq '.assets[].name | select(endswith(".deb"))')
-          gh release upload apt ./*.deb --clobber
-          gh release upload apt Packages Release InRelease --clobber
-          for asset in $previous; do
-            [ -e "$asset" ] || gh release delete-asset apt "$asset" --yes
-          done
 
   # Every build also publishes the container image, which holds the web application
   # and the detector it runs.

@@ -1,0 +1,4 @@
+Types: deb
+URIs: https://github.com/ESchouten/ai-detector/releases/download/apt/
+Suites: ./
+Signed-By: /usr/share/keyrings/ai-detector.asc

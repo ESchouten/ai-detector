@@ -5,7 +5,6 @@ yolo11**
 yolo26**
 app.json
 /application-dist/
-!example/config.json
 !web/src/routes/(admin)/detections
 
 # Local tooling and download caches

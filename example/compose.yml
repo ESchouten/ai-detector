@@ -1,8 +1,12 @@
-# AI Detector on a Linux PC with an NVIDIA GPU and the NVIDIA Container Toolkit.
+# AI Detector on a Linux PC with an NVIDIA GPU and the NVIDIA Container Toolkit, or on a Jetson
+# Orin or Thor with JetPack 7.2. Checked on an Orin Nano, not on a Thor: see detector/MIGRATION.md.
 services:
   aidetector:
     image: "ghcr.io/eschouten/ai-detector:latest"
     restart: unless-stopped
+    # Should Docker not know this runtime on a PC, register it once:
+    # sudo nvidia-ctk runtime configure --runtime=docker && sudo systemctl restart docker
+    runtime: nvidia
     # The host's network, so cameras on it can be found.
     network_mode: host
     environment:

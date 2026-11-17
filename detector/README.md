@@ -66,8 +66,9 @@ All options are in [`config.schema.json`](../config/config.schema.json). Sources
 | --- | --- | --- |
 | `detection.source` | required | Local image or video, HTTP video, RTSP/HTTP stream, or a camera index as a string such as `"0"` |
 | `detection.interval` | `0` | Minimum seconds between sampled frames; files use media time and are not paced |
-| `detection.frame_retention` | `15` | Unread sampled frames kept per live source while inference is busy; the latest is evaluated, earlier ones give context |
+| `detection.frame_retention` | `15` | Frames kept per live source for each evaluation: the latest is evaluated, earlier ones give context. With an interval, frames between samples are kept evenly spread, so event videos stay smooth |
 | `detection.frames_width` | `1280` | Maximum input width; aspect ratio is kept and smaller frames are not upscaled |
+| `detection.areas` | none | Per source, the corners of the area to watch as fractions of the picture's width and height; a detection counts only when the middle of its box is inside |
 
 - Detectors that name the **same live source string** share one camera connection and its decoded frames. Each keeps its own sampling, frame size, tracking and event rules.
 - Use separate detectors for files and live streams. Files in one detector are processed in order, and each file's end closes its own event. Live captures reconnect after expected failures.
@@ -87,7 +88,7 @@ All options are in [`config.schema.json`](../config/config.schema.json). Sources
 | `cooldown` | `0` | Per-source cooldown after acceptance, in seconds or a class map |
 | `tracking` | `false` | Persistent Ultralytics tracking |
 
-- Standard names such as `yolo11n.pt` are downloaded by Ultralytics; model URLs are downloaded once into the cache. Prepared ONNX models and TensorRT engines are cached under `models/prepared/`, which can be deleted while detection is stopped. See [inference backends](ARCHITECTURE.md#inference-backends).
+- Standard names such as `yolo11n.pt` are downloaded by Ultralytics; model URLs are downloaded once into the cache. Prepared ONNX models, TensorRT engines and Windows ML compiled models are cached under `models/prepared/`, which can be deleted while detection is stopped. See [inference backends](ARCHITECTURE.md#inference-backends).
 - An event needs `frames_min` observations containing a class outside its cooldown. Each observation counts once; context and observations containing only classes still in cooldown do not count. Approved and deliberately unvalidated events start cooldown for the classes outside cooldown, using each class's best qualifying observation. A class still in cooldown keeps its previous timer; rejected and failed events do not start cooldown.
 - Without `yolo`, each sampled frame goes straight to the verifier and the exporters, and disk files it under `unclassified` unless `directory` is set.
 
@@ -117,7 +118,7 @@ Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected
 
 **Telegram.** Needs `token` and `chat`. `alert_every` (`1`) plays the sound on every Nth alert. `quiet` takes a `start` and `end` such as `"22:00"` and `"06:00"`, in the computer's local time: alerts in that period arrive without sound. Photos are limited to 10 MB and videos to 12 MB. Alerts carry 👍 and 👎 buttons tied to the event's `event_id`; the web application receives the reviews.
 
-**Webhook.** Needs `url`; defaults to `method: "POST"` and `data_type: "binary"` (form fields and files), with `base64` (JSON) and `none` as alternatives. `headers` adds headers, `token` becomes the `Authorization` value, `body` replaces the generated content, and `data_max` limits each attachment. Payloads carry `confidence`, `timestamp`, `duration` and `validated`.
+**Webhook.** Needs `url`; defaults to `method: "POST"` and `data_type: "binary"` (form fields and files), with `base64` (JSON), `none` and `file` (the first chosen picture or video as the whole body, or `body` without one) as alternatives. `headers` adds headers, `token` becomes the `Authorization` value, `body` replaces the generated content, and `data_max` limits each attachment. Payloads carry `confidence`, `timestamp`, `duration` and `validated`.
 
 | Field | Telegram | Webhook |
 | --- | --- | --- |
@@ -141,11 +142,13 @@ Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected
 | `model` | required | ONNX embedding model, a local file or HTTP(S) URL; you bring your own |
 | `labels` | required | Detection classes whose tracked objects are individuals |
 | `precision` | `0.99` | Share of names that must be right when the installation sets its naming threshold |
+| `coat` | off | `{"keypoints": …, "matcher": …}`: two more ONNX models, local files or HTTP(S) URLs, that also compare coat details |
 
-- Each track of those classes is saved once as a sighting, a few seconds after it appears: its best pictures, with the object's outline; recognition looks only inside the outline, under `individuals/sightings/` in the data folder. People name sightings in `individuals/names.json`; a name covers every sighting given it, from every camera. Unnamed sightings that look alike are listed together in `individuals/groups.json`, so a whole group can be named at once. The latest 2000 unnamed sightings are kept; named ones always are.
+- Each track of those classes is saved once as a sighting, a few seconds after it appears: its best pictures, with the object's outline; recognition looks only inside the outline, under `individuals/sightings/` in the data folder. While the track is still in view, a picture every few seconds is added to what the sighting knows of the individual, so a name given once also covers her other sides. People name sightings in `individuals/names.json`; a name covers every sighting given it, from every camera. Unnamed sightings that look alike are listed together in `individuals/groups.json`, so a whole group can be named at once. The latest 2000 unnamed sightings are kept; named ones always are.
 - With `--live-preview`, the live boxes carry each track's sighting and name, so a person can name an individual straight from the camera picture.
 - Two tracks seen in the same picture are never recognised as the same individual.
 - Alerts show `412` for a recognised individual and `412, 233 or 87?` when the herd only suggests names. `metadata.json` lists them under `individuals`, or the reason they could not be recognised under `individuals_error`.
+- With `coat`, a track's pictures are also compared, detail by detail, with the saved pictures of the three names it resembles most, and shared details count towards a name. It needs individuals a few hundred pixels across, so a camera's main stream, and several seconds of processor time for every new track. Once names from two days are there it first compares the named sightings with each other, which takes minutes of processor time once; until that is done names are given without the coat details.
 - Recognition starts once the named sightings come from at least two days, the least from which an installation can check its own threshold; until then alerts only suggest names. See [individuals](ARCHITECTURE.md#individuals) for the model contract, the files and the scoring.
 
 ### Runtime and health
@@ -187,7 +190,7 @@ uv run --no-sync generate-schema --check
 uv build --wheel
 ```
 
-In VS Code, the **Detector: check** task runs all but the wheel build. Ruff limits a function to complexity 10, 12 branches and 50 statements ([`ruff.toml`](../ruff.toml)); split one where that names a useful operation, never suppress the rule or raise the limit. CI runs the full suite on Linux, Windows and macOS and reports branch coverage on Linux (`coverage run -m pytest`, `coverage combine`, `coverage report`), without a percentage gate. [PERFORMANCE.md](PERFORMANCE.md) covers measuring inference.
+Ruff limits a function to complexity 10, 12 branches and 50 statements ([`ruff.toml`](../ruff.toml)); split one where that names a useful operation, never suppress the rule or raise the limit. CI runs the full suite on Linux, Windows and macOS and reports branch coverage on Linux (`coverage run -m pytest`, `coverage combine`, `coverage report`), without a percentage gate. [PERFORMANCE.md](PERFORMANCE.md) covers measuring inference.
 
 Executables are built with [distribution/build.py](../distribution/build.py). After building one, `uv run --no-sync python -m tests.support.smoke_package /path/to/executable` runs it through a model download, tracking, verification, archives, delivery and shutdown; `--model-format pt` also checks a Torch checkpoint.
 

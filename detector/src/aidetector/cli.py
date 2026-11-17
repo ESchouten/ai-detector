@@ -101,6 +101,7 @@ def _arguments(argv: list[str] | None) -> argparse.Namespace:
         "--prepare-windows-ml", nargs="?", const="", help=argparse.SUPPRESS
     )
     action.add_argument("--probe-onnx-provider", help=argparse.SUPPRESS)
+    action.add_argument("--compile-onnx-model", type=Path, help=argparse.SUPPRESS)
     action.add_argument(
         "--test-vlm",
         type=Path,
@@ -142,6 +143,10 @@ def main(argv: list[str] | None = None) -> int:
         from aidetector.adapters.inference.provider_probe import run_probe
 
         return run_probe(args.probe_onnx_provider)
+    if args.compile_onnx_model is not None:
+        from aidetector.adapters.inference.compiled_models import run_helper
+
+        return run_helper(args.compile_onnx_model)
     if args.test_vlm is not None:
         from aidetector.adapters.vlm import run_check
 
@@ -223,6 +228,9 @@ def _run(
             sum(item.delivery_failures for item in stats),
             sum(item.validation_failures for item in stats),
         )
+        # The app already shows each failed delivery; a requested stop is not a failure.
+        if args.control_stdin:
+            return 0
         return 1 if any(item.failed for item in stats) else 0
     except KeyboardInterrupt:
         logger.info("Shutdown completed")

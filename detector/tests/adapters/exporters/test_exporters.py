@@ -10,6 +10,7 @@ import requests
 from aidetector.adapters.exporters.telegram import TelegramExporter
 from aidetector.adapters.exporters.webhook import WebhookExporter
 from aidetector.adapters.http import send_request
+from aidetector.adapters.media import MediaError
 from aidetector.adapters.media.event_media import EventMedia
 from aidetector.adapters.media.images import encode_jpeg
 from aidetector.application.delivery import Destination, EventDelivery
@@ -61,7 +62,7 @@ def requests_sent(monkeypatch):
     "options",
     [
         {"data_type": "none"},
-        {"data_type": "base64", "include_image": True, "body": "fixed-body"},
+        {"data_type": "base64", "include_image": True, "body": "Kälber"},
     ],
 )
 def test_webhook_without_data_or_with_a_fixed_body_sends_no_event_payload(
@@ -70,7 +71,8 @@ def test_webhook_without_data_or_with_a_fixed_body_sends_no_event_payload(
     config = WebhookConfig(url="https://example.test", **options)
     WebhookExporter(config, EventMedia()).export(result)
     [(_, _, request)] = requests_sent
-    assert request["data"] == config.body
+    # A text body is sent as UTF-8, so names like "Kälber" arrive intact.
+    assert request["data"] == (config.body and config.body.encode())
     assert request["json"] is None
     assert request["files"] is None
     assert request["timeout"] == 30
@@ -451,3 +453,36 @@ def test_telegram_caption_names_recognised_individuals_and_asks_about_others(
     lines = requests_sent[0][2]["data"]["text"].splitlines()
     assert lines[:2] == ["90%", "0 second(s)"]
     assert lines[2:] == ([names] if names else [])
+
+
+def test_webhook_file_sends_the_first_chosen_picture_as_the_body(result, requests_sent):
+    config = WebhookConfig(
+        url="https://example.test",
+        data_type="file",
+        include_plot=True,
+        include_crop=False,
+        body="Calving pen",
+        headers={"Priority": "urgent"},
+    )
+    WebhookExporter(config, EventMedia()).export(result)
+    [(_, _, request)] = requests_sent
+    assert request["data"].startswith(b"\xff\xd8")
+    assert request["headers"] == {"Priority": "urgent", "Content-Type": "image/jpeg"}
+
+
+def test_webhook_file_without_a_picture_still_sends_its_text(
+    result, requests_sent, monkeypatch
+):
+    media = EventMedia()
+
+    def broken(*_args, **_kwargs):
+        raise MediaError("no frame")
+
+    monkeypatch.setattr(media, "attachments", broken)
+    config = WebhookConfig(
+        url="https://example.test", data_type="file", include_image=True, body="Pen"
+    )
+    WebhookExporter(config, media).export(result)
+    [(_, _, request)] = requests_sent
+    assert request["data"] == b"Pen"
+    assert "Content-Type" not in request["headers"]

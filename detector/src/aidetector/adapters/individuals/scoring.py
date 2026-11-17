@@ -7,13 +7,16 @@ similar named pictures, averaged over the sighting's pictures, less a share of
 the runner-up's score, so a sighting that resembles two individuals is named
 less readily. Sightings seen together are decided together: one individual is
 never in two places at once.
+
+A coat check adds to the similarity of the few names a sighting resembles most:
+the details its pictures share with her saved pictures, counted by the caller.
 """
 
 from __future__ import annotations
 
 from collections import defaultdict
-from collections.abc import Collection, Sequence
-from dataclasses import dataclass
+from collections.abc import Callable, Collection, Mapping, Sequence
+from dataclasses import dataclass, field
 
 import numpy as np
 from numpy.typing import NDArray
@@ -22,18 +25,38 @@ Vectors = NDArray[np.float32]
 NEAREST = 2
 MARGIN = 0.75
 STRANGERS = 0.25
-FOLDS = 3
+FOLDS = 5
 # How far the adaptation damps the directions an individual varies in; lower
 # damps harder. The enrolment study found 0.3 halved wrong names on a walkway.
 DAMPING = 0.3
+# A coat check compares a sighting with the SHORTLIST names most like it, with
+# COAT_PICTURES saved pictures of each; COAT_FULL shared details or more add
+# COAT_WEIGHT to a similarity.
+SHORTLIST = 3
+COAT_PICTURES = 3
+COAT_FULL = 100
+COAT_WEIGHT = 0.2
+# A saved picture: its sighting's ID and its place among the sighting's pictures.
+Picture = tuple[str, int]
 
 
 @dataclass(frozen=True)
 class NamedSighting:
+    id: str
     name: str
     # The day the pictures were taken; the threshold check asks each day in turn.
     session: str
     vectors: Vectors
+    # Later pictures of the same track, which show her from more sides. They
+    # are only ever compared against: a sighting asks with `vectors` alone, as
+    # new tracks do.
+    later: Vectors | None = None
+
+    @property
+    def known(self) -> Vectors:
+        if self.later is None or not len(self.later):
+            return self.vectors
+        return np.concatenate([self.vectors, self.later])
 
 
 @dataclass(frozen=True)
@@ -100,6 +123,10 @@ class Gallery:
     names: tuple[str, ...]
     vectors: Vectors
     owners: NDArray[np.intp]
+    # The saved pictures, and which of the vectors each one is. Later pictures
+    # are kept as vectors only.
+    pictures: tuple[Picture, ...] = ()
+    saved: NDArray[np.intp] = field(default_factory=lambda: np.empty(0, np.intp))
     adaptation: Adaptation | None = None
 
     @classmethod
@@ -114,21 +141,36 @@ class Gallery:
         index = {name: position for position, name in enumerate(names)}
         if not sightings:
             return cls(names, np.empty((0, 0), np.float32), np.empty(0, np.intp))
-        vectors = np.concatenate([sighting.vectors for sighting in sightings])
+        starts = np.cumsum([0, *(len(sighting.known) for sighting in sightings)])
+        vectors = np.concatenate([sighting.known for sighting in sightings])
         if centre is None:
-            centre = np.mean([s.vectors.mean(axis=0) for s in sightings], axis=0)
+            centre = _centre(sightings)
         adaptation = Adaptation.of(sightings, centre)
         return cls(
             names,
             vectors if adaptation is None else adaptation(vectors),
             np.concatenate(
                 [
-                    np.full(len(sighting.vectors), index[sighting.name], np.intp)
+                    np.full(len(sighting.known), index[sighting.name], np.intp)
                     for sighting in sightings
+                ]
+            ),
+            tuple(
+                (sighting.id, place)
+                for sighting in sightings
+                for place in range(len(sighting.vectors))
+            ),
+            np.concatenate(
+                [
+                    start + np.arange(len(sighting.vectors))
+                    for start, sighting in zip(starts, sightings, strict=False)
                 ]
             ),
             adaptation,
         )
+
+    def _adapted(self, vectors: Vectors) -> Vectors:
+        return vectors if self.adaptation is None else self.adaptation(vectors)
 
     def scores(self, vectors: Vectors) -> NDArray[np.float32]:
         """One sighting's score per name, in the order of `names`."""
@@ -136,9 +178,7 @@ class Gallery:
 
     def similarities(self, vectors: Vectors) -> NDArray[np.float32]:
         """One sighting's score per name before the runner-up's share is taken off."""
-        if self.adaptation is not None:
-            vectors = self.adaptation(vectors)
-        similarity = vectors @ self.vectors.T
+        similarity = self._adapted(vectors) @ self.vectors.T
         scores = np.empty(len(self.names), np.float32)
         for owner in range(len(self.names)):
             own = similarity[:, self.owners == owner]
@@ -149,6 +189,34 @@ class Gallery:
                 .mean()
             )
         return scores
+
+    def shortlist(
+        self, vectors: Vectors, similarities: NDArray[np.float32]
+    ) -> dict[int, list[Picture]]:
+        """What a coat check compares a sighting with: the names most like it,
+        each with her saved pictures most like it."""
+        likeness = self.vectors[self.saved] @ self._adapted(vectors).mean(axis=0)
+        chosen = {}
+        for owner in np.argsort(-similarities, kind="stable")[:SHORTLIST]:
+            own = np.flatnonzero(self.owners[self.saved] == owner)
+            nearest = own[np.argsort(-likeness[own], kind="stable")[:COAT_PICTURES]]
+            chosen[int(owner)] = [self.pictures[place] for place in nearest]
+        return chosen
+
+
+def _centre(sightings: Sequence[NamedSighting]) -> NDArray[np.floating]:
+    """The mean sighting of the named ones."""
+    return np.mean([sighting.vectors.mean(axis=0) for sighting in sightings], axis=0)
+
+
+def with_coat(
+    similarities: NDArray[np.float32], shared: Mapping[int, int]
+) -> NDArray[np.float32]:
+    """Similarities with the coat details each shortlisted name shares added."""
+    fused = similarities.copy()
+    for owner, details in shared.items():
+        fused[owner] += COAT_WEIGHT * min(details, COAT_FULL) / COAT_FULL
+    return fused
 
 
 def runner_up_margin(similarities: NDArray[np.float32]) -> NDArray[np.float32]:
@@ -225,8 +293,15 @@ def threshold_for(
     return float(ranked[good[-1]]) if good.size else None
 
 
+def by_embedding(sighting: NamedSighting, known: Gallery) -> NDArray[np.float32]:
+    return known.similarities(sighting.vectors)
+
+
 def self_set_threshold(
-    sightings: Sequence[NamedSighting], precision: float, seed: int = 1
+    sightings: Sequence[NamedSighting],
+    precision: float,
+    seed: int = 1,
+    compare: Callable[[NamedSighting, Gallery], NDArray[np.float32]] = by_embedding,
 ) -> float | None:
     """The threshold an installation sets from its own named sightings.
 
@@ -235,13 +310,14 @@ def self_set_threshold(
     threshold is set on all answers pooled. Each such gallery adapts the
     embedding from its own names, around the mean of all named sightings;
     centring on the unnamed ones too let the check set the threshold too low
-    on a small herd. None until two days have names, or when no threshold
-    reaches the precision.
+    on a small herd. `compare` gives a sighting's similarity to each name, as
+    new tracks are compared. None until two days have names, or when no
+    threshold reaches the precision.
     """
     sessions = sorted({sighting.session for sighting in sightings})
     if len(sessions) < 2:
         return None
-    centre = np.mean([sighting.vectors.mean(axis=0) for sighting in sightings], axis=0)
+    centre = _centre(sightings)
     rng = np.random.default_rng(seed)
     best: list[float] = []
     correct: list[bool] = []
@@ -268,7 +344,7 @@ def self_set_threshold(
                 centre,
             )
             for query in queries:
-                scores = known.scores(query.vectors)
+                scores = runner_up_margin(compare(query, known))
                 top = int(scores.argmax())
                 best.append(float(scores[top]))
                 correct.append(known.names[top] == query.name)

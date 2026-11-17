@@ -55,7 +55,7 @@ test(
 		assert.deepEqual(await readJson(path.join(directory, 'config.json')), config);
 		assert.equal(await monitoringEnabled(path.join(directory, 'app.json')), true);
 		const log = await detector.log.read();
-		assert.equal(log.match(/Restart requested: TensorRT models are ready/g)?.length, 1);
+		assert.equal(log.match(/Restart requested: Optimized models are ready/g)?.length, 1);
 		assert.doesNotMatch(log, /ERROR|stopped unexpectedly|Restarting the detector in/);
 		await detector.stop();
 		assert.equal(await starts(), 2);

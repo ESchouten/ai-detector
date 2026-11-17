@@ -33,6 +33,7 @@ import { SettingsFiles, type SettingsPaths } from './settings-files.ts';
 import { saveDetector, deleteDetector } from './detectors.ts';
 import { saveTelegram, deleteTelegram, saveAlerts } from './telegrams.ts';
 import { saveLlm, deleteLlm } from './llms.ts';
+import { savePhoneAlarm, deletePhoneAlarm } from './phone-alarm.ts';
 import { replaceConnections, replaceDetectorConfig, settingsRevision } from './advanced.ts';
 import { recordArchiveCheck, finishCameraSetup } from './camera-setup.ts';
 import { followPresets, forgetChangedPresets } from './followed-presets.ts';
@@ -216,6 +217,14 @@ export class ConfigurationStore {
 		return this.update((document) => saveAlerts(document, input, presets));
 	}
 
+	savePhoneAlarm(input: { topic: string; detectorLabels: string[] }): Promise<void> {
+		return this.update((document) => savePhoneAlarm(document, input));
+	}
+
+	deletePhoneAlarm(): Promise<void> {
+		return this.update((document) => deletePhoneAlarm(document));
+	}
+
 	saveLlm(input: LlmConnection & { original?: string }): Promise<void> {
 		return this.update((document) => saveLlm(document, input));
 	}
@@ -256,9 +265,10 @@ export class ConfigurationStore {
 		});
 	}
 
-	saveOutageNotifications(enabled: boolean): Promise<void> {
+	saveAlarmOutages(enabled: boolean): Promise<void> {
 		return this.update((document) => {
-			document.app.notifyCameraOutages = enabled;
+			if (!document.app.phoneAlarm) throw new ConfigurationError('Set up the phone alarm first.');
+			document.app.phoneAlarm.outages = enabled;
 		});
 	}
 

@@ -174,12 +174,46 @@ def test_each_subscription_keeps_its_own_sampling_resolution_and_retention():
         1.5,
         2,
     ]
-    assert [(frame.date - started).total_seconds() for frame in slow_frames] == [1, 2]
+    assert [(frame.date - started).total_seconds() for frame in slow_frames] == [
+        1.5,
+        2,
+    ]
     assert all(frame.image.shape == (32, 32, 3) for frame in fast_frames)
     assert all(frame.image.shape == (16, 16, 3) for frame in slow_frames)
     assert all(
         not frame.image.flags.writeable for frame in (*fast_frames, *slow_frames)
     )
+
+
+def test_an_interval_keeps_frames_between_samples_for_a_smooth_video():
+    source = StreamSource(("0",), width=1280, retention=4, interval=1)
+    started = datetime(2026, 1, 1)
+    batches = source.batches()
+
+    def publish(*instants):
+        for instant in instants:
+            source.publish(
+                "0",
+                CapturedFrame(
+                    Frame(
+                        started + timedelta(seconds=instant),
+                        np.zeros((8, 8, 3), dtype=np.uint8),
+                    )
+                ),
+                instant,
+            )
+
+    def seconds(batch):
+        return [(frame.date - started).total_seconds() for frame in batch.frames["0"]]
+
+    publish(0)
+    assert seconds(next(batches)) == [0]
+    # Evenly spread over the interval; the frame after the sample waits for the next.
+    publish(0.1, 0.25, 0.5, 0.75, 1, 1.25)
+    assert seconds(next(batches)) == [0.25, 0.5, 0.75, 1]
+    publish(1.5, 1.75, 2)
+    assert seconds(next(batches)) == [1.25, 1.5, 1.75, 2]
+    source.close()
 
 
 def test_sampling_one_camera_does_not_suppress_another_camera():
@@ -231,7 +265,8 @@ def test_skipped_samples_do_not_resize_and_same_width_resizes_only_once(monkeypa
     subscribers = [
         StreamSource(("0",), width=32, retention=15, interval=1) for _ in range(2)
     ]
-    for instant in (0, 0.5, 1):
+    # Frames closer together than the interval spread over the retention are skipped.
+    for instant in (0, 0.05, 1):
         frame = CapturedFrame(
             Frame(datetime.now(), np.zeros((64, 64, 3), dtype=np.uint8))
         )

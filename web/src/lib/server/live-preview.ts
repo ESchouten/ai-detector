@@ -12,7 +12,7 @@ import type { Config, AppConfig } from '../schema.ts';
 import { readJson } from './json-file.ts';
 import { webLog } from './web-log.ts';
 
-export interface LivePreviewRule {
+interface LivePreviewRule {
 	id: string;
 	label: string;
 	preset?: string;

@@ -12,16 +12,12 @@ from aidetector.schema import schemas
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_schema_validates_example_and_offline_template():
+def test_schema_validates_offline_template():
     schema = schemas()["config.schema.json"]
     Draft202012Validator.check_schema(schema)
-    validator = Draft202012Validator(schema)
-    for document in (
-        initial_config(),
-        json.loads((ROOT / "example/config.json").read_text()),
-    ):
-        validator.validate(document)
-        Config.model_validate(document)
+    document = initial_config()
+    Draft202012Validator(schema).validate(document)
+    Config.model_validate(document)
 
 
 @pytest.mark.parametrize(

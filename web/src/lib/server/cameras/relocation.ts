@@ -1,6 +1,7 @@
 import type { RuntimeStatus } from '../../runtime.ts';
 import type { CameraDevice, Configuration, StreamMeta } from '../../schema.ts';
-import { chat, quiet, type Recipient } from '../outage-alerts.ts';
+import { isPhoneAlarm } from '../../phone-alarm.ts';
+import { outagesNotified, type OutageRecipient } from '../outage-alerts.ts';
 import { sourceKey } from '../source-key.ts';
 import { learnDevice, locateCameras, type CameraMove } from './identity.ts';
 
@@ -20,34 +21,39 @@ export interface RelocationWatch {
 	remember(id: string, source: string, device: CameraDevice): Promise<void>;
 	/** Saves the moves and gives back those that were made. */
 	relocate(moves: CameraMove[]): Promise<CameraMove[]>;
-	send(recipient: Recipient, text: string, silent: boolean): Promise<void>;
+	send(recipient: OutageRecipient, text: string): Promise<void>;
 	log(message: string): void;
 	warn(message: string, error: unknown): void;
 	learn?: (camera: StreamMeta) => Promise<CameraDevice | undefined>;
 	locate?: (lost: StreamMeta[]) => Promise<CameraMove[]>;
 }
 
-/** Who gets the alerts of a camera with this source. */
-function recipientsOf({ config }: Configuration, source: string): Recipient[] {
-	return config.detectors
-		.filter((detector) => detector.detection.source.includes(source))
-		.flatMap((detector) => detector.exporters?.telegram ?? []);
+/** The phone alarm, when a detector that watches a camera with this source rings it. */
+function recipientsOf({ config, app }: Configuration, source: string): OutageRecipient[] {
+	const topic = app.phoneAlarm?.topic;
+	if (!topic) return [];
+	const rings = config.detectors.some(
+		(detector) =>
+			detector.detection.source.includes(source) &&
+			detector.exporters?.webhook?.some((item) => isPhoneAlarm(item, topic))
+	);
+	return rings ? [{ topic }] : [];
 }
 
-/** One message for each person who gets the alerts of a camera that moved. */
+/** One message for each phone alarm that rings for a camera that moved. */
 export function relocationNotices(
 	settings: Configuration,
 	moves: CameraMove[]
-): { recipient: Recipient; text: string }[] {
-	const recipients = new Map<string, { recipient: Recipient; lines: string[] }>();
+): { recipient: OutageRecipient; text: string }[] {
+	const recipients = new Map<string, { recipient: OutageRecipient; lines: string[] }>();
 	for (const move of moves) {
 		const camera = settings.app.streams.find((stream) => stream.id === move.id);
 		const label = camera?.label ?? 'Camera';
 		const moved = `${label} got a new network address (${move.host}) and is watched there again.`;
 		const line = /* @wc-ignore */ `📍 ${moved}`;
 		for (const recipient of recipientsOf(settings, move.source)) {
-			const entry = recipients.get(chat(recipient)) ?? { recipient, lines: [] };
-			recipients.set(chat(recipient), entry);
+			const entry = recipients.get(recipient.topic) ?? { recipient, lines: [] };
+			recipients.set(recipient.topic, entry);
 			if (!entry.lines.includes(line)) entry.lines.push(line);
 		}
 	}
@@ -104,7 +110,7 @@ export class CameraRelocation {
 		if (!lost.length || now - this.searchedAt < SEARCH_INTERVAL) return;
 		this.searchedAt = now;
 		const found = await (this.watch.locate ?? locateCameras)(lost);
-		if (found.length) this.moved(settings, await this.watch.relocate(found), now);
+		if (found.length) this.moved(settings, await this.watch.relocate(found));
 	}
 
 	/** The watched cameras not yet asked what tells them apart, and those lost long enough. */
@@ -133,7 +139,7 @@ export class CameraRelocation {
 		return { unknown, lost };
 	}
 
-	private moved(settings: Configuration, moves: CameraMove[], now: number): void {
+	private moved(settings: Configuration, moves: CameraMove[]): void {
 		for (const move of moves) {
 			this.lostSince.delete(move.id);
 			const from = new URL(move.source).hostname;
@@ -141,15 +147,12 @@ export class CameraRelocation {
 				/* @wc-ignore */ `Camera ${move.id.slice(0, 12)} moved from ${from} to ${move.host}`
 			);
 		}
-		if (settings.app.notifyCameraOutages !== true) return;
+		if (!outagesNotified(settings.app)) return;
 		for (const { recipient, text } of relocationNotices(settings, moves))
 			this.watch
-				.send(recipient, text, quiet(recipient.quiet, new Date(now)))
+				.send(recipient, text)
 				.catch((error) =>
-					this.watch.warn(
-						/* @wc-ignore */ 'Could not tell through Telegram that a camera moved',
-						error
-					)
+					this.watch.warn(/* @wc-ignore */ 'Could not tell through ntfy that a camera moved', error)
 				);
 	}
 }

@@ -7,6 +7,7 @@ from typing import Annotated, Literal
 from urllib.parse import urlsplit
 
 from pydantic import (
+    AfterValidator,
     AnyHttpUrl,
     AnyUrl,
     BaseModel,
@@ -31,6 +32,15 @@ SourceList = Annotated[
 ]
 ProbabilityMap = Annotated[dict[NonEmptyString, Probability], Field(min_length=1)]
 DurationMap = Annotated[dict[NonEmptyString, Duration], Field(min_length=1)]
+# Two numbers, written so that the schema gives both coordinates a type.
+Point = Annotated[tuple[Probability, ...], Field(min_length=2, max_length=2)]
+Area = Annotated[
+    tuple[Point, ...],
+    Field(
+        min_length=3,
+        description="Polygon corners as x, y fractions of the picture's width and height.",
+    ),
+]
 HttpMethod = Literal["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"]
 _HTTP_URL = TypeAdapter(AnyHttpUrl)
 _SOURCE_URL = TypeAdapter(
@@ -130,6 +140,11 @@ class SourceConfig(_ConfigModel):
     interval: Duration = 0
     frame_retention: PositiveInt = 15
     frames_width: Annotated[int, Field(ge=2)] = 1280
+    areas: dict[NonEmptyString, Area] = Field(
+        default_factory=dict,
+        repr=False,
+        description="Per source, the area a detection's box centre must lie in to count.",
+    )
 
     @field_validator(
         "source", mode="before", json_schema_input_type=NonEmptyString | SourceList
@@ -150,6 +165,12 @@ class SourceConfig(_ConfigModel):
                 "Put finite files and live streams in separate detector definitions"
             )
         return sources
+
+    @model_validator(mode="after")
+    def areas_of_sources(self) -> SourceConfig:
+        if not set(self.areas) <= set(self.source):
+            raise ValueError("An area must belong to one of the detector's sources")
+        return self
 
 
 class VLMConfig(_ConfigModel):
@@ -252,7 +273,13 @@ class TelegramConfig(MediaConfig):
 class WebhookConfig(MediaConfig, HttpConfig):
     method: HttpMethod = "POST"
     token: str | None = Field(default=None, repr=False)
-    data_type: Literal["binary", "base64", "none"] = "binary"
+    data_type: Literal["binary", "base64", "none", "file"] = Field(
+        default="binary",
+        description=(
+            "binary: form fields and files; base64: JSON; none: no content; file: the "
+            "first chosen picture or video as the whole body, or `body` without one."
+        ),
+    )
     data_max: PositiveInt | None = None
     include_crop: bool = True
 
@@ -330,10 +357,34 @@ class DetectorConfig(_ConfigModel):
         return {} if value is None else value
 
 
+def _onnx_file(value: str) -> str:
+    url = urlsplit(value)
+    path = url.path if url.scheme in {"http", "https"} else value
+    if Path(path).suffix.lower() != ".onnx":
+        raise ValueError("A model for recognising individuals must be an ONNX file")
+    return value
+
+
+OnnxFile = Annotated[NonEmptyString, AfterValidator(_onnx_file)]
+
+
+class CoatConfig(_ConfigModel):
+    """Compare the coat details of a track and the individuals it resembles most."""
+
+    keypoints: OnnxFile = Field(
+        description="ONNX model that finds a picture's keypoints, as a path or an "
+        "http(s) URL ending in .onnx."
+    )
+    matcher: OnnxFile = Field(
+        description="ONNX model that matches two pictures' keypoints, as a path or "
+        "an http(s) URL ending in .onnx."
+    )
+
+
 class IndividualsConfig(_ConfigModel):
     """Recognise individual animals of tracked classes, shared by every detector."""
 
-    model: NonEmptyString = Field(
+    model: OnnxFile = Field(
         description="ONNX embedding model, as a path or an http(s) URL ending in .onnx."
     )
     labels: Annotated[tuple[NonEmptyString, ...], Field(min_length=1)] = Field(
@@ -344,6 +395,11 @@ class IndividualsConfig(_ConfigModel):
         description="Share of names that must be right when the installation sets "
         "its naming threshold from its own named sightings.",
     )
+    coat: CoatConfig | None = Field(
+        default=None,
+        description="Also compare coat details; needs pictures of individuals a "
+        "few hundred pixels across.",
+    )
 
     @field_validator(
         "labels",
@@ -353,15 +409,6 @@ class IndividualsConfig(_ConfigModel):
     @classmethod
     def normalize_labels(cls, value: object) -> object:
         return _sequence(value)
-
-    @field_validator("model")
-    @classmethod
-    def onnx_model(cls, value: str) -> str:
-        url = urlsplit(value)
-        path = url.path if url.scheme in {"http", "https"} else value
-        if Path(path).suffix.lower() != ".onnx":
-            raise ValueError("The individuals model must be an ONNX file")
-        return value
 
 
 class OnnxConfig(_ConfigModel):

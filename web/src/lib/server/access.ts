@@ -13,7 +13,7 @@ export const sessionCookie = (secure: boolean) => ({
 });
 
 /** `locals.deviceId` of a browser on this computer; a paired device carries its own id. */
-export const LOCAL_DEVICE = 'local';
+const LOCAL_DEVICE = 'local';
 
 /** Whether the request being answered comes from the dashboard on this computer. */
 export function isLocalDashboard(locals: App.Locals): boolean {

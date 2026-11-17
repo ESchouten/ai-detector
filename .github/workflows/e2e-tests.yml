@@ -2,8 +2,11 @@ name: End-to-end test
 
 on:
   pull_request:
+    # Documentation alone changes nothing this test covers.
+    paths-ignore: &documentation ['**/*.md']
   push:
     branches: ['main']
+    paths-ignore: *documentation
   workflow_dispatch:
 
 concurrency:
@@ -19,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      # The RTSP server that plays the example clip as a camera.
+      # The RTSP server that plays the test clip as a camera.
       MEDIAMTX_VERSION: v1.21.2
       MEDIAMTX_SHA256: 121be6e00397e473a95d83c75f4fcd3819a6af3b0e1a50889cba43ab4fab6a27
     steps:

@@ -51,7 +51,7 @@ export function settingsNavigation({ individuals = false } = {}): NavItem[] {
 			title: 'Alerts',
 			href: resolve('/notifications'),
 			icon: BellIcon,
-			description: 'Who gets a Telegram message when something is detected.'
+			description: 'A message with the footage, a loud alarm on your phone, or both.'
 		},
 		{
 			title: 'AI check',

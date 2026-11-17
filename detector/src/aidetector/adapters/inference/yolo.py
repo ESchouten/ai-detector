@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import pathlib
-from collections.abc import Generator
+from collections.abc import Generator, Mapping
 from contextlib import contextmanager
 from time import perf_counter
 from typing import TYPE_CHECKING, Any, cast
@@ -22,7 +22,7 @@ from aidetector.application.ports import (
     ignore_status,
 )
 from aidetector.configuration import OnnxConfig, YoloConfig
-from aidetector.domain.models import BoundingBox, Frame, Observation
+from aidetector.domain.models import Area, BoundingBox, Frame, Observation, inside
 
 logger = logging.getLogger(__name__)
 
@@ -63,10 +63,14 @@ def map_observations(
     result: Results,
     frames: tuple[Frame, ...],
     classes: dict[int, tuple[str, float]],
+    area: Area | None = None,
     outlined: frozenset[str] = frozenset(),
 ) -> tuple[Observation, ...]:
-    """Observations of a result; tracked boxes of `outlined` classes carry the
-    outline a segmentation model found."""
+    """Map the boxes that count: of a watched class, and centred in the area if any.
+
+    Tracked boxes of `outlined` classes carry the outline a segmentation model found.
+    """
+    height, width = frames[-1].image.shape[:2]
     boxes: list[BoundingBox] = []
     confidences: dict[str, float] = {}
     # Tracing every mask costs time on each frame, so only when asked.
@@ -83,6 +87,10 @@ def map_observations(
         if score < threshold:
             continue
         x1, y1, x2, y2 = map(int, box.xyxy[0])
+        if area is not None and not inside(
+            area, (x1 + x2) / 2 / width, (y1 + y2) / 2 / height
+        ):
+            continue
         track_id = int(box.id.item()) if box.id is not None else None
         outline: tuple[tuple[int, int], ...] = ()
         if outlines is not None and track_id is not None and name in outlined:
@@ -112,6 +120,7 @@ class YoloDetector:
         config: YoloConfig,
         sources: tuple[str, ...],
         options: InferenceOptions,
+        areas: Mapping[str, Area] | None = None,
         outlined: frozenset[str] = frozenset(),
     ):
         self.model = model
@@ -119,6 +128,7 @@ class YoloDetector:
         # Individuals are named per track, so only tracked boxes need outlines.
         self.outlined = outlined if config.tracking else frozenset()
         self.sources = sources
+        self.areas = areas or {}
         self.classes = resolve_classes(model.names, config.confidence)
         self._arguments: dict[str, Any] = {
             "conf": min(threshold for _, threshold in self.classes.values()),
@@ -173,7 +183,11 @@ class YoloDetector:
         predicted = perf_counter()
         mapped = {
             source: map_observations(
-                result, frames[source], self.classes, self.outlined
+                result,
+                frames[source],
+                self.classes,
+                self.areas.get(source),
+                self.outlined,
             )
             for source, result in zip(sources, results, strict=True)
             if source in frames
@@ -255,6 +269,7 @@ def open_detector(
     cache_directory: pathlib.Path,
     report_status: ReportStatus = ignore_status,
     engines: EnginePreparation | None = None,
+    areas: Mapping[str, Area] | None = None,
     outlined: frozenset[str] = frozenset(),
 ) -> Generator[YoloDetector]:
     """Prepare inference and own its model and tracking frames until shutdown.
@@ -296,7 +311,7 @@ def open_detector(
                 loaded = _load_model(model_path, config.task, report_status)
             if loaded.predictor is None:
                 initialize_predictor(loaded, options, report_status)
-        detector = YoloDetector(loaded, config, sources, options, outlined)
+        detector = YoloDetector(loaded, config, sources, options, areas, outlined)
         yield detector
     finally:
         if detector is not None:

@@ -11,6 +11,7 @@ from aidetector.adapters.exporters.disk import DiskExporter
 from aidetector.adapters.exporters.telegram import TelegramExporter
 from aidetector.adapters.exporters.webhook import WebhookExporter
 from aidetector.adapters.health import Healthcheck
+from aidetector.adapters.individuals.coat import CoatModel
 from aidetector.adapters.individuals.embedding import (
     EmbeddingModel,
     input_size,
@@ -38,6 +39,7 @@ from aidetector.configuration import (
     Config,
     ExportersConfig,
     IndividualsConfig,
+    OnnxConfig,
     SourceConfig,
     source_kind,
 )
@@ -130,22 +132,33 @@ def build_destinations(
     return tuple(destinations)
 
 
-def _individuals_model(
+def _individuals_models(
     config: IndividualsConfig | None,
     config_directory: Path,
     data_directory: Path,
     report_status: ReportStatus,
-) -> str | None:
+) -> tuple[str | None, CoatModel | None]:
+    """The embedding model's file and, when configured, the coat check."""
     if config is None:
-        return None
-    path = resolve_model_path(
-        config.model, config_directory, data_directory / "models", report_status
-    )
-    if not Path(path).is_file():
-        message = "The model for recognising individuals was not found. Check its path."
-        report_status(StatusEvent("preparation_failed", message=message))
-        raise RuntimeError(message)
-    return path
+        return None, None
+
+    def file(model: str) -> str:
+        path = resolve_model_path(
+            model, config_directory, data_directory / "models", report_status
+        )
+        if not Path(path).is_file():
+            message = (
+                "A model for recognising individuals was not found. Check its path."
+            )
+            report_status(StatusEvent("preparation_failed", message=message))
+            raise RuntimeError(message)
+        return path
+
+    model = file(config.model)
+    if config.coat is None:
+        return model, None
+    # Opened before the inference runtime: the coat check runs on the processor.
+    return model, CoatModel(file(config.coat.keypoints), file(config.coat.matcher))
 
 
 def _model_requirements(
@@ -171,13 +184,17 @@ def _model_requirements(
 def _open_herd(
     config: IndividualsConfig | None,
     model: str | None,
+    coat: CoatModel | None,
     data_directory: Path,
     resources: ExitStack,
 ) -> Herd | None:
     if config is None or model is None:
         return None
     herd = Herd(
-        data_directory / "individuals", EmbeddingModel(model, model_key(model)), config
+        data_directory / "individuals",
+        EmbeddingModel(model, model_key(model)),
+        config,
+        coat,
     )
     # Registered before the detectors, so it saves their last sightings after them.
     resources.callback(herd.close)
@@ -206,6 +223,26 @@ def _publisher(
     return publish
 
 
+def _build_type(
+    onnx: OnnxConfig, models: tuple[ModelRequirements, ...]
+) -> tuple[str, OnnxConfig]:
+    if TYPE != "cuda" or not models:
+        return TYPE, onnx
+    from aidetector.adapters.inference.prepared_engines import gpu_available
+
+    if gpu_available():
+        return TYPE, onnx
+    # A container started without a GPU detects as the CPU builds do: through
+    # ONNX Runtime, which is faster on the processor than PyTorch.
+    logger.warning(
+        "No NVIDIA GPU is available to this process; detection runs on the CPU "
+        "through ONNX Runtime"
+    )
+    if onnx.provider is None:
+        onnx = onnx.model_copy(update={"provider": "CPUExecutionProvider"})
+    return "default", onnx
+
+
 def run_application(
     config: Config,
     config_directory: Path,
@@ -220,38 +257,37 @@ def run_application(
         log_detector_configuration(
             index, settings, _resolved_sources(settings.detection, config_directory)
         )
-    individuals_model = _individuals_model(
+    individuals_model, coat = _individuals_models(
         config.individuals, config_directory, data_directory, report_status
     )
     models = _model_requirements(config, individuals_model)
+    build_type, onnx = _build_type(config.onnx, models)
     with ExitStack() as resources:
         report_status(
             StatusEvent("preparing", message="Preparing detection on this computer…")
         )
         options = resources.enter_context(
-            inference_runtime(config.onnx, models, TYPE, report_status)
+            inference_runtime(
+                onnx,
+                models,
+                build_type,
+                report_status,
+                data_directory / "models" / "prepared",
+            )
         )
         engines = None
-        if prefer_tensorrt and TYPE == "cuda":
+        if prefer_tensorrt and build_type == "cuda":
             from aidetector.adapters.inference.prepared_engines import (
                 EnginePreparation,
-                gpu_available,
             )
 
-            if gpu_available():
-                engines = EnginePreparation(
-                    data_directory / "models" / "prepared",
-                    stop_requested,
-                    report_status,
-                )
-            else:
-                # A container started without its GPU still detects, on the processor.
-                logger.warning(
-                    "TensorRT was preferred but no NVIDIA GPU is available to this "
-                    "process; detection continues without it"
-                )
+            engines = EnginePreparation(
+                data_directory / "models" / "prepared",
+                stop_requested,
+                report_status,
+            )
         herd = _open_herd(
-            config.individuals, individuals_model, data_directory, resources
+            config.individuals, individuals_model, coat, data_directory, resources
         )
         streams = StreamPool(report_status)
         preview = LivePreview(data_directory / "live") if live_preview else None
@@ -293,14 +329,21 @@ def run_application(
                 detector = resources.enter_context(
                     open_detector(
                         model_settings,
-                        config.onnx,
+                        onnx,
                         source.sources,
-                        TYPE,
+                        build_type,
                         options,
                         cache_directory=data_directory / "models" / "prepared",
                         report_status=rule_status,
                         engines=engines,
                         outlined=herd.labels if herd is not None else frozenset(),
+                        areas={
+                            resolved: settings.detection.areas[configured]
+                            for configured, resolved in zip(
+                                settings.detection.source, source.sources, strict=True
+                            )
+                            if configured in settings.detection.areas
+                        },
                     )
                 )
                 event_policy = EventPolicy(

@@ -34,6 +34,10 @@ Run `--check-config` against the saved file and correct what it reports. These a
 - Live preview boxes gain `identity`, null unless individuals are configured and the track is saved, and `outline`, empty unless a segmentation model outlined a tracked individual. Write `names.json` by replacing the whole file, so the detector never reads it half written. See [individuals](ARCHITECTURE.md#individuals).
 - Status records for the launcher (`--status-json`) and live pictures (`--live-preview`) are versioned protocols between the detector and the web application of the same release. Deploy both from one release.
 
+## Windows ML
+
+Automatic provider selection no longer uses experimental WebGPU. Set `onnx.provider: "WebGpuExecutionProvider"` to keep using it.
+
 ## Docker
 
 There is one image now, `ghcr.io/eschouten/ai-detector`: the web application starts and supervises the detector inside it, so detector settings apply without restarting a container. The separate `ai-detector-web` image is no longer published, and the `ai-detector` image no longer runs the detector as its default command.
@@ -41,9 +45,9 @@ There is one image now, `ghcr.io/eschouten/ai-detector`: the web application sta
 To move an installation that used the two images:
 
 1. Stop it with `docker compose down`, and back up the data folder.
-2. Replace the Compose file with [`example/compose.yml`](../example/compose.yml) or, on a Jetson with JetPack 7.2, [`example/compose.jetson.yml`](../example/compose.jetson.yml). They have one service and use the host's network on port 80.
+2. Replace the Compose file with [`example/compose.yml`](../example/compose.yml), which also serves a Jetson with JetPack 7.2. It has one service and uses the host's network on port 80.
 3. Give the data folder to the image's user: `sudo chown -R 999:999 .` in that folder. The web image wrote its files as another user, which the single image cannot change.
-4. Start it with `docker compose up -d`.
+4. Start it with `docker compose up -d --force-recreate`. A container that keeps restarting with `can't open file '/app/src/aidetector/__init__.py'` still runs the old image's command, which a tool such as Portainer or Synology Container Manager kept when it replaced only the image: recreate it this way, or delete it and create it again in that tool.
 
 Running the detector alone still works by naming the command: `python3 -m aidetector`.
 
@@ -51,7 +55,7 @@ Running the detector alone still works by naming the command: `python3 -m aidete
 
 JetPack 6 is not supported, and the published `-jetpack6` images receive no updates. Do not point a JetPack 6 host at the generic `latest` image.
 
-JetPack 7.2 runs the standard ARM64 CUDA 13 software on Orin and Thor, so the ARM64 image is built from plain Ubuntu 24.04 with the standard PyTorch build for CUDA 13, as Ultralytics' [Jetson guide](https://docs.ultralytics.com/guides/nvidia-jetson/) describes for a native installation; use it with [`example/compose.jetson.yml`](../example/compose.jetson.yml). It starts on PyTorch on the GPU and prepares TensorRT 10 engines in the background, taking them at the next start; without a GPU it says so in the log and detects on the processor.
+JetPack 7.2 runs the standard ARM64 CUDA 13 software on Orin and Thor, so the ARM64 image is built from plain Ubuntu 24.04 with the standard PyTorch build for CUDA 13, as Ultralytics' [Jetson guide](https://docs.ultralytics.com/guides/nvidia-jetson/) describes for a native installation; use it with [`example/compose.yml`](../example/compose.yml), which replaces the earlier `compose.jetson.yml` and is the same service. It starts on PyTorch on the GPU and prepares TensorRT 10 engines in the background, taking them at the next start; without a GPU it says so in the log and detects on the processor.
 
 GPU inference and TensorRT are checked on a Jetson Orin Nano with JetPack 7.2 and one RTSP camera: detection runs on the GPU with PyTorch, the engine for a YOLO26m model takes about twenty minutes to build with TensorRT 10.16 from NVIDIA's Jetson packages, and from the next start of monitoring TensorRT takes about 16 ms per frame where PyTorch takes 45 ms. A Thor is untested. Before moving a farm installation, check it on that board with the farm's own cameras, and back up the mounted settings and recordings.
 

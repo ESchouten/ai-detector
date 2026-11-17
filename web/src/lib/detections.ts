@@ -110,7 +110,7 @@ export const detectionFilterInput = v.object({
 
 export type DetectionFilter = v.InferOutput<typeof detectionFilterInput>;
 
-export interface Verdict {
+interface Verdict {
 	/** Who decided: the validator, or a person here or in Telegram. */
 	source: string;
 	/** Why the AI check gave no answer. */

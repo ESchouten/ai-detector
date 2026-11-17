@@ -59,18 +59,28 @@ class StreamSource:
         self.interval = interval
         self._condition = Condition()
         self._frames: dict[str, deque[Frame]] = {}
+        self._between: dict[str, deque[Frame]] = {}
+        self._next_keep = dict.fromkeys(sources, 0.0)
         self._next_sample = dict.fromkeys(sources, 0.0)
         self._closed = False
         self._error: Exception | None = None
 
     def publish(self, source: str, frame: CapturedFrame, sampled_at: float) -> None:
         with self._condition:
-            if self._closed or sampled_at < self._next_sample[source]:
+            if self._closed or sampled_at < self._next_keep[source]:
+                return
+            # Frames between samples are kept, evenly spread up to the retention,
+            # so an event video stays smooth when an interval is set.
+            self._next_keep[source] = sampled_at + self.interval / self.retention
+            between = self._between.setdefault(source, deque(maxlen=self.retention))
+            between.append(frame.at_width(self.width))
+            if sampled_at < self._next_sample[source]:
                 return
             self._next_sample[source] = sampled_at + self.interval
-            self._frames.setdefault(source, deque(maxlen=self.retention)).append(
-                frame.at_width(self.width)
+            self._frames.setdefault(source, deque(maxlen=self.retention)).extend(
+                between
             )
+            between.clear()
             self._condition.notify()
 
     def fail(self, error: Exception) -> None:
@@ -111,6 +121,7 @@ class StreamSource:
         with self._condition:
             self._closed = True
             self._frames.clear()
+            self._between.clear()
             self._condition.notify_all()
 
 

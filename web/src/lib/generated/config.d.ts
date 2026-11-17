@@ -114,7 +114,10 @@ export type IncludeVideo1 = boolean;
 export type VideoWidth1 = number | null;
 export type VideoCrf1 = number;
 export type Token1 = string | null;
-export type DataType = 'binary' | 'base64' | 'none';
+/**
+ * binary: form fields and files; base64: JSON; none: no content; file: the first chosen picture or video as the whole body, or `body` without one.
+ */
+export type DataType = 'binary' | 'base64' | 'none' | 'file';
 export type DataMax = number | null;
 export type Provider = string | null;
 export type Winml = boolean;
@@ -139,6 +142,14 @@ export type Labels = string | string[];
  * Share of names that must be right when the installation sets its naming threshold from its own named sightings.
  */
 export type Precision = number;
+/**
+ * ONNX model that finds a picture's keypoints, as a path or an http(s) URL ending in .onnx.
+ */
+export type Keypoints = string;
+/**
+ * ONNX model that matches two pictures' keypoints, as a path or an http(s) URL ending in .onnx.
+ */
+export type Matcher = string;
 
 export interface Config {
 	$schema?: $Schema;
@@ -158,6 +169,21 @@ export interface SourceConfig {
 	interval?: Interval;
 	frame_retention?: FrameRetention;
 	frames_width?: FramesWidth;
+	areas?: Areas;
+}
+/**
+ * Per source, the area a detection's box centre must lie in to count.
+ */
+export interface Areas {
+	/**
+	 * Polygon corners as x, y fractions of the picture's width and height.
+	 *
+	 * @minItems 3
+	 *
+	 * This interface was referenced by `Areas`'s JSON-Schema definition
+	 * via the `patternProperty` "\S".
+	 */
+	[k: string]: [[number, number], [number, number], [number, number], ...[number, number][]];
 }
 export interface YoloConfig {
 	model: Model;
@@ -262,4 +288,15 @@ export interface IndividualsConfig {
 	model: Model2;
 	labels: Labels;
 	precision?: Precision;
+	/**
+	 * Also compare coat details; needs pictures of individuals a few hundred pixels across.
+	 */
+	coat?: CoatConfig | null;
+}
+/**
+ * Compare the coat details of a track and the individuals it resembles most.
+ */
+export interface CoatConfig {
+	keypoints: Keypoints;
+	matcher: Matcher;
 }

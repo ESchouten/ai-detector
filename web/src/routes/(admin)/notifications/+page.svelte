@@ -1,38 +1,35 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { Bell, Plus } from '@lucide/svelte';
+	import { Bell, BellRing, Plus } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Empty from '$lib/components/ui/empty';
 	import * as Field from '$lib/components/ui/field';
 	import { Switch } from '$lib/components/ui/switch';
 	import LinkRows from '$lib/components/link-rows.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
-	import {
-		getTelegrams,
-		getOutageNotifications,
-		saveOutageNotifications
-	} from '$lib/remote/alerts.remote';
+	import { getTelegrams, getPhoneAlarm, saveAlarmOutages } from '$lib/remote/alerts.remote';
 	import { errorMessage, refresh } from '$lib/remote-calls';
 	import { getDetectors } from '$lib/remote/detector.remote';
 	import { recipientDetectorLabels } from '$lib/alert-recipients';
-	const [detectors, telegrams] = $derived(await Promise.all([getDetectors(), getTelegrams()]));
-	const savedNotifications = $derived(await getOutageNotifications());
-	let savingNotifications = $state<boolean | null>(null);
+	const [detectors, telegrams, alarm] = $derived(
+		await Promise.all([getDetectors(), getTelegrams(), getPhoneAlarm()])
+	);
+	let savingAlarmOutages = $state<boolean | null>(null);
 	let notificationError = $state('');
 
-	async function setOutageNotifications(enabled: boolean) {
-		savingNotifications = enabled;
+	async function setAlarmOutages(enabled: boolean) {
+		savingAlarmOutages = enabled;
 		notificationError = '';
 		try {
-			await saveOutageNotifications(enabled);
-			await refresh(getOutageNotifications());
+			await saveAlarmOutages(enabled);
+			await refresh(getPhoneAlarm());
 		} catch (cause) {
 			notificationError = errorMessage(
 				cause,
 				'Camera notifications could not be saved. Try again.'
 			);
 		} finally {
-			savingNotifications = null;
+			savingAlarmOutages = null;
 		}
 	}
 </script>
@@ -41,37 +38,22 @@
 	<PageHeader
 		back={{ href: resolve('/settings'), label: 'Settings' }}
 		title="Alerts"
-		description="When a detector sees something, the footage is sent to these people in Telegram. They can confirm it or mark it as a false alarm right there."
-	>
-		{#snippet actions()}
-			{#if telegrams.length}
-				<Button href={resolve('/notifications/add')}>
-					<Plus data-icon="inline-start" aria-hidden="true" />Add recipient
-				</Button>
-			{/if}
-		{/snippet}
-	</PageHeader>
-	<Field.Group class="panel p-4">
-		<Field.Field orientation="horizontal" data-disabled={savingNotifications !== null}>
-			<Field.Content>
-				<Field.Label for="camera-offline-notifications">Camera offline notifications</Field.Label>
-				<Field.Description id="camera-offline-notifications-help">
-					Send a Telegram message to the camera’s alert recipients after five minutes without
-					monitoring, and when monitoring resumes.
-				</Field.Description>
-			</Field.Content>
-			<Switch
-				id="camera-offline-notifications"
-				checked={savingNotifications ?? savedNotifications}
-				onCheckedChange={setOutageNotifications}
-				disabled={savingNotifications !== null}
-				aria-describedby="camera-offline-notifications-help"
-			/>
-		</Field.Field>
-		{#if notificationError}
-			<p role="alert" class="text-sm text-danger-foreground">{notificationError}</p>
+		description="Choose how you hear about what a detector sees: a message with the footage, a loud alarm on your phone, or both."
+	/>
+	<div class="flex flex-wrap items-center justify-between gap-3">
+		<div class="flex flex-col gap-1">
+			<h2 id="alerts-messages" class="text-base font-semibold">Messages</h2>
+			<p class="text-sm text-muted-foreground">
+				Through Telegram, the footage goes to these people. They can confirm it or mark it as a
+				false alarm right there.
+			</p>
+		</div>
+		{#if telegrams.length}
+			<Button href={resolve('/notifications/add')}>
+				<Plus data-icon="inline-start" aria-hidden="true" />Add recipient
+			</Button>
 		{/if}
-	</Field.Group>
+	</div>
 	{#if telegrams.length}
 		<LinkRows
 			items={telegrams.map((telegram) => {
@@ -90,7 +72,7 @@
 		<Empty.Root class="border border-dashed">
 			<Empty.Header>
 				<Empty.Media variant="icon"><Bell aria-hidden="true" /></Empty.Media>
-				<Empty.Title>No phone alerts yet</Empty.Title>
+				<Empty.Title>No Telegram recipients yet</Empty.Title>
 				<Empty.Description>
 					Connect Telegram to get each event on your phone. Monitoring and recording also work
 					without alerts.
@@ -100,5 +82,62 @@
 				<Button href={resolve('/notifications/add')}>Connect your phone</Button>
 			</Empty.Content>
 		</Empty.Root>
+	{/if}
+	<div class="flex flex-col gap-1">
+		<h2 id="alerts-alarm" class="text-base font-semibold">Alarm</h2>
+		<p class="text-sm text-muted-foreground">
+			Through the free ntfy app, your phone rings loudly, also at night, with a picture of what the
+			detector saw.
+		</p>
+	</div>
+	{#if alarm.saved}
+		<LinkRows
+			items={[
+				{
+					title: 'Phone alarm',
+					href: resolve('/notifications/alarm'),
+					icon: BellRing,
+					description: alarm.detectorLabels.length
+						? `Rings for ${alarm.detectorLabels.join(', ')}`
+						: 'Not used by a detector yet'
+				}
+			]}
+		/>
+	{:else}
+		<Empty.Root class="border border-dashed">
+			<Empty.Header>
+				<Empty.Media variant="icon"><BellRing aria-hidden="true" /></Empty.Media>
+				<Empty.Title>No phone alarm yet</Empty.Title>
+				<Empty.Description>
+					Connect ntfy to wake up for a detection with a loud alarm.
+				</Empty.Description>
+			</Empty.Header>
+			<Empty.Content>
+				<Button href={resolve('/notifications/alarm')}>Connect ntfy</Button>
+			</Empty.Content>
+		</Empty.Root>
+	{/if}
+	{#if alarm.saved}
+		<Field.Group class="panel gap-4 p-4">
+			<Field.Field orientation="horizontal" data-disabled={savingAlarmOutages !== null}>
+				<Field.Content>
+					<Field.Label for="camera-offline-alarm">Camera offline</Field.Label>
+					<Field.Description id="camera-offline-alarm-help">
+						After five minutes without monitoring, and when monitoring resumes. A normal
+						notification in ntfy, without the alarm sound.
+					</Field.Description>
+				</Field.Content>
+				<Switch
+					id="camera-offline-alarm"
+					checked={savingAlarmOutages ?? alarm.outages}
+					onCheckedChange={setAlarmOutages}
+					disabled={savingAlarmOutages !== null}
+					aria-describedby="camera-offline-alarm-help"
+				/>
+			</Field.Field>
+			{#if notificationError}
+				<p role="alert" class="text-sm text-danger-foreground">{notificationError}</p>
+			{/if}
+		</Field.Group>
 	{/if}
 </section>

@@ -140,7 +140,7 @@ export function detectorSettings(detector: DetectorConfig) {
 		...detector,
 		vlm: undefined,
 		exporters: undefined,
-		detection: { ...detector.detection, source: undefined }
+		detection: { ...detector.detection, source: undefined, areas: undefined }
 	};
 }
 

@@ -4,7 +4,7 @@ import { errorMessage, refresh } from '../remote-calls';
 import { finishSetup, getSetupStatus } from '../remote/camera-setup.remote';
 import { getCameras, saveCamera } from '../remote/camera.remote';
 
-export type SetupCamera = Awaited<ReturnType<typeof getSetupStatus>>[number];
+type SetupCamera = Awaited<ReturnType<typeof getSetupStatus>>[number];
 
 /** Picture and recording-location checks for saved cameras, one camera at a time. */
 export class SetupVerifier {

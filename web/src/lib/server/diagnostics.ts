@@ -7,7 +7,7 @@ import { isMissingFile, readJson } from './json-file.ts';
 import { sanitizeTextForLogs } from './logs.ts';
 import type { ZipEntry } from './zip-download.ts';
 
-const SECRET_FIELD = /^(?:key|token|password|secret|headers|authorization|chat)$/i;
+const SECRET_FIELD = /^(?:key|token|password|secret|headers|authorization|chat|topic)$/i;
 
 /** Redact structured settings and the same credentials wherever a library printed them. */
 function diagnosticRedactor(...documents: unknown[]) {
@@ -22,18 +22,18 @@ function diagnosticRedactor(...documents: unknown[]) {
 			}
 			return sanitizeTextForLogs(value);
 		}
-		if (Array.isArray(value)) return value.map((item) => settings(item, sensitive));
+		if (Array.isArray(value)) return value.map((item) => settings(item, sensitive, parent));
 		if (value && typeof value === 'object')
 			return Object.fromEntries(
 				Object.entries(value).map(([key, item]) => [
 					key,
 					settings(
 						item,
-						// Whoever has the health check's address can ping it.
+						// Whoever has the health check's or a webhook's address can ping it.
 						// A Telegram recipient someone named by its chat number would show that number.
 						sensitive ||
 							SECRET_FIELD.test(key) ||
-							(parent === 'health' && key === 'url') ||
+							((parent === 'health' || parent === 'webhook') && key === 'url') ||
 							(key === 'label' && item === (value as { chat?: unknown }).chat),
 						key
 					)
@@ -81,7 +81,7 @@ export async function* diagnosticFiles(
 	yield {
 		name: 'README.txt',
 		content:
-			'AI Detector diagnostics\n\nIncludes available rotated logs, the eight latest TensorRT build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n'
+			'AI Detector diagnostics\n\nIncludes available rotated logs, the latest TensorRT and Windows ML build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n'
 	};
 	yield {
 		name: 'system.json',
@@ -111,21 +111,27 @@ export async function* diagnosticFiles(
 			content: redact.text(await readFile(path.join(directory, 'logs', entry.name), 'utf8'))
 		};
 	}
-	const engines = path.join(directory, 'models', 'prepared', 'tensorrt');
-	const builds: { file: string; name: string; modified: number }[] = [];
-	for (const entry of await entries(engines)) {
-		if (!entry.isDirectory() || !/^[a-f0-9]{64}$/.test(entry.name)) continue;
-		const file = path.join(engines, entry.name, 'build.log');
-		try {
-			const info = await lstat(file);
-			if (info.isFile()) builds.push({ file, name: entry.name, modified: info.mtimeMs });
-		} catch (error) {
-			if (!isMissingFile(error)) throw error;
+	// TensorRT engines and the models Windows ML compiled: the eight latest build logs of each.
+	for (const [folder, name] of [
+		['tensorrt', 'tensorrt'],
+		['compiled', 'windows-ml']
+	]) {
+		const prepared = path.join(directory, 'models', 'prepared', folder);
+		const builds: { file: string; name: string; modified: number }[] = [];
+		for (const entry of await entries(prepared)) {
+			if (!entry.isDirectory() || !/^[a-f0-9]{64}$/.test(entry.name)) continue;
+			const file = path.join(prepared, entry.name, 'build.log');
+			try {
+				const info = await lstat(file);
+				if (info.isFile()) builds.push({ file, name: entry.name, modified: info.mtimeMs });
+			} catch (error) {
+				if (!isMissingFile(error)) throw error;
+			}
 		}
+		for (const build of builds.sort((a, b) => b.modified - a.modified).slice(0, 8))
+			yield {
+				name: `${name}/${build.name}/build.log`,
+				content: redact.text(await readFile(build.file, 'utf8'))
+			};
 	}
-	for (const build of builds.sort((a, b) => b.modified - a.modified).slice(0, 8))
-		yield {
-			name: `tensorrt/${build.name}/build.log`,
-			content: redact.text(await readFile(build.file, 'utf8'))
-		};
 }

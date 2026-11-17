@@ -1,4 +1,4 @@
-export type RuntimePhase = 'stopped' | 'checking' | 'starting' | 'running' | 'stopping' | 'failed';
+type RuntimePhase = 'stopped' | 'checking' | 'starting' | 'running' | 'stopping' | 'failed';
 export type RuntimeReadiness =
 	'idle' | 'preparing' | 'connecting' | 'monitoring' | 'degraded' | 'failed';
 

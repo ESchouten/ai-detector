@@ -9,7 +9,7 @@ import { DetectionArchive } from '../src/lib/server/archive.ts';
 import { webLog } from '../src/lib/server/web-log.ts';
 import { temporaryDirectory } from './support/files.ts';
 
-test('support bundles include rotated and TensorRT logs while redacting saved credentials and excluding recordings', async (t) => {
+test('support bundles include rotated, TensorRT and Windows ML logs while redacting saved credentials and excluding recordings', async (t) => {
 	const directory = await temporaryDirectory(t, 'detector-diagnostics-');
 	await writeJson(path.join(directory, 'config.json'), {
 		detectors: [
@@ -19,23 +19,28 @@ test('support bundles include rotated and TensorRT logs while redacting saved cr
 					key: 'vision-secret',
 					url: 'https://vision.example/v1',
 					headers: { Authorization: 'Bearer header-secret' }
-				}
+				},
+				exporters: { webhook: [{ url: 'https://ntfy.sh/alarm-secret' }] }
 			}
 		],
 		health: { url: 'https://ping.example/health-secret' }
 	});
 	await writeJson(path.join(directory, 'app.json'), {
 		telegrams: [{ label: '1234567890', token: 'telegram-secret', chat: '1234567890' }],
-		devices: [{ name: 'Private phone', hash: 'device-access-hash' }]
+		devices: [{ name: 'Private phone', hash: 'device-access-hash' }],
+		phoneAlarm: { topic: 'alarm-secret' }
 	});
 	await mkdir(path.join(directory, 'logs'));
 	await writeFile(
 		path.join(directory, 'logs', 'detector.log.1'),
-		'vision-secret telegram-secret Bearer header-secret rtsp://farmer:camera-secret@192.168.1.2/feed chat 1234567890 https://ping.example/health-secret'
+		'vision-secret telegram-secret Bearer header-secret rtsp://farmer:camera-secret@192.168.1.2/feed chat 1234567890 https://ping.example/health-secret https://ntfy.sh/alarm-secret'
 	);
 	const build = path.join(directory, 'models', 'prepared', 'tensorrt', 'a'.repeat(64));
 	await mkdir(build, { recursive: true });
 	await writeFile(path.join(build, 'build.log'), 'Exporting model\nCompilation timeout\n');
+	const compiled = path.join(directory, 'models', 'prepared', 'compiled', 'b'.repeat(64));
+	await mkdir(compiled, { recursive: true });
+	await writeFile(path.join(compiled, 'build.log'), 'Compiling for the NPU\n');
 	await writeFile(path.join(directory, 'logs', 'secret.json'), '{"private": true}');
 	const files = [];
 	for await (const file of diagnosticFiles(directory, {
@@ -52,6 +57,14 @@ test('support bundles include rotated and TensorRT logs while redacting saved cr
 				file.content.includes('Compilation timeout')
 		)
 	);
+	assert.ok(
+		files.some(
+			(file) =>
+				file.name === `windows-ml/${'b'.repeat(64)}/build.log` &&
+				'content' in file &&
+				file.content.includes('Compiling for the NPU')
+		)
+	);
 	const text = JSON.stringify(files);
 	for (const secret of [
 		'vision-secret',
@@ -60,6 +73,7 @@ test('support bundles include rotated and TensorRT logs while redacting saved cr
 		'camera-secret',
 		'1234567890',
 		'health-secret',
+		'alarm-secret',
 		'device-access-hash',
 		'Private phone',
 		'secret.json'

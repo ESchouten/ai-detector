@@ -4,11 +4,12 @@
 	import { onMount, untrack } from 'svelte';
 	import { readDetectorChoices, writeDetectorChoices } from '$lib/detector-draft-storage';
 	import { toast } from 'svelte-sonner';
-	import { Bell, Plus } from '@lucide/svelte';
+	import { Bell, BellRing, Plus } from '@lucide/svelte';
 	import CameraSelection from '$lib/components/camera-selection.svelte';
 	import ConfirmRemove from '$lib/components/confirm-remove.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import NotificationEditor from '$lib/components/notification-editor.svelte';
+	import PhoneAlarmEditor from '$lib/components/phone-alarm-editor.svelte';
 	import LlmConnectionEditor from '$lib/components/llm-connection-editor.svelte';
 	import DetectorVerification from '$lib/components/detector-verification.svelte';
 	import SegmentedControl from '$lib/components/segmented-control.svelte';
@@ -47,7 +48,8 @@
 		saveDetector
 	} from '$lib/remote/detector.remote';
 	import { getCameras } from '$lib/remote/camera.remote';
-	import { getTelegrams } from '$lib/remote/alerts.remote';
+	import { getPhoneAlarm, getTelegrams } from '$lib/remote/alerts.remote';
+	import { isPhoneAlarm, phoneAlarmExporter } from '$lib/phone-alarm';
 
 	let {
 		initial,
@@ -69,6 +71,7 @@
 	let detector = $state(createDetectorDraft(saved?.detector));
 	let llmLabel = $state(saved?.meta.llmConnection ?? '');
 	let addingRecipient = $state(false);
+	let addingAlarm = $state(false);
 	let addingConnection = $state(false);
 	const choices = $derived(
 		await Promise.all([
@@ -77,7 +80,8 @@
 			getDetectorPresets(),
 			getLlmConnections(),
 			canTestLlm(),
-			getDetectors()
+			getDetectors(),
+			getPhoneAlarm()
 		])
 	);
 	const cameras = $derived(choices[0]);
@@ -87,6 +91,7 @@
 	const llms = $derived(choices[3]);
 	const canTest = $derived(choices[4]);
 	const existingDetectors = $derived(choices[5]);
+	const alarm = $derived(choices[6]);
 	let suggestValidator = $state(!saved);
 	untrack(() => {
 		if (!saved && cameras.length === 1) detector.detection.source = [cameras[0].source];
@@ -106,6 +111,19 @@
 		...(selectedPreset?.modes ?? []).map(({ id, name }) => ({ value: id, label: name }))
 	]);
 	const selectedChannels = $derived(detector.exporters.telegram ?? []);
+	const ringsAlarm = $derived(
+		(detector.exporters.webhook ?? []).some((item) => isPhoneAlarm(item, alarm.topic))
+	);
+	function setPhoneAlarm(ring: boolean) {
+		const others = (detector.exporters.webhook ?? []).filter(
+			(item) => !isPhoneAlarm(item, alarm.topic)
+		);
+		// Saving names the alarm after the detector, whatever the name is now.
+		detector.exporters.webhook = ring
+			? [...others, phoneAlarmExporter(alarm.topic, label)]
+			: others;
+		keepDelivery = true;
+	}
 	const options = $derived<DetectorOptions>({
 		cameras,
 		telegrams,
@@ -375,7 +393,12 @@
 		{/if}
 
 		{#if cameras.length}
-			<CameraSelection {cameras} bind:selected={detector.detection.source} disabled={pending} />
+			<CameraSelection
+				{cameras}
+				bind:selected={detector.detection.source}
+				bind:areas={detector.detection.areas}
+				disabled={pending}
+			/>
 		{:else}
 			<Alert.Root>
 				<Alert.Title>Add a camera first</Alert.Title>
@@ -390,7 +413,7 @@
 
 		<Field.Set>
 			<Field.Legend>
-				Phone alerts <span class="font-normal text-muted-foreground">(optional)</span>
+				Messages <span class="font-normal text-muted-foreground">(optional)</span>
 			</Field.Legend>
 			<Field.Description>
 				Send a Telegram message with the footage when this detector sees something.
@@ -426,6 +449,41 @@
 					? 'Connect another phone or group'
 					: 'Connect Telegram'}
 			</Button>
+		</Field.Set>
+
+		<Field.Set>
+			<Field.Legend>
+				Alarm <span class="font-normal text-muted-foreground">(optional)</span>
+			</Field.Legend>
+			<Field.Description>
+				Ring your phone loudly through the free ntfy app, also at night, with a picture.
+			</Field.Description>
+			{#if alarm.saved}
+				<label
+					for="phone-alarm"
+					class="panel flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors hover:bg-accent/60"
+				>
+					<Checkbox
+						id="phone-alarm"
+						disabled={pending}
+						checked={ringsAlarm}
+						onCheckedChange={setPhoneAlarm}
+					/>
+					<span class="flex flex-col">
+						<span class="text-sm font-medium">Ring the phone alarm</span>
+						<span class="text-sm text-muted-foreground">A loud alarm through the ntfy app.</span>
+					</span>
+				</label>
+			{:else}
+				<Button
+					variant="outline"
+					class="self-start"
+					disabled={pending}
+					onclick={() => (addingAlarm = true)}
+				>
+					<BellRing data-icon="inline-start" aria-hidden="true" />Connect ntfy
+				</Button>
+			{/if}
 		</Field.Set>
 
 		<DetectorVerification
@@ -509,6 +567,26 @@
 				addingRecipient = false;
 			}}
 			onCancel={() => (addingRecipient = false)}
+		/>
+	</Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root bind:open={addingAlarm}>
+	<Dialog.Content class="max-h-[90dvh] overflow-y-auto sm:max-w-xl">
+		<Dialog.Header>
+			<Dialog.Title>Connect ntfy</Dialog.Title>
+			<Dialog.Description>
+				A loud alarm on your phone for each detection, also at night. Your detector changes stay
+				here until you save the detector.
+			</Dialog.Description>
+		</Dialog.Header>
+		<PhoneAlarmEditor
+			inline
+			onSaved={() => {
+				setPhoneAlarm(true);
+				addingAlarm = false;
+			}}
+			onCancel={() => (addingAlarm = false)}
 		/>
 	</Dialog.Content>
 </Dialog.Root>

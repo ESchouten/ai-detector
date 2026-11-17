@@ -112,7 +112,11 @@ export function followPresets({ config, app }: Configuration, presets: DetectorP
 		config.detectors[index] = withPresetTelegram(
 			{
 				...preset.detector,
-				detection: { ...preset.detector.detection, source: saved.detection.source },
+				detection: {
+					...preset.detector.detection,
+					source: saved.detection.source,
+					...(saved.detection.areas && { areas: saved.detection.areas })
+				},
 				vlm: saved.vlm,
 				exporters: saved.exporters
 			},

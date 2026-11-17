@@ -87,7 +87,7 @@ const cameraDevice = v.object({
 	/** The serial number the camera gives over ONVIF. */
 	serial: v.optional(text)
 });
-export const streamMeta = v.object({
+const streamMeta = v.object({
 	id: v.optional(text),
 	label: v.optional(text),
 	source: text,
@@ -175,11 +175,17 @@ const pairedDevice = v.object({
 export const appSchema = v.object({
 	// The interface language of this installation; absent until setup or a choice records one.
 	language: v.optional(v.picklist(LOCALES)),
-	// Camera outage notices are opt-in, including for installations saved before this setting.
-	notifyCameraOutages: v.optional(v.boolean()),
 	streams: v.optional(v.array(streamMeta), []),
 	telegrams: v.optional(v.array(telegramMeta), []),
 	llms: v.optional(v.array(llmConnection), []),
+	// The ntfy topic that phone alarms go to; detectors that ring it have its webhook.
+	phoneAlarm: v.optional(
+		v.object({
+			topic: v.pipe(v.string(), v.regex(/^[-_A-Za-z0-9]{1,64}$/)),
+			// Camera outages are told through the alarm too, at normal priority, when this is on.
+			outages: v.optional(v.boolean())
+		})
+	),
 	detectors: v.optional(v.array(detectorMeta), []),
 	devices: v.optional(v.array(pairedDevice))
 });

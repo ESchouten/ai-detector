@@ -193,12 +193,14 @@ class CoatCheck:
     """The coat details a saved sighting shares with pictures of named individuals.
 
     Keypoints are found in the pictures a sighting saved, and remembered for
-    the latest DESCRIBED_MAX sightings; any thread may ask.
+    the latest DESCRIBED_MAX sightings; any thread may ask. Once `stopping`
+    is set, comparisons that have not begun are not worth their seconds.
     """
 
     def __init__(self, model: CoatModel, sightings: Path):
         self.model = model
         self.sightings = sightings
+        self.stopping = Event()
         self._described: OrderedDict[str, list[Described]] = OrderedDict()
         self._describing = Lock()
 
@@ -430,7 +432,6 @@ class Herd:
         self._thresholds = ThreadPoolExecutor(
             1, thread_name_prefix="individuals-threshold"
         )
-        self._stopping = Event()
         self._grouping = Lock()
         self._ungrouped = False
         self._regrouped = monotonic()
@@ -534,7 +535,7 @@ class Herd:
         }
 
         def compare(sighting: NamedSighting, gallery: Gallery) -> NDArray[np.float32]:
-            if self._stopping.is_set():
+            if coat.stopping.is_set():
                 raise _Stopping
             return coat.similarities(
                 sighting.id, sighting.vectors, gallery, self._shared[sighting.id]
@@ -548,7 +549,7 @@ class Herd:
         with self._lock:
             self._known = replace(self._known, coat_threshold=threshold)
         logger.info(
-            "Naming threshold with the coat check %s, set in %.0fs",
+            "Naming threshold with the coat check %s, after %.0fs",
             "not set yet" if threshold is None else f"{threshold:.3f}",
             perf_counter() - started,
         )
@@ -736,7 +737,8 @@ class Herd:
             self.regroup()
 
     def close(self) -> None:
-        self._stopping.set()
+        if self.coat is not None:
+            self.coat.stopping.set()
         try:
             self.flush()
         except IdentificationUnavailable as error:
@@ -991,6 +993,8 @@ class TrackIdentifier:
         if track.check is None or track.check[0] is not known:
 
             def check() -> None:
+                if coat.stopping.is_set():
+                    return
                 track.checked = (
                     known,
                     coat.similarities(

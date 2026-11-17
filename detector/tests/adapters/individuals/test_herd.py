@@ -546,3 +546,29 @@ def test_a_named_picture_that_cannot_be_read_makes_identification_unavailable(
 
     with pytest.raises(IdentificationUnavailable, match="cannot be read"):
         TrackIdentifier(herd).identify(event(3, [(9, "412", PLACES[2])]), "a" * 32)
+
+
+def test_closing_does_not_compare_the_coats_still_waiting(
+    tmp_path, monkeypatch, caplog
+):
+    monkeypatch.setattr(herd_module, "LOOKING", 0)
+    monkeypatch.setattr(herd_module, "DESCRIBED_MAX", 1)
+    herd = herd_of(tmp_path, coat=True)
+    named = named_on_two_days(herd)
+    herd.known()
+    herd.flush()
+    identifier = TrackIdentifier(herd)
+    watch(identifier, 6, [(1, "412", PLACES[0])])
+    herd.flush()
+    assert herd.coat is not None
+    # The herd's thread is busy until closing begins, so her coat waits; were
+    # it compared after all, the missing pictures would be reported.
+    herd.submit(herd.coat.stopping.wait)
+    assert identifier.identity(SOURCE, 1) is not None
+    for sighting in named:
+        for picture in (herd.sightings / sighting).glob("crop-*.jpg"):
+            picture.unlink()
+
+    herd.close()
+
+    assert "Comparing coat details failed" not in caplog.text

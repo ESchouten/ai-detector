@@ -52,8 +52,10 @@ jobs:
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY != '' }}
           SPARKLE_PUBLIC_KEY: ${{ vars.SPARKLE_PUBLIC_KEY != '' }}
+          APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY != '' }}
         run: |
           missing=0
+          [ "$APT_SIGNING_KEY" = true ] || { echo '::error::Missing repository secret: APT_SIGNING_KEY'; missing=1; }
           [ "$SPARKLE_PRIVATE_KEY" = true ] || { echo '::error::Missing repository secret: SPARKLE_PRIVATE_KEY'; missing=1; }
           [ "$SPARKLE_PUBLIC_KEY" = true ] || { echo '::error::Missing repository variable: SPARKLE_PUBLIC_KEY'; missing=1; }
           exit "$missing"
@@ -422,6 +424,31 @@ jobs:
             gh release create app-update-channels --title "Application update channels" --notes "Signed desktop updater metadata for official and preview releases." --prerelease --latest=false
           fi
           gh release upload app-update-channels update-feeds/channels/appcast.xml update-feeds/channels/releases.win.json --clobber
+      - name: Publish the Ubuntu package in the apt repository
+        # Installed packages read this release's assets as a flat apt repository.
+        if: needs.configuration.outputs.channel == 'stable'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
+          GH_REPO: ${{ github.repository }}
+          APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends apt-utils
+          mkdir apt
+          cp downloads/*-linux-amd64.deb apt/
+          cd apt
+          apt-ftparchive packages . > Packages
+          apt-ftparchive release . > ../Release && mv ../Release .
+          gpg --batch --import <<< "$APT_SIGNING_KEY"
+          gpg --batch --clearsign --output InRelease Release
+          if ! gh release view apt >/dev/null 2>&1; then
+            gh release create apt --title "Ubuntu apt repository" --notes "Signed apt repository with the latest official Ubuntu package. The package adds it to the system's software sources." --prerelease --latest=false
+          fi
+          previous=$(gh release view apt --json assets --jq '.assets[].name | select(endswith(".deb"))')
+          gh release upload apt ./*.deb --clobber
+          gh release upload apt Packages Release InRelease --clobber
+          for asset in $previous; do
+            [ -e "$asset" ] || gh release delete-asset apt "$asset" --yes
+          done
 
   # Every build also publishes the container image, which holds the web application
   # and the detector it runs.

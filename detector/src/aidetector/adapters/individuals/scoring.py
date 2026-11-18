@@ -24,7 +24,9 @@ from numpy.typing import NDArray
 Vectors = NDArray[np.float32]
 NEAREST = 2
 MARGIN = 0.75
-STRANGERS = 0.25
+# The share of names the threshold check withholds as strangers. With a quarter
+# the adapted gallery named unknown individuals two to three times as often.
+STRANGERS = 0.4
 FOLDS = 5
 # How far the adaptation damps the directions an individual varies in; lower
 # damps harder. The enrolment study found 0.3 halved wrong names on a walkway.
@@ -329,7 +331,9 @@ def self_set_threshold(
         )
         count = round(STRANGERS * len(candidates))
         if len(candidates) > 1:
-            count = min(max(1, count), len(candidates) - 1)
+            # Three names stay where they can: scores against fewer names run
+            # higher, and would set a threshold the whole herd never reaches.
+            count = min(max(1, count), max(1, len(candidates) - 3))
         withheld = (
             [frozenset[str]()]
             if count == 0

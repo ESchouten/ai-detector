@@ -518,6 +518,9 @@ class Herd:
             if sighting in names
         }
         named: list[NamedSighting] = []
+        means = {
+            sighting: mean for sighting, (_, mean) in self._sighting_index().items()
+        }
         for sighting_id, name in names.items():
             sighting = self.sightings / sighting_id
             try:
@@ -527,16 +530,20 @@ class Herd:
             except FileNotFoundError:
                 logger.warning("Named sighting %s no longer exists", sighting_id)
                 continue
+            vectors = self._vectors(sighting, record)
             named.append(
                 NamedSighting(
                     sighting_id,
                     name,
                     record.seen[:10],
-                    self._vectors(sighting, record),
+                    vectors,
                     self._later_vectors(sighting_id),
                 )
             )
-        gallery = Gallery.of(named)
+            means[sighting_id] = _mean(vectors)
+        # The embedding adapts around every sighting kept, named or not.
+        centre = np.mean(list(means.values()), axis=0) if means else None
+        gallery = Gallery.of(named, centre)
         threshold = self_set_threshold(named, self.precision)
         logger.info(
             "Named individuals: %d from %d sighting(s) and %d later picture(s); "

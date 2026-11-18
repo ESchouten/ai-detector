@@ -1,10 +1,12 @@
 """Compare sightings with named individuals and set the naming threshold.
 
-A sighting is the L2-normalised embeddings of one track's pictures. An
-individual's score is the mean of her k most similar named pictures, averaged
-over the sighting's pictures, less a share of the runner-up's score, so a
-sighting that resembles two individuals is named less readily. Sightings seen
-together are decided together: one individual is never in two places at once.
+A sighting is the L2-normalised embeddings of one track's pictures. Before
+comparing, every picture is adapted to the installation from its own named
+sightings (see `Adaptation`). An individual's score is the mean of her k most
+similar named pictures, averaged over the sighting's pictures, less a share of
+the runner-up's score, so a sighting that resembles two individuals is named
+less readily. Sightings seen together are decided together: one individual is
+never in two places at once.
 
 A coat check adds to the similarity of the few names a sighting resembles most:
 the details its pictures share with her saved pictures, counted by the caller.
@@ -12,6 +14,7 @@ the details its pictures share with her saved pictures, counted by the caller.
 
 from __future__ import annotations
 
+from collections import defaultdict
 from collections.abc import Callable, Collection, Mapping, Sequence
 from dataclasses import dataclass, field
 
@@ -23,6 +26,9 @@ NEAREST = 2
 MARGIN = 0.75
 STRANGERS = 0.25
 FOLDS = 5
+# How far the adaptation damps the directions an individual varies in; lower
+# damps harder. The enrolment study found 0.3 halved wrong names on a walkway.
+DAMPING = 0.3
 # A coat check compares a sighting with the SHORTLIST names most like it, with
 # COAT_PICTURES saved pictures of each; COAT_FULL shared details or more add
 # COAT_WEIGHT to a similarity.
@@ -54,8 +60,65 @@ class NamedSighting:
 
 
 @dataclass(frozen=True)
+class Adaptation:
+    """The embedding adapted to one installation, learnt from its sightings.
+
+    Every picture from one place shares its look: floor, light and camera
+    angle. The mean sighting is taken off every picture, so that shared look
+    no longer makes all individuals seem alike, and the directions in
+    which one individual's sightings differ from one occasion to the next are
+    damped, so what is left says more about who she is. Along a direction with
+    variance v the picture is scaled by sqrt(f / (v + f)), with f `DAMPING`
+    times the mean variance, and then back to unit length. Nothing is retrained.
+    """
+
+    centre: NDArray[np.float64]
+    directions: NDArray[np.float64]
+    factors: NDArray[np.float64]
+
+    @classmethod
+    def of(
+        cls, sightings: Sequence[NamedSighting], centre: NDArray[np.floating]
+    ) -> Adaptation | None:
+        """Learnt from the named sightings around `centre`, the mean sighting.
+        None until an individual is named on two occasions that differ, the
+        least there is to learn from."""
+        means = np.stack(
+            [sighting.vectors.mean(axis=0, dtype=np.float64) for sighting in sightings]
+        )
+        rows: defaultdict[str, list[int]] = defaultdict(list)
+        for row, sighting in enumerate(sightings):
+            rows[sighting.name].append(row)
+        parts = [
+            means[own] - means[own].mean(axis=0)
+            for own in rows.values()
+            if len(own) > 1
+        ]
+        if not parts:
+            return None
+        deviations = np.concatenate(parts)
+        _, values, axes = np.linalg.svd(deviations, full_matrices=False)
+        variance = values**2 / len(deviations)
+        kept = variance > variance.max() * 1e-10
+        if not kept.any():
+            return None
+        floor = DAMPING * variance[kept].mean()
+        return cls(
+            np.asarray(centre, np.float64),
+            axes[kept].T,
+            np.sqrt(floor / (variance[kept] + floor)) - 1,
+        )
+
+    def __call__(self, vectors: Vectors) -> Vectors:
+        moved = vectors - self.centre
+        moved += ((moved @ self.directions) * self.factors) @ self.directions.T
+        return (moved / np.linalg.norm(moved, axis=1, keepdims=True)).astype(np.float32)
+
+
+@dataclass(frozen=True)
 class Gallery:
-    """The pictures of named individuals, with the index of each picture's name."""
+    """The adapted pictures of named individuals, with the index of each
+    picture's name."""
 
     names: tuple[str, ...]
     vectors: Vectors
@@ -64,17 +127,28 @@ class Gallery:
     # are kept as vectors only.
     pictures: tuple[Picture, ...] = ()
     saved: NDArray[np.intp] = field(default_factory=lambda: np.empty(0, np.intp))
+    adaptation: Adaptation | None = None
 
     @classmethod
-    def of(cls, sightings: Sequence[NamedSighting]) -> Gallery:
+    def of(
+        cls,
+        sightings: Sequence[NamedSighting],
+        centre: NDArray[np.floating] | None = None,
+    ) -> Gallery:
+        """`centre` is the mean of every sighting the installation has, named
+        or not; without it, the named sightings' mean."""
         names = tuple(sorted({sighting.name for sighting in sightings}))
         index = {name: position for position, name in enumerate(names)}
         if not sightings:
             return cls(names, np.empty((0, 0), np.float32), np.empty(0, np.intp))
         starts = np.cumsum([0, *(len(sighting.known) for sighting in sightings)])
+        vectors = np.concatenate([sighting.known for sighting in sightings])
+        if centre is None:
+            centre = _centre(sightings)
+        adaptation = Adaptation.of(sightings, centre)
         return cls(
             names,
-            np.concatenate([sighting.known for sighting in sightings]),
+            vectors if adaptation is None else adaptation(vectors),
             np.concatenate(
                 [
                     np.full(len(sighting.known), index[sighting.name], np.intp)
@@ -92,7 +166,11 @@ class Gallery:
                     for start, sighting in zip(starts, sightings, strict=False)
                 ]
             ),
+            adaptation,
         )
+
+    def _adapted(self, vectors: Vectors) -> Vectors:
+        return vectors if self.adaptation is None else self.adaptation(vectors)
 
     def scores(self, vectors: Vectors) -> NDArray[np.float32]:
         """One sighting's score per name, in the order of `names`."""
@@ -100,7 +178,7 @@ class Gallery:
 
     def similarities(self, vectors: Vectors) -> NDArray[np.float32]:
         """One sighting's score per name before the runner-up's share is taken off."""
-        similarity = vectors @ self.vectors.T
+        similarity = self._adapted(vectors) @ self.vectors.T
         scores = np.empty(len(self.names), np.float32)
         for owner in range(len(self.names)):
             own = similarity[:, self.owners == owner]
@@ -117,13 +195,18 @@ class Gallery:
     ) -> dict[int, list[Picture]]:
         """What a coat check compares a sighting with: the names most like it,
         each with her saved pictures most like it."""
-        likeness = self.vectors[self.saved] @ vectors.mean(axis=0)
+        likeness = self.vectors[self.saved] @ self._adapted(vectors).mean(axis=0)
         chosen = {}
         for owner in np.argsort(-similarities, kind="stable")[:SHORTLIST]:
             own = np.flatnonzero(self.owners[self.saved] == owner)
             nearest = own[np.argsort(-likeness[own], kind="stable")[:COAT_PICTURES]]
             chosen[int(owner)] = [self.pictures[place] for place in nearest]
         return chosen
+
+
+def _centre(sightings: Sequence[NamedSighting]) -> NDArray[np.floating]:
+    """The mean sighting of the named ones."""
+    return np.mean([sighting.vectors.mean(axis=0) for sighting in sightings], axis=0)
 
 
 def with_coat(
@@ -224,13 +307,17 @@ def self_set_threshold(
 
     Every day's sightings are asked in turn against those of the other days,
     each time with a share of the individuals withheld as strangers, and one
-    threshold is set on all answers pooled. `compare` gives a sighting's
-    similarity to each name, as new tracks are compared. None until two days
-    have names, or when no threshold reaches the precision.
+    threshold is set on all answers pooled. Each such gallery adapts the
+    embedding from its own names, around the mean of all named sightings;
+    centring on the unnamed ones too let the check set the threshold too low
+    on a small herd. `compare` gives a sighting's similarity to each name, as
+    new tracks are compared. None until two days have names, or when no
+    threshold reaches the precision.
     """
     sessions = sorted({sighting.session for sighting in sightings})
     if len(sessions) < 2:
         return None
+    centre = _centre(sightings)
     rng = np.random.default_rng(seed)
     best: list[float] = []
     correct: list[bool] = []
@@ -253,7 +340,8 @@ def self_set_threshold(
         )
         for strangers in withheld:
             known = Gallery.of(
-                [sighting for sighting in gallery if sighting.name not in strangers]
+                [sighting for sighting in gallery if sighting.name not in strangers],
+                centre,
             )
             for query in queries:
                 scores = runner_up_margin(compare(query, known))

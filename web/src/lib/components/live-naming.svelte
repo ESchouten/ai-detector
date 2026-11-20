@@ -14,8 +14,8 @@
 	}: {
 		/** The live box to name; the dialog is open while there is one. */
 		box: DetectionBox | null;
-		/** The id of the list of names already given, for suggestions while typing. */
-		names: string;
+		/** The id of the list of names already given, for suggestions while typing, where there is one. */
+		names?: string;
 	} = $props();
 	const identity = $derived(box?.identity ?? null);
 	let name = $state('');
@@ -121,10 +121,10 @@
 						/>
 						<Button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save'}</Button>
 					</div>
-					{#if identity.candidates.length}
+					{#if identity.candidates.length > (declined ? 1 : 0)}
 						<div class="flex flex-wrap items-center gap-2">
 							<span class="text-xs text-muted-foreground">Looks most like</span>
-							{#each identity.candidates as candidate (candidate.name)}
+							{#each identity.candidates.slice(declined ? 1 : 0) as candidate (candidate.name)}
 								<Button
 									type="button"
 									size="sm"

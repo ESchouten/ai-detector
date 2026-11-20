@@ -15,6 +15,7 @@
 		width,
 		height,
 		onselect,
+		naming,
 		selected
 	}: {
 		frame: LivePreviewFrame;
@@ -23,6 +24,8 @@
 		height: number;
 		/** Makes the pills buttons, for naming who they are. */
 		onselect?: (box: DetectionBox) => void;
+		/** While naming, the outlines are buttons too and those without a name get a pill. */
+		naming: boolean;
 		/** The sighting being named; its pill stands out. */
 		selected?: string;
 	} = $props();
@@ -33,7 +36,7 @@
 	// Nearer individuals are lower in the picture; their pills go on top.
 	const pills = $derived(
 		frame.boxes
-			.filter((box) => showsPill(box, onselect !== undefined))
+			.filter((box) => showsPill(box, naming))
 			.map((box) => ({ box, anchor: pillAnchor(box) }))
 			.sort((a, b) => a.anchor[1] - b.anchor[1])
 	);
@@ -106,12 +109,14 @@
 			flipped && '-translate-x-full'
 		]}
 		{#if onselect}
-			<!-- The outline is the button people reach by keyboard; the pill is a bigger target. -->
+			<!-- While naming, the outline is the button people reach by keyboard and the pill a bigger
+				target. Otherwise the pill is the only button, above a link that covers the picture. -->
 			<button
 				type="button"
-				tabindex={-1}
-				aria-hidden="true"
-				class={[...place, 'pointer-events-auto cursor-pointer']}
+				tabindex={naming ? -1 : 0}
+				aria-hidden={naming ? 'true' : undefined}
+				aria-label={naming ? undefined : `Name ${detectionBoxLabel(box)}`}
+				class={[...place, 'pointer-events-auto z-20 cursor-pointer']}
 				style:left="{left + x * scale}px"
 				style:top="max({top + y * scale}px, {small ? 1.75 : 2.5}rem)"
 				onclick={() => onselect(box)}

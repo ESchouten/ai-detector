@@ -5,7 +5,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { plural, recentMoment } from '$lib/format';
 	import type { SightingGroup } from '$lib/individuals';
-	import SightingPicture from './sighting-picture.svelte';
+	import SightingPicture from '$lib/components/sighting-picture.svelte';
 
 	let {
 		group,
@@ -134,10 +134,10 @@
 					{saving ? 'Saving…' : 'Save'}
 				</Button>
 			</div>
-			{#if group.suggestions.length}
+			{#if group.suggestions.length > 1}
 				<div class="flex flex-wrap items-center gap-2">
 					<span class="text-xs text-muted-foreground">Looks most like</span>
-					{#each group.suggestions as suggestion (suggestion)}
+					{#each group.suggestions.slice(1) as suggestion (suggestion)}
 						<Button type="button" size="sm" variant="outline" onclick={() => (name = suggestion)}>
 							{suggestion}
 						</Button>

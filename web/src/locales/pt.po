@@ -1299,10 +1299,10 @@ msgstr "Manter conexão atual"
 #: src/lib/components/camera-settings.svelte
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
+#: src/lib/components/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/phone-alarm-editor.svelte
-#: src/routes/(admin)/identities/live-naming.svelte
-#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
@@ -2245,9 +2245,9 @@ msgstr "As configurações precisam de atenção"
 msgid "Please wait…"
 msgstr "Aguarde…"
 
+#: src/lib/components/live-naming.svelte
 #: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/advanced/+page.svelte
-#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Salvar"
@@ -3801,12 +3801,12 @@ msgstr[0] "Mais # avistamento se parece com estes."
 msgstr[1] "Mais # avistamentos se parecem com estes."
 msgstr[2] "Mais # avistamentos se parecem com estes."
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Looks most like"
 msgstr "Parece mais com"
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Name or number"
 msgstr "Nome ou número"
@@ -3845,7 +3845,9 @@ msgid "Named identities"
 msgstr "Identidades nomeadas"
 
 #. 0: detectionBoxLabel(box)
+#. 0: detectionBoxLabel(box)
 #: src/lib/components/detection-boxes.svelte
+#: src/lib/components/identity-pills.svelte
 msgid "Name {0}"
 msgstr "Nomear {0}"
 
@@ -3853,29 +3855,29 @@ msgstr "Nomear {0}"
 msgid "On camera now"
 msgstr "Na câmera agora"
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Could not save the name. Try again."
 msgstr "Não foi possível salvar o nome. Tente novamente."
 
 #. 0: identity.name
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Shown as {0}. Enter another name or number if that is wrong."
 msgstr "Exibido como {0}. Digite outro nome ou número se estiver errado."
 
 #. 0: identity.candidates[0].name
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Looks most like {0}, but not enough to be sure."
 msgstr "Parece mais com {0}, mas não o suficiente para ter certeza."
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Give it a name or number; the camera then recognises it."
 msgstr "Dê a ele um nome ou número; depois a câmera o reconhece."
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Who is this?"
 msgstr "Quem é?"
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Its pictures were removed. Wait for the box to show it again."
 msgstr "As fotos dele foram removidas. Aguarde a caixa mostrá-lo de novo."
 
@@ -4194,17 +4196,17 @@ msgstr[2] "# dias"
 
 #. 0: guess
 #. 0: guess
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Is this {0}?"
 msgstr "É {0}?"
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Yes"
 msgstr "Sim"
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "No"
 msgstr "Não"

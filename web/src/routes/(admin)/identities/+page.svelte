@@ -9,9 +9,9 @@
 	import { plural } from '$lib/format';
 	import { DAYS_WANTED } from '$lib/individuals';
 	import type { DetectionBox } from '$lib/live-preview';
-	import LiveNaming from './live-naming.svelte';
+	import LiveNaming from '$lib/components/live-naming.svelte';
 	import SightingGroup from './sighting-group.svelte';
-	import SightingPicture from './sighting-picture.svelte';
+	import SightingPicture from '$lib/components/sighting-picture.svelte';
 
 	let { data, form } = $props();
 	const overview = $derived(data.overview);

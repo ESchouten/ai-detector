@@ -1299,10 +1299,10 @@ msgstr "Mevcut bağlantıyı koru"
 #: src/lib/components/camera-settings.svelte
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
+#: src/lib/components/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/phone-alarm-editor.svelte
-#: src/routes/(admin)/identities/live-naming.svelte
-#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
@@ -2245,9 +2245,9 @@ msgstr "Ayarlar dikkat gerektiriyor"
 msgid "Please wait…"
 msgstr "Lütfen bekleyin…"
 
+#: src/lib/components/live-naming.svelte
 #: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/advanced/+page.svelte
-#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Kaydet"
@@ -3785,12 +3785,12 @@ msgid_plural "# more sightings look like these."
 msgstr[0] "# gözlem daha bunlara benziyor."
 msgstr[1] "# gözlem daha bunlara benziyor."
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Looks most like"
 msgstr "En çok benzediği"
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Name or number"
 msgstr "Ad veya numara"
@@ -3829,7 +3829,9 @@ msgid "Named identities"
 msgstr "Adlandırılmış kimlikler"
 
 #. 0: detectionBoxLabel(box)
+#. 0: detectionBoxLabel(box)
 #: src/lib/components/detection-boxes.svelte
+#: src/lib/components/identity-pills.svelte
 msgid "Name {0}"
 msgstr "Adlandır: {0}"
 
@@ -3837,29 +3839,29 @@ msgstr "Adlandır: {0}"
 msgid "On camera now"
 msgstr "Şu an kamerada"
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Could not save the name. Try again."
 msgstr "Ad kaydedilemedi. Tekrar deneyin."
 
 #. 0: identity.name
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Shown as {0}. Enter another name or number if that is wrong."
 msgstr "Şu adla gösteriliyor: {0}. Yanlışsa başka bir ad veya numara girin."
 
 #. 0: identity.candidates[0].name
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Looks most like {0}, but not enough to be sure."
 msgstr "En çok şuna benziyor: {0}, ama emin olmak için yeterli değil."
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Give it a name or number; the camera then recognises it."
 msgstr "Bir ad veya numara verin; kamera onu daha sonra tanır."
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Who is this?"
 msgstr "Bu kim?"
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 msgid "Its pictures were removed. Wait for the box to show it again."
 msgstr "Fotoğrafları kaldırıldı. Çerçeve onu yeniden gösterene kadar bekleyin."
 
@@ -4176,17 +4178,17 @@ msgstr[1] "# gün"
 
 #. 0: guess
 #. 0: guess
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Is this {0}?"
 msgstr "Bu {0} mi?"
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Yes"
 msgstr "Evet"
 
-#: src/routes/(admin)/identities/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "No"
 msgstr "Hayır"

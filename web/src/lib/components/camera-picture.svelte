@@ -16,6 +16,7 @@
 		monitored = false,
 		caption,
 		onselect,
+		onpill,
 		selected,
 		overlay
 	}: {
@@ -26,6 +27,8 @@
 		caption?: Snippet;
 		/** Makes detection boxes with an identity buttons, for naming who they are. */
 		onselect?: (box: DetectionBox) => void;
+		/** Makes only the name pills buttons, where a tap on the picture itself does something else. */
+		onpill?: (box: DetectionBox) => void;
 		/** The sighting being named; its outline stands out. */
 		selected?: string;
 		/** Drawn over the picture, given its size in pixels. */
@@ -92,7 +95,13 @@
 		/>
 		{#if overlay && size}{@render overlay(size)}{/if}
 	{/if}
-	{#if active && !failed && monitored}<CameraDetections {id} {label} {onselect} {selected} />{/if}
+	{#if active && !failed && monitored}<CameraDetections
+			{id}
+			{label}
+			{onselect}
+			{onpill}
+			{selected}
+		/>{/if}
 	{#if active && !failed && !picture}
 		<p
 			role="status"

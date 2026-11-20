@@ -12,12 +12,15 @@
 		id,
 		label,
 		onselect,
+		onpill,
 		selected
 	}: {
 		id: string;
 		label: string;
 		/** Makes boxes with an identity buttons, for naming who they are. */
 		onselect?: (box: DetectionBox) => void;
+		/** Makes only the name pills buttons, where a tap on the picture itself does something else. */
+		onpill?: (box: DetectionBox) => void;
 		/** The sighting being named; its outline stands out. */
 		selected?: string;
 	} = $props();
@@ -52,7 +55,14 @@
 					{selected}
 				/>
 			</svg>
-			<IdentityPills {frame} {width} {height} {onselect} {selected} />
+			<IdentityPills
+				{frame}
+				{width}
+				{height}
+				onselect={onselect ?? onpill}
+				naming={onselect !== undefined}
+				{selected}
+			/>
 		{/if}
 	{/each}
 </div>

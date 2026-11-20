@@ -1,4 +1,5 @@
 import logging
+from collections.abc import Sequence
 from contextlib import ExitStack
 from dataclasses import replace
 from pathlib import Path
@@ -10,6 +11,13 @@ from aidetector.adapters.exporters.disk import DiskExporter
 from aidetector.adapters.exporters.telegram import TelegramExporter
 from aidetector.adapters.exporters.webhook import WebhookExporter
 from aidetector.adapters.health import Healthcheck
+from aidetector.adapters.individuals.coat import CoatModel
+from aidetector.adapters.individuals.embedding import (
+    EmbeddingModel,
+    input_size,
+    model_key,
+)
+from aidetector.adapters.individuals.herd import SIGHTING_CROPS, Herd, TrackIdentifier
 from aidetector.adapters.inference.model_assets import resolve_model_path
 from aidetector.adapters.inference.onnx import ModelRequirements, inference_runtime
 from aidetector.adapters.live_preview import LivePreview
@@ -21,6 +29,7 @@ from aidetector.application.pipeline import DetectionPipeline
 from aidetector.application.ports import (
     EventValidator,
     ObjectDetector,
+    PublishObservation,
     ReportStatus,
     StatusEvent,
     ignore_observation,
@@ -29,10 +38,12 @@ from aidetector.application.ports import (
 from aidetector.configuration import (
     Config,
     ExportersConfig,
+    IndividualsConfig,
     OnnxConfig,
     SourceConfig,
     source_kind,
 )
+from aidetector.domain.models import Observation
 from aidetector.domain.policy import Cooldown, EventPolicy, ExportPolicy
 from aidetector.runtime import DetectorWorker, RunStats, run_detectors
 from aidetector.version import TYPE
@@ -121,6 +132,97 @@ def build_destinations(
     return tuple(destinations)
 
 
+def _individuals_models(
+    config: IndividualsConfig | None,
+    config_directory: Path,
+    data_directory: Path,
+    report_status: ReportStatus,
+) -> tuple[str | None, CoatModel | None]:
+    """The embedding model's file and, when configured, the coat check."""
+    if config is None:
+        return None, None
+
+    def file(model: str) -> str:
+        path = resolve_model_path(
+            model, config_directory, data_directory / "models", report_status
+        )
+        if not Path(path).is_file():
+            message = (
+                "A model for recognising individuals was not found. Check its path."
+            )
+            report_status(StatusEvent("preparation_failed", message=message))
+            raise RuntimeError(message)
+        return path
+
+    model = file(config.model)
+    if config.coat is None:
+        return model, None
+    # Opened before the inference runtime: the coat check runs on the processor.
+    return model, CoatModel(file(config.coat.keypoints), file(config.coat.matcher))
+
+
+def _model_requirements(
+    config: Config, individuals_model: str | None
+) -> tuple[ModelRequirements, ...]:
+    models = tuple(
+        ModelRequirements(
+            settings.yolo.model, settings.yolo.imgsz, len(settings.detection.source)
+        )
+        for settings in config.detectors
+        if settings.yolo is not None
+    )
+    if individuals_model is None:
+        return models
+    return (
+        *models,
+        ModelRequirements(
+            individuals_model, input_size(individuals_model), SIGHTING_CROPS
+        ),
+    )
+
+
+def _open_herd(
+    config: IndividualsConfig | None,
+    model: str | None,
+    coat: CoatModel | None,
+    data_directory: Path,
+    resources: ExitStack,
+) -> Herd | None:
+    if config is None or model is None:
+        return None
+    herd = Herd(
+        data_directory / "individuals",
+        EmbeddingModel(model, model_key(model)),
+        config,
+        coat,
+    )
+    # Registered before the detectors, so it saves their last sightings after them.
+    resources.callback(herd.close)
+    return herd
+
+
+def _publisher(
+    preview: LivePreview | None,
+    rule_id: str,
+    sources: Sequence[str],
+    identifier: TrackIdentifier | None,
+) -> PublishObservation:
+    """Live pictures for viewers, and every track for recognising individuals."""
+    show = (
+        preview.observer(rule_id, sources, identifier)
+        if preview is not None
+        else ignore_observation
+    )
+    if identifier is None:
+        return show
+
+    def publish(source: str, observation: Observation) -> None:
+        identifier.observe(source, observation)
+        show(source, observation)
+
+    return publish
+
+
 def _build_type(
     onnx: OnnxConfig, models: tuple[ModelRequirements, ...]
 ) -> tuple[str, OnnxConfig]:
@@ -155,13 +257,10 @@ def run_application(
         log_detector_configuration(
             index, settings, _resolved_sources(settings.detection, config_directory)
         )
-    models = tuple(
-        ModelRequirements(
-            settings.yolo.model, settings.yolo.imgsz, len(settings.detection.source)
-        )
-        for settings in config.detectors
-        if settings.yolo is not None
+    individuals_model, coat = _individuals_models(
+        config.individuals, config_directory, data_directory, report_status
     )
+    models = _model_requirements(config, individuals_model)
     build_type, onnx = _build_type(config.onnx, models)
     with ExitStack() as resources:
         report_status(
@@ -187,6 +286,9 @@ def run_application(
                 stop_requested,
                 report_status,
             )
+        herd = _open_herd(
+            config.individuals, individuals_model, coat, data_directory, resources
+        )
         streams = StreamPool(report_status)
         preview = LivePreview(data_directory / "live") if live_preview else None
         workers: list[DetectorWorker] = []
@@ -234,6 +336,7 @@ def run_application(
                         cache_directory=data_directory / "models" / "prepared",
                         report_status=rule_status,
                         engines=engines,
+                        outlined=herd.labels if herd is not None else frozenset(),
                         areas={
                             resolved: settings.detection.areas[configured]
                             for configured, resolved in zip(
@@ -255,14 +358,17 @@ def run_application(
                 from aidetector.adapters.vlm import VlmValidator
 
                 validator = VlmValidator(settings.active_vlm, media)
+            identifier = (
+                TrackIdentifier(herd)
+                if herd is not None and settings.yolo and settings.yolo.outlines_tracks
+                else None
+            )
             cooldown = Cooldown(
                 settings.yolo.cooldown if settings.yolo is not None else 0,
                 min_frames=event_policy.min_frames,
             )
-            publish = (
-                preview.observer(f"detector-{index}", source.sources)
-                if preview is not None
-                else ignore_observation
+            publish = _publisher(
+                preview, f"detector-{index}", source.sources, identifier
             )
             pipeline = DetectionPipeline(detector, event_policy, rule_status, publish)
             delivery = EventDelivery(
@@ -270,6 +376,7 @@ def run_application(
                 cooldown,
                 validator,
                 rule_status,
+                identifier,
             )
             logger.info(
                 "Detector-%d ready: validation %s; destinations: %s",

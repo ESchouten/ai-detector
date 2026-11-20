@@ -14,8 +14,11 @@ from aidetector.adapters.media.event_media import EventMedia
 from aidetector.application.ports import DeliveryError, camera_id
 from aidetector.configuration import DiskConfig
 from aidetector.domain.models import (
+    Candidate,
     DetectionEvent,
     EventResult,
+    Identification,
+    Individual,
     Observation,
     ValidationResult,
     ValidationStatus,
@@ -111,6 +114,54 @@ def test_archive_preserves_public_stages_and_validation_metadata(
     metadata = EventMetadata.model_validate_json(metadata_path.read_text())
     assert metadata.validated is validated
     assert metadata.validation_error == error
+
+
+@pytest.mark.parametrize(
+    "identification, individuals, failure",
+    [
+        (None, None, None),
+        (Identification(error="disk full"), None, "disk full"),
+        (
+            Identification(
+                (
+                    Individual(
+                        7, "cow", "b" * 32, (Candidate("412", 0.8),), recognised=True
+                    ),
+                    Individual(8, "cow", "c" * 32, (Candidate("233", 0.3),)),
+                )
+            ),
+            [
+                {
+                    "track": 7,
+                    "label": "cow",
+                    "sighting": "b" * 32,
+                    "name": "412",
+                    "candidates": [{"name": "412", "score": 0.8}],
+                },
+                {
+                    "track": 8,
+                    "label": "cow",
+                    "sighting": "c" * 32,
+                    "name": None,
+                    "candidates": [{"name": "233", "score": 0.3}],
+                },
+            ],
+            None,
+        ),
+    ],
+)
+def test_archive_records_the_recognised_individuals(
+    tmp_path, identification, individuals, failure
+):
+    plain = event_result()
+    DiskExporter(DiskConfig(), tmp_path, EventMedia()).export(
+        EventResult(plain.event, plain.validation, plain.id, identification)
+    )
+    [metadata_path] = list(tmp_path.glob("cow/unvalidated/*/metadata.json"))
+    metadata = json.loads(metadata_path.read_text())
+    assert metadata["individuals"] == individuals
+    assert metadata["individuals_error"] == failure
+    EventMetadata.model_validate(metadata)
 
 
 def test_published_metadata_leaves_the_review_to_the_web_application(tmp_path):

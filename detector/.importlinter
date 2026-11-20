@@ -32,11 +32,12 @@ source_modules = aidetector.adapters
 forbidden_modules = aidetector.version
 
 [importlinter:contract:adapter-groups]
-name = Source, inference and exporter adapters are independent
+name = Source, inference, individuals and exporter adapters are independent
 type = independence
 modules =
     aidetector.adapters.sources
     aidetector.adapters.inference
+    aidetector.adapters.individuals
     aidetector.adapters.exporters
 
 [importlinter:contract:cycles]

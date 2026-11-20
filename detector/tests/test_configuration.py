@@ -9,6 +9,7 @@ from aidetector.configuration import (
     DetectorConfig,
     DiskConfig,
     HealthcheckConfig,
+    IndividualsConfig,
     SourceConfig,
     TelegramConfig,
     VLMConfig,
@@ -263,3 +264,52 @@ def test_invalid_file_encoding_is_a_config_error_without_exposing_contents(tmp_p
         load_config(path)
     assert "private-secret" not in str(error.value)
     assert path.read_bytes() == original
+
+
+def tracked(tracking=True, task="segment"):
+    return {
+        "detection": {"source": "barn.mp4"},
+        "yolo": {"model": "cows-seg.pt", "task": task, "tracking": tracking},
+    }
+
+
+def test_individuals_need_a_tracking_detector_with_a_segmentation_model():
+    individuals = {"model": "herd.onnx", "labels": "cow"}
+    config = Config.model_validate(
+        {"detectors": [tracked(False), tracked()], "individuals": individuals}
+    )
+    assert config.individuals == IndividualsConfig(
+        model="herd.onnx", labels=("cow",), precision=0.99
+    )
+    for detectors in ([tracked(False)], [tracked(task="detect")]):
+        with pytest.raises(ValidationError, match="tracking and a segmentation model"):
+            Config.model_validate({"detectors": detectors, "individuals": individuals})
+
+
+@pytest.mark.parametrize(
+    "model, valid",
+    [
+        ("models/herd.ONNX", True),
+        ("https://example.invalid/herd.onnx?download=1", True),
+        ("herd.pt", False),
+        ("https://example.invalid/herd", False),
+    ],
+)
+def test_the_individuals_model_must_be_onnx(model, valid):
+    try:
+        IndividualsConfig(model=model, labels=("cow",))
+    except ValidationError as error:
+        assert not valid
+        assert "must be an ONNX file" in str(error)
+    else:
+        assert valid
+
+
+def test_a_coat_check_needs_both_of_its_models_as_onnx():
+    coat = {"keypoints": "keypoints.onnx", "matcher": "https://example.invalid/m.onnx"}
+    config = IndividualsConfig(model="herd.onnx", labels="cow", coat=coat)
+    assert config.coat is not None
+    assert config.coat.keypoints == "keypoints.onnx"
+    for invalid in ({"keypoints": "keypoints.onnx"}, coat | {"matcher": "matcher.pt"}):
+        with pytest.raises(ValidationError):
+            IndividualsConfig(model="herd.onnx", labels="cow", coat=invalid)

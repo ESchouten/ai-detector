@@ -11,11 +11,38 @@ from threading import Event, Lock, Thread
 from time import monotonic, time
 from uuid import uuid4
 
+import cv2
+import numpy as np
+
 from aidetector.application import ports
-from aidetector.domain.models import Observation
+from aidetector.domain.models import Individual, Observation
 
 logger = logging.getLogger(__name__)
 _FRAME_NAME = re.compile(r"[a-f0-9]{64}\.detector-[1-9]\d*\.(?:json|[a-f0-9]{32}\.tmp)")
+# Pixels an outline may stray from the segmentation's, to draw it with fewer points.
+OUTLINE_TOLERANCE = 2.0
+
+
+def _identity(individual: Individual | None) -> dict | None:
+    if individual is None:
+        return None
+    return {
+        "sighting": individual.sighting,
+        "name": individual.name,
+        "candidates": [
+            {"name": candidate.name, "score": round(candidate.score, 3)}
+            for candidate in individual.candidates
+        ],
+    }
+
+
+def _outline(points: tuple[tuple[int, int], ...]) -> list[list[int]]:
+    if not points:
+        return []
+    simple = cv2.approxPolyDP(
+        np.asarray(points, np.int32), OUTLINE_TOLERANCE, closed=True
+    )
+    return simple.reshape(-1, 2).tolist()
 
 
 def _atomic_json(path: Path, record: dict) -> None:
@@ -37,7 +64,8 @@ class LivePreview:
         self.interval = interval
         self.run_id = uuid4().hex
         self._sources: dict[str, str] = {}
-        self._pending: dict[tuple[str, str], Observation] = {}
+        self._pending: dict[tuple[str, str], tuple[str, Observation]] = {}
+        self._identities: dict[str, ports.TrackIdentities] = {}
         self._active: set[str] = set()
         self._lock = Lock()
         self._stop = Event()
@@ -45,17 +73,26 @@ class LivePreview:
         self._heartbeat = 0.0
 
     def observer(
-        self, rule_id: str, sources: Sequence[str]
+        self,
+        rule_id: str,
+        sources: Sequence[str],
+        identities: ports.TrackIdentities | None = None,
     ) -> ports.PublishObservation:
-        """Register configured sources before open(); return a nonblocking callback."""
+        """Register configured sources before open(); return a nonblocking callback.
+
+        With identities, tracked boxes carry who they are, looked up as each
+        picture is written.
+        """
         source_keys = {source: ports.source_key(source) for source in sources}
         self._sources.update(source_keys)
+        if identities is not None:
+            self._identities[rule_id] = identities
 
         def publish(source: str, observation: Observation) -> None:
             source_key = source_keys[source]
             with self._lock:
                 if source_key in self._active:
-                    self._pending[(source_key, rule_id)] = observation
+                    self._pending[(source_key, rule_id)] = (source, observation)
 
         return publish
 
@@ -114,8 +151,8 @@ class LivePreview:
         with self._lock:
             self._active = active
             ready = {
-                key: observation
-                for key, observation in self._pending.items()
+                key: pending
+                for key, pending in self._pending.items()
                 if key[0] in active
             }
             self._pending.clear()
@@ -130,11 +167,11 @@ class LivePreview:
                 },
             )
             self._heartbeat = now
-        for (source_key, rule_id), observation in ready.items():
+        for (source_key, rule_id), (source, observation) in ready.items():
             if self._stop.is_set():
                 break
             try:
-                self._write_frame(source_key, rule_id, observation)
+                self._write_frame(source_key, rule_id, source, observation)
                 self._failure = None
             except OSError as error:
                 self._report_failure(error)
@@ -156,9 +193,10 @@ class LivePreview:
             return False
 
     def _write_frame(
-        self, source_key: str, rule_id: str, observation: Observation
+        self, source_key: str, rule_id: str, source: str, observation: Observation
     ) -> None:
         height, width = observation.image.shape[:2]
+        identities = self._identities.get(rule_id)
         record = {
             "version": 1,
             "runId": self.run_id,
@@ -175,6 +213,12 @@ class LivePreview:
                     "label": box.label,
                     "confidence": box.confidence,
                     "trackId": box.track_id,
+                    "outline": _outline(box.outline),
+                    "identity": _identity(
+                        identities.identity(source, box.track_id)
+                        if identities is not None and box.track_id is not None
+                        else None
+                    ),
                 }
                 for box in observation.boxes
             ],

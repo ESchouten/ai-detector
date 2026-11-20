@@ -5,10 +5,12 @@
 	import * as Empty from '$lib/components/ui/empty';
 	import CameraPicture from '$lib/components/camera-picture.svelte';
 	import FilterChips from '$lib/components/filter-chips.svelte';
+	import LiveNaming from '$lib/components/live-naming.svelte';
 	import MonitoringBanner from '$lib/components/monitoring-banner.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import Pill from '$lib/components/pill.svelte';
 	import StatusDot from '$lib/components/status-dot.svelte';
+	import type { DetectionBox } from '$lib/live-preview';
 	import { cameraStatusBadge } from '$lib/monitoring';
 	import { getCameras } from '$lib/remote/camera.remote';
 	import { getDetectorPresets } from '$lib/remote/detector.remote';
@@ -21,6 +23,8 @@
 	const stale = $derived(monitor.stale);
 	const dots = { ok: 'ok', warn: 'warn', bad: 'bad', neutral: 'idle' } as const;
 	let view = $state<'live' | 'history'>('live');
+	// The individual whose pill was tapped, to say who it is.
+	let naming = $state<DetectionBox | null>(null);
 </script>
 
 <section class="page">
@@ -57,7 +61,13 @@
 					: { label: 'Live view only', tone: 'neutral' as const }}
 				<li class="flex min-w-0 flex-col gap-2">
 					<div class="group relative">
-						<CameraPicture id={camera.id} label={camera.label} monitored={camera.monitored}>
+						<CameraPicture
+							id={camera.id}
+							label={camera.label}
+							monitored={camera.monitored}
+							onpill={(box) => (naming = box)}
+							selected={naming?.identity?.sighting}
+						>
 							{#snippet caption()}
 								<div
 									class="flex w-full min-w-0 flex-wrap items-end justify-between gap-x-3 gap-y-1.5"
@@ -96,6 +106,7 @@
 				</li>
 			{/each}
 		</ul>
+		<LiveNaming bind:box={naming} />
 	{:else}
 		<Empty.Root class="border border-dashed">
 			<Empty.Header>

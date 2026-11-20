@@ -98,6 +98,11 @@ export function dataSize(bytes: number): string {
 	return small ? /* @wc-include */ `${amount} MB` : /* @wc-include */ `${amount} GB`;
 }
 
+/** 412, 233 or 87: alternatives, joined as the interface language does. */
+export function oneOf(items: string[]): string {
+	return new Intl.ListFormat(language(), { type: 'disjunction' }).format(items);
+}
+
 export function percent(fraction: number): string {
 	return `${Math.round(fraction * 100)}%`;
 }

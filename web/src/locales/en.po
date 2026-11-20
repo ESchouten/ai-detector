@@ -198,6 +198,8 @@ msgstr "Open the localhost dashboard on the computer running AI Detector to impo
 #: src/lib/server/cameras/relocation.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/identities/+page.server.ts
+#: src/routes/(admin)/identities/+page.svelte
 msgid "Camera"
 msgstr "Camera"
 
@@ -1297,8 +1299,12 @@ msgstr "Keep current connection"
 #: src/lib/components/camera-settings.svelte
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
+#: src/lib/components/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/phone-alarm-editor.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Saving…"
 
@@ -2168,6 +2174,7 @@ msgstr "Send test again"
 #: src/lib/navigation.ts
 #: src/routes/(admin)/advanced/+page.svelte
 #: src/routes/(admin)/devices/+page.svelte
+#: src/routes/(admin)/identities/+page.svelte
 #: src/routes/(admin)/logs/+page.svelte
 #: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/settings/+page.svelte
@@ -2238,8 +2245,10 @@ msgstr "Settings need attention"
 msgid "Please wait…"
 msgstr "Please wait…"
 
+#: src/lib/components/live-naming.svelte
 #: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Save"
 
@@ -3703,6 +3712,167 @@ msgstr "AI connection"
 msgid "Filled in missing names and ignored empty optional settings in app.json."
 msgstr "Filled in missing names and ignored empty optional settings in app.json."
 
+#: src/lib/individuals.ts
+msgid "Enter a name or number."
+msgstr "Enter a name or number."
+
+#: src/lib/individuals.ts
+msgid "Use at most 40 characters."
+msgstr "Use at most 40 characters."
+
+#: src/lib/individuals.ts
+msgid "Keep at least one picture to name."
+msgstr "Keep at least one picture to name."
+
+#: src/lib/server/individuals-folder.ts
+msgid "A picture to name no longer exists. Reload the page."
+msgstr "A picture to name no longer exists. Reload the page."
+
+#: src/routes/(admin)/identities/+page.server.ts
+msgid "Reload the page and try again."
+msgstr "Reload the page and try again."
+
+#: src/routes/(admin)/identities/[sighting]/[picture]/+server.ts
+msgid "Picture not found."
+msgstr "Picture not found."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Could not save the name"
+msgstr "Could not save the name"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name sightings from one more day"
+msgstr "Name sightings from one more day"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# more group follows once these are named."
+msgid_plural "# more groups follow once these are named."
+msgstr[0] "# more group follows once these are named."
+msgstr[1] "# more groups follow once these are named."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "To name"
+msgstr "To name"
+
+#: src/routes/(admin)/identities/+page.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "# sighting"
+msgid_plural "# sightings"
+msgstr[0] "# sighting"
+msgstr[1] "# sightings"
+
+#. 0: identity.name
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Not {0}: remove the name from this picture"
+msgstr "Not {0}: remove the name from this picture"
+
+#. 0: recentMoment(group.shown[0].seen)
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Last seen {0}"
+msgstr "Last seen {0}"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Leave this picture out"
+msgstr "Leave this picture out"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Left out"
+msgstr "Left out"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "# more sighting looks like these."
+msgid_plural "# more sightings look like these."
+msgstr[0] "# more sighting looks like these."
+msgstr[1] "# more sightings look like these."
+
+#: src/lib/components/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Looks most like"
+msgstr "Looks most like"
+
+#: src/lib/components/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Name or number"
+msgstr "Name or number"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Identities"
+msgstr "Identities"
+
+#: src/lib/navigation.ts
+msgid "Name the individuals the cameras recognise."
+msgstr "Name the individuals the cameras recognise."
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Left out: a different one"
+msgstr "Left out: a different one"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Tap a picture of a different one to leave it out."
+msgstr "Tap a picture of a different one to leave it out."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Each group holds sightings that look alike. Give it a name or number once; alerts then name the identities they recognise."
+msgstr "Each group holds sightings that look alike. Give it a name or number once; alerts then name the identities they recognise."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Alerts only suggest names until named sightings come from at least two days. From then on they name the identities they are sure of."
+msgstr "Alerts only suggest names until named sightings come from at least two days. From then on they name the identities they are sure of."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "No identities named yet."
+msgstr "No identities named yet."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Named identities"
+msgstr "Named identities"
+
+#. 0: detectionBoxLabel(box)
+#. 0: detectionBoxLabel(box)
+#: src/lib/components/detection-boxes.svelte
+#: src/lib/components/identity-pills.svelte
+msgid "Name {0}"
+msgstr "Name {0}"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "On camera now"
+msgstr "On camera now"
+
+#: src/lib/components/live-naming.svelte
+msgid "Could not save the name. Try again."
+msgstr "Could not save the name. Try again."
+
+#. 0: identity.name
+#: src/lib/components/live-naming.svelte
+msgid "Shown as {0}. Enter another name or number if that is wrong."
+msgstr "Shown as {0}. Enter another name or number if that is wrong."
+
+#. 0: identity.candidates[0].name
+#: src/lib/components/live-naming.svelte
+msgid "Looks most like {0}, but not enough to be sure."
+msgstr "Looks most like {0}, but not enough to be sure."
+
+#: src/lib/components/live-naming.svelte
+msgid "Give it a name or number; the camera then recognises it."
+msgstr "Give it a name or number; the camera then recognises it."
+
+#: src/lib/components/live-naming.svelte
+msgid "Who is this?"
+msgstr "Who is this?"
+
+#: src/lib/components/live-naming.svelte
+msgid "Its pictures were removed. Wait for the box to show it again."
+msgstr "Its pictures were removed. Wait for the box to show it again."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
+msgstr "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."
+msgstr "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."
+
 #. 0: label; 1: move.host
 #: src/lib/server/cameras/relocation.ts
 msgid "{0} got a new network address ({1}) and is watched there again."
@@ -3985,3 +4155,45 @@ msgstr ""
 "\n"
 "Includes available rotated logs, the latest TensorRT and Windows ML build logs, runtime details and redacted settings. No recordings are included. Review the files before sharing: logs may include local paths and camera addresses.\n"
 ""
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "and # more"
+msgid_plural "and # more"
+msgstr[0] "and # more"
+msgstr[1] "and # more"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "An identity named on fewer than three days is recognised less often and can get the name of one that looks like it. Tap it in the live picture or name its groups below."
+msgstr "An identity named on fewer than three days is recognised less often and can get the name of one that looks like it. Tap it in the live picture or name its groups below."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name these on more days"
+msgstr "Name these on more days"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# day"
+msgid_plural "# days"
+msgstr[0] "# day"
+msgstr[1] "# days"
+
+#. 0: guess
+#. 0: guess
+#: src/lib/components/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Is this {0}?"
+msgstr "Is this {0}?"
+
+#: src/lib/components/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Yes"
+msgstr "Yes"
+
+#: src/lib/components/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "No"
+msgstr "No"
+
+#. 0: guess
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This picture was named {0} before."
+msgstr "This picture was named {0} before."

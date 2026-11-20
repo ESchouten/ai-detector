@@ -254,42 +254,47 @@ def test_cycle_guard_also_rejects_a_package_importing_its_child_and_back():
         (
             "adapters/exporters/disk.py",
             "from aidetector.adapters.sources import files\n",
-            "Source, inference and exporter adapters",
+            "Source, inference, individuals and exporter adapters",
         ),
         (
             "adapters/exporters/webhook.py",
             "def deferred():\n"
             "    from aidetector.adapters.inference.yolo import YoloDetector\n",
-            "Source, inference and exporter adapters",
+            "Source, inference, individuals and exporter adapters",
         ),
         (
             "adapters/sources/files.py",
             "from aidetector.adapters.exporters.disk import DiskExporter\n",
-            "Source, inference and exporter adapters",
+            "Source, inference, individuals and exporter adapters",
         ),
         (
             "adapters/sources/streams.py",
             "from typing import TYPE_CHECKING\n"
             "if TYPE_CHECKING:\n"
             "    from aidetector.adapters.inference.yolo import YoloDetector\n",
-            "Source, inference and exporter adapters",
+            "Source, inference, individuals and exporter adapters",
         ),
         (
             "adapters/inference/yolo.py",
             "from typing import TYPE_CHECKING\n"
             "if TYPE_CHECKING:\n"
             "    from aidetector.adapters.exporters.telegram import TelegramExporter\n",
-            "Source, inference and exporter adapters",
+            "Source, inference, individuals and exporter adapters",
         ),
         (
             "adapters/inference/onnx.py",
             "def deferred():\n    import aidetector.adapters.sources.streams\n",
-            "Source, inference and exporter adapters",
+            "Source, inference, individuals and exporter adapters",
         ),
         (
             "adapters/media/images.py",
             "from aidetector.adapters.inference import yolo\n",
-            "Source, inference and exporter adapters",
+            "Source, inference, individuals and exporter adapters",
+        ),
+        (
+            "adapters/individuals/herd.py",
+            "from aidetector.adapters.exporters import archive_metadata\n",
+            "Source, inference, individuals and exporter adapters",
         ),
     ],
 )

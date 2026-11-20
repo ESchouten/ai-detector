@@ -1,10 +1,11 @@
 import { readdir } from 'node:fs/promises';
 import path from 'node:path';
-import type {
-	IndividualsOverview,
-	NamedIndividual,
-	Sighting,
-	SightingGroup
+import {
+	DAYS_WANTED,
+	type IndividualsOverview,
+	type NamedIndividual,
+	type Sighting,
+	type SightingGroup
 } from '../individuals.ts';
 import { isMissingFile, readJson, writeJson } from './json-file.ts';
 
@@ -26,6 +27,8 @@ interface GroupsFile {
 }
 
 export class SightingMissingError extends Error {}
+
+const day = (sighting: Sighting) => sighting.seen.slice(0, 10);
 
 /**
  * The detector's individuals folder (see the detector's architecture). The detector writes
@@ -73,24 +76,32 @@ export class IndividualsFolder {
 		}
 	}
 
-	/** Look-alike unnamed sightings first, then any the detector has not grouped, newest first. */
-	async #groups(unnamed: Set<string>) {
+	/**
+	 * Look-alike unnamed sightings, then any the detector has not grouped, newest first. Groups that
+	 * look like an individual named on few days come before the others: naming those helps most.
+	 */
+	async #groups(unnamed: Set<string>, named: Map<string, NamedIndividual>) {
 		const file = await readJson<GroupsFile>(path.join(this.directory, 'groups.json'));
+		const first = (group: { suggestions: string[] }) => named.get(group.suggestions[0] ?? '');
+		const few = (group: { suggestions: string[] }) =>
+			(first(group)?.days ?? DAYS_WANTED) < DAYS_WANTED;
 		const grouped = (file?.groups ?? [])
 			.map((group) => ({
 				ids: group.sightings.filter((id) => unnamed.has(id)),
 				suggestions: group.suggestions.map((item) => item.name).filter((name) => name)
 			}))
-			.filter((group) => group.ids.length);
+			.filter((group) => group.ids.length)
+			.sort((a, b) => +few(b) - +few(a));
 		const listed = new Set(grouped.flatMap((group) => group.ids));
 		const alone = (await this.#records([...unnamed].filter((id) => !listed.has(id))))
 			.sort((a, b) => b.seen.localeCompare(a.seen))
-			.map((sighting) => ({ ids: [sighting.id], suggestions: [] }));
+			.map((sighting) => ({ ids: [sighting.id], suggestions: [] as string[] }));
 		const all = [...grouped, ...alone];
 		const groups: SightingGroup[] = await Promise.all(
 			all.slice(0, GROUPS_SHOWN).map(async (group) => ({
 				...group,
-				shown: await this.#records(group.ids.slice(0, PICTURES_SHOWN))
+				shown: await this.#records(group.ids.slice(0, PICTURES_SHOWN)),
+				reference: first(group)?.shown[0] ?? null
 			}))
 		);
 		return { groups, moreGroups: Math.max(0, all.length - GROUPS_SHOWN) };
@@ -99,7 +110,6 @@ export class IndividualsFolder {
 	async overview(): Promise<IndividualsOverview> {
 		const [ids, names] = await Promise.all([this.#sightingIds(), this.#readNames()]);
 		const unnamed = new Set(ids.filter((id) => !(id in names)));
-		const { groups, moreGroups } = await this.#groups(unnamed);
 		const named = await this.#records(Object.keys(names));
 		const byName = new Map<string, Sighting[]>();
 		for (const sighting of named.sort((a, b) => b.seen.localeCompare(a.seen)))
@@ -108,15 +118,20 @@ export class IndividualsFolder {
 			.map(([name, sightings]) => ({
 				name,
 				ids: sightings.map((sighting) => sighting.id),
-				shown: sightings.slice(0, PICTURES_SHOWN)
+				shown: sightings.slice(0, PICTURES_SHOWN),
+				days: new Set(sightings.map(day)).size
 			}))
 			.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+		const { groups, moreGroups } = await this.#groups(
+			unnamed,
+			new Map(individuals.map((individual) => [individual.name, individual]))
+		);
 		return {
 			groups,
 			moreGroups,
 			unnamed: unnamed.size,
 			named: individuals,
-			namedDays: new Set(named.map((sighting) => sighting.seen.slice(0, 10))).size
+			namedDays: new Set(named.map(day)).size
 		};
 	}
 

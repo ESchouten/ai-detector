@@ -1302,6 +1302,8 @@ msgstr "Conserver la connexion actuelle"
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Enregistrement…"
@@ -4167,3 +4169,47 @@ msgstr ""
 "\n"
 "Contient les journaux disponibles, les derniers journaux de compilation de TensorRT et de Windows ML, des détails d’exécution et les paramètres sans mots de passe. Aucun enregistrement n’est inclus. Vérifiez les fichiers avant de les partager : les journaux peuvent contenir des chemins locaux et des adresses de caméras.\n"
 ""
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "and # more"
+msgid_plural "and # more"
+msgstr[0] "et # autre"
+msgstr[1] "et # autres"
+msgstr[2] "et # autres"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "An identity named on fewer than three days is recognised less often and can get the name of one that looks like it. Tap it in the live picture or name its groups below."
+msgstr "Une identité nommée sur moins de trois jours est reconnue moins souvent et peut recevoir le nom d’une autre qui lui ressemble. Touchez-la sur l’image en direct ou nommez ses groupes ci-dessous."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name these on more days"
+msgstr "Nommez celles-ci sur plus de jours"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# day"
+msgid_plural "# days"
+msgstr[0] "# jour"
+msgstr[1] "# jours"
+msgstr[2] "# jours"
+
+#. 0: guess
+#. 0: guess
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Is this {0}?"
+msgstr "Est-ce {0} ?"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Yes"
+msgstr "Oui"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "No"
+msgstr "Non"
+
+#. 0: guess
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This picture was named {0} before."
+msgstr "Cette photo a déjà été nommée {0}."

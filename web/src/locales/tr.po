@@ -198,6 +198,8 @@ msgstr "Dosyaları içe aktarmak için AI Detector’ın çalıştığı bilgisa
 #: src/lib/server/cameras/relocation.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/identities/+page.server.ts
+#: src/routes/(admin)/identities/+page.svelte
 msgid "Camera"
 msgstr "Kamera"
 
@@ -1299,6 +1301,10 @@ msgstr "Mevcut bağlantıyı koru"
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/phone-alarm-editor.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Kaydediliyor…"
 
@@ -2168,6 +2174,7 @@ msgstr "Testi tekrar gönder"
 #: src/lib/navigation.ts
 #: src/routes/(admin)/advanced/+page.svelte
 #: src/routes/(admin)/devices/+page.svelte
+#: src/routes/(admin)/identities/+page.svelte
 #: src/routes/(admin)/logs/+page.svelte
 #: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/settings/+page.svelte
@@ -2240,6 +2247,8 @@ msgstr "Lütfen bekleyin…"
 
 #: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Kaydet"
 
@@ -3776,10 +3785,12 @@ msgid_plural "# more sightings look like these."
 msgstr[0] "# gözlem daha bunlara benziyor."
 msgstr[1] "# gözlem daha bunlara benziyor."
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Looks most like"
 msgstr "En çok benzediği"
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Name or number"
 msgstr "Ad veya numara"
@@ -4142,3 +4153,45 @@ msgstr ""
 "\n"
 "Mevcut döndürülmüş günlükleri, en son TensorRT ve Windows ML derleme günlüklerini, çalışma zamanı ayrıntılarını ve parolaları gizlenmiş ayarları içerir. Kayıt içermez. Paylaşmadan önce dosyaları gözden geçirin: günlükler yerel yolları ve kamera adreslerini içerebilir.\n"
 ""
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "and # more"
+msgid_plural "and # more"
+msgstr[0] "ve # tane daha"
+msgstr[1] "ve # tane daha"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "An identity named on fewer than three days is recognised less often and can get the name of one that looks like it. Tap it in the live picture or name its groups below."
+msgstr "Üç günden az günde adlandırılmış bir kimlik daha seyrek tanınır ve kendisine benzeyen birinin adını alabilir. Canlı görüntüde ona dokunun veya aşağıda gruplarını adlandırın."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name these on more days"
+msgstr "Bunları daha fazla günde adlandırın"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# day"
+msgid_plural "# days"
+msgstr[0] "# gün"
+msgstr[1] "# gün"
+
+#. 0: guess
+#. 0: guess
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Is this {0}?"
+msgstr "Bu {0} mi?"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Yes"
+msgstr "Evet"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "No"
+msgstr "Hayır"
+
+#. 0: guess
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This picture was named {0} before."
+msgstr "Bu fotoğrafa daha önce şu ad verildi: {0}."

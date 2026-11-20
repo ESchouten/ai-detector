@@ -208,6 +208,7 @@ def test_tracking_preserves_source_slots_when_camera_is_temporarily_absent():
     assert second_batch.images[0] is first_frame.image
     assert second_batch.images[1] is second_frame.image
     assert all(call["persist"] and call["batch"] == 2 for call in model.calls)
+    assert all(call["tracker"] == "tracktrack.yaml" for call in model.calls)
 
 
 def test_unknown_model_class_fails_with_available_names():

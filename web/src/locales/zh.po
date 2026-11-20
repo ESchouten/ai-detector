@@ -198,6 +198,8 @@ msgstr "请在运行 AI Detector 的电脑上打开 localhost 控制面板来导
 #: src/lib/server/cameras/relocation.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/identities/+page.server.ts
+#: src/routes/(admin)/identities/+page.svelte
 msgid "Camera"
 msgstr "摄像头"
 
@@ -1299,6 +1301,10 @@ msgstr "保留当前连接"
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/phone-alarm-editor.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "正在保存…"
 
@@ -2168,6 +2174,7 @@ msgstr "重新发送测试"
 #: src/lib/navigation.ts
 #: src/routes/(admin)/advanced/+page.svelte
 #: src/routes/(admin)/devices/+page.svelte
+#: src/routes/(admin)/identities/+page.svelte
 #: src/routes/(admin)/logs/+page.svelte
 #: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/settings/+page.svelte
@@ -2240,6 +2247,8 @@ msgstr "请稍候…"
 
 #: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "保存"
 
@@ -3759,10 +3768,12 @@ msgid "# more sighting looks like these."
 msgid_plural "# more sightings look like these."
 msgstr[0] "还有 # 条记录与这些相似。"
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Looks most like"
 msgstr "最像"
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Name or number"
 msgstr "名称或编号"
@@ -4125,3 +4136,43 @@ msgstr ""
 "\n"
 "包含可用的轮转日志、最新的 TensorRT 和 Windows ML 构建日志、运行时详情以及已隐去敏感信息的设置。不包含任何录像。分享前请检查这些文件：日志中可能包含本地路径和摄像头地址。\n"
 ""
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "and # more"
+msgid_plural "and # more"
+msgstr[0] "另有 # 个"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "An identity named on fewer than three days is recognised less often and can get the name of one that looks like it. Tap it in the live picture or name its groups below."
+msgstr "只在不到三天里命名过的身份较少被认出，还可能被当成与它相像的另一个。请在实时画面中点按它，或为下面它所在的分组命名。"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name these on more days"
+msgstr "请在更多天里为这些身份命名"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# day"
+msgid_plural "# days"
+msgstr[0] "# 天"
+
+#. 0: guess
+#. 0: guess
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Is this {0}?"
+msgstr "这是 {0} 吗？"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Yes"
+msgstr "是"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "No"
+msgstr "否"
+
+#. 0: guess
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This picture was named {0} before."
+msgstr "这张图片之前被命名为 {0}。"

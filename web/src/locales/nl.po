@@ -1302,6 +1302,8 @@ msgstr "Huidige verbinding behouden"
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Opslaan…"
@@ -4151,3 +4153,45 @@ msgstr ""
 "\n"
 "Bevat de beschikbare logbestanden, de nieuwste buildlogs van TensorRT en Windows ML, gegevens over de uitvoering en instellingen zonder wachtwoorden. Er zitten geen opnamen in. Bekijk de bestanden voordat je ze deelt: logs kunnen lokale paden en camera-adressen bevatten.\n"
 ""
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "and # more"
+msgid_plural "and # more"
+msgstr[0] "en nog # andere"
+msgstr[1] "en nog # andere"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "An identity named on fewer than three days is recognised less often and can get the name of one that looks like it. Tap it in the live picture or name its groups below."
+msgstr "Een identiteit met namen van minder dan drie dagen wordt minder vaak herkend en kan de naam krijgen van een die erop lijkt. Tik die aan in het livebeeld of benoem de groepen hieronder."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name these on more days"
+msgstr "Benoem deze op meer dagen"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# day"
+msgid_plural "# days"
+msgstr[0] "# dag"
+msgstr[1] "# dagen"
+
+#. 0: guess
+#. 0: guess
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Is this {0}?"
+msgstr "Is dit {0}?"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Yes"
+msgstr "Ja"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "No"
+msgstr "Nee"
+
+#. 0: guess
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This picture was named {0} before."
+msgstr "Deze foto kreeg eerder de naam {0}."

@@ -162,6 +162,10 @@ class YoloDetector:
                     # The SDK annotation omits LoadStreams instances, which its
                     # loader dispatch accepts. Keep the mismatch at this boundary.
                     source=cast(Any, source_batch),
+                    # Named, so an Ultralytics upgrade cannot change it unnoticed:
+                    # individuals are recognised per track, and on a barn camera this
+                    # one breaks a track four to five times less often than the others.
+                    tracker="tracktrack.yaml",
                     persist=True,
                     stream=True,
                     batch=len(sources),

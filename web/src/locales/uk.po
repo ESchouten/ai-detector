@@ -198,6 +198,8 @@ msgstr "Щоб імпортувати файли, відкрийте панел�
 #: src/lib/server/cameras/relocation.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/identities/+page.server.ts
+#: src/routes/(admin)/identities/+page.svelte
 msgid "Camera"
 msgstr "Камера"
 
@@ -1299,6 +1301,10 @@ msgstr "Залишити поточне підключення"
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/phone-alarm-editor.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Збереження…"
 
@@ -2168,6 +2174,7 @@ msgstr "Надіслати тест знову"
 #: src/lib/navigation.ts
 #: src/routes/(admin)/advanced/+page.svelte
 #: src/routes/(admin)/devices/+page.svelte
+#: src/routes/(admin)/identities/+page.svelte
 #: src/routes/(admin)/logs/+page.svelte
 #: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/settings/+page.svelte
@@ -2240,6 +2247,8 @@ msgstr "Зачекайте…"
 
 #: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Зберегти"
 
@@ -3808,10 +3817,12 @@ msgstr[1] "Ще # спостереження схожі на ці."
 msgstr[2] "Ще # спостережень схожі на ці."
 msgstr[3] "Ще # спостереження схожі на ці."
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Looks most like"
 msgstr "Найбільше схоже на"
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Name or number"
 msgstr "Ім’я або номер"
@@ -4174,3 +4185,49 @@ msgstr ""
 "\n"
 "Містять доступні архівні журнали, останні журнали збирання TensorRT і Windows ML, відомості про середовище виконання й налаштування з прихованими секретами. Записів не включено. Перегляньте файли перед надсиланням: журнали можуть містити локальні шляхи й адреси камер.\n"
 ""
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "and # more"
+msgid_plural "and # more"
+msgstr[0] "і ще #"
+msgstr[1] "і ще #"
+msgstr[2] "і ще #"
+msgstr[3] "і ще #"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "An identity named on fewer than three days is recognised less often and can get the name of one that looks like it. Tap it in the live picture or name its groups below."
+msgstr "Особина, названа менш ніж за три дні, розпізнається рідше й може отримати ім’я іншої, схожої. Торкніться її на зображенні в реальному часі або назвіть її групи нижче."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name these on more days"
+msgstr "Назвіть цих особин в інші дні"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# day"
+msgid_plural "# days"
+msgstr[0] "# день"
+msgstr[1] "# дні"
+msgstr[2] "# днів"
+msgstr[3] "# дня"
+
+#. 0: guess
+#. 0: guess
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Is this {0}?"
+msgstr "Це {0}?"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Yes"
+msgstr "Так"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "No"
+msgstr "Ні"
+
+#. 0: guess
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This picture was named {0} before."
+msgstr "Це фото раніше отримало ім’я {0}."

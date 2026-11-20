@@ -21,20 +21,25 @@
 	let name = $state('');
 	let saving = $state(false);
 	let message = $state('');
+	// Asked whether it is the one it looks most like, until a person says no.
+	let declined = $state(false);
+	const guess = $derived(
+		identity?.name === null && !declined ? identity.candidates.at(0)?.name : undefined
+	);
 
 	$effect(() => {
 		void identity;
 		name = '';
 		message = '';
+		declined = false;
 	});
 
-	async function save(event: SubmitEvent) {
-		event.preventDefault();
+	async function save(given: string) {
 		if (!identity) return;
 		saving = true;
 		message = '';
 		try {
-			await nameSighting({ sighting: identity.sighting, name });
+			await nameSighting({ sighting: identity.sighting, name: given });
 			box = null;
 			await invalidateAll();
 		} catch (cause) {
@@ -55,7 +60,9 @@
 		{#if box && identity}
 			{@const shown = identityLabel(identity)}
 			<Dialog.Header>
-				<Dialog.Title>Who is this?</Dialog.Title>
+				<Dialog.Title>
+					{#if guess}Is this {guess}?{:else}Who is this?{/if}
+				</Dialog.Title>
 				<Dialog.Description>
 					{#if identity.name !== null}
 						Shown as {identity.name}. Enter another name or number if that is wrong.
@@ -81,35 +88,55 @@
 					</p>
 				{/if}
 			{/await}
-			<form class="flex flex-col gap-2" onsubmit={save}>
-				<label for="live-name" class="text-sm font-medium">Name or number</label>
-				<div class="flex gap-2">
-					<Input
-						id="live-name"
-						bind:value={name}
-						list={names}
-						maxlength={40}
-						autocomplete="off"
-						required
-						class="max-w-48"
-					/>
-					<Button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save'}</Button>
-				</div>
-				{#if identity.candidates.length}
-					<div class="flex flex-wrap items-center gap-2">
-						<span class="text-xs text-muted-foreground">Looks most like</span>
-						{#each identity.candidates as candidate (candidate.name)}
-							<Button
-								type="button"
-								size="sm"
-								variant="outline"
-								onclick={() => (name = candidate.name)}>{candidate.name}</Button
-							>
-						{/each}
+			{#if guess}
+				<div class="flex flex-col gap-2">
+					<div class="flex gap-2">
+						<Button disabled={saving} onclick={() => save(guess)}>
+							{saving ? 'Saving…' : 'Yes'}
+						</Button>
+						<Button variant="outline" disabled={saving} onclick={() => (declined = true)}>
+							No
+						</Button>
 					</div>
-				{/if}
-				{#if message}<p role="alert" class="text-sm text-danger-foreground">{message}</p>{/if}
-			</form>
+					{#if message}<p role="alert" class="text-sm text-danger-foreground">{message}</p>{/if}
+				</div>
+			{:else}
+				<form
+					class="flex flex-col gap-2"
+					onsubmit={(event) => {
+						event.preventDefault();
+						void save(name);
+					}}
+				>
+					<label for="live-name" class="text-sm font-medium">Name or number</label>
+					<div class="flex gap-2">
+						<Input
+							id="live-name"
+							bind:value={name}
+							list={names}
+							maxlength={40}
+							autocomplete="off"
+							required
+							class="max-w-48"
+						/>
+						<Button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save'}</Button>
+					</div>
+					{#if identity.candidates.length}
+						<div class="flex flex-wrap items-center gap-2">
+							<span class="text-xs text-muted-foreground">Looks most like</span>
+							{#each identity.candidates as candidate (candidate.name)}
+								<Button
+									type="button"
+									size="sm"
+									variant="outline"
+									onclick={() => (name = candidate.name)}>{candidate.name}</Button
+								>
+							{/each}
+						</div>
+					{/if}
+					{#if message}<p role="alert" class="text-sm text-danger-foreground">{message}</p>{/if}
+				</form>
+			{/if}
 		{/if}
 	</Dialog.Content>
 </Dialog.Root>

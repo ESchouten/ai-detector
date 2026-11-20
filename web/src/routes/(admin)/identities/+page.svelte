@@ -7,6 +7,7 @@
 	import FilterChips from '$lib/components/filter-chips.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import { plural } from '$lib/format';
+	import { DAYS_WANTED } from '$lib/individuals';
 	import type { DetectionBox } from '$lib/live-preview';
 	import LiveNaming from './live-naming.svelte';
 	import SightingGroup from './sighting-group.svelte';
@@ -14,6 +15,13 @@
 
 	let { data, form } = $props();
 	const overview = $derived(data.overview);
+	// Names to list at most; a herd can have hundreds.
+	const LISTED = 12;
+	const few = $derived(
+		overview.named
+			.filter((identity) => identity.days < DAYS_WANTED)
+			.map((identity) => identity.name)
+	);
 	let cameraId = $state<string>();
 	const camera = $derived(data.cameras.find((item) => item.id === cameraId) ?? data.cameras.at(0));
 	let naming = $state<DetectionBox | null>(null);
@@ -38,6 +46,22 @@
 			<Alert.Description>
 				Alerts only suggest names until named sightings come from at least two days. From then on
 				they name the identities they are sure of.
+			</Alert.Description>
+		</Alert.Root>
+	{:else if few.length}
+		<Alert.Root>
+			<Alert.Title>Name these on more days</Alert.Title>
+			<Alert.Description>
+				<p>
+					An identity named on fewer than three days is recognised less often and can get the name
+					of one that looks like it. Tap it in the live picture or name its groups below.
+				</p>
+				<p class="flex flex-wrap gap-x-1 font-medium text-foreground">
+					<span>{few.slice(0, LISTED).join(', ')}</span>
+					{#if few.length > LISTED}
+						<span>{plural(few.length - LISTED, ['and # more', 'and # more'])}</span>
+					{/if}
+				</p>
 			</Alert.Description>
 		</Alert.Root>
 	{/if}
@@ -109,8 +133,10 @@
 								class="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5"
 							>
 								<span class="text-sm font-medium">{identity.name}</span>
-								<span class="text-sm text-muted-foreground">
-									{plural(identity.ids.length, ['# sighting', '# sightings'])}
+								<span class="flex flex-wrap justify-end gap-x-1 text-sm text-muted-foreground">
+									<span>{plural(identity.ids.length, ['# sighting', '# sightings'])}</span>
+									<span>·</span>
+									<span>{plural(identity.days, ['# day', '# days'])}</span>
 								</span>
 							</summary>
 							<ul class="flex flex-wrap gap-2 px-4 pb-4">

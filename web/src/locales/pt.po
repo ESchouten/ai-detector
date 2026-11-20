@@ -198,6 +198,8 @@ msgstr "Abra o painel via localhost no computador em que o AI Detector está rod
 #: src/lib/server/cameras/relocation.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/identities/+page.server.ts
+#: src/routes/(admin)/identities/+page.svelte
 msgid "Camera"
 msgstr "Câmera"
 
@@ -1299,6 +1301,10 @@ msgstr "Manter conexão atual"
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/phone-alarm-editor.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Salvando…"
 
@@ -2168,6 +2174,7 @@ msgstr "Enviar teste novamente"
 #: src/lib/navigation.ts
 #: src/routes/(admin)/advanced/+page.svelte
 #: src/routes/(admin)/devices/+page.svelte
+#: src/routes/(admin)/identities/+page.svelte
 #: src/routes/(admin)/logs/+page.svelte
 #: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/settings/+page.svelte
@@ -2240,6 +2247,8 @@ msgstr "Aguarde…"
 
 #: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Salvar"
 
@@ -3792,10 +3801,12 @@ msgstr[0] "Mais # avistamento se parece com estes."
 msgstr[1] "Mais # avistamentos se parecem com estes."
 msgstr[2] "Mais # avistamentos se parecem com estes."
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Looks most like"
 msgstr "Parece mais com"
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Name or number"
 msgstr "Nome ou número"
@@ -4158,3 +4169,47 @@ msgstr ""
 "\n"
 "Inclui os registros rotacionados disponíveis, os registros de compilação mais recentes do TensorRT e do Windows ML, detalhes do ambiente de execução e configurações com dados sensíveis ocultos. Nenhuma gravação está incluída. Revise os arquivos antes de compartilhar: os registros podem conter caminhos locais e endereços de câmeras.\n"
 ""
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "and # more"
+msgid_plural "and # more"
+msgstr[0] "e mais #"
+msgstr[1] "e mais #"
+msgstr[2] "e mais #"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "An identity named on fewer than three days is recognised less often and can get the name of one that looks like it. Tap it in the live picture or name its groups below."
+msgstr "Uma identidade com nomes de menos de três dias é reconhecida menos vezes e pode receber o nome de outra parecida. Toque nela na imagem ao vivo ou nomeie os grupos dela abaixo."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name these on more days"
+msgstr "Nomeie estas em mais dias"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# day"
+msgid_plural "# days"
+msgstr[0] "# dia"
+msgstr[1] "# dias"
+msgstr[2] "# dias"
+
+#. 0: guess
+#. 0: guess
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Is this {0}?"
+msgstr "É {0}?"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Yes"
+msgstr "Sim"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "No"
+msgstr "Não"
+
+#. 0: guess
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This picture was named {0} before."
+msgstr "Esta foto já recebeu o nome {0}."

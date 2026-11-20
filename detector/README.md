@@ -86,7 +86,7 @@ All options are in [`config.schema.json`](../config/config.schema.json). Sources
 | `timeout` | `5` | Inactivity limit since the last match; `0` disables it |
 | `include_trailing_time` | `1` | Maximum trailing context after the last match |
 | `cooldown` | `0` | Per-source cooldown after acceptance, in seconds or a class map |
-| `tracking` | `false` | Persistent Ultralytics tracking |
+| `tracking` | `false` | Persistent Ultralytics tracking, with its TrackTrack tracker |
 
 - Standard names such as `yolo11n.pt` are downloaded by Ultralytics; model URLs are downloaded once into the cache. Prepared ONNX models, TensorRT engines and Windows ML compiled models are cached under `models/prepared/`, which can be deleted while detection is stopped. See [inference backends](ARCHITECTURE.md#inference-backends).
 - An event needs `frames_min` observations containing a class outside its cooldown. Each observation counts once; context and observations containing only classes still in cooldown do not count. Approved and deliberately unvalidated events start cooldown for the classes outside cooldown, using each class's best qualifying observation. A class still in cooldown keeps its previous timer; rejected and failed events do not start cooldown.

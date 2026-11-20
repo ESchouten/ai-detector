@@ -18,6 +18,8 @@ export interface SightingGroup {
 	shown: Sighting[];
 	/** Named individuals the group resembles most, best first. */
 	suggestions: string[];
+	/** The latest named sighting of the first suggestion, to compare the group with. */
+	reference: Sighting | null;
 }
 
 export interface NamedIndividual {
@@ -25,7 +27,15 @@ export interface NamedIndividual {
 	/** Its latest sightings first; only the first few are in `shown`. */
 	ids: string[];
 	shown: Sighting[];
+	/** On how many days its named sightings were seen. */
+	days: number;
 }
+
+/**
+ * From how many days an individual needs named sightings. With fewer it is recognised less often,
+ * and with one or two named sightings it is given the name of one that looks like it.
+ */
+export const DAYS_WANTED = 3;
 
 export interface IndividualsOverview {
 	groups: SightingGroup[];

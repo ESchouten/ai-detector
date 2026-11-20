@@ -82,9 +82,46 @@ test('unnamed sightings are listed in the look-alike groups the detector made, t
 		{
 			name: '233',
 			ids: [id('3')],
-			shown: [{ id: id('3'), seen: '2026-10-02T08:00:00', crops: 1, outlines: [outline] }]
+			shown: [{ id: id('3'), seen: '2026-10-02T08:00:00', crops: 1, outlines: [outline] }],
+			days: 1
 		}
 	]);
+});
+
+test('groups that look like an individual named on few days come first, with its latest named picture to compare', async (t) => {
+	const directory = await temporaryDirectory(t, 'individuals-');
+	const folder = new IndividualsFolder(directory);
+	for (const [digit, day] of [
+		['1', '01'],
+		['2', '02'],
+		['3', '03'],
+		['4', '01'],
+		['5', '02'],
+		['6', '04'],
+		['7', '04'],
+		['8', '04']
+	])
+		await sighting(directory, id(digit), `2026-10-${day}T12:00:00`);
+	await folder.name([id('1'), id('2'), id('3')], '412');
+	await folder.name([id('4'), id('5')], '87');
+	await groups(directory, [[id('6')], ['412', '87']], [[id('7')], ['87']], [[id('8')], []]);
+
+	const overview = await folder.overview();
+	assert.deepEqual(
+		overview.named.map((identity) => [identity.name, identity.days]),
+		[
+			['87', 2],
+			['412', 3]
+		]
+	);
+	assert.deepEqual(
+		overview.groups.map((group) => [group.ids, group.suggestions[0], group.reference?.id]),
+		[
+			[[id('7')], '87', id('5')],
+			[[id('6')], '412', id('3')],
+			[[id('8')], undefined, undefined]
+		]
+	);
 });
 
 test('naming writes the whole names file the detector reads, and a name can be taken off again', async (t) => {

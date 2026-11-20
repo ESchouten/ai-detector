@@ -198,6 +198,8 @@ msgstr "Per importare i file, apri la dashboard localhost sul computer su cui è
 #: src/lib/server/cameras/relocation.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/identities/+page.server.ts
+#: src/routes/(admin)/identities/+page.svelte
 msgid "Camera"
 msgstr "Telecamera"
 
@@ -1299,6 +1301,10 @@ msgstr "Mantieni connessione attuale"
 #: src/lib/components/heartbeat-settings.svelte
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/phone-alarm-editor.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Salvataggio…"
 
@@ -2168,6 +2174,7 @@ msgstr "Invia di nuovo il test"
 #: src/lib/navigation.ts
 #: src/routes/(admin)/advanced/+page.svelte
 #: src/routes/(admin)/devices/+page.svelte
+#: src/routes/(admin)/identities/+page.svelte
 #: src/routes/(admin)/logs/+page.svelte
 #: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/settings/+page.svelte
@@ -2240,6 +2247,8 @@ msgstr "Attendi…"
 
 #: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Salva"
 
@@ -3792,10 +3801,12 @@ msgstr[0] "Ancora # avvistamento somiglia a questi."
 msgstr[1] "Altri # avvistamenti somigliano a questi."
 msgstr[2] "Altri # avvistamenti somigliano a questi."
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Looks most like"
 msgstr "Somiglia di più a"
 
+#: src/routes/(admin)/identities/live-naming.svelte
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Name or number"
 msgstr "Nome o numero"
@@ -4158,3 +4169,47 @@ msgstr ""
 "\n"
 "Include i log ruotati disponibili, i log di compilazione più recenti di TensorRT e Windows ML, i dettagli del runtime e le impostazioni con i dati sensibili oscurati. Non include registrazioni. Controlla i file prima di condividerli: i log possono contenere percorsi locali e indirizzi delle telecamere.\n"
 ""
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "and # more"
+msgid_plural "and # more"
+msgstr[0] "e # altra"
+msgstr[1] "e altre #"
+msgstr[2] "e altre #"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "An identity named on fewer than three days is recognised less often and can get the name of one that looks like it. Tap it in the live picture or name its groups below."
+msgstr "Un’identità con nomi di meno di tre giorni viene riconosciuta meno spesso e può ricevere il nome di un’altra che le somiglia. Toccala nell’immagine dal vivo o dai un nome ai suoi gruppi qui sotto."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name these on more days"
+msgstr "Dai un nome a queste in più giorni"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# day"
+msgid_plural "# days"
+msgstr[0] "# giorno"
+msgstr[1] "# giorni"
+msgstr[2] "# giorni"
+
+#. 0: guess
+#. 0: guess
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Is this {0}?"
+msgstr "È {0}?"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Yes"
+msgstr "Sì"
+
+#: src/routes/(admin)/identities/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "No"
+msgstr "No"
+
+#. 0: guess
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This picture was named {0} before."
+msgstr "Questa foto ha già ricevuto il nome {0}."

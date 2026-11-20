@@ -21,6 +21,9 @@
 	const field = $derived(`name-${group.ids[0]}`);
 	let name = $state('');
 	let saving = $state(false);
+	// Asked whether it is the one it looks most like, until a person says no.
+	let declined = $state(false);
+	const guess = $derived(declined ? undefined : group.suggestions[0]);
 
 	function toggle(id: string) {
 		if (leftOut.has(id)) leftOut.delete(id);
@@ -85,6 +88,7 @@
 				if (result.type === 'success') {
 					leftOut.clear();
 					name = '';
+					declined = false;
 				}
 				saving = false;
 			};
@@ -93,31 +97,53 @@
 		{#each kept as id (id)}
 			<input type="hidden" name="sighting" value={id} />
 		{/each}
-		<label for={field} class="text-sm font-medium">Name or number</label>
-		<div class="flex gap-2">
-			<Input
-				id={field}
-				name="name"
-				bind:value={name}
-				list={names}
-				maxlength={40}
-				autocomplete="off"
-				required
-				class="max-w-48"
-			/>
-			<Button type="submit" disabled={saving || !kept.length}>
-				{saving ? 'Saving…' : 'Save'}
-			</Button>
-		</div>
-		{#if group.suggestions.length}
-			<div class="flex flex-wrap items-center gap-2">
-				<span class="text-xs text-muted-foreground">Looks most like</span>
-				{#each group.suggestions as suggestion (suggestion)}
-					<Button type="button" size="sm" variant="outline" onclick={() => (name = suggestion)}>
-						{suggestion}
-					</Button>
-				{/each}
+		{#if guess}
+			<div class="flex items-center gap-3">
+				{#if group.reference}
+					<div class="relative size-24 shrink-0 overflow-hidden rounded-lg bg-media">
+						<SightingPicture sighting={group.reference} loading="lazy" />
+					</div>
+				{/if}
+				<div class="flex flex-col gap-2">
+					<p class="text-sm font-medium">Is this {guess}?</p>
+					{#if group.reference}
+						<p class="text-xs text-muted-foreground">This picture was named {guess} before.</p>
+					{/if}
+					<div class="flex gap-2">
+						<Button type="submit" name="name" value={guess} disabled={saving || !kept.length}>
+							{saving ? 'Saving…' : 'Yes'}
+						</Button>
+						<Button type="button" variant="outline" onclick={() => (declined = true)}>No</Button>
+					</div>
+				</div>
 			</div>
+		{:else}
+			<label for={field} class="text-sm font-medium">Name or number</label>
+			<div class="flex gap-2">
+				<Input
+					id={field}
+					name="name"
+					bind:value={name}
+					list={names}
+					maxlength={40}
+					autocomplete="off"
+					required
+					class="max-w-48"
+				/>
+				<Button type="submit" disabled={saving || !kept.length}>
+					{saving ? 'Saving…' : 'Save'}
+				</Button>
+			</div>
+			{#if group.suggestions.length}
+				<div class="flex flex-wrap items-center gap-2">
+					<span class="text-xs text-muted-foreground">Looks most like</span>
+					{#each group.suggestions as suggestion (suggestion)}
+						<Button type="button" size="sm" variant="outline" onclick={() => (name = suggestion)}>
+							{suggestion}
+						</Button>
+					{/each}
+				</div>
+			{/if}
 		{/if}
 	</form>
 </article>

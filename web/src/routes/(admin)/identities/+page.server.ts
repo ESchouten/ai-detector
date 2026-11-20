@@ -26,13 +26,16 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
 	name: async ({ request }) => {
 		const form = await request.formData();
+		// The Yes button sends the name it asked about; the name field sends a typed one.
+		const guess = form.get('confirm');
 		const parsed = v.safeParse(nameSightingsInput, {
 			sightings: form.getAll('sighting'),
-			name: form.get('name') ?? ''
+			name: guess ?? form.get('name') ?? '',
+			confirmed: guess !== null
 		});
 		if (!parsed.success) return fail(400, { message: parsed.issues[0].message });
 		try {
-			await individuals.name(parsed.output.sightings, parsed.output.name);
+			await individuals.name(parsed.output.sightings, parsed.output.name, parsed.output.confirmed);
 		} catch (error) {
 			if (error instanceof SightingMissingError) return fail(400, { message: error.message });
 			throw error;

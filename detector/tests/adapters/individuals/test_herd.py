@@ -56,9 +56,10 @@ def herd_of(tmp_path, metadata=None, coat=False):
     )
 
 
-def name(herd, names):
+def name(herd, names, confirmed=()):
     (herd.directory / "names.json").write_text(
-        json.dumps({"version": 1, "names": names}), encoding="utf-8"
+        json.dumps({"version": 1, "names": names, "confirmed": list(confirmed)}),
+        encoding="utf-8",
     )
 
 
@@ -145,6 +146,29 @@ def test_tracks_in_one_picture_are_never_recognised_as_the_same_individual(
     assert [twin.name for twin in twins] == ["412", None]
     assert "412" not in [candidate.name for candidate in twins[1].candidates]
     assert identifier.identity(SOURCE, 11) == twins[1]
+
+
+def test_names_given_by_a_yes_are_compared_against_but_set_no_threshold(tmp_path):
+    herd = herd_of(tmp_path)
+    named = {}
+    for day in (1, 2):
+        individuals = TrackIdentifier(herd).identify(event(day, whole_herd()), "e" * 32)
+        named |= {i.sighting: list(COATS)[i.track_id - 1] for i in individuals}
+
+    # Every name was a Yes to a guess: nothing is asked, so nobody is recognised.
+    name(herd, named, confirmed=named)
+    [guessed] = TrackIdentifier(herd).identify(
+        event(3, [(8, "412", PLACES[0])]), "a" * 32
+    )
+    assert guessed.name is None and guessed.candidates[0].name == "412"
+
+    # With the first day's names given by hand, those are asked against the rest.
+    first_day = list(named)[: len(named) // 2]
+    name(herd, named, confirmed=[s for s in named if s not in first_day])
+    [recognised] = TrackIdentifier(herd).identify(
+        event(4, [(9, "412", PLACES[0])]), "b" * 32
+    )
+    assert recognised.name == "412"
 
 
 def groups(herd):

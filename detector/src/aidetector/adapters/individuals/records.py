@@ -2,7 +2,7 @@
 
 ```text
 individuals/
-├── names.json                 written by people: sighting ID -> name
+├── names.json                 written by people: sighting ID -> name, and which were a Yes
 ├── groups.json                written by the detector: unnamed look-alikes
 └── sightings/<sighting ID>/
     ├── sighting.json          written once by the detector
@@ -58,6 +58,8 @@ class NamesFile(BaseModel):
 
     version: Literal[1] = 1
     names: dict[SightingId, Annotated[str, Field(min_length=1, pattern=r"\S")]] = {}
+    # Sightings named by answering Yes to the detector's own guess.
+    confirmed: list[SightingId] = []
 
 
 class Suggestion(BaseModel):

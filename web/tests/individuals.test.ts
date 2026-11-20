@@ -135,7 +135,8 @@ test('naming writes the whole names file the detector reads, and a name can be t
 	const written = JSON.parse(await readFile(path.join(directory, 'names.json'), 'utf8'));
 	assert.deepEqual(written, {
 		version: 1,
-		names: { [id('1')]: '412', [id('2')]: '412', [id('3')]: '87' }
+		names: { [id('1')]: '412', [id('2')]: '412', [id('3')]: '87' },
+		confirmed: []
 	});
 	const overview = await folder.overview();
 	assert.deepEqual(
@@ -162,6 +163,22 @@ test('naming writes the whole names file the detector reads, and a name can be t
 		[[id('3')], [id('1')]]
 	);
 	assert.equal((await folder.overview()).unnamed, 1);
+});
+
+test("a name given by a Yes to the detector's guess is marked so, until it is typed or taken off", async (t) => {
+	const directory = await temporaryDirectory(t, 'individuals-');
+	const folder = new IndividualsFolder(directory);
+	for (const digit of ['1', '2', '3']) await sighting(directory, id(digit), '2026-10-01T12:00:00');
+	const confirmed = async () =>
+		JSON.parse(await readFile(path.join(directory, 'names.json'), 'utf8')).confirmed;
+
+	await folder.name([id('1')], '412');
+	await folder.name([id('2'), id('3')], '412', true);
+	assert.deepEqual(await confirmed(), [id('2'), id('3')]);
+
+	await folder.name([id('2')], '87');
+	await folder.unname([id('3')]);
+	assert.deepEqual(await confirmed(), []);
 });
 
 test('only existing sightings can be named and only their pictures are served', async (t) => {

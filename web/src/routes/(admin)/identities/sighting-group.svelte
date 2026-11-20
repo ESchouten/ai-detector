@@ -110,7 +110,7 @@
 						<p class="text-xs text-muted-foreground">This picture was named {guess} before.</p>
 					{/if}
 					<div class="flex gap-2">
-						<Button type="submit" name="name" value={guess} disabled={saving || !kept.length}>
+						<Button type="submit" name="confirm" value={guess} disabled={saving || !kept.length}>
 							{saving ? 'Saving…' : 'Yes'}
 						</Button>
 						<Button type="button" variant="outline" onclick={() => (declined = true)}>No</Button>

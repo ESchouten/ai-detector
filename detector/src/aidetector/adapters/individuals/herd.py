@@ -511,7 +511,9 @@ class Herd:
         signature = (status.st_mtime_ns, status.st_size, self._richer)
         if signature == self._known.signature:
             return self._known
-        names = NamesFile.model_validate_json(path.read_bytes()).names
+        file = NamesFile.model_validate_json(path.read_bytes())
+        names = file.names
+        confirmed = set(file.confirmed)
         self._later = {
             sighting: vectors
             for sighting, vectors in self._later.items()
@@ -538,6 +540,7 @@ class Herd:
                     record.seen[:10],
                     vectors,
                     self._later_vectors(sighting_id),
+                    sighting_id not in confirmed,
                 )
             )
             means[sighting_id] = _mean(vectors)

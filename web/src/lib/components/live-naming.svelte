@@ -34,12 +34,12 @@
 		declined = false;
 	});
 
-	async function save(given: string) {
+	async function save(given: string, confirmed: boolean) {
 		if (!identity) return;
 		saving = true;
 		message = '';
 		try {
-			await nameSighting({ sighting: identity.sighting, name: given });
+			await nameSighting({ sighting: identity.sighting, name: given, confirmed });
 			box = null;
 			await invalidateAll();
 		} catch (cause) {
@@ -91,7 +91,7 @@
 			{#if guess}
 				<div class="flex flex-col gap-2">
 					<div class="flex gap-2">
-						<Button disabled={saving} onclick={() => save(guess)}>
+						<Button disabled={saving} onclick={() => save(guess, true)}>
 							{saving ? 'Saving…' : 'Yes'}
 						</Button>
 						<Button variant="outline" disabled={saving} onclick={() => (declined = true)}>
@@ -105,7 +105,7 @@
 					class="flex flex-col gap-2"
 					onsubmit={(event) => {
 						event.preventDefault();
-						void save(name);
+						void save(name, false);
 					}}
 				>
 					<label for="live-name" class="text-sm font-medium">Name or number</label>

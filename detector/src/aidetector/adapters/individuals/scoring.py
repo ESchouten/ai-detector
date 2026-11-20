@@ -53,6 +53,10 @@ class NamedSighting:
     # are only ever compared against: a sighting asks with `vectors` alone, as
     # new tracks do.
     later: Vectors | None = None
+    # False when a person only said Yes to the detector's guess. Those are the
+    # sightings it finds easy, so they are compared against like any other,
+    # but the threshold check never asks with them.
+    asks: bool = True
 
     @property
     def known(self) -> Vectors:
@@ -313,8 +317,10 @@ def self_set_threshold(
     embedding from its own names, around the mean of all named sightings;
     centring on the unnamed ones too let the check set the threshold too low
     on a small herd. `compare` gives a sighting's similarity to each name, as
-    new tracks are compared. None until two days have names, or when no
-    threshold reaches the precision.
+    new tracks are compared. Sightings named by a Yes to the detector's guess
+    are only asked against: asking with them, its easy cases, set the threshold
+    too low. None until two days have names, or when no threshold reaches the
+    precision.
     """
     sessions = sorted({sighting.session for sighting in sightings})
     if len(sessions) < 2:
@@ -324,7 +330,11 @@ def self_set_threshold(
     best: list[float] = []
     correct: list[bool] = []
     for session in sessions:
-        queries = [sighting for sighting in sightings if sighting.session == session]
+        queries = [
+            sighting
+            for sighting in sightings
+            if sighting.session == session and sighting.asks
+        ]
         gallery = [sighting for sighting in sightings if sighting.session != session]
         candidates = sorted(
             {query.name for query in queries} & {known.name for known in gallery}

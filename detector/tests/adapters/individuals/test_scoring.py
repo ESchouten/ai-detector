@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 import numpy as np
 import pytest
 
@@ -186,6 +188,25 @@ def test_shared_coat_details_settle_what_the_embedding_leaves_too_close_to_call(
     np.testing.assert_allclose(fused, [0.88, 0.72])
     [sure] = decide_together([fused], [set()], [None], 0.3)
     assert sure.recognised and sure.scores.argmax() == 0
+
+
+def test_the_threshold_check_never_asks_with_sightings_named_by_a_yes():
+    asked = []
+
+    def compare(sighting, known):
+        asked.append(sighting.session)
+        return known.similarities(sighting.vectors)
+
+    by_hand, by_yes = herd([1]), [replace(s, asks=False) for s in herd([2])]
+    threshold = self_set_threshold(by_hand + by_yes, 0.99, compare=compare)
+
+    # The first day's sightings were asked against the confirmed ones.
+    assert threshold is not None
+    assert set(asked) == {"2026-10-01"}
+    assert self_set_threshold(by_yes + herd([3]), 0.99) is not None
+    assert (
+        self_set_threshold([replace(s, asks=False) for s in herd([1, 2])], 0.99) is None
+    )
 
 
 def test_the_threshold_is_set_on_sightings_compared_as_new_tracks_are():

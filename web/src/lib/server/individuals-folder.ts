@@ -18,6 +18,8 @@ const PICTURE = /^crop-[1-9]\d*\.jpg$/;
 interface NamesFile {
 	version: 1;
 	names: Record<string, string>;
+	/** Sightings named by a Yes to the detector's guess; its threshold check never asks with them. */
+	confirmed?: string[];
 }
 
 interface GroupsFile {
@@ -142,31 +144,43 @@ export class IndividualsFolder {
 		return record && { ...record, name: names[id] ?? null };
 	}
 
-	#change(update: (names: Record<string, string>) => Promise<void>): Promise<void> {
+	#change(
+		update: (names: Record<string, string>, confirmed: Set<string>) => Promise<void>
+	): Promise<void> {
 		const change = this.#changes.then(async () => {
-			const names = await this.#readNames();
-			await update(names);
-			await writeJson(this.#names, { version: 1, names });
+			const file = await readJson<NamesFile>(this.#names);
+			const names = file?.names ?? {};
+			const confirmed = new Set(file?.confirmed);
+			await update(names, confirmed);
+			await writeJson(this.#names, { version: 1, names, confirmed: [...confirmed] });
 		});
 		this.#changes = change.catch(() => undefined);
 		return change;
 	}
 
-	/** Gives sightings one name; a name already given is the same individual. */
-	name(sightings: string[], name: string): Promise<void> {
-		return this.#change(async (names) => {
+	/**
+	 * Gives sightings one name; a name already given is the same individual. `confirmed` says the
+	 * name was a Yes to the detector's own guess, not typed or picked by the person.
+	 */
+	name(sightings: string[], name: string, confirmed = false): Promise<void> {
+		return this.#change(async (names, yeses) => {
 			for (const id of sightings) {
 				if (!SIGHTING_ID.test(id) || !(await this.#record(id)))
 					throw new SightingMissingError('A picture to name no longer exists. Reload the page.');
 				names[id] = name;
+				if (confirmed) yeses.add(id);
+				else yeses.delete(id);
 			}
 		});
 	}
 
 	/** Takes the names off sightings, which then wait to be named again. */
 	unname(sightings: string[]): Promise<void> {
-		return this.#change(async (names) => {
-			for (const id of sightings) delete names[id];
+		return this.#change(async (names, yeses) => {
+			for (const id of sightings) {
+				delete names[id];
+				yeses.delete(id);
+			}
 		});
 	}
 

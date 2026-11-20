@@ -61,5 +61,7 @@ export const nameSightingsInput = v.object({
 		v.array(sightingIdInput),
 		v.minLength(1, () => 'Keep at least one picture to name.')
 	),
-	name: individualNameInput
+	name: individualNameInput,
+	/** Whether the name was a Yes to the detector's guess. */
+	confirmed: v.boolean()
 });

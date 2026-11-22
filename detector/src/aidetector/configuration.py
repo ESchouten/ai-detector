@@ -398,7 +398,9 @@ class TagsConfig(_ConfigModel):
     )
     digits: PositiveInt = Field(
         default=4,
-        description="How many digits the number has; other reads are not suggested.",
+        description="How many digits the number has. A read with one digit more "
+        "counts as its first digits, since a small check digit may follow the "
+        "number; other reads are not suggested.",
     )
 
 

@@ -54,11 +54,11 @@ def event(day, cows, frames=3, label="cow"):
     )
 
 
-def herd_of(tmp_path, metadata=None, coat=False, tags=False):
+def herd_of(tmp_path, metadata=None, coat=False, tags=""):
     path = tmp_path / ("model.onnx" if metadata is None else "other.onnx")
     write_embedding_model(path, metadata=metadata)
     model = EmbeddingModel(str(path), model_key(str(path)))
-    finder, lines, reader = write_tag_models(tmp_path) if tags else (None,) * 3
+    finder, lines, reader = write_tag_models(tmp_path, tags) if tags else (None,) * 3
     return Herd(
         tmp_path / "individuals",
         model,
@@ -697,7 +697,7 @@ def test_the_number_on_a_tracks_tag_is_suggested_once_two_pictures_agree(
     tmp_path, monkeypatch
 ):
     monkeypatch.setattr(herd_module, "LOOKING", 0)
-    herd = herd_of(tmp_path, tags=True)
+    herd = herd_of(tmp_path, tags="5359")
     identifier = TrackIdentifier(herd)
     # Saved after 4 seconds, and her tag read on the next picture.
     watch_tagged(identifier, 6)
@@ -733,7 +733,7 @@ def test_the_number_on_a_tracks_tag_is_suggested_once_two_pictures_agree(
 
 
 def test_a_number_the_reader_is_not_sure_of_is_kept_but_never_suggested(tmp_path):
-    herd = herd_of(tmp_path, tags=True)
+    herd = herd_of(tmp_path, tags="5359")
     identifier = TrackIdentifier(herd)
 
     watch_tagged(identifier, 12, GREY)
@@ -748,12 +748,26 @@ def test_a_number_the_reader_is_not_sure_of_is_kept_but_never_suggested(tmp_path
     ]
 
 
+def test_a_digit_too_many_on_a_tag_is_left_off_the_suggestion(tmp_path):
+    # As where the small check digit after a number is read with it.
+    herd = herd_of(tmp_path, tags="53596")
+    identifier = TrackIdentifier(herd)
+
+    watch_tagged(identifier, 12)
+
+    checked = identifier.identity(SOURCE, 1)
+    assert checked is not None
+    assert checked.tag == "5359"
+    record, _ = tags_of(herd, checked)
+    assert (record.number, {crop.read for crop in record.crops}) == ("5359", {"53596"})
+
+
 def test_tag_pictures_are_written_now_and_then_and_only_the_tallest_kept(
     tmp_path, monkeypatch
 ):
     monkeypatch.setattr(herd_module, "KEEPING", 4)
     monkeypatch.setattr(herd_module, "TAG_CROPS", 3)
-    herd = herd_of(tmp_path, tags=True)
+    herd = herd_of(tmp_path, tags="5359")
     identifier = TrackIdentifier(herd)
 
     watch_tagged(identifier, 14, GREY)
@@ -765,7 +779,7 @@ def test_tag_pictures_are_written_now_and_then_and_only_the_tallest_kept(
 
 
 def test_a_tag_beside_the_individuals_outline_is_not_hers(tmp_path):
-    herd = herd_of(tmp_path, tags=True)
+    herd = herd_of(tmp_path, tags="5359")
     identifier = TrackIdentifier(herd)
     # Her outline is the right half of her box; the tag hangs in the left.
     outline = ((160, 40), (260, 40), (260, 200), (160, 200))

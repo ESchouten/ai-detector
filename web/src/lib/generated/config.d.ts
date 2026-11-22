@@ -163,7 +163,7 @@ export type Lines = string;
  */
 export type Reader = string;
 /**
- * How many digits the number has; other reads are not suggested.
+ * How many digits the number has. A read with one digit more counts as its first digits, since a small check digit may follow the number; other reads are not suggested.
  */
 export type Digits = number;
 

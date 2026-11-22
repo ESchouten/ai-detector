@@ -110,19 +110,13 @@ class _Reader:
         x1, y1, x2, y2 = line
         across, down = LINE_MARGIN * (x2 - x1), LINE_MARGIN * (y2 - y1)
         width, height = self._size
+        # The line with its margin, stretched over the whole of the input.
+        left, top = x1 - across, y1 - down
+        wider = (width - 1) / (x2 + across - left)
+        taller = (height - 1) / (y2 + down - top)
         stretched = cv2.warpAffine(
             image,
-            cv2.getAffineTransform(
-                np.asarray(
-                    [
-                        [x1 - across, y1 - down],
-                        [x2 + across, y1 - down],
-                        [x1 - across, y2 + down],
-                    ],
-                    np.float32,
-                ),
-                np.asarray([[0, 0], [width - 1, 0], [0, height - 1]], np.float32),
-            ),
+            np.array([[wider, 0, -left * wider], [0, taller, -top * taller]]),
             self._size,
             flags=cv2.INTER_LINEAR,
             borderMode=cv2.BORDER_REPLICATE,
@@ -166,11 +160,13 @@ class TagReader:
             left, top, right, bottom = around(image, box, TAG_MARGIN)
             crop = image[top:bottom, left:right].copy()
             scale = self._lines.size / 2 / max(crop.shape[:2])
+            size = (
+                max(1, round(crop.shape[1] * scale)),
+                max(1, round(crop.shape[0] * scale)),
+            )
             shown = cv2.resize(
                 crop,
-                None,
-                fx=scale,
-                fy=scale,
+                size,
                 interpolation=cv2.INTER_CUBIC if scale > 1 else cv2.INTER_AREA,
             )
             lines = self._lines.found(shown, LINE_FOUND)

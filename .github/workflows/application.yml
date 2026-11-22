@@ -393,6 +393,8 @@ jobs:
         env:
           APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
         run: |
+          # Newer runner images come without apt-ftparchive.
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends apt-utils
           gpg --batch --import <<< "$APT_SIGNING_KEY"
           apt-ftparchive packages . > Packages
           apt-ftparchive release . | gpg --batch --clearsign > InRelease

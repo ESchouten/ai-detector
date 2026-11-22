@@ -100,6 +100,10 @@ def prepare_macos(feed: bytes, folder: Path, version: str, bases: int = 2) -> No
         enclosure = item.find("enclosure")
         if enclosure is not None and enclosure.get("url") not in available:
             channel.remove(item)
+    if channel.find("item") is None:
+        # As for a first release. A feed left without items would also lose the
+        # Sparkle namespace, and Sparkle cannot add this release to that.
+        return
     ET.register_namespace("sparkle", SPARKLE)
     (folder / "appcast.xml").write_bytes(ET.tostring(tree, encoding="utf-8"))
 

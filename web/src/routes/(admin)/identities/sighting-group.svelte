@@ -6,6 +6,7 @@
 	import { plural, recentMoment } from '$lib/format';
 	import type { SightingGroup } from '$lib/individuals';
 	import SightingPicture from '$lib/components/sighting-picture.svelte';
+	import TagPictures from '$lib/components/tag-pictures.svelte';
 
 	let {
 		group,
@@ -21,9 +22,15 @@
 	const field = $derived(`name-${group.ids[0]}`);
 	let name = $state('');
 	let saving = $state(false);
-	// Asked whether it is the one it looks most like, until a person says no.
+	// Asked whether it is the number on the tag in one of its pictures or else the one it looks
+	// most like, until a person says no.
 	let declined = $state(false);
-	const guess = $derived(declined ? undefined : group.suggestions[0]);
+	const tagged = $derived(
+		group.shown.find((sighting) => sighting.tag && !leftOut.has(sighting.id))
+	);
+	const asked = $derived(tagged?.tag?.number ?? group.suggestions.at(0));
+	const guess = $derived(declined ? undefined : asked);
+	const others = $derived(group.suggestions.filter((suggestion) => suggestion !== asked));
 
 	function toggle(id: string) {
 		if (leftOut.has(id)) leftOut.delete(id);
@@ -98,19 +105,29 @@
 			<input type="hidden" name="sighting" value={id} />
 		{/each}
 		{#if guess}
-			<div class="flex items-center gap-3">
-				{#if group.reference}
+			<div class="flex flex-wrap items-center gap-3">
+				{#if tagged?.tag}
+					<TagPictures sighting={tagged} tag={tagged.tag} />
+				{:else if group.reference}
 					<div class="relative size-24 shrink-0 overflow-hidden rounded-lg bg-media">
 						<SightingPicture sighting={group.reference} loading="lazy" />
 					</div>
 				{/if}
 				<div class="flex flex-col gap-2">
 					<p class="text-sm font-medium">Is this {guess}?</p>
-					{#if group.reference}
+					{#if tagged}
+						<p class="text-xs text-muted-foreground">This number was read from its tag.</p>
+					{:else if group.reference}
 						<p class="text-xs text-muted-foreground">This picture was named {guess} before.</p>
 					{/if}
 					<div class="flex gap-2">
-						<Button type="submit" name="confirm" value={guess} disabled={saving || !kept.length}>
+						<!-- A Yes to a likeness is the detector's own guess; a number read from a tag is not. -->
+						<Button
+							type="submit"
+							name={tagged ? 'name' : 'confirm'}
+							value={guess}
+							disabled={saving || !kept.length}
+						>
 							{saving ? 'Saving…' : 'Yes'}
 						</Button>
 						<Button type="button" variant="outline" onclick={() => (declined = true)}>No</Button>
@@ -134,10 +151,10 @@
 					{saving ? 'Saving…' : 'Save'}
 				</Button>
 			</div>
-			{#if group.suggestions.length > 1}
+			{#if others.length}
 				<div class="flex flex-wrap items-center gap-2">
 					<span class="text-xs text-muted-foreground">Looks most like</span>
-					{#each group.suggestions.slice(1) as suggestion (suggestion)}
+					{#each others as suggestion (suggestion)}
 						<Button type="button" size="sm" variant="outline" onclick={() => (name = suggestion)}>
 							{suggestion}
 						</Button>

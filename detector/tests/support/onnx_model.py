@@ -172,3 +172,101 @@ def write_coat_models(directory, metadata=None):
         onnx.save(model, directory / f"{name}.onnx")
         paths.append(str(directory / f"{name}.onnx"))
     return paths
+
+
+def _white_patch_finder(size):
+    """A detector with its box selection built in: one box around the
+    picture's pixels lighter than 0.7 in every channel, of class 0."""
+
+    def edge(along, last):
+        return helper.make_node(
+            "ArgMax",
+            [along],
+            [f"{along}-{last}"],
+            axis=1,
+            keepdims=1,
+            select_last_index=last,
+        )
+
+    return helper.make_graph(
+        [
+            helper.make_node(
+                "ReduceMin", ["images"], ["darkest"], axes=[1], keepdims=0
+            ),
+            helper.make_node("Greater", ["darkest", "light"], ["is-light"]),
+            helper.make_node("Cast", ["is-light"], ["lit"], to=TensorProto.FLOAT),
+            helper.make_node("ReduceMax", ["lit"], ["columns"], axes=[1], keepdims=0),
+            helper.make_node("ReduceMax", ["lit"], ["lines"], axes=[2], keepdims=0),
+            edge("columns", 0),
+            edge("lines", 0),
+            edge("columns", 1),
+            edge("lines", 1),
+            helper.make_node(
+                "Concat",
+                ["columns-0", "lines-0", "columns-1", "lines-1"],
+                ["corners"],
+                axis=1,
+            ),
+            helper.make_node("Cast", ["corners"], ["inside"], to=TensorProto.FLOAT),
+            helper.make_node("Add", ["inside", "outer"], ["box"]),
+            helper.make_node("ReduceMax", ["columns"], ["sure"], axes=[1], keepdims=1),
+            helper.make_node("Concat", ["box", "sure", "class"], ["row"], axis=1),
+            helper.make_node("Unsqueeze", ["row", "first"], ["output0"]),
+        ],
+        "detector-contract",
+        [
+            helper.make_tensor_value_info(
+                "images", TensorProto.FLOAT, [1, 3, size, size]
+            )
+        ],
+        [helper.make_tensor_value_info("output0", TensorProto.FLOAT, [1, 1, 6])],
+        initializer=[
+            numpy_helper.from_array(np.array(0.7, np.float32), "light"),
+            numpy_helper.from_array(np.array([[0, 0, 1, 1]], np.float32), "outer"),
+            numpy_helper.from_array(np.array([[0]], np.float32), "class"),
+            numpy_helper.from_array(np.array([0], np.int64), "first"),
+        ],
+    )
+
+
+def write_tag_models(directory, number="5359", charset="ab0123456789"):
+    """Real, tiny tag models. The finder and the lines model each find the
+    light patch of their picture; the reader reads `number` from any line,
+    surer the lighter the line is: sure of a white one, not of a grey one."""
+    places = np.zeros((len(number) + 1, len(charset) + 1), np.float32)
+    for position, digit in enumerate(number):
+        places[position, 1 + charset.index(digit)] = 12
+    places[len(number), 0] = 12
+    reader = helper.make_graph(
+        [
+            helper.make_node("ReduceMean", ["image"], ["lightness"], keepdims=0),
+            helper.make_node("Mul", ["places", "lightness"], ["scores"]),
+            helper.make_node("Unsqueeze", ["scores", "first"], ["logits"]),
+        ],
+        "reader-contract",
+        [helper.make_tensor_value_info("image", TensorProto.FLOAT, [1, 3, 8, 32])],
+        [
+            helper.make_tensor_value_info(
+                "logits", TensorProto.FLOAT, [1, *places.shape]
+            )
+        ],
+        initializer=[
+            numpy_helper.from_array(places, "places"),
+            numpy_helper.from_array(np.array([0], np.int64), "first"),
+        ],
+    )
+    paths = []
+    for name, graph in (
+        ("finder", _white_patch_finder(288)),
+        ("lines", _white_patch_finder(64)),
+        ("reader", reader),
+    ):
+        model = helper.make_model(
+            graph, opset_imports=[helper.make_opsetid("", 13)], ir_version=9
+        )
+        if name == "reader":
+            helper.set_model_props(model, {"charset": charset})
+        onnx.checker.check_model(model)
+        onnx.save(model, directory / f"{name}.onnx")
+        paths.append(str(directory / f"{name}.onnx"))
+    return paths

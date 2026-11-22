@@ -4197,3 +4197,12 @@ msgstr "Nein"
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "This picture was named {0} before."
 msgstr "Dieses Bild wurde früher {0} genannt."
+
+#. 0: identity.tag
+#: src/lib/components/live-naming.svelte
+msgid "Its tag was read as {0}. Check the number in the picture."
+msgstr "Auf der Marke wurde {0} gelesen. Prüfen Sie die Nummer im Bild."
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This number was read from its tag."
+msgstr "Diese Nummer wurde von der Marke abgelesen."

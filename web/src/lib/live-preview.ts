@@ -7,7 +7,9 @@ const identitySchema = v.object({
 	/** Set when the detector recognises it, or a person named this sighting. */
 	name: v.nullable(v.string()),
 	/** The named identities it resembles most, best first. */
-	candidates: v.array(v.object({ name: v.string(), score: coordinate }))
+	candidates: v.array(v.object({ name: v.string(), score: coordinate })),
+	/** The number the detector read from the tag it wears, for a person to confirm. */
+	tag: v.nullable(v.string())
 });
 /** The boxes of one analyzed picture, with coordinates in pixels of the given image size. */
 export const frameSchema = v.object({
@@ -61,19 +63,25 @@ export function boxOutline(box: DetectionBox): string {
 	return points.map(([x, y]) => `${x},${y}`).join(' ');
 }
 
-/** `412` when recognised, `412?` when it only resembles 412, nothing before anything is named. */
+/** Who an unnamed one probably is: the number read from its tag, or else the name it resembles most. */
+export function identityGuess(identity: NonNullable<DetectionBox['identity']>): string | undefined {
+	return identity.tag ?? identity.candidates.at(0)?.name;
+}
+
+/** `412` when recognised, `412?` when that is only a guess, nothing before there is one. */
 export function identityLabel(identity: DetectionBox['identity']): string | null {
 	if (!identity) return null;
 	if (identity.name !== null) return identity.name;
-	return identity.candidates.length ? `${identity.candidates[0].name}?` : null;
+	const guess = identityGuess(identity);
+	return guess === undefined ? null : `${guess}?`;
 }
 
-/** Recognised, only resembling a name, or not named at all. */
+/** Recognised, only guessed from a likeness or a tag, or not named at all. */
 export type IdentityState = 'recognised' | 'resembles' | 'unnamed';
 
 export function identityState(identity: NonNullable<DetectionBox['identity']>): IdentityState {
 	if (identity.name !== null) return 'recognised';
-	return identity.candidates.length ? 'resembles' : 'unnamed';
+	return identityGuess(identity) === undefined ? 'unnamed' : 'resembles';
 }
 
 /** A box shows who it is as a pill once it resembles someone, and while naming always. */

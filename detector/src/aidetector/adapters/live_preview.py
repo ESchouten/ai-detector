@@ -33,6 +33,7 @@ def _identity(individual: Individual | None) -> dict | None:
             {"name": candidate.name, "score": round(candidate.score, 3)}
             for candidate in individual.candidates
         ],
+        "tag": individual.tag,
     }
 
 

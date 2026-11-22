@@ -290,6 +290,7 @@ def test_tracked_detections_become_sightings_and_their_names_reach_the_archive(
         write_coat_models,
         write_detection_model,
         write_embedding_model,
+        write_tag_models,
     )
 
     source = tmp_path / "input.png"
@@ -299,6 +300,7 @@ def test_tracked_detections_become_sightings_and_their_names_reach_the_archive(
     write_detection_model(tmp_path / "model.onnx", box=(6, 6, 58, 58), segment=True)
     write_embedding_model(tmp_path / "herd.onnx")
     write_coat_models(tmp_path)
+    write_tag_models(tmp_path)
     (tmp_path / "config.json").write_text(
         json.dumps(
             {
@@ -307,6 +309,11 @@ def test_tracked_detections_become_sightings_and_their_names_reach_the_archive(
                     "model": "herd.onnx",
                     "labels": "cow",
                     "coat": {"keypoints": "keypoints.onnx", "matcher": "matcher.onnx"},
+                    "tags": {
+                        "finder": "finder.onnx",
+                        "lines": "lines.onnx",
+                        "reader": "reader.onnx",
+                    },
                 },
                 "detectors": [
                     {
@@ -355,6 +362,7 @@ def test_tracked_detections_become_sightings_and_their_names_reach_the_archive(
     assert [candidate["name"] for candidate in suggested["candidates"]] == ["412"]
     assert "Individuals: 412" in logs
     assert "Comparing coat details too" in logs
+    assert "Reading the numbers on tags too" in logs
 
 
 def test_launcher_keeps_shared_camera_rule_and_archive_failures_distinct(tmp_path):

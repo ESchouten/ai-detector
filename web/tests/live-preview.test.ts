@@ -202,7 +202,7 @@ test(
 test('tracked boxes carry who they are to the camera picture', { timeout: 5000 }, async (t) => {
 	const { session, frame, open } = await fixture(t);
 	await session();
-	const identity = { sighting: 'a'.repeat(32), name: '412', candidates: [] };
+	const identity = { sighting: 'a'.repeat(32), name: '412', candidates: [], tag: null };
 	await frame('detector-1', { boxes: [{ ...box, identity }] });
 	await frame('detector-2', { boxes: [{ ...box, identity: { ...identity, sighting: '..' } }] });
 	const { reader } = open();
@@ -218,7 +218,8 @@ test('a box shows the name it is recognised by, and only suggests one when unsur
 		candidates: [
 			{ name: '412', score: 0.4 },
 			{ name: '233', score: 0.1 }
-		]
+		],
+		tag: null
 	};
 	assert.equal(detectionBoxLabel(box), 'cow · 90% · #17');
 	assert.equal(detectionBoxLabel({ ...box, identity }), '412? · #17');
@@ -227,15 +228,20 @@ test('a box shows the name it is recognised by, and only suggests one when unsur
 		detectionBoxLabel({ ...box, identity: { ...identity, candidates: [] } }),
 		'cow · 90% · #17'
 	);
+	// The number read from its tag says more than a likeness, and less than a name.
+	const tagged = { ...identity, tag: '5359' };
+	assert.equal(detectionBoxLabel({ ...box, identity: tagged }), '5359? · #17');
+	assert.equal(detectionBoxLabel({ ...box, identity: { ...tagged, name: '412' } }), '412 · #17');
 });
 
 test('a pill shows who a box is once it resembles someone, and while naming even before', () => {
-	const unnamed = { sighting: 'a'.repeat(32), name: null, candidates: [] };
+	const unnamed = { sighting: 'a'.repeat(32), name: null, candidates: [], tag: null };
 	const resembles = { ...unnamed, candidates: [{ name: '412', score: 0.4 }] };
 	assert.equal(showsPill(box, true), false);
 	assert.equal(showsPill({ ...box, identity: unnamed }, false), false);
 	assert.equal(showsPill({ ...box, identity: unnamed }, true), true);
 	assert.equal(showsPill({ ...box, identity: resembles }, false), true);
+	assert.equal(showsPill({ ...box, identity: { ...unnamed, tag: '5359' } }, false), true);
 });
 
 test('a pill points at the top of the outline nearest its middle', () => {

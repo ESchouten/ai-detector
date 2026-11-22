@@ -4178,3 +4178,12 @@ msgstr "否"
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "This picture was named {0} before."
 msgstr "这张图片之前被命名为 {0}。"
+
+#. 0: identity.tag
+#: src/lib/components/live-naming.svelte
+msgid "Its tag was read as {0}. Check the number in the picture."
+msgstr "标牌上读到的是 {0}。请对照图片核对号码。"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This number was read from its tag."
+msgstr "这个号码是从它的标牌上读出的。"

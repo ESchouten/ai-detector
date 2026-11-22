@@ -9,6 +9,11 @@ export interface Sighting {
 	crops: number;
 	/** Each picture's outline as [x, y] points in its pixels; none without segmentation. */
 	outlines: [number, number][][];
+	/**
+	 * The number the detector read from the tag it wears, for a person to confirm: read from
+	 * tag-read.jpg, which is the part `box` (x1, y1, x2, y2) of tag-picture.jpg.
+	 */
+	tag: { number: string; box: [number, number, number, number] } | null;
 }
 
 /** Unnamed sightings that look alike, to name at once. */

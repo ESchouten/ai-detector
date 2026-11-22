@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 from datetime import datetime
 from threading import Event
 
@@ -10,11 +11,20 @@ from aidetector.adapters.individuals import herd as herd_module
 from aidetector.adapters.individuals.coat import CoatModel
 from aidetector.adapters.individuals.embedding import EmbeddingModel, model_key
 from aidetector.adapters.individuals.herd import Herd, TrackIdentifier
-from aidetector.adapters.individuals.records import GroupsFile, SightingRecord
+from aidetector.adapters.individuals.records import (
+    GroupsFile,
+    SightingRecord,
+    TagRecord,
+)
+from aidetector.adapters.individuals.tags import TagReader
 from aidetector.application.ports import IdentificationUnavailable, camera_id
 from aidetector.configuration import IndividualsConfig
 from aidetector.domain.models import BoundingBox, DetectionEvent, Observation
-from tests.support.onnx_model import write_coat_models, write_embedding_model
+from tests.support.onnx_model import (
+    write_coat_models,
+    write_embedding_model,
+    write_tag_models,
+)
 
 SOURCE = "rtsp://camera.invalid/stream"
 # BGR coat colours stand in for coat patterns: the test model embeds mean colour.
@@ -44,15 +54,21 @@ def event(day, cows, frames=3, label="cow"):
     )
 
 
-def herd_of(tmp_path, metadata=None, coat=False):
+def herd_of(tmp_path, metadata=None, coat=False, tags=False):
     path = tmp_path / ("model.onnx" if metadata is None else "other.onnx")
     write_embedding_model(path, metadata=metadata)
     model = EmbeddingModel(str(path), model_key(str(path)))
+    finder, lines, reader = write_tag_models(tmp_path) if tags else (None,) * 3
     return Herd(
         tmp_path / "individuals",
         model,
-        IndividualsConfig(model=str(path), labels="cow"),
+        IndividualsConfig(
+            model=str(path),
+            labels="cow",
+            tags={"finder": finder, "lines": lines, "reader": reader} if tags else None,
+        ),
         CoatModel(*write_coat_models(tmp_path)) if coat else None,
+        TagReader(finder, lines, reader) if tags else None,
     )
 
 
@@ -652,3 +668,123 @@ def test_closing_does_not_compare_the_coats_still_waiting(
     herd.close()
 
     assert "Comparing coat details failed" not in caplog.text
+
+
+WHITE, GREY = (255, 255, 255), (190, 190, 190)
+# A cow, with a tag on her ear in the corner of her box.
+COW, TAG = (60, 40, 260, 200), (70, 50, 100, 100)
+
+
+def watch_tagged(identifier, seconds, colour=WHITE, outline=(), start=0):
+    """Observe one tagged cow once a second, letting the models finish."""
+    for second in range(start, start + seconds):
+        seen = observation(1, second, [(1, "412", COW)])
+        x1, y1, x2, y2 = TAG
+        seen.image[y1:y2, x1:x2] = colour
+        [box] = seen.boxes
+        tagged = replace(seen, boxes=(replace(box, outline=outline),))
+        identifier.observe(SOURCE, tagged)
+        identifier.herd.flush()
+
+
+def tags_of(herd, individual):
+    folder = herd.sightings / individual.sighting
+    record = TagRecord.model_validate_json((folder / "tag.json").read_text())
+    return record, sorted(path.name for path in folder.glob("tag-*.jpg"))
+
+
+def test_the_number_on_a_tracks_tag_is_suggested_once_two_pictures_agree(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "LOOKING", 0)
+    herd = herd_of(tmp_path, tags=True)
+    identifier = TrackIdentifier(herd)
+    # Saved after 4 seconds, and her tag read on the next picture.
+    watch_tagged(identifier, 6)
+    once = identifier.identity(SOURCE, 1)
+    assert once is not None
+    assert once.tag is None
+    record, pictures = tags_of(herd, once)
+    assert (record.number, record.box, pictures) == (None, None, ["tag-1.jpg"])
+    assert [(crop.read, crop.confidence > 0.9) for crop in record.crops] == [
+        ("5359", True)
+    ]
+
+    # Two seconds on it is read again, and suggested with the picture it was
+    # read from: her box with a margin, in which `box` is the tag.
+    watch_tagged(identifier, 2, start=6)
+    twice = identifier.identity(SOURCE, 1)
+    assert twice is not None
+    assert (twice.tag, twice.name, twice.sighting) == ("5359", None, once.sighting)
+    record, pictures = tags_of(herd, twice)
+    assert pictures == ["tag-1.jpg", "tag-2.jpg", "tag-picture.jpg", "tag-read.jpg"]
+    assert (record.number, record.box) == ("5359", (40, 34, 70, 84))
+    folder = herd.sightings / twice.sighting
+    assert cv2.imread(str(folder / "tag-picture.jpg")).shape[:2] == (208, 260)
+    read = cv2.imread(str(folder / "tag-read.jpg"))
+    assert read.shape[:2] == (50 + 2 * 8, 30 + 2 * 4)
+    assert read[25, 15].min() > 240
+
+    # The name a person then gives it shows instead; the tag stays known.
+    name(herd, {twice.sighting: "5359"})
+    named = identifier.identity(SOURCE, 1)
+    assert named is not None
+    assert (named.name, named.tag) == ("5359", "5359")
+
+
+def test_a_number_the_reader_is_not_sure_of_is_kept_but_never_suggested(tmp_path):
+    herd = herd_of(tmp_path, tags=True)
+    identifier = TrackIdentifier(herd)
+
+    watch_tagged(identifier, 12, GREY)
+
+    unsure = identifier.identity(SOURCE, 1)
+    assert unsure is not None
+    assert unsure.tag is None
+    record, pictures = tags_of(herd, unsure)
+    assert (record.number, pictures) == (None, ["tag-1.jpg"])
+    assert [(crop.read, crop.confidence < 0.9) for crop in record.crops] == [
+        ("5359", True)
+    ]
+
+
+def test_tag_pictures_are_written_now_and_then_and_only_the_tallest_kept(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "KEEPING", 4)
+    monkeypatch.setattr(herd_module, "TAG_CROPS", 3)
+    herd = herd_of(tmp_path, tags=True)
+    identifier = TrackIdentifier(herd)
+
+    watch_tagged(identifier, 14, GREY)
+
+    # Read at 5, 7, 9, 11 and 13 seconds; written at 5, 9 and 13.
+    record, pictures = tags_of(herd, identifier.identity(SOURCE, 1))
+    assert pictures == ["tag-1.jpg", "tag-2.jpg", "tag-3.jpg"]
+    assert len(record.crops) == 3
+
+
+def test_a_tag_beside_the_individuals_outline_is_not_hers(tmp_path):
+    herd = herd_of(tmp_path, tags=True)
+    identifier = TrackIdentifier(herd)
+    # Her outline is the right half of her box; the tag hangs in the left.
+    outline = ((160, 40), (260, 40), (260, 200), (160, 200))
+
+    watch_tagged(identifier, 12, outline=outline)
+
+    other = identifier.identity(SOURCE, 1)
+    assert other is not None
+    assert other.tag is None
+    assert not (herd.sightings / other.sighting / "tag.json").exists()
+
+
+def test_tags_are_not_looked_for_without_a_reader(tmp_path):
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+
+    watch_tagged(identifier, 12)
+
+    plain = identifier.identity(SOURCE, 1)
+    assert plain is not None
+    assert plain.tag is None
+    assert not (herd.sightings / plain.sighting / "tag.json").exists()

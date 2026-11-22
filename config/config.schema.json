@@ -325,6 +325,18 @@
           ],
           "default": null,
           "description": "Also compare coat details; needs pictures of individuals a few hundred pixels across."
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TagsConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Also read the number on each individual's tag and suggest it as the name; needs tags some 50 pixels high."
         }
       },
       "required": [
@@ -459,6 +471,47 @@
         "source"
       ],
       "title": "SourceConfig",
+      "type": "object"
+    },
+    "TagsConfig": {
+      "additionalProperties": false,
+      "description": "Read the number on the tag an individual wears, to suggest as its name.",
+      "properties": {
+        "finder": {
+          "description": "ONNX model that finds tags in a picture of an individual, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Finder",
+          "type": "string"
+        },
+        "lines": {
+          "description": "ONNX model that finds the lines of text on a tag, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Lines",
+          "type": "string"
+        },
+        "reader": {
+          "description": "ONNX model that reads a line of text, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Reader",
+          "type": "string"
+        },
+        "digits": {
+          "default": 4,
+          "description": "How many digits the number has; other reads are not suggested.",
+          "exclusiveMinimum": 0,
+          "title": "Digits",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "finder",
+        "lines",
+        "reader"
+      ],
+      "title": "TagsConfig",
       "type": "object"
     },
     "TelegramConfig": {

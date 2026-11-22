@@ -13,13 +13,19 @@ import { isMissingFile, readJson, writeJson } from './json-file.ts';
 const GROUPS_SHOWN = 24;
 const PICTURES_SHOWN = 12;
 const SIGHTING_ID = /^[a-f0-9]{32}$/;
-const PICTURE = /^crop-[1-9]\d*\.jpg$/;
+const PICTURE = /^(crop-[1-9]\d*|tag-picture|tag-read)\.jpg$/;
 
 interface NamesFile {
 	version: 1;
 	names: Record<string, string>;
 	/** Sightings named by a Yes to the detector's guess; its threshold check never asks with them. */
 	confirmed?: string[];
+}
+
+/** What the detector's tag reader keeps in a sighting; only a number it suggests is shown. */
+interface TagFile {
+	number: string | null;
+	box: [number, number, number, number] | null;
 }
 
 interface GroupsFile {
@@ -57,9 +63,18 @@ export class IndividualsFolder {
 	}
 
 	async #record(id: string): Promise<Sighting | null> {
-		const record = await readJson<Sighting>(path.join(this.#sighting(id), 'sighting.json'));
+		const [record, tag] = await Promise.all([
+			readJson<Sighting>(path.join(this.#sighting(id), 'sighting.json')),
+			readJson<TagFile>(path.join(this.#sighting(id), 'tag.json'))
+		]);
 		return (
-			record && { id, seen: record.seen, crops: record.crops, outlines: record.outlines ?? [] }
+			record && {
+				id,
+				seen: record.seen,
+				crops: record.crops,
+				outlines: record.outlines ?? [],
+				tag: tag?.number && tag.box ? { number: tag.number, box: tag.box } : null
+			}
 		);
 	}
 
@@ -184,7 +199,7 @@ export class IndividualsFolder {
 		});
 	}
 
-	/** Where a sighting's picture is, for a picture name such as crop-1.jpg. */
+	/** Where a sighting's picture is, for a picture name such as crop-1.jpg or tag-read.jpg. */
 	picture(sighting: string, picture: string): string | null {
 		return SIGHTING_ID.test(sighting) && PICTURE.test(picture)
 			? path.join(this.#sighting(sighting), picture)

@@ -142,6 +142,7 @@ class Individual:
     none before anything is named. The best is recognised only when its score
     clears the threshold the installation set from its own named sightings.
     `sighting` names the saved pictures of this track that a person can name.
+    `tag` is the number read from the tag it wears, for a person to confirm.
     """
 
     track_id: int
@@ -149,6 +150,7 @@ class Individual:
     sighting: str
     candidates: tuple[Candidate, ...] = ()
     recognised: bool = False
+    tag: str | None = None
 
     @property
     def name(self) -> str | None:

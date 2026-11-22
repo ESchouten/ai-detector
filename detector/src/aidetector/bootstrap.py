@@ -18,6 +18,7 @@ from aidetector.adapters.individuals.embedding import (
     model_key,
 )
 from aidetector.adapters.individuals.herd import SIGHTING_CROPS, Herd, TrackIdentifier
+from aidetector.adapters.individuals.tags import TagReader
 from aidetector.adapters.inference.model_assets import resolve_model_path
 from aidetector.adapters.inference.onnx import ModelRequirements, inference_runtime
 from aidetector.adapters.live_preview import LivePreview
@@ -137,10 +138,11 @@ def _individuals_models(
     config_directory: Path,
     data_directory: Path,
     report_status: ReportStatus,
-) -> tuple[str | None, CoatModel | None]:
-    """The embedding model's file and, when configured, the coat check."""
+) -> tuple[str | None, CoatModel | None, TagReader | None]:
+    """The embedding model's file and, when configured, the coat check and the
+    tag reader."""
     if config is None:
-        return None, None
+        return None, None, None
 
     def file(model: str) -> str:
         path = resolve_model_path(
@@ -154,11 +156,20 @@ def _individuals_models(
             raise RuntimeError(message)
         return path
 
-    model = file(config.model)
-    if config.coat is None:
-        return model, None
-    # Opened before the inference runtime: the coat check runs on the processor.
-    return model, CoatModel(file(config.coat.keypoints), file(config.coat.matcher))
+    # Opened before the inference runtime: both run on the processor.
+    coat = (
+        None
+        if config.coat is None
+        else CoatModel(file(config.coat.keypoints), file(config.coat.matcher))
+    )
+    tags = (
+        None
+        if config.tags is None
+        else TagReader(
+            file(config.tags.finder), file(config.tags.lines), file(config.tags.reader)
+        )
+    )
+    return file(config.model), coat, tags
 
 
 def _model_requirements(
@@ -185,6 +196,7 @@ def _open_herd(
     config: IndividualsConfig | None,
     model: str | None,
     coat: CoatModel | None,
+    tags: TagReader | None,
     data_directory: Path,
     resources: ExitStack,
 ) -> Herd | None:
@@ -195,6 +207,7 @@ def _open_herd(
         EmbeddingModel(model, model_key(model)),
         config,
         coat,
+        tags,
     )
     # Registered before the detectors, so it saves their last sightings after them.
     resources.callback(herd.close)
@@ -257,7 +270,7 @@ def run_application(
         log_detector_configuration(
             index, settings, _resolved_sources(settings.detection, config_directory)
         )
-    individuals_model, coat = _individuals_models(
+    individuals_model, coat, tags = _individuals_models(
         config.individuals, config_directory, data_directory, report_status
     )
     models = _model_requirements(config, individuals_model)
@@ -287,7 +300,7 @@ def run_application(
                 report_status,
             )
         herd = _open_herd(
-            config.individuals, individuals_model, coat, data_directory, resources
+            config.individuals, individuals_model, coat, tags, data_directory, resources
         )
         streams = StreamPool(report_status)
         preview = LivePreview(data_directory / "live") if live_preview else None

@@ -121,7 +121,12 @@ class Herd:
         if track_id != 7:
             return None
         return Individual(
-            7, "cow", "a" * 32, (Candidate("412", 0.61), Candidate("233", 0.2)), True
+            7,
+            "cow",
+            "a" * 32,
+            (Candidate("412", 0.61), Candidate("233", 0.2)),
+            True,
+            "5359",
         )
 
 
@@ -142,6 +147,7 @@ def test_tracked_boxes_carry_who_they_are(tmp_path):
                 {"name": "412", "score": 0.61},
                 {"name": "233", "score": 0.2},
             ],
+            "tag": "5359",
         }
         publish("camera", observation(None))
         untracked = wait_for(

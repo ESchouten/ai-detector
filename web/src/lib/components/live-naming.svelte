@@ -3,10 +3,11 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
-	import { identityLabel, type DetectionBox } from '$lib/live-preview';
+	import { identityGuess, type DetectionBox } from '$lib/live-preview';
 	import { errorMessage } from '$lib/remote-calls';
 	import { getSighting, nameSighting } from '$lib/remote/identities.remote';
 	import SightingPicture from './sighting-picture.svelte';
+	import TagPictures from './tag-pictures.svelte';
 
 	let {
 		box = $bindable(),
@@ -21,10 +22,13 @@
 	let name = $state('');
 	let saving = $state(false);
 	let message = $state('');
-	// Asked whether it is the one it looks most like, until a person says no.
+	// Asked whether it is the number on its tag or else the one it looks most like, until a person
+	// says no.
 	let declined = $state(false);
-	const guess = $derived(
-		identity?.name === null && !declined ? identity.candidates.at(0)?.name : undefined
+	const asked = $derived(identity?.name === null ? identityGuess(identity) : undefined);
+	const guess = $derived(declined ? undefined : asked);
+	const others = $derived(
+		identity?.candidates.filter((candidate) => candidate.name !== asked) ?? []
 	);
 
 	$effect(() => {
@@ -58,7 +62,6 @@
 >
 	<Dialog.Content class="sm:max-w-lg">
 		{#if box && identity}
-			{@const shown = identityLabel(identity)}
 			<Dialog.Header>
 				<Dialog.Title>
 					{#if guess}Is this {guess}?{:else}Who is this?{/if}
@@ -66,7 +69,9 @@
 				<Dialog.Description>
 					{#if identity.name !== null}
 						Shown as {identity.name}. Enter another name or number if that is wrong.
-					{:else if shown}
+					{:else if identity.tag !== null}
+						Its tag was read as {identity.tag}. Check the number in the picture.
+					{:else if identity.candidates.length}
 						Looks most like {identity.candidates[0].name}, but not enough to be sure.
 					{:else}
 						Give it a name or number; the camera then recognises it.
@@ -82,6 +87,9 @@
 							</li>
 						{/each}
 					</ul>
+					{#if sighting.tag && sighting.tag.number === guess}
+						<TagPictures {sighting} tag={sighting.tag} />
+					{/if}
 				{:else}
 					<p class="text-sm text-muted-foreground">
 						Its pictures were removed. Wait for the box to show it again.
@@ -91,7 +99,8 @@
 			{#if guess}
 				<div class="flex flex-col gap-2">
 					<div class="flex gap-2">
-						<Button disabled={saving} onclick={() => save(guess, true)}>
+						<!-- A Yes to a likeness is the detector's own guess; a number read from a tag is not. -->
+						<Button disabled={saving} onclick={() => save(guess, guess !== identity.tag)}>
 							{saving ? 'Saving…' : 'Yes'}
 						</Button>
 						<Button variant="outline" disabled={saving} onclick={() => (declined = true)}>
@@ -121,10 +130,10 @@
 						/>
 						<Button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save'}</Button>
 					</div>
-					{#if identity.candidates.length > (declined ? 1 : 0)}
+					{#if others.length}
 						<div class="flex flex-wrap items-center gap-2">
 							<span class="text-xs text-muted-foreground">Looks most like</span>
-							{#each identity.candidates.slice(declined ? 1 : 0) as candidate (candidate.name)}
+							{#each others as candidate (candidate.name)}
 								<Button
 									type="button"
 									size="sm"

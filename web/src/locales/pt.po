@@ -4215,3 +4215,12 @@ msgstr "Não"
 #: src/routes/(admin)/identities/sighting-group.svelte
 msgid "This picture was named {0} before."
 msgstr "Esta foto já recebeu o nome {0}."
+
+#. 0: identity.tag
+#: src/lib/components/live-naming.svelte
+msgid "Its tag was read as {0}. Check the number in the picture."
+msgstr "Na marca foi lido {0}. Confira o número na foto."
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This number was read from its tag."
+msgstr "Este número foi lido na marca."

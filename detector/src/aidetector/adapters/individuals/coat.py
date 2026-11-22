@@ -27,6 +27,19 @@ SIDE_MIN = 32
 SURE = 0.5
 
 
+def processor_session(path: str) -> Any:
+    """An ONNX Runtime session on the processor."""
+    import onnxruntime as ort
+
+    options = ort.SessionOptions()
+    # Camera capture and the detectors need the processor between runs.
+    options.add_session_config_entry("session.intra_op.allow_spinning", "0")
+    options.add_session_config_entry("session.inter_op.allow_spinning", "0")
+    return ort.InferenceSession(
+        path, sess_options=options, providers=["CPUExecutionProvider"]
+    )
+
+
 @dataclass(frozen=True)
 class Described:
     """One picture's keypoints as the matcher takes them."""
@@ -46,20 +59,9 @@ class CoatModel:
     """
 
     def __init__(self, keypoints: str, matcher: str):
-        import onnxruntime as ort
-
         self.key = model_key(keypoints)[:8] + model_key(matcher)[:8]
-        options = ort.SessionOptions()
-        # Camera capture and the detectors need the processor between runs.
-        options.add_session_config_entry("session.intra_op.allow_spinning", "0")
-        options.add_session_config_entry("session.inter_op.allow_spinning", "0")
-        providers = ["CPUExecutionProvider"]
-        self._keypoints: Any = ort.InferenceSession(
-            keypoints, sess_options=options, providers=providers
-        )
-        self._matcher: Any = ort.InferenceSession(
-            matcher, sess_options=options, providers=providers
-        )
+        self._keypoints = processor_session(keypoints)
+        self._matcher = processor_session(matcher)
         metadata = self._keypoints.get_modelmeta().custom_metadata_map
         self._size = int(metadata.get("size", SIZE))
 

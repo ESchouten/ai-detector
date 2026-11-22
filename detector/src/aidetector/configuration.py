@@ -381,6 +381,27 @@ class CoatConfig(_ConfigModel):
     )
 
 
+class TagsConfig(_ConfigModel):
+    """Read the number on the tag an individual wears, to suggest as its name."""
+
+    finder: OnnxFile = Field(
+        description="ONNX model that finds tags in a picture of an individual, as "
+        "a path or an http(s) URL ending in .onnx."
+    )
+    lines: OnnxFile = Field(
+        description="ONNX model that finds the lines of text on a tag, as a path "
+        "or an http(s) URL ending in .onnx."
+    )
+    reader: OnnxFile = Field(
+        description="ONNX model that reads a line of text, as a path or an "
+        "http(s) URL ending in .onnx."
+    )
+    digits: PositiveInt = Field(
+        default=4,
+        description="How many digits the number has; other reads are not suggested.",
+    )
+
+
 class IndividualsConfig(_ConfigModel):
     """Recognise individual animals of tracked classes, shared by every detector."""
 
@@ -399,6 +420,11 @@ class IndividualsConfig(_ConfigModel):
         default=None,
         description="Also compare coat details; needs pictures of individuals a "
         "few hundred pixels across.",
+    )
+    tags: TagsConfig | None = Field(
+        default=None,
+        description="Also read the number on each individual's tag and suggest it "
+        "as the name; needs tags some 50 pixels high.",
     )
 
     @field_validator(

@@ -9,7 +9,8 @@ individuals/
     ├── crop-1.jpg, ...        the track's best pictures, whole
     ├── vectors-<model>.npy    their embeddings, per model file
     ├── later-<model>.npy      embeddings of the track's later pictures
-    └── coat-<models>.json     coat details shared with named pictures
+    ├── coat-<models>.json     coat details shared with named pictures
+    └── tag.json, tag-*.jpg    what the tags on the track's pictures showed
 ```
 """
 
@@ -49,6 +50,29 @@ class CoatRecord(BaseModel):
     version: Literal[1] = 1
     # Per other sighting, the count for each of its pictures compared, by place.
     shared: dict[SightingId, dict[int, int]]
+
+
+class TagCrop(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    # What the tag's number line read as, and how sure the reader was.
+    read: str
+    confidence: float
+
+
+class TagRecord(BaseModel):
+    """What the tags on a track's pictures showed, replaced as more are seen."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    version: Literal[1] = 1
+    # The number the reader was sure of on more than one tag picture, for a
+    # person to confirm: read from tag-read.jpg, which is the part `box` (x1,
+    # y1, x2, y2) of tag-picture.jpg.
+    number: str | None = None
+    box: tuple[int, int, int, int] | None = None
+    # tag-1.jpg and onwards: the tallest tags seen, to train a reader with.
+    crops: list[TagCrop] = []
 
 
 class NamesFile(BaseModel):

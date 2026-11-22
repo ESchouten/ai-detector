@@ -313,3 +313,17 @@ def test_a_coat_check_needs_both_of_its_models_as_onnx():
     for invalid in ({"keypoints": "keypoints.onnx"}, coat | {"matcher": "matcher.pt"}):
         with pytest.raises(ValidationError):
             IndividualsConfig(model="herd.onnx", labels="cow", coat=invalid)
+
+
+def test_reading_tags_needs_its_three_models_as_onnx():
+    tags = {"finder": "finder.onnx", "lines": "lines.onnx", "reader": "reader.onnx"}
+    config = IndividualsConfig(model="herd.onnx", labels="cow", tags=tags)
+    assert config.tags is not None
+    assert (config.tags.reader, config.tags.digits) == ("reader.onnx", 4)
+    for invalid in (
+        {"finder": "finder.onnx", "lines": "lines.onnx"},
+        tags | {"reader": "reader.pt"},
+        tags | {"digits": 0},
+    ):
+        with pytest.raises(ValidationError):
+            IndividualsConfig(model="herd.onnx", labels="cow", tags=invalid)

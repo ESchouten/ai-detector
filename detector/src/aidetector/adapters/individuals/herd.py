@@ -30,6 +30,8 @@ from aidetector.adapters.individuals.records import (
     SightingGroup,
     SightingRecord,
     Suggestion,
+    TagCrop,
+    TagRecord,
 )
 from aidetector.adapters.individuals.scoring import (
     Decision,
@@ -40,6 +42,7 @@ from aidetector.adapters.individuals.scoring import (
     self_set_threshold,
     with_coat,
 )
+from aidetector.adapters.individuals.tags import TAG_MARGIN, Tag, TagReader, around
 from aidetector.adapters.media import MediaError
 from aidetector.adapters.media.images import encode_jpeg
 from aidetector.application.ports import IdentificationUnavailable, camera_id
@@ -96,6 +99,14 @@ DESCRIBED_MAX = 64
 REGROUPING = 30.0
 # Seconds between looks at names.json for live pictures.
 LOOKING = 1.0
+# With a tag reader, a saved track's picture is searched for tags every
+# TAG_LOOK seconds of source time, when the reader has time. A number is
+# suggested once the reader was TAG_SURE of it on TAG_AGREEING tag pictures,
+# and the TAG_CROPS tallest tags are kept as pictures.
+TAG_LOOK = 2.0
+TAG_SURE = 0.9
+TAG_AGREEING = 2
+TAG_CROPS = 16
 
 
 @dataclass(frozen=True)
@@ -408,6 +419,93 @@ class _Later:
             self.spacing *= 2
 
 
+@dataclass(frozen=True)
+class _Read:
+    """A tag whose number the reader was sure of, in the picture it was on."""
+
+    tag: Tag
+    picture: Image
+    times: int = 1
+
+
+class _Tags:
+    """What the tags on a track's pictures showed. Filled on the tag
+    reader's thread; `number` is also read for live pictures."""
+
+    def __init__(self) -> None:
+        self.crops: list[Tag] = []
+        self.sure: dict[str, _Read] = {}
+        self.number: str | None = None
+        self.kept: datetime | None = None
+        self.unkept = False
+
+    def add(self, tags: Sequence[Tag], picture: Image, digits: int) -> None:
+        """Count the numbers the reader is sure of, each with its surest tag,
+        and keep the tallest tags."""
+        for tag in tags:
+            text = tag.text
+            if (
+                tag.confidence < TAG_SURE
+                or len(text) != digits
+                or not (text.isascii() and text.isdigit())
+            ):
+                continue
+            read = self.sure.get(text)
+            if read is None:
+                self.sure[text] = _Read(tag, picture)
+            elif tag.confidence > read.tag.confidence:
+                self.sure[text] = _Read(tag, picture, read.times + 1)
+            else:
+                self.sure[text] = replace(read, times=read.times + 1)
+        if not tags:
+            return
+        self.unkept = True
+        self.crops = sorted(
+            [*self.crops, *tags], key=lambda tag: tag.crop.shape[0], reverse=True
+        )[:TAG_CROPS]
+        agreed = [
+            number for number, read in self.sure.items() if read.times >= TAG_AGREEING
+        ]
+        self.number = max(
+            agreed, key=lambda number: self.sure[number].times, default=None
+        )
+
+    def record(self) -> tuple[TagRecord, dict[str, Image]]:
+        """What to keep in the sighting's folder: the record and its pictures."""
+        pictures = {
+            f"tag-{index}.jpg": tag.crop for index, tag in enumerate(self.crops, 1)
+        }
+        crops = [
+            TagCrop(read=tag.text, confidence=round(tag.confidence, 3))
+            for tag in self.crops
+        ]
+        if self.number is None:
+            return TagRecord(crops=crops), pictures
+        read = self.sure[self.number]
+        scale = min(1.0, SIDE_MAX / max(read.picture.shape[:2]))
+        picture = read.picture
+        if scale < 1:
+            size = (
+                max(1, round(picture.shape[1] * scale)),
+                max(1, round(picture.shape[0] * scale)),
+            )
+            picture = cv2.resize(picture, size, interpolation=cv2.INTER_AREA)
+        pictures |= {"tag-picture.jpg": picture, "tag-read.jpg": read.tag.crop}
+        x1, y1, x2, y2 = (round(value * scale) for value in read.tag.box)
+        return TagRecord(
+            number=self.number, box=(x1, y1, x2, y2), crops=crops
+        ), pictures
+
+
+def _worn(tag: Tag, outline: NDArray[np.int32]) -> bool:
+    """Whether a tag hangs on the individual with this outline: its middle is
+    within the outline or no further from it than half the tag's height, since
+    a segmentation model may leave the tag itself out."""
+    x1, y1, x2, y2 = tag.box
+    centre = ((x1 + x2) / 2, (y1 + y2) / 2)
+    return cv2.pointPolygonTest(outline, centre, measureDist=True) >= (y1 - y2) / 2
+
+
 def _individual(
     track_id: int,
     label: str,
@@ -430,6 +528,33 @@ def _individual(
     return Individual(track_id, label, sighting.id, candidates, decision.recognised)
 
 
+class _Spare:
+    """Work for one thread that can be skipped: no more is taken while
+    WAITING_MAX jobs wait for it."""
+
+    def __init__(self, work: ThreadPoolExecutor, report: Callable[[Future], None]):
+        self._work = work
+        self._report = report
+        self._waiting = 0
+        self._counting = Lock()
+
+    @property
+    def free(self) -> bool:
+        return self._waiting < WAITING_MAX
+
+    def submit(self, job: Callable[[], None]) -> None:
+        def run() -> None:
+            try:
+                job()
+            finally:
+                with self._counting:
+                    self._waiting -= 1
+
+        with self._counting:
+            self._waiting += 1
+        self._work.submit(run).add_done_callback(self._report)
+
+
 class Herd:
     """Named individuals and saved sightings in one folder, shared by every detector.
 
@@ -439,7 +564,8 @@ class Herd:
     its pictures. Sightings are embedded and saved one at a time on the herd's
     own thread, so detection never waits for the model. With a coat check, a
     second thread sets the threshold for its scores and compares the coats of
-    tracks on live pictures.
+    tracks on live pictures. With a tag reader, a third reads the tags on
+    tracks' pictures.
     """
 
     def __init__(
@@ -448,10 +574,13 @@ class Herd:
         model: EmbeddingModel,
         config: IndividualsConfig,
         coat: CoatModel | None = None,
+        tags: TagReader | None = None,
     ):
         self.directory = directory
         self.model = model
         self.coat = None if coat is None else CoatCheck(coat, self.sightings)
+        self.tags = tags
+        self.digits = 0 if config.tags is None else config.tags.digits
         self.labels = frozenset(config.labels)
         self.precision = config.precision
         logger.info(
@@ -462,13 +591,18 @@ class Herd:
         )
         if coat is not None:
             logger.info("Comparing coat details too, on the processor")
+        if tags is not None:
+            logger.info("Reading the numbers on tags too, on the processor")
         self._lock = Lock()
         self._known = _NOTHING_KNOWN
         self._index: dict[str, tuple[str, NDArray[np.float32]]] | None = None
         self._work = ThreadPoolExecutor(1, thread_name_prefix="individuals")
-        # Later pictures waiting for the model, and those of named sightings.
-        self._waiting = 0
-        self._counting = Lock()
+        # Pictures that can be skipped: a track's later ones, on the herd's
+        # thread, and those searched for tags, on their own.
+        self.sides = _Spare(self._work, _report_failure)
+        self._reading = ThreadPoolExecutor(1, thread_name_prefix="individuals-tags")
+        self.tagged = _Spare(self._reading, _report_tag_failure)
+        # The later pictures of named sightings.
         self._later: dict[str, NDArray[np.float32]] = {}
         self._richer = 0
         # The coat details each named sighting shares with the others' pictures.
@@ -747,6 +881,27 @@ class Herd:
                 self._later[sighting] = vectors
                 self._richer += 1
 
+    def keep_tags(self, sighting: str, tags: _Tags) -> None:
+        """Replace what a sighting's tags showed; a sighting removed meanwhile
+        keeps nothing."""
+        folder = self.sightings / sighting
+        record, pictures = tags.record()
+        files = {name: encode_jpeg(picture, 90) for name, picture in pictures.items()}
+        files["tag.json"] = record.model_dump_json().encode()
+        pending = folder / f"tag.{uuid4().hex}.tmp"
+        try:
+            # The record last, so it never names a picture that is not there.
+            for name, content in files.items():
+                pending.write_bytes(content)
+                pending.replace(folder / name)
+        except FileNotFoundError:
+            return
+        except OSError as error:
+            pending.unlink(missing_ok=True)
+            raise IdentificationUnavailable(
+                f"Cannot save a sighting's tags: {error}"
+            ) from error
+
     def submit[T](self, job: Callable[[], T]) -> Future[T]:
         """Run work on the herd's thread, after the work submitted before it."""
         return self._work.submit(job)
@@ -754,25 +909,6 @@ class Herd:
     def submit_coat[T](self, job: Callable[[], T]) -> Future[T]:
         """Compare coats on the second thread, after those submitted before."""
         return self._coats.submit(job)
-
-    @property
-    def spare(self) -> bool:
-        """Whether the model has time for pictures that can be skipped."""
-        return self._waiting < WAITING_MAX
-
-    def submit_spare(self, job: Callable[[], None]) -> None:
-        """Run work that could have been skipped; `spare` counts it until done."""
-
-        def run() -> None:
-            try:
-                job()
-            finally:
-                with self._counting:
-                    self._waiting -= 1
-
-        with self._counting:
-            self._waiting += 1
-        self._work.submit(run).add_done_callback(_report_failure)
 
     def _regroup_in_background(self) -> None:
         try:
@@ -791,10 +927,11 @@ class Herd:
         self._work.submit(self._regroup_in_background)
 
     def flush(self) -> None:
-        """Wait for the sightings being saved and the coats being compared,
-        then group any new ones."""
+        """Wait for the sightings being saved, the coats being compared and
+        the tags being read, then group any new ones."""
         self._work.submit(lambda: None).result()
         self._coats.submit(lambda: None).result()
+        self._reading.submit(lambda: None).result()
         with self._grouping:
             ungrouped, self._ungrouped = self._ungrouped, False
             self._regrouped = monotonic()
@@ -811,6 +948,7 @@ class Herd:
         finally:
             self._work.shutdown()
             self._coats.shutdown()
+            self._reading.shutdown()
 
 
 class _Track:
@@ -826,6 +964,9 @@ class _Track:
         self.later = _Later()
         self.asked = seen
         self.kept = seen
+        # The tags on its pictures, and when they were last looked for.
+        self.tags = _Tags()
+        self.looked = seen
         # Tracks seen in the same picture: other individuals.
         self.beside: set[int] = set()
         # The sighting's similarity to each named individual, with the names it
@@ -968,7 +1109,7 @@ class TrackIdentifier:
         box: BoundingBox,
     ) -> None:
         """Embed one more picture of a saved track, when the model has time."""
-        if min(box.x2 - box.x1, box.y2 - box.y1) < SIDE_MIN or not self.herd.spare:
+        if min(box.x2 - box.x1, box.y2 - box.y1) < SIDE_MIN or not self.herd.sides.free:
             return
         track.asked = observation.date
         picture, outline = _cut(observation.image, box)
@@ -983,7 +1124,71 @@ class TrackIdentifier:
             ]
             track.later.add(vector, sighting, beside)
 
-        self.herd.submit_spare(embed)
+        self.herd.sides.submit(embed)
+
+    def _look_for_tags(
+        self,
+        reader: TagReader,
+        track: _Track,
+        observation: Observation,
+        box: BoundingBox,
+    ) -> None:
+        """Read the tags on one more picture of a saved track, at the size the
+        camera gave it and with a margin, since ears stick out of a box, when
+        the reader has time."""
+        if (
+            min(box.x2 - box.x1, box.y2 - box.y1) < SIDE_MIN
+            or not self.herd.tagged.free
+        ):
+            return
+        moment = track.looked = observation.date
+        left, top, right, bottom = around(
+            observation.image, (box.x1, box.y1, box.x2, box.y2), TAG_MARGIN
+        )
+        picture = observation.image[top:bottom, left:right].copy()
+        outline = np.asarray(box.outline, np.int32).reshape(-1, 2) - (left, top)
+        tags = track.tags
+
+        def read() -> None:
+            if (sighting := track.saved) is None:
+                return
+            number = tags.number
+            tags.add(
+                [
+                    tag
+                    for tag in reader.read(picture)
+                    if not len(outline) or _worn(tag, outline)
+                ],
+                picture,
+                self.herd.digits,
+            )
+            # A new suggestion at once; the pictures every KEEPING seconds.
+            if tags.unkept and (
+                tags.number != number
+                or tags.kept is None
+                or (moment - tags.kept).total_seconds() >= KEEPING
+            ):
+                tags.unkept = False
+                tags.kept = moment
+                self.herd.keep_tags(sighting.id, tags)
+
+        self.herd.tagged.submit(read)
+
+    def _look_again(
+        self,
+        tracks: dict[int, _Track],
+        track: _Track,
+        observation: Observation,
+        box: BoundingBox,
+    ) -> None:
+        """Look at a saved track when it is time: at another side of it, and
+        at its tags."""
+        now = observation.date
+        if (now - track.asked).total_seconds() >= track.later.spacing:
+            self._look_later(tracks, track, observation, box)
+        reader = self.herd.tags
+        if reader is not None and (now - track.looked).total_seconds() >= TAG_LOOK:
+            self._look_for_tags(reader, track, observation, box)
 
     def _keep_later(self, track: _Track) -> None:
         def keep() -> None:
@@ -1020,8 +1225,8 @@ class TrackIdentifier:
                     # One coming in from the edge waits for a whole picture.
                     if since >= SETTLED and (track.pictures.whole or since >= PARTIAL):
                         self._save(source, track_id, track)
-                elif (now - track.asked).total_seconds() >= track.later.spacing:
-                    self._look_later(tracks, track, observation, box)
+                else:
+                    self._look_again(tracks, track, observation, box)
             self._seen_together(source, tracks, seen)
             for track_id, track in list(tracks.items()):
                 away = (now - track.last).total_seconds()
@@ -1139,7 +1344,10 @@ class TrackIdentifier:
             return None
         known = self._latest_known()
         self._check_soon(track, known, sighting)
-        return self._decided(source, known).get(track_id)
+        individual = self._decided(source, known).get(track_id)
+        if individual is None or track.tags.number is None:
+            return individual
+        return replace(individual, tag=track.tags.number)
 
     def _event_tracks(self, event: DetectionEvent) -> dict[int, _Track]:
         """The event's tracks, in the order they appear. Those live pictures
@@ -1213,3 +1421,4 @@ def _reporting(what: str) -> Callable[[Future], None]:
 
 _report_failure = _reporting("Saving a sighting")
 _report_coat_failure = _reporting("Comparing coat details")
+_report_tag_failure = _reporting("Reading a tag")

@@ -82,7 +82,9 @@ test('unnamed sightings are listed in the look-alike groups the detector made, t
 		{
 			name: '233',
 			ids: [id('3')],
-			shown: [{ id: id('3'), seen: '2026-10-02T08:00:00', crops: 1, outlines: [outline] }],
+			shown: [
+				{ id: id('3'), seen: '2026-10-02T08:00:00', crops: 1, outlines: [outline], tag: null }
+			],
 			days: 1
 		}
 	]);
@@ -154,6 +156,7 @@ test('naming writes the whole names file the detector reads, and a name can be t
 		seen: '2026-10-02T13:00:00',
 		crops: 1,
 		outlines: [outline],
+		tag: null,
 		name: '87'
 	});
 
@@ -194,11 +197,37 @@ test('only existing sightings can be named and only their pictures are served', 
 		folder.picture(id('1'), 'crop-1.jpg'),
 		path.join(directory, 'sightings', id('1'), 'crop-1.jpg')
 	);
+	for (const picture of ['tag-picture.jpg', 'tag-read.jpg'])
+		assert.equal(
+			folder.picture(id('1'), picture),
+			path.join(directory, 'sightings', id('1'), picture)
+		);
 	for (const [sightingId, picture] of [
 		[id('1'), 'sighting.json'],
+		[id('1'), 'tag.json'],
+		[id('1'), 'tag-1.jpg'],
 		[id('1'), '../crop-1.jpg'],
 		['..', 'crop-1.jpg'],
 		[id('1'), 'crop-0.jpg']
 	])
 		assert.equal(folder.picture(sightingId, picture), null);
+});
+
+test('a sighting carries the number read from its tag once the detector suggests one', async (t) => {
+	const directory = await temporaryDirectory(t, 'individuals-');
+	const folder = new IndividualsFolder(directory);
+	await sighting(directory, id('1'), '2026-10-01T12:00:00');
+	const tag = path.join(directory, 'sightings', id('1'), 'tag.json');
+
+	// Tags were seen, but no number read twice.
+	await writeFile(tag, JSON.stringify({ version: 1, number: null, box: null, crops: [] }));
+	assert.equal((await folder.sighting(id('1')))?.tag, null);
+
+	await writeFile(tag, JSON.stringify({ version: 1, number: '5359', box: [40, 34, 70, 84] }));
+	assert.deepEqual((await folder.sighting(id('1')))?.tag, {
+		number: '5359',
+		box: [40, 34, 70, 84]
+	});
+	const [group] = (await folder.overview()).groups;
+	assert.equal(group.shown[0].tag?.number, '5359');
 });

@@ -96,6 +96,10 @@ def linux_tree(folder: Path, version: str) -> Path:
     autostart = root / "etc" / "xdg" / "autostart"
     autostart.mkdir(parents=True)
     shutil.copy2(ASSETS / "linux" / "ai-detector.desktop", autostart)
+    # Later releases arrive through Ubuntu's software updates.
+    sources = root / "etc" / "apt" / "sources.list.d"
+    sources.mkdir(parents=True)
+    shutil.copy2(ASSETS / "linux" / "ai-detector.sources", sources)
     control = root / "DEBIAN"
     control.mkdir()
     (control / "control").write_text(

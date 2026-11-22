@@ -38,6 +38,10 @@ class InstallerTest(unittest.TestCase):
             "/etc/xdg/autostart/ai-detector.desktop",
             (root / "DEBIAN/conffiles").read_text(),
         )
+        self.assertIn(
+            "BEGIN PGP PUBLIC KEY BLOCK",
+            (root / "etc/apt/sources.list.d/ai-detector.sources").read_text(),
+        )
         self.assertIn("Architecture: amd64", (root / "DEBIAN/control").read_text())
         self.assertIn("Version: 1.2.3", (root / "DEBIAN/control").read_text())
         self.assertIn("zenity", (root / "DEBIAN/control").read_text())

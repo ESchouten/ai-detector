@@ -1,0 +1,14 @@
+Types: deb
+URIs: https://github.com/ESchouten/ai-detector/releases/latest/download/
+Suites: ./
+Signed-By:
+ -----BEGIN PGP PUBLIC KEY BLOCK-----
+ .
+ mDMEavxXIRYJKwYBBAHaRw8BAQdAKGVUG67E2Y0mZjgIOkNXnrSxUyZq6CJpbPa+
+ h8WUjse0GkFJIERldGVjdG9yIGFwdCByZXBvc2l0b3J5iK8EExYKAFcWIQRYSXhb
+ CV9KpuJLaNPaI2KvVcnwuQUCavxXIRsUgAAAAAAEAA5tYW51MiwyLjUrMS4xMiww
+ LDMCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQ2iNir1XJ8Lkb0gD5
+ AdsVvIr70zeJ/1ui8g/synkOawKFOpgm6PxNQMtQUp0BAMdTftAgrNpsy9mWmrBA
+ hzsysSq669RuOwIjT+kySk8B
+ =odLf
+ -----END PGP PUBLIC KEY BLOCK-----

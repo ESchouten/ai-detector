@@ -52,8 +52,10 @@ jobs:
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY != '' }}
           SPARKLE_PUBLIC_KEY: ${{ vars.SPARKLE_PUBLIC_KEY != '' }}
+          APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY != '' }}
         run: |
           missing=0
+          [ "$APT_SIGNING_KEY" = true ] || { echo '::error::Missing repository secret: APT_SIGNING_KEY'; missing=1; }
           [ "$SPARKLE_PRIVATE_KEY" = true ] || { echo '::error::Missing repository secret: SPARKLE_PRIVATE_KEY'; missing=1; }
           [ "$SPARKLE_PUBLIC_KEY" = true ] || { echo '::error::Missing repository variable: SPARKLE_PUBLIC_KEY'; missing=1; }
           exit "$missing"
@@ -384,6 +386,16 @@ jobs:
             python3 -m zipfile --create "${installer%.exe}.zip" "$installer"
             rm "$installer"
           done
+      - name: Sign an apt index, so Ubuntu updates from the latest official release
+        working-directory: downloads
+        # Bash by name fails the step when either side of the pipe fails.
+        shell: bash
+        env:
+          APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
+        run: |
+          gpg --batch --import <<< "$APT_SIGNING_KEY"
+          apt-ftparchive packages . > Packages
+          apt-ftparchive release . | gpg --batch --clearsign > InRelease
       - uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.RELEASE_TOKEN || github.token }}

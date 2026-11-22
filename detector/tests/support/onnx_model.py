@@ -232,10 +232,13 @@ def _white_patch_finder(size):
 def write_tag_models(directory, number="5359", charset="ab0123456789"):
     """Real, tiny tag models. The finder and the lines model each find the
     light patch of their picture; the reader reads `number` from any line,
-    surer the lighter the line is: sure of a white one, not of a grey one."""
+    surer the lighter the line is: sure of a white one, not of a grey one.
+    Digits after a space in `number` are small print, read but never surely."""
+    large, _, small = number.partition(" ")
+    number = large + small
     places = np.zeros((len(number) + 1, len(charset) + 1), np.float32)
     for position, digit in enumerate(number):
-        places[position, 1 + charset.index(digit)] = 12
+        places[position, 1 + charset.index(digit)] = 12 if position < len(large) else 1
     places[len(number), 0] = 12
     reader = helper.make_graph(
         [

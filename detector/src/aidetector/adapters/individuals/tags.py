@@ -42,12 +42,18 @@ PADDING = 114
 @dataclass(frozen=True)
 class Tag:
     """One tag in a picture: where it is, its pixels with a margin, and what
-    its number read as, with how sure the reader is of its least sure digit."""
+    its number read as, with how sure the reader is of each digit."""
 
     box: Box
     crop: Image
     text: str
-    confidence: float
+    sure: tuple[float, ...]
+
+    @property
+    def confidence(self) -> float:
+        """How sure the reader is of the least sure digit; nothing read is
+        sure of nothing."""
+        return min(self.sure, default=0.0)
 
 
 def around(image: Image, box: Box, margin: float) -> Box:
@@ -104,9 +110,11 @@ class _Reader:
         # The end mark and the digits; nothing else is on a number's line.
         self._read = [0, *(1 + charset.index(digit) for digit in "0123456789")]
 
-    def read(self, image: Image, line: NDArray[np.float32]) -> tuple[str, float]:
+    def read(
+        self, image: Image, line: NDArray[np.float32]
+    ) -> tuple[str, tuple[float, ...]]:
         """The digits of a line in a BGR picture, and how sure the model is of
-        the least sure one; nothing read is sure of nothing."""
+        each."""
         x1, y1, x2, y2 = line
         across, down = LINE_MARGIN * (x2 - x1), LINE_MARGIN * (y2 - y1)
         width, height = self._size
@@ -126,14 +134,14 @@ class _Reader:
         scores = self._session.run(None, {self._input: pixels})[0][0][:, self._read]
         scores = np.exp(scores - scores.max(axis=1, keepdims=True))
         likely = scores / scores.sum(axis=1, keepdims=True)
-        text, confidence = "", 1.0
+        text, sure = "", []
         for position in likely:
             character = int(position.argmax())
             if character == 0:
                 break
             text += str(character - 1)
-            confidence = min(confidence, float(position[character]))
-        return text, confidence if text else 0.0
+            sure.append(float(position[character]))
+        return text, tuple(sure)
 
 
 class TagReader:
@@ -169,9 +177,9 @@ class TagReader:
             )
             lines = self._lines.found(shown, LINE_FOUND)
             lines = lines[lines[:, 5] == 0]
-            text, confidence = "", 0.0
+            text, sure = "", ()
             if len(lines):
                 line = lines[lines[:, 4].argmax(), :4]
-                text, confidence = self._reader.read(shown, line)
-            tags.append(Tag(box, crop, text, confidence))
+                text, sure = self._reader.read(shown, line)
+            tags.append(Tag(box, crop, text, sure))
         return tags

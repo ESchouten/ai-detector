@@ -749,8 +749,8 @@ def test_a_number_the_reader_is_not_sure_of_is_kept_but_never_suggested(tmp_path
 
 
 def test_a_digit_too_many_on_a_tag_is_left_off_the_suggestion(tmp_path):
-    # As where the small check digit after a number is read with it.
-    herd = herd_of(tmp_path, tags="53596")
+    # The small check digit after a number, read with it and not surely.
+    herd = herd_of(tmp_path, tags="5359 6")
     identifier = TrackIdentifier(herd)
 
     watch_tagged(identifier, 12)
@@ -759,7 +759,10 @@ def test_a_digit_too_many_on_a_tag_is_left_off_the_suggestion(tmp_path):
     assert checked is not None
     assert checked.tag == "5359"
     record, _ = tags_of(herd, checked)
-    assert (record.number, {crop.read for crop in record.crops}) == ("5359", {"53596"})
+    assert record.number == "5359"
+    assert {(crop.read, crop.confidence < 0.9) for crop in record.crops} == {
+        ("53596", True)
+    }
 
 
 def test_tag_pictures_are_written_now_and_then_and_only_the_tallest_kept(

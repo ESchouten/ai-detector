@@ -443,10 +443,13 @@ class _Tags:
         """Count the numbers the reader is sure of, each with its surest tag,
         and keep the tallest tags."""
         for tag in tags:
-            # A digit too many is the small check digit printed after a number.
-            text = tag.text[:digits] if len(tag.text) == digits + 1 else tag.text
+            # A digit too many is the small check digit printed after a number,
+            # which the reader need not be sure of.
+            text, sure = tag.text, tag.sure
+            if len(text) == digits + 1:
+                text, sure = text[:digits], sure[:digits]
             if (
-                tag.confidence < TAG_SURE
+                min(sure, default=0.0) < TAG_SURE
                 or len(text) != digits
                 or not (text.isascii() and text.isdigit())
             ):

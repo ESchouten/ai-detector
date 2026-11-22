@@ -160,13 +160,11 @@ class TagReader:
             left, top, right, bottom = around(image, box, TAG_MARGIN)
             crop = image[top:bottom, left:right].copy()
             scale = self._lines.size / 2 / max(crop.shape[:2])
-            size = (
-                max(1, round(crop.shape[1] * scale)),
-                max(1, round(crop.shape[0] * scale)),
-            )
             shown = cv2.resize(
                 crop,
-                size,
+                (0, 0),
+                fx=scale,
+                fy=scale,
                 interpolation=cv2.INTER_CUBIC if scale > 1 else cv2.INTER_AREA,
             )
             lines = self._lines.found(shown, LINE_FOUND)

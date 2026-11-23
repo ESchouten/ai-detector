@@ -8,7 +8,7 @@
 	import PageHeader from '$lib/components/page-header.svelte';
 	import { plural } from '$lib/format';
 	import { DAYS_WANTED } from '$lib/individuals';
-	import type { DetectionBox } from '$lib/live-preview';
+	import type { Identity } from '$lib/live-preview';
 	import LiveNaming from '$lib/components/live-naming.svelte';
 	import SightingGroup from './sighting-group.svelte';
 	import SightingPicture from '$lib/components/sighting-picture.svelte';
@@ -24,7 +24,7 @@
 	);
 	let cameraId = $state<string>();
 	const camera = $derived(data.cameras.find((item) => item.id === cameraId) ?? data.cameras.at(0));
-	let naming = $state<DetectionBox | null>(null);
+	let naming = $state<Identity | null>(null);
 </script>
 
 <section class="page-narrow">
@@ -92,12 +92,12 @@
 					id={camera.id}
 					label={camera.label}
 					monitored
-					onselect={(box) => (naming = box)}
-					selected={naming?.identity?.sighting}
+					onselect={(box) => (naming = box.identity)}
+					selected={naming?.sighting}
 				/>
 			{/key}
 		</section>
-		<LiveNaming bind:box={naming} names="identity-names" />
+		<LiveNaming bind:identity={naming} names="identity-names" />
 	{/if}
 
 	<section class="flex flex-col gap-3" aria-labelledby="identities-unnamed">

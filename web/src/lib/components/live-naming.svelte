@@ -3,22 +3,21 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
-	import { identityGuess, type DetectionBox } from '$lib/live-preview';
+	import { identityGuess, type Identity } from '$lib/live-preview';
 	import { errorMessage } from '$lib/remote-calls';
 	import { getSighting, nameSighting } from '$lib/remote/identities.remote';
 	import SightingPicture from './sighting-picture.svelte';
 	import TagPictures from './tag-pictures.svelte';
 
 	let {
-		box = $bindable(),
+		identity = $bindable(),
 		names
 	}: {
-		/** The live box to name; the dialog is open while there is one. */
-		box: DetectionBox | null;
+		/** Who to name, of a live box or a recording; the dialog is open while there is one. */
+		identity: Identity | null;
 		/** The id of the list of names already given, for suggestions while typing, where there is one. */
 		names?: string;
 	} = $props();
-	const identity = $derived(box?.identity ?? null);
 	let name = $state('');
 	let saving = $state(false);
 	let message = $state('');
@@ -44,7 +43,7 @@
 		message = '';
 		try {
 			await nameSighting({ sighting: identity.sighting, name: given, confirmed });
-			box = null;
+			identity = null;
 			await invalidateAll();
 		} catch (cause) {
 			message = errorMessage(cause, 'Could not save the name. Try again.');
@@ -55,13 +54,13 @@
 </script>
 
 <Dialog.Root
-	open={box !== null}
+	open={identity !== null}
 	onOpenChange={(open) => {
-		if (!open) box = null;
+		if (!open) identity = null;
 	}}
 >
 	<Dialog.Content class="sm:max-w-lg">
-		{#if box && identity}
+		{#if identity}
 			<Dialog.Header>
 				<Dialog.Title>
 					{#if guess}Is this {guess}?{:else}Who is this?{/if}
@@ -100,7 +99,7 @@
 				<div class="flex flex-col gap-2">
 					<div class="flex gap-2">
 						<!-- A Yes to a likeness is the detector's own guess; a number read from a tag is not. -->
-						<Button disabled={saving} onclick={() => save(guess, guess !== identity.tag)}>
+						<Button disabled={saving} onclick={() => save(guess, guess !== identity?.tag)}>
 							{saving ? 'Saving…' : 'Yes'}
 						</Button>
 						<Button variant="outline" disabled={saving} onclick={() => (declined = true)}>

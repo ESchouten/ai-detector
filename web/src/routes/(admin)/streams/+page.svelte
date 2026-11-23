@@ -10,7 +10,7 @@
 	import PageHeader from '$lib/components/page-header.svelte';
 	import Pill from '$lib/components/pill.svelte';
 	import StatusDot from '$lib/components/status-dot.svelte';
-	import type { DetectionBox } from '$lib/live-preview';
+	import type { Identity } from '$lib/live-preview';
 	import { cameraStatusBadge } from '$lib/monitoring';
 	import { getCameras } from '$lib/remote/camera.remote';
 	import { getDetectorPresets } from '$lib/remote/detector.remote';
@@ -24,7 +24,7 @@
 	const dots = { ok: 'ok', warn: 'warn', bad: 'bad', neutral: 'idle' } as const;
 	let view = $state<'live' | 'history'>('live');
 	// The individual whose pill was tapped, to say who it is.
-	let naming = $state<DetectionBox | null>(null);
+	let naming = $state<Identity | null>(null);
 </script>
 
 <section class="page">
@@ -65,8 +65,8 @@
 							id={camera.id}
 							label={camera.label}
 							monitored={camera.monitored}
-							onpill={(box) => (naming = box)}
-							selected={naming?.identity?.sighting}
+							onpill={(box) => (naming = box.identity)}
+							selected={naming?.sighting}
 						>
 							{#snippet caption()}
 								<div
@@ -106,7 +106,7 @@
 				</li>
 			{/each}
 		</ul>
-		<LiveNaming bind:box={naming} />
+		<LiveNaming bind:identity={naming} />
 	{:else}
 		<Empty.Root class="border border-dashed">
 			<Empty.Header>

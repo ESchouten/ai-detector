@@ -23,6 +23,7 @@
 	import { categoryName, detectionKey, recordingVerdict, type Detection } from '$lib/detections';
 	import { clipLength, dayHeading, percent, timeOfDay } from '$lib/format';
 	import { removeDetection } from '$lib/remote/detections.remote';
+	import RecordingIndividuals from './recording-individuals.svelte';
 	import ReviewButtons from './review-buttons.svelte';
 
 	// One recording at a time, with the neighbours a key press away.
@@ -125,6 +126,14 @@
 					<source src={recordingMedia(entry, 'video.mp4')} type="video/mp4" />
 					Your browser cannot play this video.
 				</video>
+				{#if entry.individuals?.length}
+					<!-- The video does not wait for their pictures. -->
+					<svelte:boundary>
+						<RecordingIndividuals individuals={entry.individuals} />
+						{#snippet pending()}{/snippet}
+						{#snippet failed()}{/snippet}
+					</svelte:boundary>
+				{/if}
 			{/key}
 			<div class="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
 				<div class="flex items-center gap-1.5">

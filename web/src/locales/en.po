@@ -3858,6 +3858,7 @@ msgid "Give it a name or number; the camera then recognises it."
 msgstr "Give it a name or number; the camera then recognises it."
 
 #: src/lib/components/live-naming.svelte
+#: src/lib/components/recording-individuals.svelte
 msgid "Who is this?"
 msgstr "Who is this?"
 

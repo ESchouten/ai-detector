@@ -11,6 +11,7 @@ const identitySchema = v.object({
 	/** The number the detector read from the tag it wears, for a person to confirm. */
 	tag: v.nullable(v.string())
 });
+export type Identity = v.InferOutput<typeof identitySchema>;
 /** The boxes of one analyzed picture, with coordinates in pixels of the given image size. */
 export const frameSchema = v.object({
 	version: v.literal(1),
@@ -64,7 +65,7 @@ export function boxOutline(box: DetectionBox): string {
 }
 
 /** Who an unnamed one probably is: the number read from its tag, or else the name it resembles most. */
-export function identityGuess(identity: NonNullable<DetectionBox['identity']>): string | undefined {
+export function identityGuess(identity: Identity): string | undefined {
 	return identity.tag ?? identity.candidates.at(0)?.name;
 }
 
@@ -79,7 +80,7 @@ export function identityLabel(identity: DetectionBox['identity']): string | null
 /** Recognised, only guessed from a likeness or a tag, or not named at all. */
 export type IdentityState = 'recognised' | 'resembles' | 'unnamed';
 
-export function identityState(identity: NonNullable<DetectionBox['identity']>): IdentityState {
+export function identityState(identity: Identity): IdentityState {
 	if (identity.name !== null) return 'recognised';
 	return identityGuess(identity) === undefined ? 'unnamed' : 'resembles';
 }

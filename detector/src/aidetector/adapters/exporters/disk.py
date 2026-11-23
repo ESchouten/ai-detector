@@ -76,7 +76,9 @@ class DiskExporter:
                 ("annotated", "best.jpg"),
                 ("original", "clean.jpg"),
             ):
-                (pending / filename).write_bytes(self.media.image(event, kind))
+                (pending / filename).write_bytes(
+                    self.media.image(event, kind, individuals=result.individuals)
+                )
             (pending / "video.mp4").write_bytes(
                 self.media.video(
                     event, width=1280, crf=28, padding=self.config.crop_padding

@@ -80,7 +80,11 @@ class TelegramExporter:
     def export(self, result: EventResult) -> None:
         try:
             attachments = self.media.attachments(
-                result.event, self.config, image_max=10_000_000, video_max=12_000_000
+                result.event,
+                self.config,
+                image_max=10_000_000,
+                video_max=12_000_000,
+                individuals=result.individuals,
             )
         except MediaError as error:
             raise DeliveryError(str(error)) from error

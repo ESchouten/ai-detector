@@ -391,6 +391,11 @@ def test_an_event_of_a_detector_that_follows_none_names_the_tracks_in_its_boxes(
     # Around the first two cows and a third of the next one.
     individuals = identifier.identify(mounting(2, (20, 40, 200, 100)), "e" * 32)
     assert [individual.track_id for individual in individuals] == [1, 2]
+    # Where each was in the event's best picture, whatever size that is.
+    assert [individual.place for individual in individuals] == [
+        (20 / 320, 40 / 240, 80 / 320, 100 / 240),
+        (100 / 320, 40 / 240, 160 / 320, 100 / 240),
+    ]
     for individual in individuals:
         watched = follower.identity(SOURCE, individual.track_id)
         assert watched is not None and individual.sighting == watched.sighting

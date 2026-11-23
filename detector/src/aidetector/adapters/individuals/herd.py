@@ -1468,7 +1468,27 @@ class TrackIdentifier:
         }
 
     def identify(self, event: DetectionEvent, event_id: str) -> tuple[Individual, ...]:
-        return self._identify(event.source, self._event_tracks(event), event_id)
+        tracks = self._event_tracks(event)
+        return self._placed(
+            event, tracks, self._identify(event.source, tracks, event_id)
+        )
+
+    def _placed(
+        self,
+        event: DetectionEvent,
+        tracks: Mapping[int, _Track],
+        individuals: tuple[Individual, ...],
+    ) -> tuple[Individual, ...]:
+        """The individuals with where each was in the event's best picture."""
+        with self._lock:
+            places = {
+                track_id: _place_at(tuple(track.places), event.best.date)
+                for track_id, track in tracks.items()
+            }
+        return tuple(
+            replace(individual, place=places.get(individual.track_id))
+            for individual in individuals
+        )
 
     def _on_top(
         self, event: DetectionEvent, tracks: Mapping[int, _Track]
@@ -1504,7 +1524,9 @@ class TrackIdentifier:
         such as one that finds a mounting: the tracks inside its boxes, the
         one underneath first where one is on top of the other."""
         tracks = self._inside(event)
-        individuals = self._identify(event.source, tracks, event_id)
+        individuals = self._placed(
+            event, tracks, self._identify(event.source, tracks, event_id)
+        )
         on_top = self._on_top(event, tracks)
         if on_top is None:
             return individuals

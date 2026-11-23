@@ -11,20 +11,18 @@ from aidetector.domain.models import EventResult
 
 
 def _names(result: EventResult) -> str:
-    """A recognised individual's name, or her likeliest names as a question;
-    an arrow down before the one underneath and up before the one on top."""
+    """A recognised individual's name, or her likeliest names as a question."""
     if result.identification is None:
         return ""
     names = []
     for individual in result.identification.individuals:
         candidates = [candidate.name for candidate in individual.candidates]
-        place = {True: "⬆ ", False: "⬇ ", None: ""}[individual.on_top]
         if individual.name is not None:
-            names.append(f"{place}{individual.name}")
+            names.append(individual.name)
         elif len(candidates) == 1:
-            names.append(f"{place}{candidates[0]}?")
+            names.append(f"{candidates[0]}?")
         elif candidates:
-            names.append(f"{place}{', '.join(candidates[:-1])} or {candidates[-1]}?")
+            names.append(f"{', '.join(candidates[:-1])} or {candidates[-1]}?")
     return "\n" + " · ".join(names) if names else ""
 
 

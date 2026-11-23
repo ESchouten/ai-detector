@@ -12,7 +12,6 @@ from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, replace
 from datetime import datetime
 from pathlib import Path
-from statistics import median
 from threading import Event, Lock
 from time import monotonic, perf_counter
 from uuid import uuid4
@@ -100,10 +99,6 @@ PLACES_MAX = 1200
 INSIDE = 0.5
 NEARBY = 1.0
 OFTEN = 3
-# Of two tracks in such an event, one is on top of the other when its box
-# starts higher by at least this share of their mean height, over the event's
-# pictures with boxes: a cow that mounts another rears up above her.
-ABOVE = 0.15
 # After its sighting is saved, a track goes on showing the individual from
 # other sides. One picture is embedded every LATER seconds of source time, as
 # long as fewer than WAITING_MAX wait for the model, and LATER_MAX at most are
@@ -1490,54 +1485,14 @@ class TrackIdentifier:
             for individual in individuals
         )
 
-    def _on_top(
-        self, event: DetectionEvent, tracks: Mapping[int, _Track]
-    ) -> int | None:
-        """Which of an event's two tracks was on top of the other, when one
-        clearly was."""
-        if len(tracks) != 2:
-            return None
-        with self._lock:
-            (first, here), (second, there) = (
-                (track_id, tuple(track.places)) for track_id, track in tracks.items()
-            )
-        higher = []
-        for observation in event.observations:
-            if not observation.boxes:
-                continue
-            one = _place_at(here, observation.date)
-            other = _place_at(there, observation.date)
-            if one is None or other is None:
-                continue
-            height = (one[3] - one[1] + other[3] - other[1]) / 2
-            if height > 0:
-                higher.append((other[1] - one[1]) / height)
-        margin = median(higher) if higher else 0.0
-        if abs(margin) < ABOVE:
-            return None
-        return first if margin > 0 else second
-
     def identify_inside(
         self, event: DetectionEvent, event_id: str
     ) -> tuple[Individual, ...]:
         """The same for an event of a detector that follows no individuals,
-        such as one that finds a mounting: the tracks inside its boxes, the
-        one underneath first where one is on top of the other."""
+        such as one that finds a mounting: the tracks inside its boxes."""
         tracks = self._inside(event)
-        individuals = self._placed(
+        return self._placed(
             event, tracks, self._identify(event.source, tracks, event_id)
-        )
-        on_top = self._on_top(event, tracks)
-        if on_top is None:
-            return individuals
-        return tuple(
-            sorted(
-                (
-                    replace(individual, on_top=individual.track_id == on_top)
-                    for individual in individuals
-                ),
-                key=lambda individual: individual.track_id == on_top,
-            )
         )
 
     def _identify(

@@ -32,8 +32,6 @@ class IndividualMetadata(BaseModel):
     # Set when the best candidate cleared the installation's naming threshold.
     name: str | None
     candidates: list[CandidateMetadata]
-    # Of two individuals where one is on top of the other: whether it is this one.
-    on_top: bool | None = None
 
 
 class ManualReview(BaseModel):
@@ -103,7 +101,6 @@ class EventMetadata(BaseModel):
                         CandidateMetadata(name=candidate.name, score=candidate.score)
                         for candidate in individual.candidates
                     ],
-                    on_top=individual.on_top,
                 )
                 for individual in identification.individuals
             ],

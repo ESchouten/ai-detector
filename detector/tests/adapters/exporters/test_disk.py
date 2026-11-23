@@ -127,9 +127,7 @@ def test_archive_preserves_public_stages_and_validation_metadata(
                     Individual(
                         7, "cow", "b" * 32, (Candidate("412", 0.8),), recognised=True
                     ),
-                    Individual(
-                        8, "cow", "c" * 32, (Candidate("233", 0.3),), on_top=True
-                    ),
+                    Individual(8, "cow", "c" * 32, (Candidate("233", 0.3),)),
                 )
             ),
             [
@@ -139,7 +137,6 @@ def test_archive_preserves_public_stages_and_validation_metadata(
                     "sighting": "b" * 32,
                     "name": "412",
                     "candidates": [{"name": "412", "score": 0.8}],
-                    "on_top": None,
                 },
                 {
                     "track": 8,
@@ -147,7 +144,6 @@ def test_archive_preserves_public_stages_and_validation_metadata(
                     "sighting": "c" * 32,
                     "name": None,
                     "candidates": [{"name": "233", "score": 0.3}],
-                    "on_top": True,
                 },
             ],
             None,

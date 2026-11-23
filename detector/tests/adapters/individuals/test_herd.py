@@ -404,6 +404,35 @@ def test_an_event_of_a_detector_that_follows_none_names_the_tracks_in_its_boxes(
     assert identifier.identify(mounting(2, (20, 40, 200, 100), other), "0" * 32) == ()
 
 
+def test_of_two_tracks_in_such_an_event_the_one_that_rears_up_is_on_top(tmp_path):
+    herd = herd_of(tmp_path)
+    follower = TrackIdentifier(herd)
+    # The second cow stands behind the first; from the sixth second she is on her.
+    for second in range(12):
+        cows = [
+            (1, "412", PLACES[0]),
+            (2, "233", (30, 10, 90, 90) if second >= 6 else PLACES[1]),
+            (3, "87", PLACES[2]),
+        ]
+        follower.observe(SOURCE, observation(1, second, cows))
+    herd.flush()
+    identifier = InsideIdentifier({SOURCE: follower})
+
+    individuals = identifier.identify(mounting(7, (20, 10, 100, 100)), "e" * 32)
+    assert [(individual.track_id, individual.on_top) for individual in individuals] == [
+        (1, False),
+        (2, True),
+    ]
+    # Side by side neither is on top, and with a third in the box nobody can tell.
+    beside = identifier.identify(mounting(2, (20, 40, 160, 100)), "f" * 32)
+    assert [(individual.track_id, individual.on_top) for individual in beside] == [
+        (1, None),
+        (2, None),
+    ]
+    three = identifier.identify(mounting(2, (20, 40, 240, 100)), "0" * 32)
+    assert [individual.on_top for individual in three] == [None, None, None]
+
+
 def test_a_long_event_names_a_track_that_was_inside_for_a_part_of_it(tmp_path):
     herd = herd_of(tmp_path)
     follower = TrackIdentifier(herd)

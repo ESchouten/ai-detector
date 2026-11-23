@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Detection } from '$lib/detections';
+	import { onTopMark, type Detection } from '$lib/detections';
 	import { identityLabel, type Identity } from '$lib/live-preview';
 	import { getSighting } from '$lib/remote/identities.remote';
 	import LiveNaming from './live-naming.svelte';
@@ -22,7 +22,7 @@
 				candidates: individual.candidates,
 				tag: sighting.tag?.number ?? null
 			};
-			return [{ sighting, identity }];
+			return [{ sighting, identity, mark: onTopMark(individual) }];
 		})
 	);
 	let naming = $state<Identity | null>(null);
@@ -30,7 +30,7 @@
 
 {#if shown.length}
 	<ul class="flex flex-wrap gap-2 px-5 pt-4">
-		{#each shown as { sighting, identity } (sighting.id)}
+		{#each shown as { sighting, identity, mark } (sighting.id)}
 			<li>
 				<button
 					type="button"
@@ -40,7 +40,7 @@
 					<span class="relative size-12 overflow-hidden rounded-md bg-media">
 						<SightingPicture {sighting} loading="lazy" />
 					</span>
-					{identityLabel(identity) ?? 'Who is this?'}
+					{mark}{identityLabel(identity) ?? 'Who is this?'}
 				</button>
 			</li>
 		{/each}

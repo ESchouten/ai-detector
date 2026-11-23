@@ -81,6 +81,18 @@
           },
           "title": "Candidates",
           "type": "array"
+        },
+        "on_top": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "On Top"
         }
       },
       "required": [

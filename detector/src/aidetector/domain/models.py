@@ -143,6 +143,8 @@ class Individual:
     clears the threshold the installation set from its own named sightings.
     `sighting` names the saved pictures of this track that a person can name.
     `tag` is the number read from the tag it wears, for a person to confirm.
+    `on_top` says, where an event shows two individuals and one is clearly on
+    top of the other, which of the two this one is.
     """
 
     track_id: int
@@ -151,6 +153,7 @@ class Individual:
     candidates: tuple[Candidate, ...] = ()
     recognised: bool = False
     tag: str | None = None
+    on_top: bool | None = None
 
     @property
     def name(self) -> str | None:

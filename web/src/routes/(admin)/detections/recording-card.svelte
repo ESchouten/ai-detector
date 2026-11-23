@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Play } from '@lucide/svelte';
 	import Pill from '$lib/components/pill.svelte';
-	import { categoryName, recordingVerdict, type Detection } from '$lib/detections';
+	import { categoryName, onTopMark, recordingVerdict, type Detection } from '$lib/detections';
 	import { clipLength, oneOf, percent, timeOfDay } from '$lib/format';
 	import ReviewButtons from '$lib/components/review-buttons.svelte';
 	import { recordingMedia } from '$lib/components/recording-viewer.svelte';
@@ -20,17 +20,17 @@
 	const verdict = $derived(recordingVerdict(entry));
 	const time = $derived(timeOfDay(entry.start));
 	const dismissed = $derived(entry.stage === 'rejected');
-	// A recognised individual by name, otherwise the names it resembles most.
+	// A recognised individual by name, otherwise the names it resembles most; an arrow says which
+	// of two is on top of the other.
 	const individuals = $derived(
-		(entry.individuals ?? [])
-			.map(
-				(individual) =>
-					individual.name ??
-					(individual.candidates.length
-						? `${oneOf(individual.candidates.map((candidate) => candidate.name))}?`
-						: '')
-			)
-			.filter((name) => name)
+		(entry.individuals ?? []).flatMap((individual) => {
+			const name =
+				individual.name ??
+				(individual.candidates.length
+					? `${oneOf(individual.candidates.map((candidate) => candidate.name))}?`
+					: '');
+			return name ? [onTopMark(individual) + name] : [];
+		})
 	);
 </script>
 

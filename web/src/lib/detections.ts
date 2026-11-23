@@ -13,6 +13,12 @@ export function categoryName(type: string): string {
 	return type.charAt(0).toUpperCase() + type.slice(1);
 }
 
+/** An arrow up for the one of two that is on top of the other, down for the one underneath. */
+export function onTopMark(individual: { on_top?: boolean | null }): string {
+	if (individual.on_top == null) return '';
+	return individual.on_top ? '⬆ ' : '⬇ ';
+}
+
 export function isArchiveSegment(value: string): boolean {
 	return value.length > 0 && value !== '.' && value !== '..' && !/[/\\\0]/.test(value);
 }

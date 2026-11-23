@@ -439,6 +439,28 @@ def test_request_exception_reports_its_kind_without_credential_details(
             ),
             "412 · 233, 87 or 15? · 9?",
         ),
+        (
+            Identification(
+                (
+                    Individual(
+                        1,
+                        "cow",
+                        "a" * 32,
+                        (Candidate("412", 0.9),),
+                        recognised=True,
+                        on_top=False,
+                    ),
+                    Individual(
+                        2,
+                        "cow",
+                        "b" * 32,
+                        (Candidate("233", 0.5), Candidate("87", 0.4)),
+                        on_top=True,
+                    ),
+                )
+            ),
+            "⬇ 412 · ⬆ 233 or 87?",
+        ),
     ],
 )
 def test_telegram_caption_names_recognised_individuals_and_asks_about_others(

@@ -22,6 +22,7 @@ export type Name = string | null;
 export type Name1 = string;
 export type Score = number;
 export type Candidates = CandidateMetadata[];
+export type OnTop = boolean | null;
 export type IndividualsError = string | null;
 export type Validated1 = boolean;
 export type Source = 'web' | 'telegram';
@@ -63,6 +64,7 @@ export interface IndividualMetadata {
 	sighting: Sighting;
 	name: Name;
 	candidates: Candidates;
+	on_top?: OnTop;
 }
 export interface CandidateMetadata {
 	name: Name1;

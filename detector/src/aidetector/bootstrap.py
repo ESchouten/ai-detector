@@ -17,7 +17,12 @@ from aidetector.adapters.individuals.embedding import (
     input_size,
     model_key,
 )
-from aidetector.adapters.individuals.herd import SIGHTING_CROPS, Herd, TrackIdentifier
+from aidetector.adapters.individuals.herd import (
+    SIGHTING_CROPS,
+    Herd,
+    InsideIdentifier,
+    TrackIdentifier,
+)
 from aidetector.adapters.individuals.tags import TagReader
 from aidetector.adapters.inference.model_assets import resolve_model_path
 from aidetector.adapters.inference.onnx import ModelRequirements, inference_runtime
@@ -38,6 +43,7 @@ from aidetector.application.ports import (
 )
 from aidetector.configuration import (
     Config,
+    DetectorConfig,
     ExportersConfig,
     IndividualsConfig,
     OnnxConfig,
@@ -214,6 +220,28 @@ def _open_herd(
     return herd
 
 
+def _identifier(
+    herd: Herd | None,
+    settings: DetectorConfig,
+    sources: Sequence[str],
+    followers: dict[str, TrackIdentifier],
+    followed: frozenset[str],
+) -> TrackIdentifier | InsideIdentifier | None:
+    """Who names a detector's events: the detector itself when it follows
+    individuals, and otherwise one that follows them on a source they share,
+    for the individuals inside the events' boxes."""
+    if herd is None or settings.yolo is None:
+        return None
+    if settings.yolo.outlines_tracks:
+        follower = TrackIdentifier(herd)
+        for source in sources:
+            followers.setdefault(source, follower)
+        return follower
+    if followed.intersection(settings.detection.source):
+        return InsideIdentifier(followers)
+    return None
+
+
 def _publisher(
     preview: LivePreview | None,
     rule_id: str,
@@ -302,6 +330,13 @@ def run_application(
         herd = _open_herd(
             config.individuals, individuals_model, coat, tags, data_directory, resources
         )
+        followed = frozenset(
+            configured
+            for rule in config.detectors
+            if rule.yolo is not None and rule.yolo.outlines_tracks
+            for configured in rule.detection.source
+        )
+        followers: dict[str, TrackIdentifier] = {}
         streams = StreamPool(report_status)
         preview = LivePreview(data_directory / "live") if live_preview else None
         workers: list[DetectorWorker] = []
@@ -371,17 +406,18 @@ def run_application(
                 from aidetector.adapters.vlm import VlmValidator
 
                 validator = VlmValidator(settings.active_vlm, media)
-            identifier = (
-                TrackIdentifier(herd)
-                if herd is not None and settings.yolo and settings.yolo.outlines_tracks
-                else None
+            identifier = _identifier(
+                herd, settings, source.sources, followers, followed
             )
             cooldown = Cooldown(
                 settings.yolo.cooldown if settings.yolo is not None else 0,
                 min_frames=event_policy.min_frames,
             )
             publish = _publisher(
-                preview, f"detector-{index}", source.sources, identifier
+                preview,
+                f"detector-{index}",
+                source.sources,
+                identifier if isinstance(identifier, TrackIdentifier) else None,
             )
             pipeline = DetectionPipeline(detector, event_policy, rule_status, publish)
             delivery = EventDelivery(

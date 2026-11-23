@@ -10,7 +10,11 @@ import pytest
 from aidetector.adapters.individuals import herd as herd_module
 from aidetector.adapters.individuals.coat import CoatModel
 from aidetector.adapters.individuals.embedding import EmbeddingModel, model_key
-from aidetector.adapters.individuals.herd import Herd, TrackIdentifier
+from aidetector.adapters.individuals.herd import (
+    Herd,
+    InsideIdentifier,
+    TrackIdentifier,
+)
 from aidetector.adapters.individuals.records import (
     GroupsFile,
     SightingRecord,
@@ -356,6 +360,48 @@ def test_a_track_watched_live_is_saved_in_the_background_and_named_at_once(
     assert (
         len([path for path in herd.sightings.iterdir() if path.name != ".pending"]) == 1
     )
+
+
+def mounting(second, box, source=SOURCE):
+    """An event of a detector that follows no individuals and analyses the
+    camera at twice the size: one box, no tracks."""
+    return DetectionEvent(
+        source,
+        tuple(
+            Observation(
+                datetime(2026, 10, 1, 12, 0, second + frame),
+                np.full((480, 640, 3), 128, np.uint8),
+                {"mounting": 0.9},
+                (BoundingBox(*(2 * side for side in box), "mounting", 0.9),),
+            )
+            for frame in range(3)
+        ),
+    )
+
+
+def test_an_event_of_a_detector_that_follows_none_names_the_tracks_in_its_boxes(
+    tmp_path,
+):
+    herd = herd_of(tmp_path)
+    follower = TrackIdentifier(herd)
+    watch(follower, 6, whole_herd())
+    herd.flush()
+    identifier = InsideIdentifier({SOURCE: follower})
+
+    # Around the first two cows and a third of the next one.
+    individuals = identifier.identify(mounting(2, (20, 40, 200, 100)), "e" * 32)
+    assert [individual.track_id for individual in individuals] == [1, 2]
+    for individual in individuals:
+        watched = follower.identity(SOURCE, individual.track_id)
+        assert watched is not None and individual.sighting == watched.sighting
+    assert (
+        len([path for path in herd.sightings.iterdir() if path.name != ".pending"]) == 4
+    )
+
+    # Nobody when the cows were not there then, or on a camera nobody follows.
+    assert identifier.identify(mounting(30, (20, 40, 200, 100)), "f" * 32) == ()
+    other = "rtsp://other.invalid/stream"
+    assert identifier.identify(mounting(2, (20, 40, 200, 100), other), "0" * 32) == ()
 
 
 def test_a_track_coming_in_from_the_edge_waits_for_a_whole_picture(tmp_path):

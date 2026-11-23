@@ -5,7 +5,8 @@ from __future__ import annotations
 import logging
 import shutil
 import tempfile
-from collections import OrderedDict
+from bisect import bisect_left
+from collections import OrderedDict, deque
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, replace
@@ -58,6 +59,9 @@ from aidetector.domain.models import (
 logger = logging.getLogger(__name__)
 Image = NDArray[np.uint8]
 Outline = tuple[tuple[int, int], ...]
+# A box as fractions of its picture's width and height, so that detectors
+# that analyse the same camera at different sizes can compare theirs.
+Place = tuple[float, float, float, float]
 SIGHTING_CROPS = 4
 CANDIDATES = 3
 # Smaller pictures carry too little coat for an embedding.
@@ -82,6 +86,15 @@ SETTLED = 4.0
 PARTIAL = 15.0
 GONE = 10.0
 FORGOTTEN = 600.0
+# Where a track was is kept every PLACED seconds, PLACES_MAX times at most, for
+# the events of detectors that do not follow individuals themselves. A track is
+# in such an event when at least INSIDE of its box is inside the event's boxes
+# on half of the event's pictures with boxes or more, going by where it was
+# within NEARBY seconds of each.
+PLACED = 0.5
+PLACES_MAX = 1200
+INSIDE = 0.5
+NEARBY = 1.0
 # After its sighting is saved, a track goes on showing the individual from
 # other sides. One picture is embedded every LATER seconds of source time, as
 # long as fewer than WAITING_MAX wait for the model, and LATER_MAX at most are
@@ -964,6 +977,8 @@ class _Track:
         self.last = seen
         self.pictures = _Pictures()
         self.sighting: Future[_Sighting | None] | None = None
+        # Where it was and when, oldest first.
+        self.places: deque[tuple[datetime, Place]] = deque(maxlen=PLACES_MAX)
         # Pictures after the sighting, when the last was taken and last kept.
         self.later = _Later()
         self.asked = seen
@@ -1047,6 +1062,35 @@ class _Naming:
     individuals: dict[int, Individual]
 
 
+def _places(observation: Observation, boxes: Sequence[BoundingBox]) -> list[Place]:
+    height, width = observation.image.shape[:2]
+    return [
+        (box.x1 / width, box.y1 / height, box.x2 / width, box.y2 / height)
+        for box in boxes
+    ]
+
+
+def _share(place: Place, box: Place) -> float:
+    """How much of a place lies inside a box."""
+    width = min(place[2], box[2]) - max(place[0], box[0])
+    height = min(place[3], box[3]) - max(place[1], box[1])
+    area = (place[2] - place[0]) * (place[3] - place[1])
+    return width * height / area if width > 0 and height > 0 and area > 0 else 0.0
+
+
+def _place_at(places: Sequence[tuple[datetime, Place]], date: datetime) -> Place | None:
+    """Where a track was nearest to a moment, if it was seen about then."""
+    index = bisect_left(places, date, key=lambda place: place[0])
+    near = min(
+        places[max(index - 1, 0) : index + 1],
+        key=lambda place: abs((place[0] - date).total_seconds()),
+        default=None,
+    )
+    if near is None or abs((near[0] - date).total_seconds()) > NEARBY:
+        return None
+    return near[1]
+
+
 class TrackIdentifier:
     """One detector's view of the herd; its tracker's IDs mean nothing elsewhere.
 
@@ -1059,7 +1103,8 @@ class TrackIdentifier:
     different individuals. With a coat check, the coat of a track on live
     pictures is compared on the herd's second thread, and the track goes by
     its embedding until that is done; an event compares its own tracks' coats
-    before it decides, and waits for no other.
+    before it decides, and waits for no other. An event of a detector that
+    follows no individuals itself gets the tracks that were inside its boxes.
     """
 
     def __init__(self, herd: Herd):
@@ -1223,6 +1268,11 @@ class TrackIdentifier:
                 if track is None:
                     track = tracks[track_id] = _Track(label, now)
                 track.last = now
+                if (
+                    not track.places
+                    or (now - track.places[-1][0]).total_seconds() >= PLACED
+                ):
+                    track.places.append((now, _places(observation, [box])[0]))
                 if track.sighting is None:
                     track.pictures.add(observation, box)
                     since = (now - track.first).total_seconds()
@@ -1379,15 +1429,52 @@ class TrackIdentifier:
                 self._seen_together(event.source, tracks, seen)
             return {track_id: tracks[track_id] for track_id in order}
 
+    def _inside(self, event: DetectionEvent) -> dict[int, _Track]:
+        """The watched tracks that were inside another detector's event, the
+        ones most often inside first."""
+        with self._lock:
+            tracks = dict(self._tracks.get(event.source, {}))
+            places = {
+                track_id: tuple(track.places) for track_id, track in tracks.items()
+            }
+        boxed = [observation for observation in event.observations if observation.boxes]
+        inside = dict.fromkeys(places, 0)
+        for observation in boxed:
+            boxes = _places(observation, observation.boxes)
+            for track_id, seen in places.items():
+                place = _place_at(seen, observation.date)
+                if (
+                    place is not None
+                    and max(_share(place, box) for box in boxes) >= INSIDE
+                ):
+                    inside[track_id] += 1
+        return {
+            track_id: tracks[track_id]
+            for track_id, pictures in sorted(
+                inside.items(), key=lambda counted: counted[1], reverse=True
+            )
+            if pictures and 2 * pictures >= len(boxed)
+        }
+
     def identify(self, event: DetectionEvent, event_id: str) -> tuple[Individual, ...]:
+        return self._identify(event.source, self._event_tracks(event), event_id)
+
+    def identify_inside(
+        self, event: DetectionEvent, event_id: str
+    ) -> tuple[Individual, ...]:
+        """The same for an event of a detector that follows no individuals,
+        such as one that finds a mounting: the tracks inside its boxes."""
+        return self._identify(event.source, self._inside(event), event_id)
+
+    def _identify(
+        self, source: str, tracks: dict[int, _Track], event_id: str
+    ) -> tuple[Individual, ...]:
         started = perf_counter()
-        tracks = self._event_tracks(event)
         with self._lock:
             pending = [
                 (
                     track_id,
-                    track.sighting
-                    or self._save(event.source, track_id, track, event_id),
+                    track.sighting or self._save(source, track_id, track, event_id),
                 )
                 for track_id, track in tracks.items()
             ]
@@ -1402,7 +1489,7 @@ class TrackIdentifier:
         if (coat := self.herd.coat) is not None and known.coat_threshold is not None:
             for track_id, sighting in saved.items():
                 self._check(coat, tracks[track_id], known, sighting)
-        decided = self._decided(event.source, known)
+        decided = self._decided(source, known)
         individuals = tuple(decided[track_id] for track_id in saved)
         logger.info(
             "Compared %d track(s) with the named individuals in %.0fms",
@@ -1410,6 +1497,19 @@ class TrackIdentifier:
             (perf_counter() - started) * 1000,
         )
         return individuals
+
+
+class InsideIdentifier:
+    """For a detector that follows no individuals itself, such as one that
+    finds a mounting: its events carry the individuals that a detector which
+    does follow them saw inside their boxes on the same source."""
+
+    def __init__(self, followers: Mapping[str, TrackIdentifier]):
+        self.followers = followers
+
+    def identify(self, event: DetectionEvent, event_id: str) -> tuple[Individual, ...]:
+        follower = self.followers.get(event.source)
+        return () if follower is None else follower.identify_inside(event, event_id)
 
 
 def _reporting(what: str) -> Callable[[Future], None]:

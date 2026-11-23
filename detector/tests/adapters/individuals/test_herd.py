@@ -362,7 +362,7 @@ def test_a_track_watched_live_is_saved_in_the_background_and_named_at_once(
     )
 
 
-def mounting(second, box, source=SOURCE):
+def mounting(second, box, source=SOURCE, seconds=3):
     """An event of a detector that follows no individuals and analyses the
     camera at twice the size: one box, no tracks."""
     return DetectionEvent(
@@ -374,7 +374,7 @@ def mounting(second, box, source=SOURCE):
                 {"mounting": 0.9},
                 (BoundingBox(*(2 * side for side in box), "mounting", 0.9),),
             )
-            for frame in range(3)
+            for frame in range(seconds)
         ),
     )
 
@@ -402,6 +402,27 @@ def test_an_event_of_a_detector_that_follows_none_names_the_tracks_in_its_boxes(
     assert identifier.identify(mounting(30, (20, 40, 200, 100)), "f" * 32) == ()
     other = "rtsp://other.invalid/stream"
     assert identifier.identify(mounting(2, (20, 40, 200, 100), other), "0" * 32) == ()
+
+
+def test_a_long_event_names_a_track_that_was_inside_for_a_part_of_it(tmp_path):
+    herd = herd_of(tmp_path)
+    follower = TrackIdentifier(herd)
+    # The tracker follows the first cow under a new number after 4 seconds; the
+    # third stands beside the box all the time and the fourth walks through it.
+    for second in range(20):
+        cows = [
+            (5 if second >= 4 else 1, "412", PLACES[0]),
+            (2, "233", PLACES[1]),
+            (3, "87", PLACES[2]),
+            (4, "15", PLACES[0] if second in (10, 11) else PLACES[3]),
+        ]
+        follower.observe(SOURCE, observation(1, second, cows))
+    herd.flush()
+
+    individuals = InsideIdentifier({SOURCE: follower}).identify(
+        mounting(0, (20, 40, 200, 100), seconds=20), "e" * 32
+    )
+    assert [individual.track_id for individual in individuals] == [2, 5, 1]
 
 
 def test_a_track_coming_in_from_the_edge_waits_for_a_whole_picture(tmp_path):

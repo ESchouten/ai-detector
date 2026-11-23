@@ -89,12 +89,16 @@ FORGOTTEN = 600.0
 # Where a track was is kept every PLACED seconds, PLACES_MAX times at most, for
 # the events of detectors that do not follow individuals themselves. A track is
 # in such an event when at least INSIDE of its box is inside the event's boxes
-# on half of the event's pictures with boxes or more, going by where it was
-# within NEARBY seconds of each.
+# on half or more of the event's pictures with boxes that it was there for,
+# going by where it was within NEARBY seconds of each, and on OFTEN of them at
+# least, or on half of them all in a shorter event. So a track that was only
+# there for a part of a long event counts too: the tracker may follow the same
+# individual under a new number halfway.
 PLACED = 0.5
 PLACES_MAX = 1200
 INSIDE = 0.5
 NEARBY = 1.0
+OFTEN = 3
 # After its sighting is saved, a track goes on showing the individual from
 # other sides. One picture is embedded every LATER seconds of source time, as
 # long as fewer than WAITING_MAX wait for the model, and LATER_MAX at most are
@@ -1438,22 +1442,24 @@ class TrackIdentifier:
                 track_id: tuple(track.places) for track_id, track in tracks.items()
             }
         boxed = [observation for observation in event.observations if observation.boxes]
+        there = dict.fromkeys(places, 0)
         inside = dict.fromkeys(places, 0)
         for observation in boxed:
             boxes = _places(observation, observation.boxes)
-            for track_id, seen in places.items():
-                place = _place_at(seen, observation.date)
-                if (
-                    place is not None
-                    and max(_share(place, box) for box in boxes) >= INSIDE
-                ):
+            for track_id, kept in places.items():
+                place = _place_at(kept, observation.date)
+                if place is None:
+                    continue
+                there[track_id] += 1
+                if max(_share(place, box) for box in boxes) >= INSIDE:
                     inside[track_id] += 1
+        often = max(1, min(OFTEN, (len(boxed) + 1) // 2))
         return {
             track_id: tracks[track_id]
             for track_id, pictures in sorted(
                 inside.items(), key=lambda counted: counted[1], reverse=True
             )
-            if pictures and 2 * pictures >= len(boxed)
+            if pictures >= often and 2 * pictures >= there[track_id]
         }
 
     def identify(self, event: DetectionEvent, event_id: str) -> tuple[Individual, ...]:

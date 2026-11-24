@@ -393,9 +393,11 @@ def _providers(
             None,
         )
         # Only a model prepared for both may start on one and move to the other.
+        # DirectML also runs the FP32 model that OpenVINO needs.
         if (
             built_in.names[0] == "DmlExecutionProvider"
-            and built_in.inference_options == selection.inference_options
+            and built_in.inference_options.rectangular
+            == selection.inference_options.rectangular
         ):
             directml = built_in
     return selection, directml, registered

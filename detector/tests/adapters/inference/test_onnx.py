@@ -905,6 +905,29 @@ def test_windows_ml_accelerator_waits_on_directml_for_its_compiled_model(
     assert len(amd_windows_ml.requests) == 1
 
 
+def test_openvino_gpu_is_tested_in_the_helper_while_directml_runs_its_fp32_model(
+    amd_windows_ml, windows_ml
+):
+    # On an Intel UHD 630 PC, opening the model on OpenVINO ended the process.
+    intel = amd_windows_ml.amd
+    intel.ep_name = "OpenVINOExecutionProvider"
+    windows_ml.libraries = {intel.ep_name: "openvino.dll"}
+    cache = amd_windows_ml.cache
+    with inference_runtime(
+        OnnxConfig(), ONNX_MODELS, "windowsml", cache=cache
+    ) as options:
+        assert options.half is False
+        amd_windows_ml.sdk.InferenceSession(str(amd_windows_ml.model), None)
+    assert amd_windows_ml.sessions == [
+        (
+            str(amd_windows_ml.model),
+            [("DmlExecutionProvider", {}), ("CPUExecutionProvider", {})],
+        )
+    ]
+    [request] = amd_windows_ml.requests
+    assert [item["provider"] for item in request["accelerators"]] == [intel.ep_name]
+
+
 def test_compiled_model_that_does_not_open_is_deferred_to_directml(
     amd_windows_ml, caplog
 ):

@@ -130,12 +130,49 @@ export type Headers2 = {
 } | null;
 export type Body1 = string | null;
 export type Interval1 = number;
+/**
+ * ONNX embedding model, as a path or an http(s) URL ending in .onnx.
+ */
+export type Model2 = string;
+/**
+ * Detection classes whose tracked objects are individuals.
+ */
+export type Labels = string | string[];
+/**
+ * Share of names that must be right when the installation sets its naming threshold from its own named sightings.
+ */
+export type Precision = number;
+/**
+ * ONNX model that finds a picture's keypoints, as a path or an http(s) URL ending in .onnx.
+ */
+export type Keypoints = string;
+/**
+ * ONNX model that matches two pictures' keypoints, as a path or an http(s) URL ending in .onnx.
+ */
+export type Matcher = string;
+/**
+ * ONNX model that finds tags in a picture of an individual, as a path or an http(s) URL ending in .onnx.
+ */
+export type Finder = string;
+/**
+ * ONNX model that finds the lines of text on a tag, as a path or an http(s) URL ending in .onnx.
+ */
+export type Lines = string;
+/**
+ * ONNX model that reads a line of text, as a path or an http(s) URL ending in .onnx.
+ */
+export type Reader = string;
+/**
+ * How many digits the number has. A read with one digit more counts as its first digits, since a small check digit may follow the number; other reads are not suggested.
+ */
+export type Digits = number;
 
 export interface Config {
 	$schema?: $Schema;
 	detectors: Detectors;
 	onnx?: OnnxConfig;
 	health?: HealthcheckConfig | null;
+	individuals?: IndividualsConfig | null;
 }
 export interface DetectorConfig {
 	detection: SourceConfig;
@@ -259,4 +296,36 @@ export interface HealthcheckConfig {
 	headers?: Headers2;
 	body?: Body1;
 	interval?: Interval1;
+}
+/**
+ * Recognise individual animals of tracked classes, shared by every detector.
+ */
+export interface IndividualsConfig {
+	model: Model2;
+	labels: Labels;
+	precision?: Precision;
+	/**
+	 * Also compare coat details; needs pictures of individuals a few hundred pixels across.
+	 */
+	coat?: CoatConfig | null;
+	/**
+	 * Also read the number on each individual's tag and suggest it as the name; needs tags some 50 pixels high.
+	 */
+	tags?: TagsConfig | null;
+}
+/**
+ * Compare the coat details of a track and the individuals it resembles most.
+ */
+export interface CoatConfig {
+	keypoints: Keypoints;
+	matcher: Matcher;
+}
+/**
+ * Read the number on the tag an individual wears, to suggest as its name.
+ */
+export interface TagsConfig {
+	finder: Finder;
+	lines: Lines;
+	reader: Reader;
+	digits?: Digits;
 }

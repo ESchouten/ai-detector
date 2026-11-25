@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import unicodedata
 from collections.abc import Sequence
 
 import cv2
@@ -9,7 +10,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from aidetector.adapters.media import MediaError
-from aidetector.domain.models import BoundingBox, Observation
+from aidetector.domain.models import BoundingBox, Individual, Observation
 
 Image = NDArray[np.uint8]
 _ASPECT_RATIO = 16 / 9
@@ -40,11 +41,30 @@ def encode_jpeg(image: Image, quality: int = 95) -> bytes:
     return encoded.tobytes()
 
 
+def _named(individual: Individual) -> str | None:
+    """Who an individual is, or the likeliest name as a question, in letters
+    OpenCV can draw."""
+    if individual.name is not None:
+        name = individual.name
+    elif individual.candidates:
+        name = f"{individual.candidates[0].name}?"
+    else:
+        return None
+    return unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+
+
 def draw_boxes(
-    observation: Observation, boxes: Sequence[BoundingBox] | None = None
+    observation: Observation,
+    boxes: Sequence[BoundingBox] | None = None,
+    individuals: Sequence[Individual] = (),
 ) -> Image:
     boxes = observation.boxes if boxes is None else boxes
-    if not boxes:
+    named = [
+        (individual.place, label)
+        for individual in individuals
+        if individual.place is not None and (label := _named(individual))
+    ]
+    if not boxes and not named:
         return observation.image
 
     from ultralytics.utils.plotting import Annotator
@@ -64,6 +84,12 @@ def draw_boxes(
             else ""
         )
         annotator.box_label((x1, y1, x2, y2), label, color=(255, 0, 0))
+    for (left, top, right, bottom), label in named:
+        x1, y1 = max(0, round(left * width)), max(0, round(top * height))
+        x2 = min(width - 1, round(right * width))
+        y2 = min(height - 1, round(bottom * height))
+        if x2 > x1 and y2 > y1:
+            annotator.box_label((x1, y1, x2, y2), label, color=(0, 200, 255))
     return image
 
 

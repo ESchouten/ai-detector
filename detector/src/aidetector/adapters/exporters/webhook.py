@@ -73,6 +73,7 @@ class WebhookExporter:
                 self.config,
                 image_max=self.config.data_max,
                 video_max=self.config.data_max,
+                individuals=result.individuals,
             )
         except MediaError as error:
             raise DeliveryError(str(error)) from error

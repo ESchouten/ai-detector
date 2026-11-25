@@ -21,7 +21,13 @@ from aidetector.adapters.media.images import (
     shrink_image,
 )
 from aidetector.adapters.media.video import encode_video
-from aidetector.domain.models import BoundingBox, DetectionEvent, Observation
+from aidetector.domain.models import (
+    BoundingBox,
+    Candidate,
+    DetectionEvent,
+    Individual,
+    Observation,
+)
 
 
 def observation(*boxes):
@@ -104,6 +110,23 @@ def test_annotations_clip_boxes_to_image_bounds(box, clipped):
     assert np.array_equal(
         draw_boxes(observation(box)), draw_boxes(observation(clipped))
     )
+
+
+def test_the_annotated_picture_names_each_individual_where_it_was():
+    original = observation(BoundingBox(10, 10, 150, 90, "mounting", 0.9))
+    plain = draw_boxes(original)
+    unnamed = Individual(1, "cow", "a" * 32, place=(0.1, 0.2, 0.5, 0.8))
+    suggested = Individual(
+        2, "cow", "b" * 32, (Candidate("Dörte", 0.4),), place=(0.5, 0.1, 0.9, 0.7)
+    )
+    elsewhere = Individual(3, "cow", "c" * 32, (Candidate("233", 0.9),), True)
+    # Nobody named yet, or no place in that picture: nothing more is drawn.
+    assert np.array_equal(draw_boxes(original, individuals=(unnamed, elsewhere)), plain)
+    named = draw_boxes(original, individuals=(suggested,))
+    assert np.any(named[10:70, 80:144] != plain[10:70, 80:144])
+    # Names without a box of the detector are drawn too.
+    alone = draw_boxes(observation(), individuals=(suggested,))
+    assert np.any(alone)
 
 
 def test_empty_reversed_and_fully_outside_boxes_leave_pixels_unchanged():

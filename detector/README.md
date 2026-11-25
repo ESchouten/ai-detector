@@ -86,7 +86,7 @@ All options are in [`config.schema.json`](../config/config.schema.json). Sources
 | `timeout` | `5` | Inactivity limit since the last match; `0` disables it |
 | `include_trailing_time` | `1` | Maximum trailing context after the last match |
 | `cooldown` | `0` | Per-source cooldown after acceptance, in seconds or a class map |
-| `tracking` | `false` | Persistent Ultralytics tracking |
+| `tracking` | `false` | Persistent Ultralytics tracking, with its TrackTrack tracker |
 
 - Standard names such as `yolo11n.pt` are downloaded by Ultralytics; model URLs are downloaded once into the cache. Prepared ONNX models, TensorRT engines and Windows ML compiled models are cached under `models/prepared/`, which can be deleted while detection is stopped. See [inference backends](ARCHITECTURE.md#inference-backends).
 - An event needs `frames_min` observations containing a class outside its cooldown. Each observation counts once; context and observations containing only classes still in cooldown do not count. Approved and deliberately unvalidated events start cooldown for the classes outside cooldown, using each class's best qualifying observation. A class still in cooldown keeps its previous timer; rejected and failed events do not start cooldown.
@@ -129,6 +129,32 @@ Every exporter accepts `confidence`, `crop_padding` (`0.1`) and `export_rejected
 | `video_width`, `video_crf` | `1280`, `28` | `1280`, `28` |
 | `timeout` | `30` | `30` |
 
+### Individuals
+
+`individuals` recognises individual animals, such as cows, in every detector that has `yolo.tracking` on and a segmentation model (`"task": "segment"`, for example `yolo26m-seg.pt`). It is off without it, and the configuration check asks for at least one such detector.
+
+```json
+"individuals": {"model": "https://example.com/cow-embeddings.onnx", "labels": "cow"}
+```
+
+| Field | Default | Meaning |
+| --- | --- | --- |
+| `model` | required | ONNX embedding model, a local file or HTTP(S) URL; you bring your own |
+| `labels` | required | Detection classes whose tracked objects are individuals |
+| `precision` | `0.99` | Share of names that must be right when the installation sets its naming threshold |
+| `coat` | off | `{"keypoints": …, "matcher": …}`: two more ONNX models, local files or HTTP(S) URLs, that also compare coat details |
+| `tags` | off | `{"finder": …, "lines": …, "reader": …}`: three more ONNX models that read the number on each individual's tag, and `digits` (`4`), how many digits a number has |
+
+- Each track of those classes is saved once as a sighting, a few seconds after it appears: its best pictures, with the object's outline; recognition looks only inside the outline, under `individuals/sightings/` in the data folder. While the track is still in view, a picture every few seconds is added to what the sighting knows of the individual, so a name given once also covers her other sides. People name sightings in `individuals/names.json`; a name covers every sighting given it, from every camera. Unnamed sightings that look alike are listed together in `individuals/groups.json`, so a whole group can be named at once. The latest 2000 unnamed sightings are kept; named ones always are.
+- With `--live-preview`, the live boxes carry each track's sighting and name, so a person can name an individual straight from the camera picture.
+- Two tracks seen in the same picture are never recognised as the same individual.
+- Alerts show `412` for a recognised individual and `412, 233 or 87?` when the herd only suggests names. `metadata.json` lists them under `individuals`, or the reason they could not be recognised under `individuals_error`.
+- A detector that follows no individuals itself, such as one that finds a mounting, gets them from a detector that does on the same camera: its alerts show the individuals that were at least half inside its boxes.
+- The picture with boxes (`include_plot`, and `best.jpg` of a recording) also shows each individual's own box with its name, or its likeliest name with a question mark, where it was in that picture.
+- With `coat`, a track's pictures are also compared, detail by detail, with the saved pictures of the three names it resembles most, and shared details count towards a name. It needs individuals a few hundred pixels across, so a camera's main stream, and several seconds of processor time for every new track. Once names from two days are there it first compares the named sightings with each other, which takes minutes of processor time once; until that is done names are given without the coat details.
+- With `tags`, the number on the tag an individual wears, such as an ear tag, is read where a picture shows it large enough, about 50 pixels high, so from a camera's main stream and close by. A number read on two pictures is suggested as `5359?` on the live picture and for its sighting, with the picture it was read from; it becomes the name only when a person says Yes. The tags seen are kept in the sighting as pictures.
+- Recognition starts once the named sightings come from at least two days, the least from which an installation can check its own threshold; until then alerts only suggest names. See [individuals](ARCHITECTURE.md#individuals) for the model contract, the files and the scoring.
+
 ### Runtime and health
 
 - `onnx.provider` requests an installed execution provider; `onnx.winml` (`true`) registers Windows ML providers in Windows ML builds; `onnx.opset` (`20`) is used for model export.
@@ -146,7 +172,7 @@ That test follows one event from a temporary video to a real archive, with deter
 1. [CLI](src/aidetector/cli.py) and [bootstrap](src/aidetector/bootstrap.py): arguments, configuration, and construction of sources, models and destinations.
 2. [Runtime](src/aidetector/runtime.py): supervises processing and delivery, including failure and shutdown.
 3. [Pipeline](src/aidetector/application/pipeline.py) and [event assembler](src/aidetector/domain/events.py): batches become observations and events.
-4. [Delivery](src/aidetector/application/delivery.py): cooldown, verification and destinations.
+4. [Delivery](src/aidetector/application/delivery.py): cooldown, verification, [individuals](src/aidetector/adapters/individuals/herd.py) and destinations.
 5. [Disk archive](src/aidetector/adapters/exporters/disk.py): the files the web application reads.
 
 [ARCHITECTURE.md](ARCHITECTURE.md) has the structure, the ownership rules and a table of [where each kind of change belongs](ARCHITECTURE.md#where-a-change-belongs). Read [AGENTS.md](AGENTS.md) before editing. A change to configuration or archive metadata needs regenerated schemas, and a note in [MIGRATION.md](MIGRATION.md) when someone upgrading must act.

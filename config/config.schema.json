@@ -1,5 +1,31 @@
 {
   "$defs": {
+    "CoatConfig": {
+      "additionalProperties": false,
+      "description": "Compare the coat details of a track and the individuals it resembles most.",
+      "properties": {
+        "keypoints": {
+          "description": "ONNX model that finds a picture's keypoints, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Keypoints",
+          "type": "string"
+        },
+        "matcher": {
+          "description": "ONNX model that matches two pictures' keypoints, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Matcher",
+          "type": "string"
+        }
+      },
+      "required": [
+        "keypoints",
+        "matcher"
+      ],
+      "title": "CoatConfig",
+      "type": "object"
+    },
     "DetectorConfig": {
       "additionalProperties": false,
       "properties": {
@@ -250,6 +276,76 @@
       "title": "HealthcheckConfig",
       "type": "object"
     },
+    "IndividualsConfig": {
+      "additionalProperties": false,
+      "description": "Recognise individual animals of tracked classes, shared by every detector.",
+      "properties": {
+        "model": {
+          "description": "ONNX embedding model, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Model",
+          "type": "string"
+        },
+        "labels": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "items": {
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Detection classes whose tracked objects are individuals.",
+          "title": "Labels"
+        },
+        "precision": {
+          "default": 0.99,
+          "description": "Share of names that must be right when the installation sets its naming threshold from its own named sightings.",
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Precision",
+          "type": "number"
+        },
+        "coat": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoatConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Also compare coat details; needs pictures of individuals a few hundred pixels across."
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TagsConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Also read the number on each individual's tag and suggest it as the name; needs tags some 50 pixels high."
+        }
+      },
+      "required": [
+        "model",
+        "labels"
+      ],
+      "title": "IndividualsConfig",
+      "type": "object"
+    },
     "OnnxConfig": {
       "additionalProperties": false,
       "properties": {
@@ -375,6 +471,47 @@
         "source"
       ],
       "title": "SourceConfig",
+      "type": "object"
+    },
+    "TagsConfig": {
+      "additionalProperties": false,
+      "description": "Read the number on the tag an individual wears, to suggest as its name.",
+      "properties": {
+        "finder": {
+          "description": "ONNX model that finds tags in a picture of an individual, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Finder",
+          "type": "string"
+        },
+        "lines": {
+          "description": "ONNX model that finds the lines of text on a tag, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Lines",
+          "type": "string"
+        },
+        "reader": {
+          "description": "ONNX model that reads a line of text, as a path or an http(s) URL ending in .onnx.",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Reader",
+          "type": "string"
+        },
+        "digits": {
+          "default": 4,
+          "description": "How many digits the number has. A read with one digit more counts as its first digits, since a small check digit may follow the number; other reads are not suggested.",
+          "exclusiveMinimum": 0,
+          "title": "Digits",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "finder",
+        "lines",
+        "reader"
+      ],
+      "title": "TagsConfig",
       "type": "object"
     },
     "TelegramConfig": {
@@ -941,6 +1078,17 @@
       "anyOf": [
         {
           "$ref": "#/$defs/HealthcheckConfig"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "individuals": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/IndividualsConfig"
         },
         {
           "type": "null"

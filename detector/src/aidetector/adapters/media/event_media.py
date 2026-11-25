@@ -10,7 +10,7 @@ from aidetector.adapters.media.images import (
 )
 from aidetector.adapters.media.video import encode_video
 from aidetector.configuration import MediaConfig
-from aidetector.domain.models import DetectionEvent
+from aidetector.domain.models import DetectionEvent, Individual
 
 ImageKind = Literal["original", "annotated", "crop"]
 
@@ -21,6 +21,7 @@ class _ImageKey:
     max_bytes: int | None
     crop_padding: float | None
     annotate_crop: bool | None
+    individuals: tuple[Individual, ...]
 
 
 @dataclass(frozen=True)
@@ -68,6 +69,7 @@ class EventMedia:
         padding: float = 0.1,
         data_max: int | None = None,
         plot_crop: bool = True,
+        individuals: tuple[Individual, ...] = (),
     ) -> bytes: ...
 
     @overload
@@ -78,6 +80,7 @@ class EventMedia:
         padding: float = 0.1,
         data_max: int | None = None,
         plot_crop: bool = True,
+        individuals: tuple[Individual, ...] = (),
     ) -> bytes | None: ...
 
     def image(
@@ -87,20 +90,24 @@ class EventMedia:
         padding: float = 0.1,
         data_max: int | None = None,
         plot_crop: bool = True,
+        individuals: tuple[Individual, ...] = (),
     ) -> bytes | None:
+        """An encoded picture of the event's best observation. The annotated
+        one also shows the individuals, each by name where it was."""
         self._use(event)
         key = _ImageKey(
             kind,
             data_max,
             crop_padding=padding if kind == "crop" else None,
             annotate_crop=plot_crop if kind == "crop" else None,
+            individuals=individuals if kind == "annotated" else (),
         )
         if key not in self._images:
             best = event.best
             if kind == "original":
                 image = best.image
             elif kind == "annotated":
-                image = draw_boxes(best)
+                image = draw_boxes(best, individuals=individuals)
             else:
                 image = crop_observation(best, padding=padding, plot=plot_crop)
             if image is None:
@@ -153,6 +160,7 @@ class EventMedia:
         *,
         image_max: int | None = None,
         video_max: int | None = None,
+        individuals: tuple[Individual, ...] = (),
     ) -> list[Attachment]:
         attachments: list[Attachment] = []
         timestamp = event.best.date.isoformat(timespec="milliseconds").replace(":", "-")
@@ -162,7 +170,13 @@ class EventMedia:
             ("crop", "crop", config.include_crop),
         ):
             if enabled:
-                content = self.image(event, kind, config.crop_padding, image_max)
+                content = self.image(
+                    event,
+                    kind,
+                    config.crop_padding,
+                    image_max,
+                    individuals=individuals,
+                )
                 if content is not None:
                     attachments.append(
                         Attachment(

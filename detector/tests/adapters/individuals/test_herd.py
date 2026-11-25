@@ -1,0 +1,879 @@
+import json
+from dataclasses import replace
+from datetime import datetime
+from threading import Event
+
+import cv2
+import numpy as np
+import pytest
+
+from aidetector.adapters.individuals import herd as herd_module
+from aidetector.adapters.individuals.coat import CoatModel
+from aidetector.adapters.individuals.embedding import EmbeddingModel, model_key
+from aidetector.adapters.individuals.herd import (
+    Herd,
+    InsideIdentifier,
+    TrackIdentifier,
+)
+from aidetector.adapters.individuals.records import (
+    GroupsFile,
+    SightingRecord,
+    TagRecord,
+)
+from aidetector.adapters.individuals.tags import TagReader
+from aidetector.application.ports import IdentificationUnavailable, camera_id
+from aidetector.configuration import IndividualsConfig
+from aidetector.domain.models import BoundingBox, DetectionEvent, Observation
+from tests.support.onnx_model import (
+    write_coat_models,
+    write_embedding_model,
+    write_tag_models,
+)
+
+SOURCE = "rtsp://camera.invalid/stream"
+# BGR coat colours stand in for coat patterns: the test model embeds mean colour.
+COATS = {"412": (0, 0, 255), "233": (0, 255, 0), "87": (255, 0, 0), "15": (0, 255, 255)}
+PLACES = [
+    (20, 40, 80, 100),
+    (100, 40, 160, 100),
+    (180, 40, 240, 100),
+    (250, 40, 310, 100),
+]
+
+
+def observation(day, second, cows, label="cow"):
+    image = np.full((240, 320, 3), 128, np.uint8)
+    boxes = []
+    for track, coat, (x1, y1, x2, y2) in cows:
+        image[y1:y2, x1:x2] = COATS[coat]
+        boxes.append(BoundingBox(x1, y1, x2, y2, label, 0.9, track))
+    return Observation(
+        datetime(2026, 10, day, 12, 0, second), image, {"cow": 0.9}, tuple(boxes)
+    )
+
+
+def event(day, cows, frames=3, label="cow"):
+    return DetectionEvent(
+        SOURCE, tuple(observation(day, second, cows, label) for second in range(frames))
+    )
+
+
+def herd_of(tmp_path, metadata=None, coat=False, tags=""):
+    path = tmp_path / ("model.onnx" if metadata is None else "other.onnx")
+    write_embedding_model(path, metadata=metadata)
+    model = EmbeddingModel(str(path), model_key(str(path)))
+    finder, lines, reader = write_tag_models(tmp_path, tags) if tags else (None,) * 3
+    return Herd(
+        tmp_path / "individuals",
+        model,
+        IndividualsConfig(
+            model=str(path),
+            labels="cow",
+            tags={"finder": finder, "lines": lines, "reader": reader} if tags else None,
+        ),
+        CoatModel(*write_coat_models(tmp_path)) if coat else None,
+        TagReader(finder, lines, reader) if tags else None,
+    )
+
+
+def name(herd, names, confirmed=()):
+    (herd.directory / "names.json").write_text(
+        json.dumps({"version": 1, "names": names, "confirmed": list(confirmed)}),
+        encoding="utf-8",
+    )
+
+
+def whole_herd():
+    return [(track, coat, PLACES[track - 1]) for track, coat in enumerate(COATS, 1)]
+
+
+def test_tracked_individuals_are_kept_as_sightings_until_someone_names_them(tmp_path):
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    individuals = identifier.identify(
+        event(1, [(1, "412", PLACES[0]), (2, "233", PLACES[1])]), "e" * 32
+    )
+    assert [(i.track_id, i.label, i.candidates, i.name) for i in individuals] == [
+        (1, "cow", (), None),
+        (2, "cow", (), None),
+    ]
+    folder = herd.sightings / individuals[0].sighting
+    record = SightingRecord.model_validate_json((folder / "sighting.json").read_text())
+    assert record.camera == camera_id(SOURCE)
+    assert (record.track, record.event_id, record.seen) == (
+        1,
+        "e" * 32,
+        "2026-10-01T12:00:00",
+    )
+    assert sorted(path.name for path in folder.iterdir()) == [
+        "crop-1.jpg",
+        "crop-2.jpg",
+        "crop-3.jpg",
+        "sighting.json",
+        f"vectors-{herd.model.key}.npy",
+    ]
+
+    # A track that continues into the next event keeps its sighting.
+    again = identifier.identify(event(1, [(1, "412", PLACES[0])]), "f" * 32)
+    assert again[0].sighting == individuals[0].sighting
+    assert (
+        len([path for path in herd.sightings.iterdir() if path.name != ".pending"]) == 2
+    )
+
+
+def test_names_given_on_two_days_recognise_later_tracks_without_a_restart(tmp_path):
+    herd = herd_of(tmp_path)
+    named: dict[int, dict[str, str]] = {}
+    for day in (1, 2):
+        # Each run of a tracker numbers its tracks anew.
+        individuals = TrackIdentifier(herd).identify(event(day, whole_herd()), "e" * 32)
+        named[day] = {i.sighting: list(COATS)[i.track_id - 1] for i in individuals}
+
+    identifier = TrackIdentifier(herd)
+    name(herd, named[1])
+    unsure = identifier.identify(event(3, [(9, "412", PLACES[2])]), "a" * 32)[0]
+    assert unsure.name is None
+    assert [candidate.name for candidate in unsure.candidates][0] == "412"
+    assert len(unsure.candidates) == 3
+
+    name(herd, named[1] | named[2])
+    sure = identifier.identify(event(3, [(9, "412", PLACES[2])]), "b" * 32)[0]
+    assert sure.recognised
+    assert sure.name == "412"
+    assert sure.sighting == unsure.sighting
+
+
+def test_tracks_in_one_picture_are_never_recognised_as_the_same_individual(
+    tmp_path,
+):
+    herd = herd_of(tmp_path)
+    named = {}
+    for day in (1, 2):
+        individuals = TrackIdentifier(herd).identify(event(day, whole_herd()), "e" * 32)
+        named |= {i.sighting: list(COATS)[i.track_id - 1] for i in individuals}
+    name(herd, named)
+    identifier = TrackIdentifier(herd)
+
+    # Seen at different times, two cows with one coat are each taken for 412.
+    first = identifier.identify(event(3, [(8, "412", PLACES[0])]), "a" * 32)
+    second = identifier.identify(event(4, [(9, "412", PLACES[1])]), "b" * 32)
+    assert [first[0].name, second[0].name] == ["412", "412"]
+
+    # Seen together, only one of them can be 412.
+    twins = identifier.identify(
+        event(5, [(10, "412", PLACES[0]), (11, "412", PLACES[1])]), "c" * 32
+    )
+    assert [twin.name for twin in twins] == ["412", None]
+    assert "412" not in [candidate.name for candidate in twins[1].candidates]
+    assert identifier.identity(SOURCE, 11) == twins[1]
+
+
+def test_names_given_by_a_yes_are_compared_against_but_set_no_threshold(tmp_path):
+    herd = herd_of(tmp_path)
+    named = {}
+    for day in (1, 2):
+        individuals = TrackIdentifier(herd).identify(event(day, whole_herd()), "e" * 32)
+        named |= {i.sighting: list(COATS)[i.track_id - 1] for i in individuals}
+
+    # Every name was a Yes to a guess: nothing is asked, so nobody is recognised.
+    name(herd, named, confirmed=named)
+    [guessed] = TrackIdentifier(herd).identify(
+        event(3, [(8, "412", PLACES[0])]), "a" * 32
+    )
+    assert guessed.name is None and guessed.candidates[0].name == "412"
+
+    # With the first day's names given by hand, those are asked against the rest.
+    first_day = list(named)[: len(named) // 2]
+    name(herd, named, confirmed=[s for s in named if s not in first_day])
+    [recognised] = TrackIdentifier(herd).identify(
+        event(4, [(9, "412", PLACES[0])]), "b" * 32
+    )
+    assert recognised.name == "412"
+
+
+def groups(herd):
+    herd.flush()
+    return GroupsFile.model_validate_json(
+        (herd.directory / "groups.json").read_text()
+    ).groups
+
+
+def test_unnamed_look_alike_sightings_are_grouped_for_naming(tmp_path):
+    herd = herd_of(tmp_path)
+    sightings: dict[str, list[str]] = {}
+    for day in (1, 2):
+        for individual in TrackIdentifier(herd).identify(
+            event(day, whole_herd()), "e" * 32
+        ):
+            coat = list(COATS)[individual.track_id - 1]
+            sightings.setdefault(coat, []).append(individual.sighting)
+    assert sorted(sorted(g.sightings) for g in groups(herd)) == sorted(
+        sorted(both) for both in sightings.values()
+    )
+    assert all(g.suggestions == [] for g in groups(herd))
+
+    name(herd, {sightings["412"][0]: "412", sightings["233"][0]: "233"})
+    later = TrackIdentifier(herd).identify(event(3, [(1, "412", PLACES[0])]), "a" * 32)
+    listed = groups(herd)
+    named = {sightings["412"][0], sightings["233"][0]}
+    assert not any(named & set(g.sightings) for g in listed)
+    joined = next(g for g in listed if later[0].sighting in g.sightings)
+    assert sorted(joined.sightings) == sorted([sightings["412"][1], later[0].sighting])
+    assert [suggestion.name for suggestion in joined.suggestions] == ["412", "233"]
+
+
+def test_invalid_names_make_identification_unavailable(tmp_path):
+    herd = herd_of(tmp_path)
+    herd.directory.mkdir(parents=True)
+    (herd.directory / "names.json").write_text('{"names": {"x": "412"}}')
+    with pytest.raises(IdentificationUnavailable, match="invalid"):
+        TrackIdentifier(herd).identify(event(1, [(1, "412", PLACES[0])]), "e" * 32)
+
+
+def test_another_model_embeds_named_sightings_again_from_their_pictures(tmp_path):
+    herd = herd_of(tmp_path)
+    sighting = (
+        TrackIdentifier(herd)
+        .identify(event(1, [(1, "412", PLACES[0])]), "e" * 32)[0]
+        .sighting
+    )
+    name(herd, {sighting: "412"})
+    other = herd_of(tmp_path, metadata={"mean": "0.5,0.5,0.5", "std": "0.25,0.25,0.25"})
+    assert other.model.key != herd.model.key
+    known = other.known()
+    assert known.gallery.names == ("412",)
+    assert known.threshold is None
+    assert (other.sightings / sighting / f"vectors-{other.model.key}.npy").exists()
+
+
+def test_only_tracked_boxes_of_the_configured_classes_large_enough_count(tmp_path):
+    identifier = TrackIdentifier(herd_of(tmp_path))
+    assert identifier.identify(event(1, [(None, "412", PLACES[0])]), "e" * 32) == ()
+    assert (
+        identifier.identify(event(1, [(1, "412", PLACES[0])], label="person"), "e" * 32)
+        == ()
+    )
+    assert identifier.identify(event(1, [(1, "412", (20, 40, 60, 80))]), "e" * 32) == ()
+
+
+def pictures(herd, individual):
+    folder = herd.sightings / individual.sighting
+    return [
+        cv2.imread(str(folder / f"crop-{index}.jpg"))
+        for index in range(1, len(list(folder.glob("crop-*.jpg"))) + 1)
+    ]
+
+
+def test_whole_uncovered_pictures_are_chosen_before_larger_cut_off_ones(tmp_path):
+    herd = herd_of(tmp_path)
+    cut_off = observation(1, 0, [(1, "412", (0, 40, 150, 200))])
+    covered = observation(
+        1, 1, [(1, "412", (100, 40, 220, 160)), (2, "233", (90, 30, 200, 150))]
+    )
+    whole = observation(1, 2, [(1, "412", (100, 40, 160, 100))])
+    [individual, _] = TrackIdentifier(herd).identify(
+        DetectionEvent(SOURCE, (cut_off, covered, whole)), "e" * 32
+    )
+    assert [picture.shape for picture in pictures(herd, individual)] == [
+        (60, 60, 3),
+        (160, 150, 3),
+        (120, 120, 3),
+    ]
+
+
+def test_pictures_stay_whole_and_the_model_sees_only_inside_the_outline(tmp_path):
+    herd = herd_of(tmp_path)
+    image = np.full((240, 320, 3), 128, np.uint8)
+    image[40:100, 100:130] = COATS["412"]
+    image[40:100, 130:160] = COATS["233"]
+    # The box holds both coats; the outline only the first.
+    outline = ((100, 40), (129, 40), (129, 99), (100, 99))
+    box = BoundingBox(100, 40, 160, 100, "cow", 0.9, 1, outline)
+    seen = Observation(datetime(2026, 10, 1), image, {"cow": 0.9}, (box,))
+
+    [individual] = TrackIdentifier(herd).identify(
+        DetectionEvent(SOURCE, (seen,)), "e" * 32
+    )
+
+    # People see the neighbour too, with the outline of the one this is.
+    [picture] = pictures(herd, individual)
+    assert picture.shape == (60, 60, 3)
+    # JPEG blurs the edge between the halves; their middles keep their colour.
+    assert np.abs(picture[30, 10].astype(int) - COATS["412"]).max() < 12
+    assert np.abs(picture[30, 50].astype(int) - COATS["233"]).max() < 12
+    folder = herd.sightings / individual.sighting
+    record = SightingRecord.model_validate_json((folder / "sighting.json").read_text())
+    assert sorted(record.outlines[0]) == [(0, 0), (0, 59), (29, 0), (29, 59)]
+    # The model saw the neighbour grey, also when it embeds the pictures again.
+    masked = image[40:100, 100:160].copy()
+    masked[:, 30:] = 127
+    expected = herd.model.embed([masked])
+    [vectors] = folder.glob("vectors-*.npy")
+    np.testing.assert_allclose(np.load(vectors), expected, atol=0.02)
+    vectors.unlink()
+    name(herd, {individual.sighting: "412"})
+    herd.known()
+    np.testing.assert_allclose(np.load(vectors), expected, atol=0.02)
+
+
+def watch(identifier, seconds, cows, start=0):
+    """Observe cows once a second, as live detection does."""
+    for second in range(start, start + seconds):
+        identifier.observe(SOURCE, observation(1, second, cows))
+
+
+def test_a_track_watched_live_is_saved_in_the_background_and_named_at_once(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "LOOKING", 0)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    watch(identifier, 3, [(1, "412", PLACES[0])])
+    herd.flush()
+    assert identifier.identity(SOURCE, 1) is None
+    assert not herd.sightings.exists()
+
+    watch(identifier, 3, [(1, "412", PLACES[0])], start=3)
+    herd.flush()
+    unnamed = identifier.identity(SOURCE, 1)
+    assert unnamed is not None
+    assert (unnamed.track_id, unnamed.name, unnamed.candidates) == (1, None, ())
+    record = SightingRecord.model_validate_json(
+        (herd.sightings / unnamed.sighting / "sighting.json").read_text()
+    )
+    assert (record.seen, record.event_id, record.crops) == (
+        "2026-10-01T12:00:00",
+        None,
+        4,
+    )
+    assert identifier.identity(SOURCE, 2) is None
+
+    # One day of names would only suggest; a person's own name for it shows at once.
+    name(herd, {unnamed.sighting: "412"})
+    named = identifier.identity(SOURCE, 1)
+    assert named is not None
+    assert (named.sighting, named.name) == (unnamed.sighting, "412")
+
+    # The event the track was in keeps its sighting.
+    [individual] = identifier.identify(event(1, [(1, "412", PLACES[0])]), "e" * 32)
+    assert (individual.sighting, individual.name) == (unnamed.sighting, "412")
+    assert (
+        len([path for path in herd.sightings.iterdir() if path.name != ".pending"]) == 1
+    )
+
+
+def mounting(second, box, source=SOURCE, seconds=3):
+    """An event of a detector that follows no individuals and analyses the
+    camera at twice the size: one box, no tracks."""
+    return DetectionEvent(
+        source,
+        tuple(
+            Observation(
+                datetime(2026, 10, 1, 12, 0, second + frame),
+                np.full((480, 640, 3), 128, np.uint8),
+                {"mounting": 0.9},
+                (BoundingBox(*(2 * side for side in box), "mounting", 0.9),),
+            )
+            for frame in range(seconds)
+        ),
+    )
+
+
+def test_an_event_of_a_detector_that_follows_none_names_the_tracks_in_its_boxes(
+    tmp_path,
+):
+    herd = herd_of(tmp_path)
+    follower = TrackIdentifier(herd)
+    watch(follower, 6, whole_herd())
+    herd.flush()
+    identifier = InsideIdentifier({SOURCE: follower})
+
+    # Around the first two cows and a third of the next one.
+    individuals = identifier.identify(mounting(2, (20, 40, 200, 100)), "e" * 32)
+    assert [individual.track_id for individual in individuals] == [1, 2]
+    # Where each was in the event's best picture, whatever size that is.
+    assert [individual.place for individual in individuals] == [
+        (20 / 320, 40 / 240, 80 / 320, 100 / 240),
+        (100 / 320, 40 / 240, 160 / 320, 100 / 240),
+    ]
+    for individual in individuals:
+        watched = follower.identity(SOURCE, individual.track_id)
+        assert watched is not None and individual.sighting == watched.sighting
+    assert (
+        len([path for path in herd.sightings.iterdir() if path.name != ".pending"]) == 4
+    )
+
+    # Nobody when the cows were not there then, or on a camera nobody follows.
+    assert identifier.identify(mounting(30, (20, 40, 200, 100)), "f" * 32) == ()
+    other = "rtsp://other.invalid/stream"
+    assert identifier.identify(mounting(2, (20, 40, 200, 100), other), "0" * 32) == ()
+
+
+def test_a_long_event_names_a_track_that_was_inside_for_a_part_of_it(tmp_path):
+    herd = herd_of(tmp_path)
+    follower = TrackIdentifier(herd)
+    # The tracker follows the first cow under a new number after 4 seconds; the
+    # third stands beside the box all the time and the fourth walks through it.
+    for second in range(20):
+        cows = [
+            (5 if second >= 4 else 1, "412", PLACES[0]),
+            (2, "233", PLACES[1]),
+            (3, "87", PLACES[2]),
+            (4, "15", PLACES[0] if second in (10, 11) else PLACES[3]),
+        ]
+        follower.observe(SOURCE, observation(1, second, cows))
+    herd.flush()
+
+    individuals = InsideIdentifier({SOURCE: follower}).identify(
+        mounting(0, (20, 40, 200, 100), seconds=20), "e" * 32
+    )
+    assert [individual.track_id for individual in individuals] == [2, 5, 1]
+
+
+def test_a_track_coming_in_from_the_edge_waits_for_a_whole_picture(tmp_path):
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    watch(identifier, 6, [(1, "412", (0, 40, 60, 100))])
+    herd.flush()
+    assert identifier.identity(SOURCE, 1) is None
+
+    watch(identifier, 1, [(1, "412", PLACES[0])], start=6)
+    herd.flush()
+    saved = identifier.identity(SOURCE, 1)
+    assert saved is not None
+    assert [picture.shape for picture in pictures(herd, saved)][0] == (60, 60, 3)
+
+    # One that never shows whole is saved after a while all the same.
+    watch(identifier, 16, [(2, "233", (0, 40, 60, 100))], start=7)
+    herd.flush()
+    assert identifier.identity(SOURCE, 2) is not None
+
+
+def test_a_track_gone_before_it_settled_is_saved_with_what_was_seen(tmp_path):
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    watch(identifier, 2, [(1, "412", PLACES[0])])
+    watch(identifier, 10, [(2, "233", PLACES[1])], start=2)
+    herd.flush()
+    gone = identifier.identity(SOURCE, 1)
+    assert gone is not None
+    assert len(pictures(herd, gone)) == 2
+
+
+def test_only_the_latest_unnamed_sightings_are_kept(tmp_path, monkeypatch):
+    monkeypatch.setattr(herd_module, "KEPT_MAX", 2)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    oldest, older, newer, newest = (
+        identifier.identify(event(day, [(day, "412", PLACES[0])]), "e" * 32)[0]
+        for day in (1, 2, 3, 4)
+    )
+    name(herd, {oldest.sighting: "412"})
+    groups(herd)
+    assert sorted(path.name for path in herd.sightings.iterdir()) == sorted(
+        [".pending", oldest.sighting, newer.sighting, newest.sighting]
+    )
+    assert older.sighting not in {s for g in groups(herd) for s in g.sightings}
+
+
+def watch_waiting(identifier, seconds, cows, start=0):
+    """Observe cows once a second, letting the model finish in between."""
+    for second in range(start, start + seconds):
+        identifier.observe(SOURCE, observation(1, second, cows))
+        identifier.herd.submit(lambda: None).result()
+
+
+def later(herd, individual):
+    [stored] = (herd.sightings / individual.sighting).glob("later-*.npy")
+    return np.load(stored)
+
+
+def test_a_saved_track_goes_on_teaching_what_its_individual_looks_like(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "LOOKING", 0)
+    monkeypatch.setattr(herd_module, "KEEPING", 10)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    # Saved after 4 seconds; then a picture every 2, written every 10.
+    watch_waiting(identifier, 14, [(1, "412", PLACES[0])])
+    saved = identifier.identity(SOURCE, 1)
+    assert saved is not None
+    assert not list((herd.sightings / saved.sighting).glob("later-*.npy"))
+    watch_waiting(identifier, 2, [(1, "412", PLACES[0])], start=14)
+    assert later(herd, saved).shape[0] == 5
+    assert later(herd, saved).dtype == np.float16
+
+    # Once named, the later pictures are compared against like its own, and
+    # more of them count without the names changing.
+    name(herd, {saved.sighting: "412"})
+    known = herd.known()
+    assert len(known.gallery.vectors) == 4 + 5
+    watch_waiting(identifier, 19, [(1, "412", PLACES[0])], start=16)
+    richer = herd.known()
+    assert richer is not known
+    assert len(richer.gallery.vectors) == 4 + 15
+    assert herd.known() is richer
+
+    # After a restart they are read from the sighting.
+    again = herd_of(tmp_path)
+    assert len(again.known().gallery.vectors) == 4 + 15
+
+
+def test_a_track_that_jumps_to_its_neighbour_teaches_nothing_wrong(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "KEEPING", 5)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    watch_waiting(identifier, 8, [(1, "412", PLACES[0]), (2, "233", PLACES[1])])
+    # The tracker's number 1 moves to the cow beside it.
+    watch_waiting(identifier, 12, [(1, "233", PLACES[1])], start=8)
+    saved = identifier.identity(SOURCE, 1)
+    assert saved is not None
+    [own] = herd.model.embed([np.full((60, 60, 3), COATS["412"], np.uint8)])
+    kept = later(herd, saved).astype(np.float32)
+    assert len(kept) == 1
+    assert (kept @ own).min() > 0.9
+
+
+def test_a_side_unlike_the_first_pictures_is_still_her(tmp_path, monkeypatch):
+    monkeypatch.setattr(herd_module, "KEEPING", 5)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    watch_waiting(identifier, 8, [(1, "412", PLACES[0])])
+    # She turns and shows a side with another pattern.
+    watch_waiting(identifier, 12, [(1, "87", PLACES[0])], start=8)
+    saved = identifier.identity(SOURCE, 1)
+    assert saved is not None
+    [turned] = herd.model.embed([np.full((60, 60, 3), COATS["87"], np.uint8)])
+    assert (later(herd, saved).astype(np.float32) @ turned).max() > 0.9
+
+
+def test_later_pictures_stay_spread_over_a_long_track(tmp_path, monkeypatch):
+    monkeypatch.setattr(herd_module, "LATER", 1.0)
+    monkeypatch.setattr(herd_module, "LATER_MAX", 4)
+    monkeypatch.setattr(herd_module, "KEEPING", 5)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    watch_waiting(identifier, 40, [(1, "412", PLACES[0])])
+    saved = identifier.identity(SOURCE, 1)
+    assert saved is not None
+    # Every picture a second would be 35; thinned by half each time it is full.
+    assert 3 <= len(later(herd, saved)) <= 4
+
+
+def test_later_pictures_wait_while_the_model_is_busy(tmp_path, monkeypatch):
+    monkeypatch.setattr(herd_module, "WAITING_MAX", 0)
+    monkeypatch.setattr(herd_module, "KEEPING", 5)
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+    watch_waiting(identifier, 20, [(1, "412", PLACES[0])])
+    saved = identifier.identity(SOURCE, 1)
+    assert saved is not None
+    assert not list((herd.sightings / saved.sighting).glob("later-*.npy"))
+
+
+def named_on_two_days(herd):
+    named = {}
+    for day in (1, 2):
+        individuals = TrackIdentifier(herd).identify(event(day, whole_herd()), "e" * 32)
+        named |= {i.sighting: list(COATS)[i.track_id - 1] for i in individuals}
+    name(herd, named)
+    return named
+
+
+def test_shared_coat_details_count_once_their_own_threshold_is_set(tmp_path, caplog):
+    herd = herd_of(tmp_path, coat=True)
+    named = named_on_two_days(herd)
+    identifier = TrackIdentifier(herd)
+
+    # The threshold for scores with coat details is set in the background;
+    # until then the embedding decides alone.
+    [plain] = identifier.identify(event(3, [(9, "412", PLACES[2])]), "a" * 32)
+    assert plain.name == "412"
+
+    herd.flush()
+    known = herd.known()
+    assert known.threshold is not None and known.coat_threshold is not None
+    [checked] = identifier.identify(event(3, [(9, "412", PLACES[2])]), "b" * 32)
+    assert checked.name == "412"
+    # Every detail of her coat shows in her named pictures, none in another's.
+    assert checked.candidates[0].score == pytest.approx(
+        plain.candidates[0].score + 0.2, abs=1e-3
+    )
+    # The threshold was set on scores with coat details too.
+    assert known.coat_threshold == pytest.approx(known.threshold + 0.2, abs=1e-3)
+
+    # The details each named sighting shares were kept with it, so a restart
+    # sets the threshold again without comparing their pictures once more.
+    for sighting in named:
+        for picture in (herd.sightings / sighting).glob("crop-*.jpg"):
+            picture.unlink()
+    again = herd_of(tmp_path, coat=True)
+    assert again.known().coat_threshold is None
+    again.flush()
+    assert again.known().coat_threshold == pytest.approx(known.coat_threshold)
+    assert "Comparing coat details failed" not in caplog.text
+
+
+def test_kept_coat_details_that_cannot_be_read_leave_the_embedding_to_decide(
+    tmp_path, caplog
+):
+    herd = herd_of(tmp_path, coat=True)
+    named = named_on_two_days(herd)
+    herd.known()
+    herd.flush()
+    [kept] = (herd.sightings / next(iter(named))).glob("coat-*.json")
+    kept.write_text("{}", encoding="utf-8")
+
+    again = herd_of(tmp_path, coat=True)
+    again.known()
+    again.flush()
+
+    assert again.known().coat_threshold is None
+    assert "Comparing coat details failed: The coat details of sighting" in caplog.text
+    [plain] = TrackIdentifier(again).identify(
+        event(3, [(9, "412", PLACES[2])]), "a" * 32
+    )
+    assert plain.name == "412"
+
+
+def test_live_pictures_go_by_the_embedding_until_a_tracks_coat_is_compared(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "LOOKING", 0)
+    herd = herd_of(tmp_path, coat=True)
+    named_on_two_days(herd)
+    herd.known()
+    herd.flush()
+    identifier = TrackIdentifier(herd)
+    watch(identifier, 6, [(1, "412", PLACES[0])])
+    herd.flush()
+
+    # The coat thread is busy: her coat is not compared yet, and her
+    # embedding alone does not clear the threshold for scores with coat details.
+    busy = Event()
+    herd.submit_coat(busy.wait)
+    waiting = identifier.identity(SOURCE, 1)
+    assert waiting is not None
+    assert waiting.name is None
+    assert waiting.candidates[0].name == "412"
+
+    busy.set()
+    herd.flush()
+    compared = identifier.identity(SOURCE, 1)
+    assert compared is not None
+    assert (compared.sighting, compared.name) == (waiting.sighting, "412")
+    assert compared.candidates[0].score == pytest.approx(
+        waiting.candidates[0].score + 0.2, abs=1e-3
+    )
+
+
+def test_an_event_compares_its_own_tracks_coats_and_waits_for_no_other(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "LOOKING", 0)
+    herd = herd_of(tmp_path, coat=True)
+    named_on_two_days(herd)
+    herd.known()
+    herd.flush()
+    identifier = TrackIdentifier(herd)
+    watch(identifier, 6, [(1, "412", PLACES[0]), (2, "233", PLACES[1])])
+    herd.flush()
+    # Live pictures asked for both coats, and the coat thread is busy.
+    busy = Event()
+    herd.submit_coat(busy.wait)
+    for track in (1, 2):
+        waiting = identifier.identity(SOURCE, track)
+        assert waiting is not None and waiting.name is None
+
+    [individual] = identifier.identify(event(1, [(1, "412", PLACES[0])]), "a" * 32)
+
+    assert individual.name == "412"
+    beside = identifier.identity(SOURCE, 2)
+    assert beside is not None and beside.name is None
+    busy.set()
+    herd.flush()
+    beside = identifier.identity(SOURCE, 2)
+    assert beside is not None and beside.name == "233"
+
+
+def test_a_named_picture_that_cannot_be_read_makes_identification_unavailable(
+    tmp_path, monkeypatch
+):
+    # Keypoints are found again in a picture that is no longer remembered.
+    monkeypatch.setattr(herd_module, "DESCRIBED_MAX", 1)
+    herd = herd_of(tmp_path, coat=True)
+    named = named_on_two_days(herd)
+    herd.known()
+    herd.flush()
+    for sighting in named:
+        for picture in (herd.sightings / sighting).glob("crop-*.jpg"):
+            picture.unlink()
+
+    with pytest.raises(IdentificationUnavailable, match="cannot be read"):
+        TrackIdentifier(herd).identify(event(3, [(9, "412", PLACES[2])]), "a" * 32)
+
+
+def test_closing_does_not_compare_the_coats_still_waiting(
+    tmp_path, monkeypatch, caplog
+):
+    monkeypatch.setattr(herd_module, "LOOKING", 0)
+    monkeypatch.setattr(herd_module, "DESCRIBED_MAX", 1)
+    herd = herd_of(tmp_path, coat=True)
+    named = named_on_two_days(herd)
+    herd.known()
+    herd.flush()
+    identifier = TrackIdentifier(herd)
+    watch(identifier, 6, [(1, "412", PLACES[0])])
+    herd.flush()
+    assert herd.coat is not None
+    # The coat thread is busy until closing begins, so her coat waits; were
+    # it compared after all, the missing pictures would be reported.
+    herd.submit_coat(herd.coat.stopping.wait)
+    assert identifier.identity(SOURCE, 1) is not None
+    for sighting in named:
+        for picture in (herd.sightings / sighting).glob("crop-*.jpg"):
+            picture.unlink()
+
+    herd.close()
+
+    assert "Comparing coat details failed" not in caplog.text
+
+
+WHITE, GREY = (255, 255, 255), (190, 190, 190)
+# A cow, with a tag on her ear in the corner of her box.
+COW, TAG = (60, 40, 260, 200), (70, 50, 100, 100)
+
+
+def watch_tagged(identifier, seconds, colour=WHITE, outline=(), start=0):
+    """Observe one tagged cow once a second, letting the models finish."""
+    for second in range(start, start + seconds):
+        seen = observation(1, second, [(1, "412", COW)])
+        x1, y1, x2, y2 = TAG
+        seen.image[y1:y2, x1:x2] = colour
+        [box] = seen.boxes
+        tagged = replace(seen, boxes=(replace(box, outline=outline),))
+        identifier.observe(SOURCE, tagged)
+        identifier.herd.flush()
+
+
+def tags_of(herd, individual):
+    folder = herd.sightings / individual.sighting
+    record = TagRecord.model_validate_json((folder / "tag.json").read_text())
+    return record, sorted(path.name for path in folder.glob("tag-*.jpg"))
+
+
+def test_the_number_on_a_tracks_tag_is_suggested_once_two_pictures_agree(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "LOOKING", 0)
+    herd = herd_of(tmp_path, tags="5359")
+    identifier = TrackIdentifier(herd)
+    # Saved after 4 seconds, and her tag read on the next picture.
+    watch_tagged(identifier, 6)
+    once = identifier.identity(SOURCE, 1)
+    assert once is not None
+    assert once.tag is None
+    record, pictures = tags_of(herd, once)
+    assert (record.number, record.box, pictures) == (None, None, ["tag-1.jpg"])
+    assert [(crop.read, crop.confidence > 0.9) for crop in record.crops] == [
+        ("5359", True)
+    ]
+
+    # Two seconds on it is read again, and suggested with the picture it was
+    # read from: her box with a margin, in which `box` is the tag.
+    watch_tagged(identifier, 2, start=6)
+    twice = identifier.identity(SOURCE, 1)
+    assert twice is not None
+    assert (twice.tag, twice.name, twice.sighting) == ("5359", None, once.sighting)
+    record, pictures = tags_of(herd, twice)
+    assert pictures == ["tag-1.jpg", "tag-2.jpg", "tag-picture.jpg", "tag-read.jpg"]
+    assert (record.number, record.box) == ("5359", (40, 34, 70, 84))
+    folder = herd.sightings / twice.sighting
+    assert cv2.imread(str(folder / "tag-picture.jpg")).shape[:2] == (208, 260)
+    read = cv2.imread(str(folder / "tag-read.jpg"))
+    assert read.shape[:2] == (50 + 2 * 8, 30 + 2 * 4)
+    assert read[25, 15].min() > 240
+
+    # The name a person then gives it shows instead; the tag stays known.
+    name(herd, {twice.sighting: "5359"})
+    named = identifier.identity(SOURCE, 1)
+    assert named is not None
+    assert (named.name, named.tag) == ("5359", "5359")
+
+
+def test_a_number_the_reader_is_not_sure_of_is_kept_but_never_suggested(tmp_path):
+    herd = herd_of(tmp_path, tags="5359")
+    identifier = TrackIdentifier(herd)
+
+    watch_tagged(identifier, 12, GREY)
+
+    unsure = identifier.identity(SOURCE, 1)
+    assert unsure is not None
+    assert unsure.tag is None
+    record, pictures = tags_of(herd, unsure)
+    assert (record.number, pictures) == (None, ["tag-1.jpg"])
+    assert [(crop.read, crop.confidence < 0.9) for crop in record.crops] == [
+        ("5359", True)
+    ]
+
+
+def test_a_digit_too_many_on_a_tag_is_left_off_the_suggestion(tmp_path):
+    # The small check digit after a number, read with it and not surely.
+    herd = herd_of(tmp_path, tags="5359 6")
+    identifier = TrackIdentifier(herd)
+
+    watch_tagged(identifier, 12)
+
+    checked = identifier.identity(SOURCE, 1)
+    assert checked is not None
+    assert checked.tag == "5359"
+    record, _ = tags_of(herd, checked)
+    assert record.number == "5359"
+    assert {(crop.read, crop.confidence < 0.9) for crop in record.crops} == {
+        ("53596", True)
+    }
+
+
+def test_tag_pictures_are_written_now_and_then_and_only_the_tallest_kept(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(herd_module, "KEEPING", 4)
+    monkeypatch.setattr(herd_module, "TAG_CROPS", 3)
+    herd = herd_of(tmp_path, tags="5359")
+    identifier = TrackIdentifier(herd)
+
+    watch_tagged(identifier, 14, GREY)
+
+    # Read at 5, 7, 9, 11 and 13 seconds; written at 5, 9 and 13.
+    record, pictures = tags_of(herd, identifier.identity(SOURCE, 1))
+    assert pictures == ["tag-1.jpg", "tag-2.jpg", "tag-3.jpg"]
+    assert len(record.crops) == 3
+
+
+def test_a_tag_beside_the_individuals_outline_is_not_hers(tmp_path):
+    herd = herd_of(tmp_path, tags="5359")
+    identifier = TrackIdentifier(herd)
+    # Her outline is the right half of her box; the tag hangs in the left.
+    outline = ((160, 40), (260, 40), (260, 200), (160, 200))
+
+    watch_tagged(identifier, 12, outline=outline)
+
+    other = identifier.identity(SOURCE, 1)
+    assert other is not None
+    assert other.tag is None
+    assert not (herd.sightings / other.sighting / "tag.json").exists()
+
+
+def test_tags_are_not_looked_for_without_a_reader(tmp_path):
+    herd = herd_of(tmp_path)
+    identifier = TrackIdentifier(herd)
+
+    watch_tagged(identifier, 12)
+
+    plain = identifier.identity(SOURCE, 1)
+    assert plain is not None
+    assert plain.tag is None
+    assert not (herd.sightings / plain.sighting / "tag.json").exists()

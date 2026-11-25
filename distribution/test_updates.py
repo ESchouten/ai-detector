@@ -265,12 +265,13 @@ class UpdateFeedTest(unittest.TestCase):
                     {path.name for path in folder.glob("*.dmg")},
                     {f"AI-Detector-{version}.dmg" for version in available},
                 )
+                staged = folder / "appcast.xml"
+                if not available:
+                    # Nothing to carry over: Sparkle starts a feed of its own.
+                    self.assertFalse(staged.exists())
+                    continue
+                self.assertIn(b"xmlns:sparkle", staged.read_bytes())
                 self.assertEqual(
-                    tuple(
-                        version
-                        for version, _ in mac_items(
-                            (folder / "appcast.xml").read_bytes()
-                        )
-                    ),
+                    tuple(version for version, _ in mac_items(staged.read_bytes())),
                     available,
                 )

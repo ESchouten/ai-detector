@@ -198,6 +198,8 @@ msgstr "Dosyaları içe aktarmak için AI Detector’ın çalıştığı bilgisa
 #: src/lib/server/cameras/relocation.ts
 #: src/lib/server/configuration/camera-setup.ts
 #: src/lib/server/installation-import/metadata.ts
+#: src/routes/(admin)/identities/+page.server.ts
+#: src/routes/(admin)/identities/+page.svelte
 msgid "Camera"
 msgstr "Kamera"
 
@@ -1297,8 +1299,12 @@ msgstr "Mevcut bağlantıyı koru"
 #: src/lib/components/camera-settings.svelte
 #: src/lib/components/detector-editor.svelte
 #: src/lib/components/heartbeat-settings.svelte
+#: src/lib/components/live-naming.svelte
+#: src/lib/components/live-naming.svelte
 #: src/lib/components/notification-editor.svelte
 #: src/lib/components/phone-alarm-editor.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Saving…"
 msgstr "Kaydediliyor…"
 
@@ -2168,6 +2174,7 @@ msgstr "Testi tekrar gönder"
 #: src/lib/navigation.ts
 #: src/routes/(admin)/advanced/+page.svelte
 #: src/routes/(admin)/devices/+page.svelte
+#: src/routes/(admin)/identities/+page.svelte
 #: src/routes/(admin)/logs/+page.svelte
 #: src/routes/(admin)/notifications/+page.svelte
 #: src/routes/(admin)/settings/+page.svelte
@@ -2238,8 +2245,10 @@ msgstr "Ayarlar dikkat gerektiriyor"
 msgid "Please wait…"
 msgstr "Lütfen bekleyin…"
 
+#: src/lib/components/live-naming.svelte
 #: src/lib/components/phone-alarm-editor.svelte
 #: src/routes/(admin)/advanced/+page.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
 msgid "Save"
 msgstr "Kaydet"
 
@@ -3703,6 +3712,168 @@ msgstr "Yapay zekâ bağlantısı"
 msgid "Filled in missing names and ignored empty optional settings in app.json."
 msgstr "app.json içindeki eksik adlar dolduruldu ve boş isteğe bağlı ayarlar yok sayıldı."
 
+#: src/lib/individuals.ts
+msgid "Enter a name or number."
+msgstr "Bir ad veya numara girin."
+
+#: src/lib/individuals.ts
+msgid "Use at most 40 characters."
+msgstr "En fazla 40 karakter kullanın."
+
+#: src/lib/individuals.ts
+msgid "Keep at least one picture to name."
+msgstr "Adlandırılacak en az bir fotoğraf bırakın."
+
+#: src/lib/server/individuals-folder.ts
+msgid "A picture to name no longer exists. Reload the page."
+msgstr "Adlandırılacak bir fotoğraf artık yok. Sayfayı yeniden yükleyin."
+
+#: src/routes/(admin)/identities/+page.server.ts
+msgid "Reload the page and try again."
+msgstr "Sayfayı yeniden yükleyip tekrar deneyin."
+
+#: src/routes/(admin)/identities/[sighting]/[picture]/+server.ts
+msgid "Picture not found."
+msgstr "Fotoğraf bulunamadı."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Could not save the name"
+msgstr "Ad kaydedilemedi"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name sightings from one more day"
+msgstr "Bir günün daha gözlemlerini adlandırın"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# more group follows once these are named."
+msgid_plural "# more groups follow once these are named."
+msgstr[0] "Bunlar adlandırılınca # grup daha gelecek."
+msgstr[1] "Bunlar adlandırılınca # grup daha gelecek."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "To name"
+msgstr "Adlandırılacaklar"
+
+#: src/routes/(admin)/identities/+page.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "# sighting"
+msgid_plural "# sightings"
+msgstr[0] "# gözlem"
+msgstr[1] "# gözlem"
+
+#. 0: identity.name
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Not {0}: remove the name from this picture"
+msgstr "{0} değil: bu fotoğraftaki adı kaldır"
+
+#. 0: recentMoment(group.shown[0].seen)
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Last seen {0}"
+msgstr "Son görülme: {0}"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Leave this picture out"
+msgstr "Bu fotoğrafı dışarıda bırak"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Left out"
+msgstr "Dışarıda bırakıldı"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "# more sighting looks like these."
+msgid_plural "# more sightings look like these."
+msgstr[0] "# gözlem daha bunlara benziyor."
+msgstr[1] "# gözlem daha bunlara benziyor."
+
+#: src/lib/components/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Looks most like"
+msgstr "En çok benzediği"
+
+#: src/lib/components/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Name or number"
+msgstr "Ad veya numara"
+
+#: src/lib/navigation.ts
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Identities"
+msgstr "Kimlikler"
+
+#: src/lib/navigation.ts
+msgid "Name the individuals the cameras recognise."
+msgstr "Kameraların tanıdığı bireyleri adlandırın."
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Left out: a different one"
+msgstr "Dışarıda bırakıldı: başka bir birey"
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Tap a picture of a different one to leave it out."
+msgstr "Dışarıda bırakmak için başka bir bireyin fotoğrafına dokunun."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Each group holds sightings that look alike. Give it a name or number once; alerts then name the identities they recognise."
+msgstr "Her grup birbirine benzeyen gözlemleri içerir. Gruba bir kez ad veya numara verin; bildirimler daha sonra tanıdıkları kimlikleri adıyla belirtir."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Alerts only suggest names until named sightings come from at least two days. From then on they name the identities they are sure of."
+msgstr "Adlandırılmış gözlemler en az iki günden gelene kadar bildirimler yalnızca ad önerir. Ondan sonra emin oldukları kimlikleri adıyla belirtir."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "No identities named yet."
+msgstr "Henüz adlandırılmış kimlik yok."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Named identities"
+msgstr "Adlandırılmış kimlikler"
+
+#. 0: detectionBoxLabel(box)
+#. 0: detectionBoxLabel(box)
+#: src/lib/components/detection-boxes.svelte
+#: src/lib/components/identity-pills.svelte
+msgid "Name {0}"
+msgstr "Adlandır: {0}"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "On camera now"
+msgstr "Şu an kamerada"
+
+#: src/lib/components/live-naming.svelte
+msgid "Could not save the name. Try again."
+msgstr "Ad kaydedilemedi. Tekrar deneyin."
+
+#. 0: identity.name
+#: src/lib/components/live-naming.svelte
+msgid "Shown as {0}. Enter another name or number if that is wrong."
+msgstr "Şu adla gösteriliyor: {0}. Yanlışsa başka bir ad veya numara girin."
+
+#. 0: identity.candidates[0].name
+#: src/lib/components/live-naming.svelte
+msgid "Looks most like {0}, but not enough to be sure."
+msgstr "En çok şuna benziyor: {0}, ama emin olmak için yeterli değil."
+
+#: src/lib/components/live-naming.svelte
+msgid "Give it a name or number; the camera then recognises it."
+msgstr "Bir ad veya numara verin; kamera onu daha sonra tanır."
+
+#: src/lib/components/live-naming.svelte
+#: src/lib/components/recording-individuals.svelte
+msgid "Who is this?"
+msgstr "Bu kim?"
+
+#: src/lib/components/live-naming.svelte
+msgid "Its pictures were removed. Wait for the box to show it again."
+msgstr "Fotoğrafları kaldırıldı. Çerçeve onu yeniden gösterene kadar bekleyin."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Tap one in the picture to say who it is. It can be named a few seconds after it appears."
+msgstr "Kim olduğunu belirtmek için görüntüde birine dokunun. Göründükten birkaç saniye sonra adlandırılabilir."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Nothing to name. New sightings appear here when a detector with tracking and a segmentation model records an individual."
+msgstr "Adlandırılacak bir şey yok. Takip özellikli ve segmentasyon modelli bir dedektör bir bireyi kaydettiğinde yeni gözlemler burada görünür."
+
 #. 0: label; 1: move.host
 #: src/lib/server/cameras/relocation.ts
 msgid "{0} got a new network address ({1}) and is watched there again."
@@ -3985,3 +4156,54 @@ msgstr ""
 "\n"
 "Mevcut döndürülmüş günlükleri, en son TensorRT ve Windows ML derleme günlüklerini, çalışma zamanı ayrıntılarını ve parolaları gizlenmiş ayarları içerir. Kayıt içermez. Paylaşmadan önce dosyaları gözden geçirin: günlükler yerel yolları ve kamera adreslerini içerebilir.\n"
 ""
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "and # more"
+msgid_plural "and # more"
+msgstr[0] "ve # tane daha"
+msgstr[1] "ve # tane daha"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "An identity named on fewer than three days is recognised less often and can get the name of one that looks like it. Tap it in the live picture or name its groups below."
+msgstr "Üç günden az günde adlandırılmış bir kimlik daha seyrek tanınır ve kendisine benzeyen birinin adını alabilir. Canlı görüntüde ona dokunun veya aşağıda gruplarını adlandırın."
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "Name these on more days"
+msgstr "Bunları daha fazla günde adlandırın"
+
+#: src/routes/(admin)/identities/+page.svelte
+msgid "# day"
+msgid_plural "# days"
+msgstr[0] "# gün"
+msgstr[1] "# gün"
+
+#. 0: guess
+#. 0: guess
+#: src/lib/components/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Is this {0}?"
+msgstr "Bu {0} mi?"
+
+#: src/lib/components/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "Yes"
+msgstr "Evet"
+
+#: src/lib/components/live-naming.svelte
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "No"
+msgstr "Hayır"
+
+#. 0: guess
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This picture was named {0} before."
+msgstr "Bu fotoğrafa daha önce şu ad verildi: {0}."
+
+#. 0: identity.tag
+#: src/lib/components/live-naming.svelte
+msgid "Its tag was read as {0}. Check the number in the picture."
+msgstr "Etiketinde {0} okundu. Numarayı fotoğrafta kontrol edin."
+
+#: src/routes/(admin)/identities/sighting-group.svelte
+msgid "This number was read from its tag."
+msgstr "Bu numara etiketinden okundu."

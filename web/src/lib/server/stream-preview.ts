@@ -61,6 +61,7 @@ export function createPreviewStream(source: string, executable: string) {
 	let controller: ReadableStreamDefaultController<Uint8Array>;
 	let responseClosed = false;
 	let stopping = false;
+	let cancelled = false;
 	let hadFrame = false;
 	let stderr = '';
 	let readTimer: ReturnType<typeof setTimeout> | undefined;
@@ -95,7 +96,8 @@ export function createPreviewStream(source: string, executable: string) {
 		child.once('close', (code) => {
 			clearTimeout(readTimer);
 			clearTimeout(killTimer);
-			if (!stopping && code !== 0)
+			// Not on `stopping`: stdout ends before the process closes, and that already stops it.
+			if (!cancelled && (code !== 0 || stderr.trim()))
 				webLog.warn(`FFmpeg preview of ${source} ended with code ${code}:\n${stderr.trim()}`);
 			resolve();
 		})
@@ -136,6 +138,7 @@ export function createPreviewStream(source: string, executable: string) {
 		},
 		cancel() {
 			responseClosed = true;
+			cancelled = true;
 			return stop();
 		}
 	});
